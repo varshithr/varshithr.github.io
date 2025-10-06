@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Querying & Tuning for Large Datasets</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fbfd; /* Very light blue-gray */
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+        .section-header {
+            background-color: #1a5653; /* Darker teal */
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        .section-header:hover {
+            background-color: #154542; /* Even darker teal on hover */
+        }
+        .section-content {
+            background-color: #f0fdfa; /* Lighter background for content */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #cce7e4; /* Light border */
+        }
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        .accordion-icon.rotated {
+            transform: rotate(90deg);
+        }
+        ul.list-disc li, ul.list-circle li, ul.list-square li {
+            margin-bottom: 0.5rem;
+        }
+        pre {
+            background-color: #f4f6f8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: #36454F; /* Charcoal */
+            margin-top: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .sql-keyword {
+            color: #2563eb; /* Blue */
+            font-weight: 600;
+        }
+        .sql-function {
+            color: #059669; /* Green */
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="container">
+        <h1 class="text-4xl font-bold text-center mb-8 text-emerald-800">SQL Querying & Tuning for Large Datasets</h1>
+
+        <!-- Introduction -->
+        <div class="mb-6">
+            <div class="section-header" onclick="toggleSection('intro')">
+                <h2 class="text-2xl font-semibold">Introduction: SQL in the Big Data World</h2>
+                <span class="accordion-icon text-2xl font-bold" id="intro-icon">+</span>
+            </div>
+            <div id="intro-content" class="section-content hidden">
+                <p class="mb-4">SQL remains the lingua franca for data analysis, even with massive datasets. However, querying petabytes of data efficiently requires a deeper understanding of how SQL engines (like Spark SQL on Databricks) process queries and how to optimize them. This section covers advanced SQL features and tuning strategies for big data.</p>
+            </div>
+        </div>
+
+        <!-- Window Functions -->
+        <div class="mb-6">
+            <div class="section-header" onclick="toggleSection('window-functions')">
+                <h2 class="text-2xl font-semibold">Window Functions: Powerful Analytical SQL</h2>
+                <span class="accordion-icon text-2xl font-bold" id="window-functions-icon">+</span>
+            </div>
+            <div id="window-functions-content" class="section-content hidden">
+                <p class="mb-4">Window functions perform calculations across a set of table rows that are related to the current row. Unlike aggregate functions (which return a single value for a group), window functions return a value for each row in the window.</p>
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">Syntax:</h3>
+                <pre><code>
+<span class="sql-function">FUNCTION</span>(<span class="sql-keyword">column</span>) <span class="sql-keyword">OVER</span> (
+    [<span class="sql-keyword">PARTITION BY</span> column1 [, column2, ...]]
+    [<span class="sql-keyword">ORDER BY</span> column3 [ASC|DESC] [, column4 [ASC|DESC], ...]]
+    [<span class="sql-keyword">ROWS BETWEEN</span> start <span class="sql-keyword">AND</span> end | <span class="sql-keyword">RANGE BETWEEN</span> start <span class="sql-keyword">AND</span> end]
+)
+                </code></pre>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong><code>PARTITION BY</code>:</strong> Divides the rows into groups (partitions) where the window function operates independently. Similar to <code>GROUP BY</code>, but does not collapse rows.</li>
+                    <li class="mb-2"><strong><code>ORDER BY</code>:</strong> Orders the rows within each partition. Essential for rank-based or sequential calculations.</li>
+                    <li class="mb-2"><strong>Window Frame (<code>ROWS BETWEEN</code> / <code>RANGE BETWEEN</code>):</strong> Defines the set of rows within the partition that are included in the calculation for the current row.
+                        <ul class="list-circle list-inside ml-4">
+                            <li><code>UNBOUNDED PRECEDING</code>: From the start of the partition.</li>
+                            <li><code>CURRENT ROW</code>: The current row.</li>
+                            <li><code>N PRECEDING</code> / <code>N FOLLOWING</code>: N rows before/after the current row.</li>
+                            <li><code>UNBOUNDED FOLLOWING</code>: To the end of the partition.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">Common Window Functions & Examples:</h3>
+
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-emerald-600">Ranking Functions:</h4>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong><code>ROW_NUMBER()</code>:</strong> Assigns a unique, sequential integer to each row within its partition, starting from 1.
+                        <pre><code>
+<span class="sql-keyword">SELECT</span>
+    product_id,
+    sale_date,
+    sales_amount,
+    <span class="sql-function">ROW_NUMBER</span>() <span class="sql-keyword">OVER</span> (<span class="sql-keyword">PARTITION BY</span> product_id <span class="sql-keyword">ORDER BY</span> sale_date <span class="sql-keyword">DESC</span>) <span class="sql-keyword">as</span> rn
+<span class="sql-keyword">FROM</span>
+    sales_data;
+                        </code></pre>
+                    </li>
+                    <li class="mb-2"><strong><code>RANK()</code>:</strong> Assigns a rank within its partition. If values are tied, they receive the same rank, and the next rank is skipped.
+                        <pre><code>
+<span class="sql-keyword">SELECT</span>
+    department,
+    employee_name,
+    salary,
+    <span class="sql-function">RANK</span>() <span class="sql-keyword">OVER</span> (<span class="sql-keyword">PARTITION BY</span> department <span class="sql-keyword">ORDER BY</span> salary <span class="sql-keyword">DESC</span>) <span class="sql-keyword">as</span> salary_rank
+<span class="sql-keyword">FROM</span>
+    employees;
+                        </code></pre>
+                    </li>
+                    <li class="mb-2"><strong><code>DENSE_RANK()</code>:</strong> Similar to <code>RANK()</code>, but if values are tied, they receive the same rank, and no ranks are skipped.
+                        <pre><code>
+<span class="sql-keyword">SELECT</span>
+    category,
+    item_name,
+    price,
+    <span class="sql-function">DENSE_RANK</span>() <span class="sql-keyword">OVER</span> (<span class="sql-keyword">PARTITION BY</span> category <span class="sql-keyword">ORDER BY</span> price <span class="sql-keyword">ASC</span>) <span class="sql-keyword">as</span> price_dense_rank
+<span class="sql-keyword">FROM</span>
+    products;
+                        </code></pre>
+                    </li>
+                    <li class="mb-2"><strong><code>NTILE(n)</code>:</strong> Divides the rows in each partition into 'n' groups and assigns a group number (from 1 to n) to each row.
+                        <pre><code>
+<span class="sql-keyword">SELECT</span>
+    customer_id,
+    order_total,
+    <span class="sql-function">NTILE</span>(4) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">ORDER BY</span> order_total <span class="sql-keyword">DESC</span>) <span class="sql-keyword">as</span> quartile
+<span class="sql-keyword">FROM</span>
+    orders;
+                        </code></pre>
+                    </li>
+                </ul>
+
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-emerald-600">Analytic Functions:</h4>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong><code>LAG(column, offset, default)</code>:</strong> Accesses data from a previous row in the same result set.
+                        <pre><code>
+<span class="sql-keyword">SELECT</span>
+    transaction_date,
+    amount,
+    <span class="sql-function">LAG</span>(amount, 1, 0) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">ORDER BY</span> transaction_date) <span class="sql-keyword">as</span> previous_day_amount
+<span class="sql-keyword">FROM</span>
+    daily_transactions;
+                        </code></pre>
+                    </li>
+                    <li class="mb-2"><strong><code>LEAD(column, offset, default)</code>:</strong> Accesses data from a subsequent row in the same result set.
+                        <pre><code>
+<span class="sql-keyword">SELECT</span>
+    transaction_date,
+    amount,
+    <span class="sql-function">LEAD</span>(amount, 1, 0) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">ORDER BY</span> transaction_date) <span class="sql-keyword">as</span> next_day_amount
+<span class="sql-keyword">FROM</span>
+    daily_transactions;
+                        </code></pre>
+                    </li>
+                    <li class="mb-2"><strong>Aggregate Functions as Window Functions (e.g., <code>SUM()</code>, <code>AVG()</code>, <code>COUNT()</code>):</strong> Perform aggregations over a window.
+                        <pre><code>
+<span class="sql-keyword">SELECT</span>
+    sale_date,
+    region,
+    sales_amount,
+    <span class="sql-function">SUM</span>(sales_amount) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">PARTITION BY</span> region <span class="sql-keyword">ORDER BY</span> sale_date <span class="sql-keyword">ROWS BETWEEN</span> 3 <span class="sql-keyword">PRECEDING AND CURRENT ROW</span>) <span class="sql-keyword">as</span> 4_day_rolling_sum
+<span class="sql-keyword">FROM</span>
+    regional_sales;
+                        </code></pre>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SQL Query Tuning for Large Datasets -->
+        <div class="mb-6">
+            <div class="section-header" onclick="toggleSection('query-tuning')">
+                <h2 class="text-2xl font-semibold">SQL Query Tuning for Large Datasets</h2>
+                <span class="accordion-icon text-2xl font-bold" id="query-tuning-icon">+</span>
+            </div>
+            <div id="query-tuning-content" class="section-content hidden">
+                <p class="mb-4">Optimizing SQL queries on distributed systems like Spark (Databricks) is critical for performance and cost efficiency. It often involves reducing data processed, optimizing shuffles, and leveraging underlying data formats.</p>
+
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">1. Understand the Query Execution Plan:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2">Use <span class="font-mono"><code>EXPLAIN EXTENDED</code></span> or <span class="font-mono"><code>EXPLAIN FORMATTED</code></span> (in Databricks/Spark SQL) to see the logical and physical plan. Look for expensive operations like full table scans, large shuffles, and broadcast joins.</li>
+                    <pre><code>
+<span class="sql-keyword">EXPLAIN EXTENDED</span>
+<span class="sql-keyword">SELECT</span> count(*) <span class="sql-keyword">FROM</span> large_table <span class="sql-keyword">WHERE</span> date_col = '2023-01-01';
+                    </code></pre>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">2. Data Filtering and Projection:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Filter Early, Filter Often:</strong> Apply <span class="font-mono"><code>WHERE</code></span> clauses as early as possible to reduce the amount of data processed in subsequent steps.</li>
+                    <li class="mb-2"><strong>Select Only Necessary Columns:</strong> Avoid <span class="font-mono"><code>SELECT *</code></span>. Project only the columns required for your query. This reduces I/O and memory usage.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">3. Optimize Joins:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Broadcast Hash Join:</strong> If one table is significantly smaller (e.g., < 100MB-1GB, configurable via <span class="font-mono"><code>spark.sql.autoBroadcastJoinThreshold</code></span>), Spark can broadcast it to all executors, avoiding a shuffle for the larger table. Explicitly hint with <span class="font-mono"><code>BROADCAST</code></span>.
+                        <pre><code>
+<span class="sql-keyword">SELECT</span> a.*, b.dim_name
+<span class="sql-keyword">FROM</span>
+    fact_table a
+<span class="sql-keyword">JOIN</span> <span class="sql-function">BROADCAST</span>(dimension_table) b <span class="sql-keyword">ON</span> a.dim_key = b.dim_key;
+                        </code></pre>
+                    </li>
+                    <li class="mb-2"><strong>Sort-Merge Join:</strong> Default for large joins. Requires both tables to be sorted and then merged. Involves a shuffle.</li>
+                    <li class="mb-2"><strong>Skewed Joins:</strong> If a join key has highly uneven distribution (data skew), it can lead to "hot spots" where a few tasks take much longer.
+                        <ul class="list-circle list-inside ml-4">
+                            <li><strong>Salting:</strong> Add a random suffix to the skewed key in both tables, then join on the composite key. This distributes the skewed key across more partitions.</li>
+                            <li><strong>Adaptive Query Execution (AQE):</strong> Spark 3.0+ can automatically detect and optimize skewed joins. Ensure <span class="font-mono"><code>spark.sql.adaptive.skewJoin.enabled</code></span> is true.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">4. Leverage Data Layout (Delta Lake specific):</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Partitioning:</strong> Organize data by common filter columns (e.g., date, country). Reduces scan time by pruning irrelevant partitions.
+                        <pre><code>
+<span class="sql-keyword">CREATE TABLE</span> sales_by_date (<span class="sql-keyword">...</span>)
+<span class="sql-keyword">USING</span> DELTA
+<span class="sql-keyword">PARTITIONED BY</span> (sale_date);
+                        </code></pre>
+                    </li>
+                    <li class="mb-2"><strong>Z-Ordering:</strong> For Delta tables, use <span class="font-mono"><code>ZORDER BY</code></span> on frequently queried high-cardinality columns (e.g., <span class="font-mono"><code>user_id</code></span>, <span class="font-mono"><code>product_id</code></span>) to co-locate related data and improve data skipping.
+                        <pre><code>
+<span class="sql-keyword">OPTIMIZE</span> my_delta_table
+<span class="sql-keyword">ZORDER BY</span> (user_id, product_id);
+                        </code></pre>
+                    </li>
+                    <li class="mb-2"><strong>Liquid Clustering:</strong> A more flexible alternative to partitioning and Z-Ordering in Delta Lake, automatically adapting to data changes and query patterns.</li>
+                    <li class="mb-2"><strong>Compaction (<code>OPTIMIZE</code>):</strong> Regularly run <span class="font-mono"><code>OPTIMIZE</code></span> to combine small files into larger ones, reducing metadata overhead and improving read performance.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">5. Aggregations:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Pre-aggregation:</strong> If certain aggregations are frequently used, consider pre-calculating and storing them in a separate Gold layer table.</li>
+                    <li class="mb-2"><strong>Minimize Distinct Counts:</strong> <span class="font-mono"><code>COUNT(DISTINCT column)</code></span> is expensive as it requires a global shuffle. Use approximations if exact count isn't needed (e.g., HyperLogLog functions).</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">6. Configuration Tuning (Databricks specific):</h3>
+                <ul class="list-disc list-inside pl-4">
+                    <li class="mb-2"><strong>Adaptive Query Execution (AQE):</strong> Ensure <span class="font-mono"><code>spark.sql.adaptive.enabled=true</code></span>. It dynamically optimizes query plans at runtime.</li>
+                    <li class="mb-2"><strong>Photon Engine:</strong> Use Photon-enabled clusters for significant performance boosts on SQL and DataFrame operations.</li>
+                    <li class="mb-2"><strong>Shuffle Partitions:</strong> Adjust <span class="font-mono"><code>spark.sql.shuffle.partitions</code></span> based on cluster size and data volume. Too few can lead to large tasks; too many can lead to excessive overhead.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Other Useful Concepts -->
+        <div class="mb-6">
+            <div class="section-header" onclick="toggleSection('other-concepts')">
+                <h2 class="text-2xl font-semibold">Other Useful Concepts & Best Practices</h2>
+                <span class="accordion-icon text-2xl font-bold" id="other-concepts-icon">+</span>
+            </div>
+            <div id="other-concepts-content" class="section-content hidden">
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">1. Common Table Expressions (CTEs):</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2">Improve readability and modularity of complex queries. Can sometimes aid optimization by allowing the optimizer to better understand the query flow.</li>
+                    <pre><code>
+<span class="sql-keyword">WITH</span>
+    daily_sales <span class="sql-keyword">AS</span> (
+        <span class="sql-keyword">SELECT</span>
+            sale_date,
+            <span class="sql-function">SUM</span>(amount) <span class="sql-keyword">as</span> total_daily_sales
+        <span class="sql-keyword">FROM</span>
+            sales
+        <span class="sql-keyword">GROUP BY</span>
+            sale_date
+    ),
+    monthly_avg <span class="sql-keyword">AS</span> (
+        <span class="sql-keyword">SELECT</span>
+            <span class="sql-function">DATE_TRUNC</span>('month', sale_date) <span class="sql-keyword">as</span> month,
+            <span class="sql-function">AVG</span>(total_daily_sales) <span class="sql-keyword">as</span> avg_monthly_sales
+        <span class="sql-keyword">FROM</span>
+            daily_sales
+        <span class="sql-keyword">GROUP BY</span>
+            <span class="sql-function">DATE_TRUNC</span>('month', sale_date)
+    )
+<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> monthly_avg;
+                    </code></pre>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">2. Subqueries:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2">Can be used in <span class="font-mono"><code>SELECT</code></span>, <span class="font-mono"><code>FROM</code></span>, or <span class="font-mono"><code>WHERE</code></span> clauses. Correlated subqueries (where the inner query depends on the outer query) can be very inefficient on large datasets and should often be rewritten as joins or window functions.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">3. Delta Lake SQL Commands:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong><code>MERGE INTO</code>:</strong> For UPSERT operations (insert if not exists, update if exists). Highly efficient for CDC (Change Data Capture) and managing slowly changing dimensions.
+                        <pre><code>
+<span class="sql-keyword">MERGE INTO</span> target_table <span class="sql-keyword">AS</span> t
+<span class="sql-keyword">USING</span> source_table <span class="sql-keyword">AS</span> s
+<span class="sql-keyword">ON</span> t.id = s.id
+<span class="sql-keyword">WHEN MATCHED THEN UPDATE SET</span> t.value = s.value
+<span class="sql-keyword">WHEN NOT MATCHED THEN INSERT</span> (id, value) <span class="sql-keyword">VALUES</span> (s.id, s.value);
+                        </code></pre>
+                    </li>
+                    <li class="mb-2"><strong><code>VACUUM</code>:</strong> Removes data files no longer referenced by a Delta table and older than the retention threshold. Important for cost management and GDPR compliance.
+                        <pre><code>
+<span class="sql-keyword">VACUUM</span> my_delta_table <span class="sql-keyword">RETAIN</span> 168 <span class="sql-keyword">HOURS</span>;
+                        </code></pre>
+                    </li>
+                    <li class="mb-2"><strong><code>RESTORE</code>:</strong> Reverts a Delta table to an earlier version using time travel.
+                        <pre><code>
+<span class="sql-keyword">RESTORE TABLE</span> my_delta_table <span class="sql-keyword">TO VERSION AS OF</span> 5;
+<span class="sql-keyword">RESTORE TABLE</span> my_delta_table <span class="sql-keyword">TO TIMESTAMP AS OF</span> '2023-01-01 10:00:00';
+                        </code></pre>
+                    </li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">4. Data Type Optimization:</h3>
+                <ul class="list-disc list-inside pl-4">
+                    <li class="mb-2">Use the most compact data types possible (e.g., <span class="font-mono"><code>INT</code></span> instead of <span class="font-mono"><code>BIGINT</code></span> if values fit, <span class="font-mono"><code>DATE</code></span> instead of <span class="font-mono"><code>TIMESTAMP</code></span> if time isn't needed). This reduces storage and memory footprint.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for accordion functionality
+        function toggleSection(id) {
+            const content = document.getElementById(id + '-content');
+            const icon = document.getElementById(id + '-icon');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotated');
+                icon.textContent = '-';
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('rotated');
+                icon.textContent = '+';
+            }
+        }
+    </script>
+</body>
+</html>
