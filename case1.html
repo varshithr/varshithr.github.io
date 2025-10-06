@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: Modern Fintech Data Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+         @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flow-arrow {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .flow-arrow::after {
+            content: '→';
+            font-size: 2.5rem;
+            color: #ff6361;
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+        @media (max-width: 1023px) {
+            .flow-arrow::after {
+                content: '↓';
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-gray-800">
+                <span class="gradient-text">Fintech Data Platforms</span>
+            </div>
+            <ul class="flex space-x-6 text-gray-600 font-medium">
+                <li><a href="#ingestion" class="hover:text-[#bc5090]">Ingestion</a></li>
+                <li><a href="#lakehouse" class="hover:text-[#bc5090]">Lakehouse</a></li>
+                <li><a href="#consumption" class="hover:text-[#bc5090]">Consumption</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="hero" class="text-center mb-20">
+            <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight">Anatomy of a Modern Portfolio Analytics & Risk Platform</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Visualizing the high-speed data architecture that powers real-time investment decisions, from raw market signals to actionable intelligence.</p>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card text-center">
+                    <div class="text-5xl font-extrabold gradient-text">10M+</div>
+                    <p class="text-gray-500 mt-2">Market Events Processed per Second</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-5xl font-extrabold gradient-text">&lt;100ms</div>
+                    <p class="text-gray-500 mt-2">Latency for Real-time Valuations</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-5xl font-extrabold gradient-text">100%</div>
+                    <p class="text-gray-500 mt-2">Auditable & Compliant Data Lineage</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="ingestion" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2">Dual-Channel Data Ingestion</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">The platform's foundation is its ability to reliably ingest two distinct types of data simultaneously, each handled by specialized GCP services for optimal performance.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card">
+                    <div class="flex items-center mb-4">
+                        <span class="text-5xl mr-4">⚡</span>
+                        <div>
+                             <h3 class="text-xl font-bold text-gray-800">Real-time Market Data</h3>
+                            <p class="text-sm font-medium text-[#ff6361]">High-Frequency Stream</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Continuous streams from exchanges and APIs, including stock prices, FX rates, and market news. Ingested via <span class="font-semibold text-[#58508d]">GCP Pub/Sub</span> to handle massive volume with low latency and high reliability.</p>
+                </div>
+                <div class="card">
+                    <div class="flex items-center mb-4">
+                        <span class="text-5xl mr-4">📁</span>
+                         <div>
+                            <h3 class="text-xl font-bold text-gray-800">Batch Client Holdings</h3>
+                            <p class="text-sm font-medium text-[#ff6361]">Scheduled Loads</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Periodic updates of client portfolios, positions, and internal reference data. Securely staged in <span class="font-semibold text-[#58508d]">Google Cloud Storage</span> for efficient batch processing and integration.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="lakehouse" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2">The Lakehouse Core: Automated & Reliable Processing</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">At the heart of the platform, Databricks Delta Live Tables (DLT) automate the transformation of raw data into analysis-ready assets within a unified, governed Delta Lake.</p>
+
+            <div class="card mb-12">
+                 <h3 class="text-2xl font-bold text-center mb-6">Delta Live Tables Pipeline</h3>
+                 <div class="flex flex-col lg:flex-row justify-center items-center">
+                     <div class="text-center p-4 m-2 border-2 border-[#58508d] rounded-lg bg-[#58508d]/10 w-full lg:w-1/4">
+                         <div class="text-2xl font-bold text-[#58508d]">BRONZE</div>
+                         <p class="text-sm text-gray-600">Raw, immutable data from all sources is ingested.</p>
+                     </div>
+                     <div class="flow-arrow hidden lg:flex"></div>
+                      <div class="flow-arrow flex lg:hidden"></div>
+                     <div class="text-center p-4 m-2 border-2 border-[#bc5090] rounded-lg bg-[#bc5090]/10 w-full lg:w-1/4">
+                         <div class="text-2xl font-bold text-[#bc5090]">SILVER</div>
+                         <p class="text-sm text-gray-600">Data is cleaned, filtered, and enriched for quality.</p>
+                     </div>
+                     <div class="flow-arrow hidden lg:flex"></div>
+                     <div class="flow-arrow flex lg:hidden"></div>
+                     <div class="text-center p-4 m-2 border-2 border-[#ff6361] rounded-lg bg-[#ff6361]/10 w-full lg:w-1/4">
+                         <div class="text-2xl font-bold text-[#ff6361]">GOLD</div>
+                         <p class="text-sm text-gray-600">Business-ready aggregates, valuations, and risk metrics are created.</p>
+                     </div>
+                 </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                 <div class="card">
+                     <h3 class="text-xl font-bold text-center mb-4">Data Lake Composition</h3>
+                     <p class="text-center text-gray-600 text-sm mb-4">The Gold layer, though smallest in volume, is the most valuable, directly powering analytics. The Bronze layer serves as a crucial, auditable backup of all raw data.</p>
+                     <div class="chart-container">
+                        <canvas id="compositionChart"></canvas>
+                     </div>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-bold text-center mb-4">Key DLT Features</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-2xl mr-3 text-[#58508d]">✓</span>
+                            <div>
+                                <h4 class="font-semibold">Declarative ETL</h4>
+                                <p class="text-sm text-gray-600">Define pipeline outcomes, not complex implementation steps.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                             <span class="text-2xl mr-3 text-[#bc5090]">✓</span>
+                            <div>
+                                <h4 class="font-semibold">Automated Data Quality</h4>
+                                <p class="text-sm text-gray-600">Enforce data integrity with built-in rules and expectations.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                             <span class="text-2xl mr-3 text-[#ff6361]">✓</span>
+                            <div>
+                                <h4 class="font-semibold">Full Data Lineage</h4>
+                                <p class="text-sm text-gray-600">Automatically track data flow for governance and compliance.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="consumption" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2">Analytics & Consumption Ecosystem</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">The refined "Gold" data from the Lakehouse feeds a diverse ecosystem of tools and applications, empowering different teams to extract value.</p>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="card">
+                     <h3 class="text-xl font-bold text-center mb-4">Data Access by Persona</h3>
+                      <p class="text-center text-gray-600 text-sm mb-4">Different roles have varying needs for data access, from real-time queries for traders to deep historical analysis for regulators.</p>
+                     <div class="chart-container">
+                        <canvas id="accessChart"></canvas>
+                     </div>
+                </div>
+                <div class="space-y-6">
+                    <div class="card flex items-center">
+                        <span class="text-4xl mr-4">🔍</span>
+                        <div>
+                            <h4 class="font-bold">BigQuery</h4>
+                            <p class="text-sm text-gray-600">For deep analytics, ad-hoc queries, and large-scale regulatory reporting.</p>
+                        </div>
+                    </div>
+                     <div class="card flex items-center">
+                        <span class="text-4xl mr-4">🤖</span>
+                        <div>
+                            <h4 class="font-bold">Vertex AI</h4>
+                            <p class="text-sm text-gray-600">For training and deploying advanced ML models for market prediction and risk.</p>
+                        </div>
+                    </div>
+                     <div class="card flex items-center">
+                        <span class="text-4xl mr-4">📈</span>
+                        <div>
+                            <h4 class="font-bold">BI Tools & Custom Apps</h4>
+                            <p class="text-sm text-gray-600">Powering real-time trading dashboards, risk alerts, and management reports.</p>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </section>
+    </main>
+    
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Fintech Data Solutions. An illustrative architecture.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const energeticPlayful = {
+                blue: '#58508d',
+                pink: '#bc5090',
+                orange: '#ff6361',
+                yellow: '#ffa600',
+                darkBlue: '#003f5c'
+            };
+
+            const processLongLabels = (labels, maxLength) => {
+                return labels.map(label => {
+                    if (label.length <= maxLength) {
+                        return label;
+                    }
+                    const words = label.split(' ');
+                    let currentLine = '';
+                    const lines = [];
+                    words.forEach(word => {
+                        if ((currentLine + ' ' + word).trim().length > maxLength) {
+                            lines.push(currentLine.trim());
+                            currentLine = word;
+                        } else {
+                            currentLine = (currentLine + ' ' + word).trim();
+                        }
+                    });
+                    if (currentLine) {
+                        lines.push(currentLine.trim());
+                    }
+                    return lines;
+                });
+            };
+
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                  return label.join(' ');
+                } else {
+                  return label;
+                }
+            };
+            
+            const sharedChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#475569',
+                            font: {
+                                family: "'Inter', sans-serif",
+                                size: 14,
+                            }
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: '#1E293B',
+                        titleFont: {
+                            family: "'Inter', sans-serif",
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            family: "'Inter', sans-serif",
+                            size: 14
+                        },
+                        padding: 12,
+                        cornerRadius: 6,
+                        callbacks: {
+                           title: tooltipTitleCallback
+                        }
+                    }
+                }
+            };
+            
+            const compositionCtx = document.getElementById('compositionChart');
+            if(compositionCtx) {
+                new Chart(compositionCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Bronze (Raw)', 'Silver (Cleaned)', 'Gold (Business-Ready)'],
+                        datasets: [{
+                            label: 'Data Lake Composition by Volume',
+                            data: [65, 25, 10],
+                            backgroundColor: [
+                                energeticPlayful.blue,
+                                energeticPlayful.pink,
+                                energeticPlayful.orange
+                            ],
+                            borderColor: '#ffffff',
+                            borderWidth: 4,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        ...sharedChartOptions,
+                        cutout: '70%',
+                    }
+                });
+            }
+
+            const accessCtx = document.getElementById('accessChart');
+            if(accessCtx) {
+                new Chart(accessCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Quant Analysts', 'Risk Managers', 'Traders', 'BI Users', 'Regulators'],
+                        datasets: [{
+                            label: 'Data Access Frequency (Queries per day)',
+                            data: [85, 60, 150, 40, 5],
+                            backgroundColor: [
+                                energeticPlayful.blue,
+                                energeticPlayful.pink,
+                                energeticPlayful.orange,
+                                energeticPlayful.yellow,
+                                energeticPlayful.darkBlue
+                            ],
+                            borderRadius: 6,
+                        }]
+                    },
+                    options: {
+                        ...sharedChartOptions,
+                        scales: {
+                             y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#E2E8F0'
+                                },
+                                ticks: {
+                                    color: '#475569'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#475569'
+                                }
+                            }
+                        },
+                        plugins: {
+                            ...sharedChartOptions.plugins,
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
