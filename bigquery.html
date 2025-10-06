@@ -1,293 +1,177 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BigQuery Visual Deep Dive</title>
+    <title>Case Study: E-commerce Analytics with BigQuery</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Custom font */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
+            background-color: #F0F4F8;
+            color: #1E293B;
         }
-        .bq-cell {
-            min-height: 4rem;
+        .gradient-text {
+            background: linear-gradient(90deg, #6d28d9, #9d3a9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .flow-arrow {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0.5rem;
-            transition: all 0.3s ease;
-            font-size: 0.75rem;
-            line-height: 1.2;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-align: center;
         }
-        .header-cell {
-            background-color: #6d28d9; /* Deep Purple */
-            color: white;
-            font-weight: 600;
-            border: 1px solid #581c87;
+        .flow-arrow::after {
+            content: '→';
+            font-size: 2.5rem;
+            color: #9d3a9d;
+            margin-left: 1rem;
+            margin-right: 1rem;
         }
-        .concept-cell {
-            background-color: #e9d5ff; /* Light Purple */
-            color: #4c1d95;
-            font-weight: 700;
-            text-align: left;
-            padding-left: 1rem;
-            cursor: pointer;
-        }
-        .data-cell {
-            background-color: #ffffff;
-            color: #1f2937;
-            border: 1px solid #e5e7eb;
-            font-size: 0.875rem;
-            cursor: pointer;
-        }
-        /* Specific styling for concepts */
-        .columnar-cell {
-            background-color: #ecfdf5; /* Light Green */
-            color: #065f46;
-            font-weight: 500;
-        }
-        .nested-cell {
-            background-color: #fffbeb; /* Light Yellow */
-            color: #92400e;
-            font-weight: 500;
-        }
-        .pruning-cell {
-            background-color: #fee2e2; /* Light Red/Pink */
-            color: #991b1b;
-            font-weight: 600;
+        @media (max-width: 1023px) {
+            .flow-arrow::after {
+                content: '↓';
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
         }
     </style>
-    <script>
-        // Global State
-        const state = {
-            currentTab: 'architecture', 
-            message: "Click a concept tab above to explore BigQuery's design for massive-scale analytics.",
-        };
-
-        // Core Concepts Data
-        const concepts = {
-            architecture: {
-                title: "BigQuery Architecture (Decoupled Storage & Compute)",
-                description: "BigQuery separates its compute engine (Dremel) from its storage layer (Colossus), allowing them to scale independently. This is key to massive query concurrency.",
-                headers: ["Component", "Role", "Analogy"],
-                rows: [
-                    { key: "Dremel (Compute)", data: ["Runs the SQL Query", "The factory floor (processing)"] },
-                    { key: "Colossus (Storage)", data: ["Stores all the data", "The global warehouse (data)"] },
-                    { key: "Jupiter (Network)", data: ["Moves data between them", "The high-speed conveyor belt"] },
-                ]
-            },
-            columnar: {
-                title: "Columnar Storage (Data Access Optimization)",
-                description: "BigQuery stores data by column, not by row. When you query a column, only the data blocks for that specific column are read, dramatically reducing I/O.",
-                headers: ["Traditional Row Store", "BigQuery Column Store", "Query Benefit"],
-                rows: [
-                    { key: "Row 1: (ID, Name, Date, Metric)", data: ["Reads all 4 fields", "Reads only 'Metric' field", "1/4 I/O cost to read Metric"] },
-                    { key: "Row 2: (ID, Name, Date, Metric)", data: ["Reads all 4 fields", "Reads only 'Metric' field", "Speed: Faster processing on smaller data set"] },
-                    { key: "Row 3: (ID, Name, Date, Metric)", data: ["Reads all 4 fields", "Reads only 'Metric' field", "Cost: Fewer bytes processed"] },
-                ]
-            },
-            nested: {
-                title: "Nested & Repeated Fields (The No-Normalization Rule)",
-                description: "To avoid joins and maintain performance, BigQuery allows complex (JSON-like) structures to be stored natively within a cell using STRUCTs (NESTED) and ARRAYs (REPEATED).",
-                headers: ["UserID", "OrderDate", "Items (REPEATED)", "ItemQuantity (REPEATED)"],
-                rows: [
-                    { key: "U-1001", data: ["2025-09-15", "['Laptop', 'Mouse']", "[1, 1]"] },
-                    { key: "U-1002", data: ["2025-09-15", "['Monitor']", "[1]"] },
-                    { key: "U-1003", data: ["2025-09-16", "['Keyboard', 'Webcam', 'Mat']", "[1, 1, 2]"] },
-                ]
-            },
-            partitioning: {
-                title: "Table Partitioning (Massive Data Pruning)",
-                description: "Partitioning splits a table's physical storage into segments based on a date/timestamp or an ingestion-time column. This allows BigQuery to ignore vast amounts of irrelevant data.",
-                headers: ["Query Type", "Partition Key (Date)", "Data Block Accessed", "Cost Impact"],
-                rows: [
-                    { key: "SELECT count(*)", data: ["Entire Table (All Dates)", "All Blocks", "FULL TABLE COST"] },
-                    { key: "SELECT count(*) WHERE date = '2025-01-01'", data: ["2025-01-01 Only", "Single Block", "HUGE COST REDUCTION"] },
-                    { key: "SELECT count(*) WHERE date BETWEEN '2025-01-01' AND '2025-01-07'", data: ["7 Partitions", "7 Blocks", "Targeted, Low Cost"] },
-                ]
-            },
-            clustering: {
-                title: "Clustering (Micro-Optimization within Partitions)",
-                description: "Within a single partition, **Clustering** sorts the data blocks based on key columns. When you filter by the clustered key, BigQuery further prunes blocks inside the partition.",
-                headers: ["Partition Key", "Clustering Key (User_ID)", "I/O Access Pattern"],
-                rows: [
-                    { key: "2025-09-16", data: ["UserID starts with 'A' (Block 1)", "Seeks to Block 1, scans little data"] },
-                    { key: "2025-09-16", data: ["UserID starts with 'M' (Block 5)", "Seeks to Block 5, scans little data"] },
-                    { key: "2025-09-17", data: ["UserID starts with 'A' (Block 1)", "Ignores the entire '2025-09-16' partition"] },
-                ]
-            },
-            slots: {
-                title: "The Slot System (Compute Resource Model)",
-                description: "A **Slot** is a unit of computational capacity (CPU, RAM). The number of slots allocated determines the speed and concurrency of your queries.",
-                headers: ["Mode", "Slots Allocation", "Performance Goal", "Cost Model"],
-                rows: [
-                    { key: "On-Demand (Default)", data: ["Dynamic & Shared", "Variable/Best Effort", "Pay Per TB Scanned"] },
-                    { key: "Flat Rate (Reserved)", data: ["Fixed & Dedicated", "Consistent, Predictable Speed", "Pay Per Slot Time (Hourly/Monthly)"] },
-                    { key: "Autoscaling", data: ["Baseline + Burst", "High Concurrency with Guardrails", "Hybrid"] },
-                ]
-            },
-            pruningCost: {
-                title: "Query Pruning & Cost Reduction (The Trifecta)",
-                description: "The combination of Partitioning, Clustering, and Columnar storage reduces the total bytes processed, which is the primary factor in reducing BigQuery query cost.",
-                headers: ["Query", "Pruning Applied", "Bytes Processed (Example)"],
-                rows: [
-                    { key: "SELECT * FROM LargeTable", data: ["None", "100 GB (Full Scan)"] },
-                    { key: "SELECT * FROM LargeTable WHERE date='2025-01-01'", data: ["Partition Pruning", "1 GB (Single Partition)"] },
-                    { key: "SELECT UserID FROM LargeTable WHERE date='2025-01-01'", data: ["Partition + Columnar Pruning", "0.1 GB (Single Column, Single Partition)"] },
-                    { key: "SELECT UserID FROM LargeTable WHERE date='2025-01-01' AND Country='US'", data: ["Partition + Columnar + Clustering Pruning", "0.01 GB (Hyper-Targeted)"] },
-                ]
-            },
-            wildcards: {
-                title: "Wildcard Tables (Querying Many Tables at Once)",
-                description: "Wildcard tables allow you to run a single query against multiple tables that share a common prefix (e.g., daily log tables). The `_TABLE_SUFFIX` pseudo-column is key for filtering.",
-                headers: ["Table Name", "Wildcard Query Pattern", "Access Filtering"],
-                rows: [
-                    { key: "logs_20250101", data: ["SELECT * FROM logs_*", "WHERE _TABLE_SUFFIX = '20250101'"] },
-                    { key: "logs_20250102", data: ["SELECT * FROM logs_*", "WHERE _TABLE_SUFFIX BETWEEN '20250101' AND '20250105'"] },
-                    { key: "logs_20250103", data: ["SELECT * FROM logs_2025*", "WHERE _TABLE_SUFFIX LIKE '03%'"] },
-                ]
-            }
-        };
-
-        /**
-         * Converts the global state into HTML and updates the DOM.
-         */
-        const render = () => {
-            const container = document.getElementById('table-container');
-            const messageBar = document.getElementById('message-bar');
-            const tabButtons = document.querySelectorAll('.tab-button');
-
-            // 1. Update Tabs
-            tabButtons.forEach(btn => {
-                btn.classList.remove('bg-purple-700', 'text-white');
-                btn.classList.add('bg-white', 'text-purple-700', 'hover:bg-purple-50');
-                if (btn.dataset.tab === state.currentTab) {
-                    btn.classList.remove('bg-white', 'text-purple-700', 'hover:bg-purple-50');
-                    btn.classList.add('bg-purple-700', 'text-white', 'shadow-lg');
-                }
-            });
-
-            // 2. Update Message Bar
-            messageBar.innerHTML = `<span class="font-bold">${concepts[state.currentTab].title}</span>: ${concepts[state.currentTab].description}`;
-
-            // 3. Generate Table HTML
-            const currentConcept = concepts[state.currentTab];
-            let html = `<div class="overflow-x-auto shadow-xl rounded-xl">`;
-            // Dynamic grid layout: 180px for Concept, rest split evenly
-            html += `<div class="grid" style="grid-template-columns: 180px repeat(${currentConcept.headers.length - 1}, 1fr);">`;
-
-            // Headers
-            currentConcept.headers.forEach(header => {
-                html += `<div class="header-cell bq-cell h-12 flex items-center justify-center">${header}</div>`;
-            });
-
-            // Rows
-            currentConcept.rows.forEach((row, rowIndex) => {
-                // Concept/Row Identifier Cell
-                let conceptCellClasses = 'concept-cell bq-cell h-16';
-                let dataCellClasses = 'data-cell bq-cell h-16';
-                
-                // Specific styling/content overrides for concepts
-                if (state.currentTab === 'columnar') {
-                    conceptCellClasses = 'concept-cell bq-cell h-16 bg-blue-100 text-blue-800';
-                    dataCellClasses = 'columnar-cell bq-cell h-16';
-                }
-                if (state.currentTab === 'nested') {
-                    conceptCellClasses = 'concept-cell bq-cell h-16 bg-yellow-100 text-yellow-800';
-                    dataCellClasses = 'nested-cell bq-cell h-16';
-                }
-                if (state.currentTab === 'pruningCost') {
-                    conceptCellClasses = 'concept-cell bq-cell h-16 bg-red-100 text-red-800';
-                    dataCellClasses = 'pruning-cell bq-cell h-16';
-                }
-                
-                html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
-
-                // Data Cells
-                currentConcept.headers.slice(1).forEach((header, colIndex) => {
-                    const data = row.data[colIndex];
-                    let cellContent = data;
-                    let cellClasses = dataCellClasses;
-
-                    html += `<div class="${cellClasses}" title="${header}: ${data}">${cellContent}</div>`;
-                });
-            });
-
-            html += `</div></div>`;
-            container.innerHTML = html;
-        };
-
-        /**
-         * Switches the active concept tab.
-         * @param {string} tabName 
-         */
-        const switchTab = (tabName) => {
-            state.currentTab = tabName;
-            render();
-        };
-
-        // Initial setup and event listeners
-        window.onload = () => {
-            // Set up tab listeners
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.addEventListener('click', () => switchTab(button.dataset.tab));
-            });
-
-            // Start with the 'architecture' tab
-            switchTab('architecture');
-        };
-    </script>
 </head>
-<body class="p-8">
-    <a href="index.html" class="text-gray-600 hover:text-purple-600 hover:underline font-semibold mb-6 inline-block">&larr; Back to Home</a>
-    <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
-        <svg class="w-8 h-8 mr-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-        BigQuery Schema & Performance Essentials
-    </h1>
-    <p class="text-lg text-gray-600 mb-8">Click on the tabs below to explore the core concepts that enable BigQuery's massive scale and cost efficiency.</p>
+<body class="antialiased">
 
-    <!-- Tab Navigation -->
-    <div class="flex flex-wrap space-x-4 space-y-2 mb-8">
-        <button data-tab="architecture" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            1. Decoupled Architecture (Dremel)
-        </button>
-        <button data-tab="columnar" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            2. Columnar Storage
-        </button>
-        <button data-tab="nested" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            3. Nested & Repeated Fields
-        </button>
-        <button data-tab="partitioning" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            4. Table Partitioning (Date/Time)
-        </button>
-        <button data-tab="clustering" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            5. Clustering (Within Partitions)
-        </button>
-        <button data-tab="slots" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            6. The Slot System (Compute Model)
-        </button>
-        <button data-tab="pruningCost" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            7. Query Pruning & Cost
-        </button>
-        <button data-tab="wildcards" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            8. Wildcard Tables
-        </button>
-    </div>
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-gray-800">
+                <span class="gradient-text">BigQuery Case Study</span>
+            </div>
+             <ul class="flex space-x-6 text-gray-600 font-medium">
+                <li><a href="index.html" class="text-gray-600 hover:text-purple-600 hover:underline">Home</a></li>
+                <li><a href="#challenge" class="hover:text-[#9d3a9d]">Challenge</a></li>
+                <li><a href="#solution" class="hover:text-[#9d3a9d]">Solution</a></li>
+                <li><a href="#features" class="hover:text-[#9d3a9d]">Key Features</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <!-- Explanation Bar -->
-    <div id="message-bar" class="bg-indigo-100 border-l-4 border-indigo-500 text-indigo-800 p-4 mb-8 rounded-md shadow-md">
-        <!-- Message will be populated by JS -->
-    </div>
+    <main class="container mx-auto px-6 py-12">
 
-    <!-- BigQuery Visualizer Container -->
-    <div id="table-container" class="mt-8">
-        <!-- Visual table will be generated here -->
-    </div>
+        <section id="hero" class="text-center mb-20">
+            <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight">Building a High-Performance E-commerce Analytics Platform</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">How a fast-growing online retailer uses Google BigQuery to analyze petabytes of sales and user behavior data for instant insights and personalization.</p>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card text-center">
+                    <div class="text-5xl font-extrabold gradient-text">2 PB</div>
+                    <p class="text-gray-500 mt-2">of Data Queried Daily</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-5xl font-extrabold gradient-text">&lt; 5 Sec</div>
+                    <p class="text-gray-500 mt-2">Average Query Response Time</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-5xl font-extrabold gradient-text">500+</div>
+                    <p class="text-gray-500 mt-2">Concurrent Users Supported</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="challenge" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2">The Challenge: From Sluggish Reports to Real-Time Decisions</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">The retailer's legacy data warehouse couldn't keep up with its explosive growth, leading to slow reports, high costs, and an inability to analyze granular user behavior data.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card">
+                    <div class="flex items-center mb-4">
+                        <span class="text-5xl mr-4">🐢</span>
+                        <div>
+                             <h3 class="text-xl font-bold text-gray-800">Slow & Inefficient Queries</h3>
+                            <p class="text-sm font-medium text-[#9d3a9d]">Hours, Not Seconds</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Complex joins between massive sales and clickstream tables took hours to complete, making ad-hoc analysis impossible. Marketing and analytics teams were stuck with stale, aggregated data.</p>
+                </div>
+                <div class="card">
+                    <div class="flex items-center mb-4">
+                        <span class="text-5xl mr-4">💸</span>
+                         <div>
+                            <h3 class="text-xl font-bold text-gray-800">Spiraling Infrastructure Costs</h3>
+                            <p class="text-sm font-medium text-[#9d3a9d]">Scaling and Maintenance</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">The on-premise data warehouse required constant, expensive hardware upgrades and a dedicated team for maintenance, diverting resources from innovation and data analysis.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="solution" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2">The Solution: A Serverless DWH with BigQuery</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">By migrating to Google BigQuery, the retailer built a serverless, highly scalable data warehouse that decouples storage and compute, enabling massive parallelism and cost control.</p>
+
+            <div class="card mb-12">
+                 <h3 class="text-2xl font-bold text-center mb-6">BigQuery-Powered Analytics Flow</h3>
+                 <div class="flex flex-col lg:flex-row justify-center items-center">
+                     <div class="text-center p-4 m-2 border-2 border-[#6d28d9] rounded-lg bg-[#6d28d9]/10 w-full lg:w-1/3">
+                         <div class="text-2xl font-bold text-[#6d28d9]">1. Data Ingestion</div>
+                         <p class="text-sm text-gray-600">Batch and streaming data loaded into GCS and directly into BigQuery.</p>
+                     </div>
+                     <div class="flow-arrow hidden lg:flex"></div>
+                     <div class="flow-arrow flex lg:hidden"></div>
+                     <div class="text-center p-4 m-2 border-2 border-[#9d3a9d] rounded-lg bg-[#9d3a9d]/10 w-full lg:w-1/3">
+                         <div class="text-2xl font-bold text-[#9d3a9d]">2. Storage & Processing</div>
+                         <p class="text-sm text-gray-600">Data is stored in BigQuery's columnar format, optimized with partitioning and clustering.</p>
+                     </div>
+                     <div class="flow-arrow hidden lg:flex"></div>
+                     <div class="flow-arrow flex lg:hidden"></div>
+                     <div class="text-center p-4 m-2 border-2 border-[#cd487a] rounded-lg bg-[#cd487a]/10 w-full lg:w-1/3">
+                         <div class="text-2xl font-bold" style="color: #cd487a;">3. Analytics & BI</div>
+                         <p class="text-sm text-gray-600">Dashboards, reports, and ML models consume data via high-speed queries.</p>
+                     </div>
+                 </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="features" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2">Key BigQuery Features in Action</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">BigQuery's architecture provided specific solutions to the retailer's most pressing data challenges, transforming their analytics capabilities.</p>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">⚙️ Decoupled Storage & Compute</h3>
+                    <p class="text-gray-600">BigQuery's Dremel engine can scale compute resources independently from storage. This means hundreds of queries can run in parallel without interfering with each other, providing consistent performance.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">📊 Columnar Storage</h3>
+                    <p class="text-gray-600">Instead of reading entire rows, BigQuery only scans the columns needed for a query. A `SELECT user_id, total_price` query on a 100-column table only reads 2% of the data, drastically reducing I/O and cost.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">✂️ Partitioning & Clustering</h3>
+                    <p class="text-gray-600">The sales table was partitioned by `order_date` and clustered by `customer_id`. Queries filtering by date and customer now scan tiny fractions of the total data, returning results in seconds instead of hours.</p>
+                </div>
+             </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+
 </body>
 </html>

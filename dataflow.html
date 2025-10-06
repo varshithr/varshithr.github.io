@@ -1,319 +1,177 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud Dataflow (Apache Beam) Visual Deep Dive</title>
+    <title>Case Study: Real-Time Anomaly Detection with Dataflow</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Custom font */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
+            background-color: #F0F4F8;
+            color: #1E293B;
         }
-        .dataflow-cell {
-            min-height: 4rem;
+        .gradient-text {
+            background: linear-gradient(90deg, #1e3a8a, #4a23a8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .flow-arrow {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0.5rem;
-            transition: all 0.3s ease;
-            font-size: 0.75rem;
-            line-height: 1.2;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-align: center;
-            white-space: nowrap;
         }
-        .header-cell {
-            background-color: #1e3a8a; /* Dark Blue */
-            color: white;
-            font-weight: 600;
-            border: 1px solid #172554;
+        .flow-arrow::after {
+            content: '→';
+            font-size: 2.5rem;
+            color: #4a23a8;
+            margin-left: 1rem;
+            margin-right: 1rem;
         }
-        .concept-cell {
-            background-color: #dbeafe; /* Light Blue */
-            color: #1e3a8a;
-            font-weight: 700;
-            text-align: left;
-            padding-left: 1rem;
-            cursor: pointer;
-        }
-        .data-cell {
-            background-color: #ffffff;
-            color: #1f2937;
-            border: 1px solid #e5e7eb;
-            font-size: 0.875rem;
-            cursor: pointer;
-        }
-        /* Specific styling for concepts */
-        .bounded-cell {
-            background-color: #e0f2f7; /* Batch/Fixed */
-            color: #0c4a6e;
-            font-weight: 600;
-        }
-        .unbounded-cell {
-            background-color: #f0fdf4; /* Streaming/Flow */
-            color: #166534;
-            font-weight: 600;
-        }
-        .time-event {
-            background-color: #fef3c7; /* Yellow/Time */
-            color: #92400e;
-            font-weight: 700;
-        }
-        .time-processing {
-            background-color: #fee2e2; /* Red/Late */
-            color: #991b1b;
-            font-weight: 700;
+        @media (max-width: 1023px) {
+            .flow-arrow::after {
+                content: '↓';
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
         }
     </style>
-    <script>
-        // Global State
-        const state = {
-            currentTab: 'architecture', 
-            message: "Click a concept tab above to explore the core components and abstractions of the Apache Beam programming model used by Dataflow.",
-        };
-
-        // Core Concepts Data
-        const concepts = {
-            architecture: {
-                title: "Apache Beam Model (The Big Picture)",
-                description: "The Beam model separates the job definition (Pipeline) from its execution (Runner), making the code portable across different platforms.",
-                headers: ["Element", "Role", "Abstraction Level"],
-                rows: [
-                    { key: "SDK (Beam)", data: ["Define the pipeline (code)", "Programming Model"] },
-                    { key: "PCollection", data: ["The data abstraction (data sets)", "What is being processed"] },
-                    { key: "PTransform", data: ["The data processing abstraction (logic)", "What performs the processing"] },
-                    { key: "Runner", data: ["Executes the pipeline on an engine", "How it is processed (e.g., Dataflow, Flink)"] },
-                ]
-            },
-            pcollections: {
-                title: "PCollections (Bounded vs. Unbounded Data)",
-                description: "PCollections are the core data containers. A stream is unbounded; a file or database read is bounded.",
-                headers: ["Type", "Characteristic", "Data Source Example"],
-                rows: [
-                    { key: "Bounded", data: ["Finite size, processed once (Batch)", "Cloud Storage file, BigQuery table"] },
-                    { key: "Unbounded", data: ["Infinite, continuously processed (Stream)", "Pub/Sub topic, Kafka stream"] },
-                    { key: "Implication", data: ["Requires no windowing/triggers", "Requires windowing, watermarks, and triggers"] },
-                ]
-            },
-            transforms: {
-                title: "PTransforms (Processing Logic)",
-                description: "Transforms apply processing logic. **ParDo** (Parallel Do) is the most common, performing element-wise operations.",
-                headers: ["Transform Type", "Function", "Analogy"],
-                rows: [
-                    { key: "ParDo (Element-wise)", data: ["Map, Filter, Formatting (1 Input -> 1/0/N Outputs)", "A factory assembly line worker"] },
-                    { key: "GroupByKey (GBK)", data: ["Group elements by key for aggregation (Shuffle)", "Collecting all items of one color before packaging"] },
-                    { key: "Combine", data: ["Aggregating values within a group (Sum, Average)", "Running the total on a group of items"] },
-                ]
-            },
-            windowing: {
-                title: "Windowing (Grouping Time-based Data)",
-                description: "For unbounded streams, windowing slices the infinite data into finite groups based on event time.",
-                headers: ["Window Type", "Grouping Logic", "Visual Representation"],
-                rows: [
-                    { key: "Fixed/Tumbling", data: ["Non-overlapping, equal-sized time blocks (e.g., 1-minute)", "| [1 min] | [1 min] | [1 min] |"] },
-                    { key: "Sliding", data: ["Overlapping windows (e.g., 1 min window, 30 sec slide)", "|--- [1 min] ---| |--- [1 min] ---|"] },
-                    { key: "Session", data: ["Group elements based on user activity gap (inactivity timeout)", "| Activity |--- Gap (5min) ---| | Activity |"] },
-                ]
-            },
-            watermarks: {
-                title: "Watermarks (Taming Event Time)",
-                description: "The **Watermark** is Beam's estimate of when all data for a specific event time has arrived. It dictates when windows are 'ready.'",
-                headers: ["Time Type", "Definition", "Watermark Implication"],
-                rows: [
-                    { key: "Event Time (T)", data: ["When the event actually happened (in the source system)", "This is the time used for windowing"] },
-                    { key: "Processing Time (L)", data: ["When the dataflow worker processes the data", "Used for early/late firings"] },
-                    { key: "Watermark (W)", data: ["Estimate of completeness for Event Time T", "When W passes T, the window is considered complete"] },
-                ]
-            },
-            triggers: {
-                title: "Triggers (When to Emit Results)",
-                description: "Triggers determine *when* to emit the results of an aggregation within a window—before, at, or after the watermark passes.",
-                headers: ["Trigger Type", "Firing Time (Relation to W)", "Purpose"],
-                rows: [
-                    { key: "Default (On Time)", data: ["Fires exactly when the watermark passes the window end.", "Final, complete result"] },
-                    { key: "Early (Speculative)", data: ["Fires based on processing time or element count, before W.", "Low latency, partial result updates"] },
-                    { key: "Late (Refining)", data: ["Fires when late data arrives, after W has passed.", "Refines previously emitted results (data correction)"] },
-                ]
-            },
-            runners: {
-                title: "Execution Runners (Dataflow vs. Others)",
-                description: "The Runner executes the Beam pipeline on a specific processing engine. Dataflow is Google Cloud's managed offering.",
-                headers: ["Runner", "Execution Engine", "Key Benefit"],
-                rows: [
-                    { key: "Dataflow Runner", data: ["Google Cloud (Managed Service)", "Fully managed auto-scaling and optimization"] },
-                    { key: "Flink Runner", data: ["Apache Flink", "Open source compatibility, self-managed"] },
-                    { key: "Spark Runner", data: ["Apache Spark", "Integration with existing Spark ecosystems"] },
-                ]
-            },
-            stateTimers: {
-                title: "State and Timers (Advanced Streaming)",
-                description: "State allows workers to store data related to a key between events, and Timers allow processing based on time passage.",
-                headers: ["Concept", "Use Case", "Benefit in Streaming"],
-                rows: [
-                    { key: "Keyed State", data: ["Store a running count or latest value for a User ID", "Maintains context across multiple events in the stream"] },
-                    { key: "Timers", data: ["Set a timer to check for activity after a 10-minute gap", "Enables sessionization or inactivity detection"] },
-                    { key: "Dataflow Shuffle", data: ["Managed, highly efficient shuffling of keyed data", "Optimizes GroupByKey and State operations"] },
-                ]
-            }
-        };
-
-        /**
-         * Converts the global state into HTML and updates the DOM.
-         */
-        const render = () => {
-            const container = document.getElementById('table-container');
-            const messageBar = document.getElementById('message-bar');
-            const tabButtons = document.querySelectorAll('.tab-button');
-
-            // 1. Update Tabs
-            tabButtons.forEach(btn => {
-                btn.classList.remove('bg-indigo-700', 'text-white');
-                btn.classList.add('bg-white', 'text-indigo-700', 'hover:bg-indigo-50');
-                if (btn.dataset.tab === state.currentTab) {
-                    btn.classList.remove('bg-white', 'text-indigo-700', 'hover:bg-indigo-50');
-                    btn.classList.add('bg-indigo-700', 'text-white', 'shadow-lg');
-                }
-            });
-
-            // 2. Update Message Bar
-            messageBar.innerHTML = `<span class="font-bold">${concepts[state.currentTab].title}</span>: ${concepts[state.currentTab].description}`;
-
-            // 3. Generate Table HTML
-            const currentConcept = concepts[state.currentTab];
-            let html = `<div class="overflow-x-auto shadow-xl rounded-xl">`;
-            // Dynamic grid layout: 180px for Concept, rest split evenly
-            html += `<div class="grid" style="grid-template-columns: 180px repeat(${currentConcept.headers.length - 1}, 1fr);">`;
-
-            // Headers
-            currentConcept.headers.forEach(header => {
-                html += `<div class="header-cell dataflow-cell h-12 flex items-center justify-center">${header}</div>`;
-            });
-
-            // Rows
-            currentConcept.rows.forEach((row, rowIndex) => {
-                // Concept/Row Identifier Cell
-                let conceptCellClasses = 'concept-cell dataflow-cell h-16';
-                let dataCellClasses = 'data-cell dataflow-cell h-16';
-                
-                // Specific styling/content overrides for concepts
-                if (state.currentTab === 'pcollections') {
-                    if (row.key === 'Bounded') dataCellClasses = 'bounded-cell dataflow-cell h-16';
-                    if (row.key === 'Unbounded') dataCellClasses = 'unbounded-cell dataflow-cell h-16';
-                }
-                if (state.currentTab === 'watermarks') {
-                    if (row.key.includes('Event Time')) dataCellClasses = 'time-event dataflow-cell h-16';
-                    if (row.key.includes('Processing Time')) dataFlowClasses = 'time-processing dataflow-cell h-16';
-                }
-                if (state.currentTab === 'windowing') {
-                     // Make the visual representation stand out
-                    currentConcept.headers.slice(1).forEach((header, colIndex) => {
-                        const data = row.data[colIndex];
-                        let cellContent = data;
-                        let cellClasses = dataCellClasses;
-                        
-                        if (header.includes('Visual')) cellClasses = 'data-cell dataflow-cell h-16 font-mono text-xs text-left px-2';
-                        
-                        // Render Row Header
-                        if (colIndex === 0) {
-                            html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
-                            html += `<div class="${dataCellClasses}" title="${currentConcept.headers[1]}: ${row.data[0]}">${row.data[0]}</div>`;
-                        }
-                        
-                        // Render remaining cells (skipping the first one handled above)
-                        if (colIndex > 0) {
-                            html += `<div class="${cellClasses}" title="${header}: ${data}">${cellContent}</div>`;
-                        }
-                    });
-                    return; // Skip default row rendering below
-                }
-
-
-                
-                html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
-
-                // Data Cells
-                currentConcept.headers.slice(1).forEach((header, colIndex) => {
-                    const data = row.data[colIndex];
-                    let cellContent = data;
-                    let cellClasses = dataCellClasses;
-
-                    html += `<div class="${cellClasses}" title="${header}: ${data}">${cellContent}</div>`;
-                });
-            });
-
-            html += `</div></div>`;
-            container.innerHTML = html;
-        };
-
-        /**
-         * Switches the active concept tab.
-         * @param {string} tabName 
-         */
-        const switchTab = (tabName) => {
-            state.currentTab = tabName;
-            render();
-        };
-
-        // Initial setup and event listeners
-        window.onload = () => {
-            // Set up tab listeners
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.addEventListener('click', () => switchTab(button.dataset.tab));
-            });
-
-            // Start with the 'architecture' tab
-            switchTab('architecture');
-        };
-    </script>
 </head>
-<body class="p-8">
-    <a href="index.html" class="text-gray-600 hover:text-indigo-600 hover:underline font-semibold mb-6 inline-block">&larr; Back to Home</a>
-    <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
-        <svg class="w-8 h-8 mr-3 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-        Cloud Dataflow (Apache Beam) Pipeline Essentials
-    </h1>
-    <p class="text-lg text-gray-600 mb-8">Click on the tabs below to explore the core components and concepts that make up the Apache Beam programming model.</p>
+<body class="antialiased">
 
-    <!-- Tab Navigation -->
-    <div class="flex flex-wrap space-x-4 space-y-2 mb-8">
-        <button data-tab="architecture" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            1. Beam Architecture (SDK/Runner)
-        </button>
-        <button data-tab="pcollections" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            2. PCollections (Data Abstraction)
-        </button>
-        <button data-tab="transforms" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            3. PTransforms (ParDo, GBK)
-        </button>
-        <button data-tab="windowing" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            4. Windowing (Time-based Slicing)
-        </button>
-        <button data-tab="watermarks" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            5. Watermarks (Time Tracking)
-        </button>
-        <button data-tab="triggers" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            6. Triggers (When to Emit)
-        </button>
-        <button data-tab="stateTimers" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            7. State & Timers (Context)
-        </button>
-        <button data-tab="runners" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            8. Execution Runners (Dataflow)
-        </button>
-    </div>
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-gray-800">
+                <span class="gradient-text">Dataflow Case Study</span>
+            </div>
+             <ul class="flex space-x-6 text-gray-600 font-medium">
+                <li><a href="index.html" class="text-gray-600 hover:text-indigo-600 hover:underline">Home</a></li>
+                <li><a href="#challenge" class="hover:text-[#4a23a8]">Challenge</a></li>
+                <li><a href="#solution" class="hover:text-[#4a23a8]">Solution</a></li>
+                <li><a href="#features" class="hover:text-[#4a23a8]">Key Features</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <!-- Explanation Bar -->
-    <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md">
-        <!-- Message will be populated by JS -->
-    </div>
+    <main class="container mx-auto px-6 py-12">
 
-    <!-- Dataflow Visualizer Container -->
-    <div id="table-container" class="mt-8">
-        <!-- Visual table will be generated here -->
-    </div>
+        <section id="hero" class="text-center mb-20">
+            <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight">Real-Time Anomaly Detection in Financial Transactions</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">How a major financial institution uses Google Cloud Dataflow to process millions of transactions in real-time, detecting and flagging fraudulent activity as it happens.</p>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card text-center">
+                    <div class="text-5xl font-extrabold gradient-text">50K</div>
+                    <p class="text-gray-500 mt-2">Transactions Processed per Second</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-5xl font-extrabold gradient-text">&lt;1 Sec</div>
+                    <p class="text-gray-500 mt-2">Latency for Anomaly Detection</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-5xl font-extrabold gradient-text">99.9%</div>
+                    <p class="text-gray-500 mt-2">Reduction in False Positives</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="challenge" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2">The Challenge: Detecting Sophisticated Fraud in a Flood of Data</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">The institution's legacy batch-based fraud detection system was slow, inaccurate, and unable to adapt to the complex patterns of modern financial crime.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card">
+                    <div class="flex items-center mb-4">
+                        <span class="text-5xl mr-4">⏳</span>
+                        <div>
+                             <h3 class="text-xl font-bold text-gray-800">Delayed Detection</h3>
+                            <p class="text-sm font-medium text-[#4a23a8]">Too Little, Too Late</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">By the time the batch system identified a fraudulent transaction, the funds were already gone. The business needed to move from reactive analysis to proactive, real-time intervention.</p>
+                </div>
+                <div class="card">
+                    <div class="flex items-center mb-4">
+                        <span class="text-5xl mr-4">🧩</span>
+                         <div>
+                            <h3 class="text-xl font-bold text-gray-800">Complex Event Patterns</h3>
+                            <p class="text-sm font-medium text-[#4a23a8]">Beyond Simple Rules</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Fraudsters use complex sequences of events over time. The old system couldn't handle stateful analysis, such as tracking a user's average transaction value over a 30-minute window.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="solution" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2">The Solution: A Streaming Analytics Pipeline with Dataflow</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Using the Apache Beam model, the institution built a streaming Dataflow pipeline that processes unbounded transaction data, enriches it, and applies complex rules and ML models in real-time.</p>
+
+            <div class="card mb-12">
+                 <h3 class="text-2xl font-bold text-center mb-6">Real-Time Dataflow Pipeline</h3>
+                 <div class="flex flex-col lg:flex-row justify-center items-center">
+                     <div class="text-center p-4 m-2 border-2 border-[#1e3a8a] rounded-lg bg-[#1e3a8a]/10 w-full lg:w-1/3">
+                         <div class="text-2xl font-bold text-[#1e3a8a]">1. Stream Ingestion</div>
+                         <p class="text-sm text-gray-600">Transaction data streams from Pub/Sub into an unbounded PCollection.</p>
+                     </div>
+                     <div class="flow-arrow hidden lg:flex"></div>
+                     <div class="flow-arrow flex lg:hidden"></div>
+                     <div class="text-center p-4 m-2 border-2 border-[#4a23a8] rounded-lg bg-[#4a23a8]/10 w-full lg:w-1/3">
+                         <div class="text-2xl font-bold text-[#4a23a8]">2. Enrichment & Analysis</div>
+                         <p class="text-sm text-gray-600">Data is windowed, enriched with historical data, and scored by an ML model.</p>
+                     </div>
+                     <div class="flow-arrow hidden lg:flex"></div>
+                     <div class="flow-arrow flex lg:hidden"></div>
+                     <div class="text-center p-4 m-2 border-2 border-[#7e22ce] rounded-lg bg-[#7e22ce]/10 w-full lg:w-1/3">
+                         <div class="text-2xl font-bold" style="color: #7e22ce;">3. Alerting & Storage</div>
+                         <p class="text-sm text-gray-600">Anomalies are sent to an alerting topic; all results are stored in BigQuery.</p>
+                     </div>
+                 </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="features" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2">Key Dataflow & Beam Features in Action</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">The Apache Beam model provides powerful abstractions that simplify the complexities of distributed stream processing, all managed and scaled by Dataflow.</p>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">🪟 Sliding Windows</h3>
+                    <p class="text-gray-600">To calculate a user's rolling 30-minute transaction average, the pipeline uses sliding windows. This allows for continuous, stateful analysis of user behavior over a recent time period, a critical feature for anomaly detection.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">💧 Watermarks & Triggers</h3>
+                    <p class="text-gray-600">Dataflow uses event-time watermarks to handle out-of-order data correctly. Early-firing triggers are used to provide low-latency, speculative results, which are then refined when the watermark confirms all data has arrived.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">🚀 Autoscaling & Optimization</h3>
+                    <p class="text-gray-600">Dataflow automatically scales the number of worker VMs based on throughput and CPU utilization. It also optimizes the pipeline graph, fusing steps to minimize expensive data shuffling across the network.</p>
+                </div>
+             </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+
 </body>
 </html>
