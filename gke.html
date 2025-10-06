@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Kubernetes Engine (GKE) Visual Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .gke-cell {
+            min-height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+            font-size: 0.75rem;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .header-cell {
+            background-color: #4285F4; /* Google Blue */
+            color: white;
+            font-weight: 600;
+            border: 1px solid #1a73e8;
+        }
+        .concept-cell {
+            background-color: #e3f2fd; /* Light Blue */
+            color: #1f2937;
+            font-weight: 700;
+            text-align: left;
+            padding-left: 1rem;
+            cursor: pointer;
+        }
+        .data-cell {
+            background-color: #ffffff;
+            color: #1f2937;
+            border: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+        /* Specific styling for concepts */
+        /* Blue for Execution/Compute */
+        .execution-cell {
+            background-color: #D1E3FF; 
+            color: #1A73E8;
+            font-weight: 600;
+        }
+        /* Yellow/Orange for Networking/Storage */
+        .data-plane-cell {
+            background-color: #FEEFC3; 
+            color: #F9AB00;
+            font-weight: 600;
+        }
+        /* Green for Policy/Governance */
+        .metadata-cell {
+            background-color: #E6F4EA; 
+            color: #34A853;
+            font-weight: 600;
+        }
+    </style>
+    <script>
+        // Global State
+        const state = {
+            currentTab: 'architecture', 
+            message: "Click a concept tab above to explore the core components of Google Kubernetes Engine (GKE).",
+        };
+
+        // Core Concepts Data for GKE
+        const concepts = {
+            architecture: {
+                title: "1. GKE Core Architecture (Control Plane vs. Node Pool)",
+                description: "GKE abstracts the Kubernetes Control Plane while running the worker Node Pool within your Google Cloud Project.",
+                headers: ["Component", "Function", "Location (Plane)"],
+                rows: [
+                    { key: "Control Plane", data: ["Managed Kubernetes components (API Server, Scheduler, Controller Manager, etcd)", "Managed by Google (Free in Autopilot)"] },
+                    { key: "API Server", data: ["Entry point for all cluster commands (kubectl, API calls)", "Control Plane (GKE Managed)"] },
+                    { key: "Node Pool", data: ["Group of worker VMs (GCE Instances) where containers run", "Data Plane (Your Cloud Project)"] },
+                    { key: "etcd", data: ["Distributed key-value store containing cluster state and configuration", "Control Plane (Highly Available)"] },
+                ]
+            },
+            workloads: {
+                title: "2. Workload Basics (Kubernetes Primitives)",
+                description: "These are the fundamental objects used to define and run applications within the GKE cluster.",
+                headers: ["Primitive", "Role", "Purpose"],
+                rows: [
+                    { key: "Pod", data: ["Smallest deployable unit, runs one or more containers", "Shares networking and storage among containers"] },
+                    { key: "Deployment", data: ["Declarative way to define desired state for Pods", "Manages rolling updates and rollbacks"] },
+                    { key: "Service", data: ["Abstract layer defining a logical set of Pods and access policy", "Enables internal/external access and load balancing"] },
+                    { key: "Namespace", data: ["Virtual cluster inside a physical cluster", "Provides resource isolation and grouping"] },
+                ]
+            },
+            networking: {
+                title: "3. GKE Networking & Connectivity",
+                description: "GKE uses VPC-native networking to provide highly scalable and performant connectivity for Pods and Services.",
+                headers: ["Concept", "Mechanism", "Scope"],
+                rows: [
+                    { key: "VPC-Native", data: ["Pods and Services use actual VPC subnet IP addresses", "Enables simplified routing and firewall rules"] },
+                    { key: "Ingress", data: ["API object managing external access to services (HTTP/S)", "Manages GCP HTTP(S) Load Balancer for the cluster"] },
+                    { key: "ClusterIP", data: ["Default Service type, internal IP address for internal routing", "Service is only reachable from within the cluster"] },
+                    { key: "LoadBalancer", data: ["Service type that provisions a GCP Network Load Balancer", "Exposes service externally via a dedicated external IP"] },
+                ]
+            },
+            storage: {
+                title: "4. Storage, State & Data Persistence",
+                description: "Kubernetes uses Volume objects to abstract storage and handle persistent data needs for stateful applications.",
+                headers: ["Concept", "Role", "GCP Backing Service"],
+                rows: [
+                    { key: "PersistentVolume (PV)", data: ["Cluster-wide resource describing physical storage (e.g., 100GB Disk)", "GCE Persistent Disk (PD) or Cloud Filestore"] },
+                    { key: "PersistentVolumeClaim (PVC)", data: ["User request for storage (e.g., 'I need 5GB')", "Binds to a matching PV or dynamically provisions one"] },
+                    { key: "StorageClass", data: ["Defines the type and provisioning method for storage", "Controls I/O performance (e.g., Standard vs. SSD PD)"] },
+                    { key: "StatefulSet", data: ["Controller used for stateful applications (e.g., databases)", "Ensures stable, unique network IDs and ordered deployment/scaling"] },
+                ]
+            },
+            modes: {
+                title: "5. Operational Modes: Standard vs. Autopilot",
+                description: "GKE offers two primary operational modes, balancing configuration flexibility with management automation.",
+                headers: ["Feature", "Standard Mode", "Autopilot Mode"],
+                rows: [
+                    { key: "Node Management", data: ["Manual provisioning and scaling of Node Pools", "Automatic provisioning, scaling, and patching of Nodes"] },
+                    { key: "Cost Model", data: ["Pay for Control Plane + Node VMs (regardless of utilization)", "Pay for Control Plane + Resources consumed by Pods"] },
+                    { key: "Configuration", data: ["Full access to Node configuration (OS, machine type, kernel)", "Limited access (GKE manages OS/runtime for security and efficiency)"] },
+                    { key: "Security", data: ["Requires manual configuration of cluster upgrades and security patches", "Automatic security patching and hardening applied by GKE"] },
+                ]
+            },
+            security: {
+                title: "6. Security & Governance",
+                description: "GKE leverages Google Cloud's IAM and Kubernetes' internal security mechanisms (RBAC) for layered protection.",
+                headers: ["Mechanism", "Scope", "Goal"],
+                rows: [
+                    { key: "IAM", data: ["Google Cloud user/service identity management", "Controls access to the GKE Cluster resource itself (Control Plane)"] },
+                    { key: "RBAC (Role-Based Access Control)", data: ["Kubernetes internal authorization system", "Controls actions within the cluster (e.g., who can create a Pod)"] },
+                    { key: "Binary Authorization", data: ["Policy enforcement on container image deployment", "Ensures only trusted, verified images run in the cluster"] },
+                    { key: "Workload Identity", data: ["Binds Kubernetes Service Accounts to GCP Service Accounts", "Allows Pods to securely access GCP services (e.g., Cloud Storage)"] },
+                ]
+            },
+            advanced: {
+                title: "7. Advanced Scaling and Automation",
+                description: "GKE uses multiple vertical and horizontal scalers to ensure optimal resource utilization and responsiveness.",
+                headers: ["Scaler", "Target", "Role"],
+                rows: [
+                    { key: "Cluster Autoscaler (CA)", data: ["Worker Nodes (VMs)", "Automatically adds or removes nodes based on Pod resource requests"] },
+                    { key: "Horizontal Pod Autoscaler (HPA)", data: ["Pods", "Scales the number of Pod replicas based on CPU/Memory utilization or custom metrics"] },
+                    { key: "Vertical Pod Autoscaler (VPA)", data: ["Container CPU/Memory Requests", "Automatically adjusts resource requests for containers to optimize scheduling and reduce waste"] },
+                    { key: "Anthos", data: ["Multi-cloud, Hybrid Platform", "Extends GKE management and services to hybrid and multi-cloud environments"] },
+                ]
+            }
+        };
+
+        /**
+         * Converts the global state into HTML and updates the DOM.
+         */
+        const render = () => {
+            const container = document.getElementById('table-container');
+            const messageBar = document.getElementById('message-bar');
+            const tabButtons = document.querySelectorAll('.tab-button');
+
+            // 1. Update Tabs
+            tabButtons.forEach(btn => {
+                btn.classList.remove('bg-gray-700', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+                if (btn.dataset.tab === state.currentTab) {
+                    btn.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+                    btn.classList.add('bg-gray-700', 'text-white', 'shadow-lg');
+                }
+            });
+
+            // 2. Update Message Bar
+            messageBar.innerHTML = `<span class="font-bold">${concepts[state.currentTab].title}</span>: ${concepts[state.currentTab].description}`;
+
+            // 3. Generate Table HTML
+            const currentConcept = concepts[state.currentTab];
+            let html = `<div class="overflow-x-auto shadow-xl rounded-xl">`;
+            // Dynamic grid layout: 180px for Concept, rest split evenly
+            html += `<div class="grid" style="grid-template-columns: 180px repeat(${currentConcept.headers.length - 1}, 1fr);">`;
+
+            // Headers
+            currentConcept.headers.forEach(header => {
+                html += `<div class="header-cell gke-cell h-12 flex items-center justify-center">${header}</div>`;
+            });
+
+            // Rows
+            currentConcept.rows.forEach((row, rowIndex) => {
+                // Concept/Row Identifier Cell
+                let conceptCellClasses = 'concept-cell gke-cell h-16';
+                let dataCellClasses = 'data-cell gke-cell h-16';
+                
+                // Specific styling logic for GKE concepts
+                if (state.currentTab === 'architecture') {
+                    if (row.key.includes('Control Plane') || row.key.includes('API Server') || row.key.includes('etcd')) dataCellClasses = 'metadata-cell gke-cell h-16'; // Control Plane/Metadata
+                    if (row.key.includes('Node Pool')) dataCellClasses = 'execution-cell gke-cell h-16'; // Compute
+                }
+                if (state.currentTab === 'workloads') {
+                    dataCellClasses = 'execution-cell gke-cell h-16';
+                    if (row.key === 'Service') dataCellClasses = 'data-plane-cell gke-cell h-16'; // Networking
+                }
+                if (state.currentTab === 'networking') {
+                    dataCellClasses = 'data-plane-cell gke-cell h-16'; // Networking
+                }
+                if (state.currentTab === 'storage') {
+                    dataCellClasses = 'data-plane-cell gke-cell h-16'; // Storage/State
+                    if (row.key === 'StatefulSet') dataCellClasses = 'execution-cell gke-cell h-16'; // Workload controller
+                }
+                if (state.currentTab === 'modes') {
+                    if (row.key.includes('Management') || row.key.includes('Security')) dataCellClasses = 'metadata-cell gke-cell h-16'; // Governance/Management
+                    if (row.key.includes('Cost Model') || row.key.includes('Configuration')) dataCellClasses = 'execution-cell gke-cell h-16'; // Compute/Resource
+                }
+                 if (state.currentTab === 'security') {
+                    if (row.key.includes('IAM') || row.key.includes('RBAC')) dataCellClasses = 'metadata-cell gke-cell h-16'; // Access Control
+                    if (row.key.includes('Binary Authorization') || row.key.includes('Workload Identity')) dataCellClasses = 'data-plane-cell gke-cell h-16'; // Policy/Service Access
+                }
+                if (state.currentTab === 'advanced') {
+                    if (row.key.includes('Autoscaler')) dataCellClasses = 'execution-cell gke-cell h-16'; // Scaling/Compute
+                    if (row.key.includes('Anthos')) dataCellClasses = 'metadata-cell gke-cell h-16'; // Platform Management
+                }
+
+                html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
+
+                // Data Cells
+                currentConcept.headers.slice(1).forEach((header, colIndex) => {
+                    const data = row.data[colIndex];
+                    let cellContent = data;
+                    let cellClasses = dataCellClasses;
+
+                    html += `<div class="${cellClasses}" title="${header}: ${data}">${cellContent}</div>`;
+                });
+            });
+
+            html += `</div></div>`;
+            container.innerHTML = html;
+        };
+
+        /**
+         * Switches the active concept tab.
+         * @param {string} tabName 
+         */
+        const switchTab = (tabName) => {
+            state.currentTab = tabName;
+            render();
+        };
+
+        // Initial setup and event listeners
+        window.onload = () => {
+            // Set up tab listeners
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => switchTab(button.dataset.tab));
+            });
+
+            // Start with the 'architecture' tab
+            switchTab('architecture');
+        };
+    </script>
+</head>
+<body class="p-8">
+
+    <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
+        <svg class="w-8 h-8 mr-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM13 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2zM13 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2z"></path></svg>
+        Google Kubernetes Engine (GKE) Visual Deep Dive
+    </h1>
+    <p class="text-lg text-gray-600 mb-8">Click on the tabs below to explore the fundamental components of Google Kubernetes Engine (GKE), Google Cloud's managed Kubernetes service.</p>
+
+    <!-- Tab Navigation -->
+    <div class="flex flex-wrap space-x-4 space-y-2 mb-8">
+        <button data-tab="architecture" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+            1. Core Architecture
+        </button>
+        <button data-tab="workloads" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+            2. Workload Basics (Pods/Deployments)
+        </button>
+        <button data-tab="networking" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+            3. Networking
+        </button>
+        <button data-tab="storage" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+            4. Storage & State
+        </button>
+        <button data-tab="modes" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+            5. Operational Modes (Standard/Autopilot)
+        </button>
+        <button data-tab="security" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+            6. Security & Governance
+        </button>
+        <button data-tab="advanced" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+            7. Advanced Scaling
+        </button>
+    </div>
+
+    <!-- Explanation Bar -->
+    <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md">
+        <!-- Message will be populated by JS -->
+    </div>
+
+    <!-- GKE Visualizer Container -->
+    <div id="table-container" class="mt-8">
+        <!-- Visual table will be generated here -->
+    </div>
+</body>
+</html>

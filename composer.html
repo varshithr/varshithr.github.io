@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Composer (Airflow) Visual Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .composer-cell {
+            min-height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+            font-size: 0.75rem;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .header-cell {
+            background-color: #164e63; /* Dark Teal */
+            color: white;
+            font-weight: 600;
+            border: 1px solid #0e7490;
+        }
+        .concept-cell {
+            background-color: #e0f2f7; /* Light Cyan */
+            color: #155e75;
+            font-weight: 700;
+            text-align: left;
+            padding-left: 1rem;
+            cursor: pointer;
+        }
+        .data-cell {
+            background-color: #ffffff;
+            color: #1f2937;
+            border: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+        /* Specific styling for concepts */
+        .flow-cell {
+            background-color: #d1fae5; /* Green for flow/success */
+            color: #065f46;
+            font-weight: 600;
+        }
+        .external-cell {
+            background-color: #fef3c7; /* Yellow for external/connections */
+            color: #92400e;
+            font-weight: 500;
+        }
+        .state-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            font-weight: 700;
+        }
+        .state-running {
+            background-color: #bfdbfe;
+            color: #1e40af;
+            font-weight: 700;
+        }
+        .state-failed {
+            background-color: #fee2e2;
+            color: #991b1b;
+            font-weight: 700;
+        }
+    </style>
+    <script>
+        // Global State
+        const state = {
+            currentTab: 'architecture', 
+            message: "Click a concept tab above to explore the Airflow components managed by Cloud Composer.",
+        };
+
+        // Core Concepts Data
+        const concepts = {
+            architecture: {
+                title: "Airflow Architecture (The Engine Components)",
+                description: "Cloud Composer manages these four core components that work together to define, schedule, execute, and monitor workflows.",
+                headers: ["Component", "Role", "Physical Location"],
+                rows: [
+                    { key: "Scheduler", data: ["Parses DAGs, monitors tasks, initiates runs", "Compute Engine VM (Managed)"] },
+                    { key: "Webserver", data: ["Provides the Airflow UI for monitoring and control", "App Engine (Managed)"] },
+                    { key: "Worker(s)", data: ["Executes the actual task commands (via Celery)", "Compute Engine VM (Managed/Scalable)"] },
+                    { key: "Metadata DB", data: ["Stores all DAG/Task/Variable state and history", "Cloud SQL (Managed)"] },
+                ]
+            },
+            dags: {
+                title: "DAGs (Directed Acyclic Graphs)",
+                description: "A DAG is the blueprint for an entire workflow, defining tasks and their execution order (dependencies). 'Acyclic' means no loops.",
+                headers: ["DAG Element", "Description", "Example"],
+                rows: [
+                    { key: "DAG ID", data: ["Unique identifier for the workflow", "etl_marketing_pipeline"] },
+                    { key: "Task", data: ["A single unit of work to be performed", "extract_data (operator)"] },
+                    { key: "Dependency (>>)", data: ["Defines execution order (A >> B)", "B cannot run until A succeeds"] },
+                    { key: "Schedule", data: ["When the DAG should run (CRON)", "0 5 * * * (5 AM daily)"] },
+                ]
+            },
+            operators: {
+                title: "Operators (The Action Units)",
+                description: "Operators are classes that represent a specific task. They often contain the logic to interact with external systems (GCP or otherwise).",
+                headers: ["Operator", "Function", "GCP Service Interacted"],
+                rows: [
+                    { key: "BashOperator", data: ["Execute a shell command", "N/A (Local Worker)"] },
+                    { key: "BigQueryExecuteQueryOperator", data: ["Run a standard SQL query", "BigQuery"] },
+                    { key: "CloudDataTransferServiceOperator", data: ["Start a data transfer job", "DTS"] },
+                    { key: "PythonOperator", data: ["Call a specific Python function", "N/A (Local Worker)"] },
+                ]
+            },
+            sensors: {
+                title: "Sensors (Waiting for External Events)",
+                description: "Sensors are a type of operator that pauses execution until a certain condition is met in an external system (e.g., a file landing in Cloud Storage).",
+                headers: ["Sensor Type", "Condition Checked", "Behavior"],
+                rows: [
+                    { key: "GCSObjectAclSensor", data: ["Wait for an object's ACL to match", "Pokes the external service at intervals"] },
+                    { key: "ExternalTaskSensor", data: ["Wait for a task in another DAG to succeed", "Pokes the metadata database"] },
+                    { key: "SqlSensor", data: ["Wait for a SQL query to return a non-empty result", "Pokes the target database"] },
+                ]
+            },
+            connections: {
+                title: "Connections & Hooks (Securing Credentials)",
+                description: "Connections define credentials and endpoints for external systems. Hooks are the Python interfaces that use these connections to interact with the external APIs securely.",
+                headers: ["Element", "Role", "Security Practice"],
+                rows: [
+                    { key: "Connection ID", data: ["Key used by the Hook to retrieve credentials", "Stored in Metadata DB (Encrypted)"] },
+                    { key: "Hook (e.g., GCSHook)", data: ["Abstracts API calls using Connection info", "Handles credential rotation/access"] },
+                    { key: "External Service", data: ["The target system (e.g., Cloud Storage)", "Connection uses Service Account / OAuth"] },
+                ]
+            },
+            xcoms: {
+                title: "XComs (Cross-communication)",
+                description: "XCom (Cross-Communication) is a mechanism for small amounts of data (up to 48KB in the default setup) to be passed between tasks.",
+                headers: ["Task", "Action", "Value Passed", "Use Case"],
+                rows: [
+                    { key: "Task_A (Push)", data: ["Stores a key-value pair in Metadata DB", "File_Count: 12", "Report a summary metric"] },
+                    { key: "Task_B (Pull)", data: ["Retrieves value from Task_A by key", "File_Count: 12", "Determine next step based on count"] },
+                    { key: "Scheduler/UI", data: ["Can inspect XCom values", "File_Count: 12", "Debugging/Monitoring"] },
+                ]
+            },
+            taskStates: {
+                title: "Task States (The Lifecycle)",
+                description: "Tasks progress through various states, which define the history and current status of a workflow run. Upstream dependency failures propagate quickly.",
+                headers: ["State", "Visual Status", "Next Action"],
+                rows: [
+                    { key: "Scheduled", data: ["Grey/Light Blue", "Worker picks it up to run"] },
+                    { key: "Running", data: ["Blue", "Worker is executing the task code"] },
+                    { key: "Success", data: ["Green", "Triggers downstream tasks"] },
+                    { key: "Failed", data: ["Red", "Marks downstream tasks as 'Upstream Failed'"] },
+                    { key: "Upstream Failed", data: ["Orange", "Will not run until upstream task is cleared/retried"] },
+                ]
+            },
+            scaling: {
+                title: "Composer Scaling (Worker Resources)",
+                description: "Cloud Composer environments come in different sizes, dictating the base resources (Scheduler, DB) and the worker pool configuration.",
+                headers: ["Size", "Celery Workers (Default)", "CPU / Memory Allocation", "Concurrency/Cost Impact"],
+                rows: [
+                    { key: "Small", data: ["1 to 2 workers", "Low resource allocation", "Lowest cost, suitable for testing"] },
+                    { key: "Medium", data: ["3 to 5 workers", "Standard resource allocation", "Balanced performance and cost (default)"] },
+                    { key: "Large", data: ["5 to 20+ workers", "High resource allocation", "Max throughput and concurrency (highest cost)"] },
+                ]
+            }
+        };
+
+        /**
+         * Converts the global state into HTML and updates the DOM.
+         */
+        const render = () => {
+            const container = document.getElementById('table-container');
+            const messageBar = document.getElementById('message-bar');
+            const tabButtons = document.querySelectorAll('.tab-button');
+
+            // 1. Update Tabs
+            tabButtons.forEach(btn => {
+                btn.classList.remove('bg-teal-700', 'text-white');
+                btn.classList.add('bg-white', 'text-teal-700', 'hover:bg-teal-50');
+                if (btn.dataset.tab === state.currentTab) {
+                    btn.classList.remove('bg-white', 'text-teal-700', 'hover:bg-teal-50');
+                    btn.classList.add('bg-teal-700', 'text-white', 'shadow-lg');
+                }
+            });
+
+            // 2. Update Message Bar
+            messageBar.innerHTML = `<span class="font-bold">${concepts[state.currentTab].title}</span>: ${concepts[state.currentTab].description}`;
+
+            // 3. Generate Table HTML
+            const currentConcept = concepts[state.currentTab];
+            let html = `<div class="overflow-x-auto shadow-xl rounded-xl">`;
+            // Dynamic grid layout: 180px for Concept, rest split evenly
+            html += `<div class="grid" style="grid-template-columns: 180px repeat(${currentConcept.headers.length - 1}, 1fr);">`;
+
+            // Headers
+            currentConcept.headers.forEach(header => {
+                html += `<div class="header-cell composer-cell h-12 flex items-center justify-center">${header}</div>`;
+            });
+
+            // Rows
+            currentConcept.rows.forEach((row, rowIndex) => {
+                // Concept/Row Identifier Cell
+                let conceptCellClasses = 'concept-cell composer-cell h-16';
+                let dataCellClasses = 'data-cell composer-cell h-16';
+                
+                // Specific styling/content overrides for concepts
+                if (state.currentTab === 'architecture' && rowIndex < 3) {
+                    dataCellClasses = 'flow-cell composer-cell h-16'; // Worker, Scheduler, Webserver are active components
+                }
+                if (state.currentTab === 'operators' && row.key.includes('BigQuery')) {
+                    dataCellClasses = 'external-cell composer-cell h-16';
+                }
+                if (state.currentTab === 'taskStates') {
+                    conceptCellClasses = 'concept-cell composer-cell h-16 text-center';
+                    
+                    let stateColorClass = 'data-cell'; // Default
+                    if (row.key === 'Success') stateColorClass = 'state-success';
+                    if (row.key === 'Running') stateColorClass = 'state-running';
+                    if (row.key === 'Failed' || row.key === 'Upstream Failed') stateColorClass = 'state-failed';
+
+                    html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
+                    
+                    // Apply state color to the visual status cell
+                    html += `<div class="${stateColorClass} composer-cell h-16" title="Status">${row.data[0]}</div>`;
+                    
+                    // Keep the last cell standard data
+                    html += `<div class="data-cell composer-cell h-16" title="Next Action">${row.data[1]}</div>`;
+                    
+                    return; // Skip default row rendering below
+                }
+                
+                html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
+
+                // Data Cells
+                currentConcept.headers.slice(1).forEach((header, colIndex) => {
+                    const data = row.data[colIndex];
+                    let cellContent = data;
+                    let cellClasses = dataCellClasses;
+
+                    html += `<div class="${cellClasses}" title="${header}: ${data}">${cellContent}</div>`;
+                });
+            });
+
+            html += `</div></div>`;
+            container.innerHTML = html;
+        };
+
+        /**
+         * Switches the active concept tab.
+         * @param {string} tabName 
+         */
+        const switchTab = (tabName) => {
+            state.currentTab = tabName;
+            render();
+        };
+
+        // Initial setup and event listeners
+        window.onload = () => {
+            // Set up tab listeners
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => switchTab(button.dataset.tab));
+            });
+
+            // Start with the 'architecture' tab
+            switchTab('architecture');
+        };
+    </script>
+</head>
+<body class="p-8">
+
+    <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
+        <svg class="w-8 h-8 mr-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-7-9a1 1 0 000 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414l1.293 1.293H3z" clip-rule="evenodd"></path></svg>
+        Cloud Composer (Apache Airflow) Essentials
+    </h1>
+    <p class="text-lg text-gray-600 mb-8">Click on the tabs below to explore the fundamental components and concepts of building pipelines with Airflow.</p>
+
+    <!-- Tab Navigation -->
+    <div class="flex flex-wrap space-x-4 space-y-2 mb-8">
+        <button data-tab="architecture" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+            1. Core Architecture (Components)
+        </button>
+        <button data-tab="dags" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+            2. DAGs (The Blueprint)
+        </button>
+        <button data-tab="operators" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+            3. Operators (Actions)
+        </button>
+        <button data-tab="sensors" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+            4. Sensors (Waiting)
+        </button>
+        <button data-tab="connections" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+            5. Connections & Hooks
+        </button>
+        <button data-tab="xcoms" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+            6. XComs (Data Sharing)
+        </button>
+        <button data-tab="taskStates" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+            7. Task States (Lifecycle)
+        </button>
+        <button data-tab="scaling" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+            8. Scaling & Workers
+        </button>
+    </div>
+
+    <!-- Explanation Bar -->
+    <div id="message-bar" class="bg-cyan-100 border-l-4 border-cyan-500 text-cyan-800 p-4 mb-8 rounded-md shadow-md">
+        <!-- Message will be populated by JS -->
+    </div>
+
+    <!-- Composer Visualizer Container -->
+    <div id="table-container" class="mt-8">
+        <!-- Visual table will be generated here -->
+    </div>
+</body>
+</html>
