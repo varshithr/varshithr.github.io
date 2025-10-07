@@ -244,49 +244,49 @@
         };
     </script>
 </head>
-<body class="p-8">
+<body class="p-4 sm:p-8">
     <a href="index.html" class="text-gray-600 hover:text-purple-600 hover:underline font-semibold mb-6 inline-block">&larr; Back to Home</a>
-    <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
         <svg class="w-8 h-8 mr-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
         BigQuery Schema & Performance Essentials
     </h1>
-    <p class="text-lg text-gray-600 mb-8">Click on the tabs below to explore the core concepts that enable BigQuery's massive scale and cost efficiency.</p>
+    <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the core concepts that enable BigQuery's massive scale and cost efficiency.</p>
 
     <!-- Tab Navigation -->
-    <div class="flex flex-wrap space-x-4 space-y-2 mb-8">
-        <button data-tab="architecture" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+    <div class="flex flex-wrap gap-2 mb-8">
+        <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
             1. Decoupled Architecture (Dremel)
         </button>
-        <button data-tab="columnar" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+        <button data-tab="columnar" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
             2. Columnar Storage
         </button>
-        <button data-tab="nested" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+        <button data-tab="nested" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
             3. Nested & Repeated Fields
         </button>
-        <button data-tab="partitioning" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+        <button data-tab="partitioning" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
             4. Table Partitioning (Date/Time)
         </button>
-        <button data-tab="clustering" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+        <button data-tab="clustering" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
             5. Clustering (Within Partitions)
         </button>
-        <button data-tab="slots" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+        <button data-tab="slots" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
             6. The Slot System (Compute Model)
         </button>
-        <button data-tab="pruningCost" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+        <button data-tab="pruningCost" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
             7. Query Pruning & Cost
         </button>
-        <button data-tab="wildcards" class="tab-button py-2 px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+        <button data-tab="wildcards" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
             8. Wildcard Tables
         </button>
     </div>
 
     <!-- Explanation Bar -->
-    <div id="message-bar" class="bg-indigo-100 border-l-4 border-indigo-500 text-indigo-800 p-4 mb-8 rounded-md shadow-md">
+    <div id="message-bar" class="bg-indigo-100 border-l-4 border-indigo-500 text-indigo-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base">
         <!-- Message will be populated by JS -->
     </div>
 
     <!-- BigQuery Visualizer Container -->
-    <div id="table-container" class="mt-8">
+    <div id="table-container" class="mt-8 overflow-x-auto">
         <!-- Visual table will be generated here -->
     </div>
 </body>
