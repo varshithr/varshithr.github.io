@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon S3 Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #FF9900, #232F3E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+        .section-header {
+            background-color: #232F3E;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="aws_topics.html" class="gradient-text">Back to AWS Topics</a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="index.html" class="hover:text-[#FF9900]">Home</a></li>
+                <li><a href="aboutme.html" class="hover:text-[#FF9900] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section id="hero" class="text-center my-12 sm:my-20">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">
+                Amazon S3: The Foundation of the Data Lake
+            </h1>
+            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">A deep dive into the core concepts of Amazon S3 that make it the de facto standard for building scalable and durable data lakes in the cloud.</p>
+        </section>
+        <div class="space-y-8">
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Core Concepts</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Buckets:</strong> The fundamental containers for data in S3. Bucket names are globally unique.</li>
+                    <li><strong>Objects:</strong> The files and their metadata that are stored in a bucket. An object can be up to 5 terabytes in size.</li>
+                    <li><strong>Keys:</strong> The unique identifier for an object within a bucket. A key is a full path to the object (e.g., `raw/sales/2023/01/01/data.json`).</li>
+                    <li><strong>Durability and Availability:</strong> S3 is designed for 99.999999999% (11 nines) of durability by redundantly storing objects across multiple Availability Zones (AZs).</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Storage Classes</h2>
+                <p class="text-gray-600 mb-4">S3 offers a range of storage classes designed for different use cases and access patterns, allowing you to optimize costs.</p>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>S3 Standard:</strong> For frequently accessed data that requires low latency and high throughput. The default storage class.</li>
+                    <li><strong>S3 Intelligent-Tiering:</strong> Automatically moves data between a frequent access tier and an infrequent access tier to optimize costs.</li>
+                    <li><strong>S3 Standard-Infrequent Access (S3 Standard-IA):</strong> For data that is accessed less frequently but requires rapid access when needed. Lower storage cost, but a per-GB retrieval fee.</li>
+                    <li><strong>S3 Glacier Instant Retrieval:</strong> For long-term archival data that needs to be accessed in milliseconds.</li>
+                    <li><strong>S3 Glacier Flexible Retrieval:</strong> For long-term backups and archives with retrieval times from minutes to hours.</li>
+                    <li><strong>S3 Glacier Deep Archive:</strong> The lowest-cost storage class for long-term data retention (e.g., 7-10 years) with retrieval times of 12 hours or more.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Data Lake Best Practices</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Partitioning:</strong> Use a logical directory structure (e.g., `/year=2023/month=01/day=01/`) to partition your data. This allows query engines like Athena and Redshift Spectrum to prune data and scan only the necessary partitions, improving performance and reducing cost.</li>
+                    <li><strong>Columnar File Formats:</strong> Store data in columnar formats like Apache Parquet or ORC. This allows query engines to read only the columns needed for a query, rather than scanning the entire row.</li>
+                    <li><strong>Compression:</strong> Use a splittable compression algorithm like Snappy or Gzip to reduce storage costs and improve I/O performance.</li>
+                    <li><strong>Lifecycle Policies:</strong> Automatically transition objects to lower-cost storage classes (e.g., from S3 Standard to Glacier) as they age to optimize costs.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>

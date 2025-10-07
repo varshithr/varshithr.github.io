@@ -130,9 +130,9 @@
                 <p class="mb-4">The Lakehouse architecture is a new, open data management paradigm that combines the best features of data lakes and data warehouses. It's designed to handle all types of data (structured, semi-structured, unstructured) and support all data workloads (BI, AI, ML) on a single platform.</p>
                 <h3 class="text-xl font-semibold mb-2 text-indigo-600">Key Components of Databricks Lakehouse:</h3>
                 <ul class="list-disc list-inside mb-4 pl-4">
-                    <li class="mb-2"><strong>Delta Lake:</strong> An open-source storage layer that brings ACID transactions, schema enforcement, scalability, and data versioning to data lakes. It's the foundation of the Lakehouse, enabling reliable data pipelines.</li>
-                    <li class="mb-2"><strong>Photon:</strong> A vectorized query engine built for the Databricks Lakehouse. It significantly speeds up SQL and data frame operations, especially on large datasets, by leveraging modern CPU architectures.</li>
-                    <li class="mb-2"><strong>Unity Catalog:</strong> A unified governance solution for data and AI on the Lakehouse. It provides a central place to manage data access, auditing, and lineage across all data assets (tables, files, ML models).</li>
+                    <li class="mb-2"><strong>Delta Lake:</strong> An open-source storage layer built on open formats (Parquet) that brings ACID transactions, schema enforcement, and data versioning (Time Travel) to your data lake. This is the core component that adds reliability and performance.</li>
+                    <li class="mb-2"><strong>Photon Engine:</strong> A high-performance, C++ based vectorized query engine that is compatible with Apache Spark APIs. Instead of processing data row-by-row, Photon processes data in batches (vectors), taking full advantage of modern CPU hardware (SIMD). This results in significant performance improvements for SQL and DataFrame operations.</li>
+                    <li class="mb-2"><strong>Unity Catalog:</strong> A unified governance solution for data and AI assets across multiple workspaces and clouds. It provides a central place to manage permissions, auditing, and data lineage, treating the Lakehouse as a single, governable entity.</li>
                 </ul>
                 <h3 class="text-xl font-semibold mb-2 text-indigo-600">Why Lakehouse?</h3>
                 <p class="mb-4">Traditional architectures often lead to data silos (data lakes for raw data, data warehouses for structured BI). The Lakehouse eliminates these silos, offering:</p>
@@ -250,11 +250,12 @@ BI Tools / ML Models / Data Science
                 <p class="mb-4">Unity Catalog is the comprehensive governance solution for the Databricks Lakehouse. It provides a centralized place to manage all data and AI assets, enabling fine-grained control and end-to-end lineage.</p>
                 <h3 class="text-xl font-semibold mb-2 text-indigo-600">Core Features:</h3>
                 <ul class="list-disc list-inside mb-4 pl-4">
-                    <li class="mb-2"><strong>Centralized Metadata:</strong> One metastore to rule them all, spanning multiple workspaces.</li>
-                    <li class="mb-2"><strong>Fine-Grained Access Control:</strong> Use standard SQL GRANT/REVOKE statements to manage permissions on catalogs, schemas, tables, and views.</li>
-                    <li class="mb-2"><strong>Automated Data Lineage:</strong> Automatically captures and visualizes lineage for all queries, notebooks, and dashboards, down to the column level.</li>
-                    <li class="mb-2"><strong>Data Discovery:</strong> A built-in data explorer allows users to easily search for and discover relevant data assets across the entire organization.</li>
-                    <li class="mb-2"><strong>Secure Data Sharing:</strong> Use Delta Sharing, an open protocol, to securely share live data with other organizations without duplicating it.</li>
+                    <li class="mb-2"><strong>Centralized Metadata & 3-Level Namespace:</strong> One metastore to rule them all, spanning multiple workspaces. It introduces a three-level namespace (`catalog.schema.table`) for better data organization.</li>
+                    <li class="mb-2"><strong>Fine-Grained Access Control:</strong> Use standard SQL GRANT/REVOKE statements to manage permissions on catalogs, schemas, tables, and views. It also supports Row-Level Security and Column-Level Masking.</li>
+                    <li class="mb-2"><strong>Automated Data Lineage:</strong> Automatically captures and visualizes lineage for all queries, notebooks, and dashboards, down to the column level, across all languages.</li>
+                    <li class="mb-2"><strong>Data Discovery:</strong> A built-in data explorer allows users to easily search for and discover relevant data assets using tags and metadata.</li>
+                    <li class="mb-2"><strong>Secure Data Sharing:</strong> Use Delta Sharing, an open protocol, to securely share live data with other organizations without duplicating it, regardless of the platform they use.</li>
+                    <li class="mb-2"><strong>Attribute Based Access Control (ABAC):</strong> Use tags to control access to data assets, simplifying governance at scale by grouping assets and principals by their attributes.</li>
                 </ul>
                 <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                     <h4 class="font-bold text-blue-800 mb-2">Example: Granting Access with Unity Catalog</h4>
@@ -267,6 +268,37 @@ GRANT USE_SCHEMA ON SCHEMA marketing_data.web_analytics TO `analysts`;
 
 -- Grant select on a specific table
 GRANT SELECT ON TABLE marketing_data.web_analytics.page_views TO `analysts`;
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delta Lake Internals -->
+        <div class="mb-6">
+            <div class="section-header" onclick="toggleSection('delta-lake-internals')">
+                <h2 class="text-2xl font-semibold">Delta Lake Internals: The Transaction Log</h2>
+                <span class="accordion-icon text-2xl font-bold" id="delta-lake-internals-icon">+</span>
+            </div>
+            <div id="delta-lake-internals-content" class="section-content hidden">
+                <p class="mb-4">The power of Delta Lake comes from the `_delta_log` directory, which is stored alongside the data files (Parquet). This transaction log is the single source of truth that defines the state of a Delta table.</p>
+                <h3 class="text-xl font-semibold mb-2 text-indigo-600">How it Works:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Ordered Atomic Commits:</strong> Every transaction (e.g., INSERT, UPDATE, DELETE, MERGE) is recorded as an ordered, atomic commit in the transaction log. Each commit produces a new JSON file (e.g., `000000.json`, `000001.json`).</li>
+                    <li class="mb-2"><strong>Log Entries:</strong> These JSON files contain "actions" that describe changes to the table, such as adding or removing a data file, changing metadata (schema), or updating statistics.</li>
+                    <li class="mb-2"><strong>Checkpoints:</strong> To avoid having to read thousands of small JSON files, Delta Lake periodically compacts the transaction log into a Parquet file called a checkpoint. This checkpoint contains the aggregated state of the table up to that point, providing a much faster way for readers to get the current state of the table.</li>
+                    <li class="mb-2"><strong>ACID Transactions:</strong> The transaction log enables ACID properties. When a write occurs, Delta first writes the data files, then commits an entry to the log. This two-phase commit protocol ensures atomicity. The optimistic concurrency control model handles conflicts between concurrent writes.</li>
+                </ul>
+                <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <h4 class="font-bold text-blue-800 mb-2">Example `_delta_log` Directory Structure:</h4>
+                    <pre class="bg-gray-100 p-3 rounded text-sm overflow-x-auto">
+/path/to/table/
+  ├── _delta_log/
+  │   ├── 000000.json
+  │   ├── 000001.json
+  │   ├── ...
+  │   └── 000010.checkpoint.parquet
+  ├── part-00000-....c000.snappy.parquet
+  └── part-00001-....c000.snappy.parquet
                     </pre>
                 </div>
             </div>

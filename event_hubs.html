@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Event Hubs Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #0089D6, #0072C6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="azure_topics.html" class="gradient-text">Back to Azure Topics</a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="index.html" class="hover:text-[#0089D6]">Home</a></li>
+                <li><a href="aboutme.html" class="hover:text-[#0089D6] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section id="hero" class="text-center my-12 sm:my-20">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">
+                Azure Event Hubs: Big Data Streaming Platform
+            </h1>
+            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">A deep dive into Azure Event Hubs, the fully managed, real-time data ingestion service that's simple, trusted, and scalable.</p>
+        </section>
+        <div class="space-y-8">
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Core Concepts</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Event Hubs Namespace:</strong> A container for one or more Event Hubs.</li>
+                    <li><strong>Event Hub:</strong> A partitioned data stream, analogous to a topic in Kafka or a stream in Kinesis.</li>
+                    <li><strong>Partitions:</strong> An ordered sequence of events that is held in an Event Hub. Partitions are a mechanism for data parallelism.</li>
+                    <li><strong>Event Publishers (Producers):</strong> Any entity that sends data to an Event Hub.</li>
+                    <li><strong>Event Receivers (Consumers):</strong> Any entity that reads event data from an Event Hub.</li>
+                    <li><strong>Consumer Groups:</strong> A view (state, position, or offset) of an entire event hub. Consumer groups enable multiple consuming applications to each have a separate view of the event stream.</li>
+                    <li><strong>Throughput Units (Standard) / Processing Units (Premium):</strong> The pre-purchased units of capacity that control the throughput of your Event Hub.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Key Features</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Scalability:</strong> Capable of ingesting millions of events per second, making it suitable for the most demanding big data workloads.</li>
+                    <li><strong>Protocol Support:</strong> Supports multiple protocols, including AMQP, Kafka, and HTTPS.</li>
+                    <li><strong>Capture:</strong> Automatically capture streaming data in Event Hubs and save it to Azure Blob Storage or Azure Data Lake Storage.</li>
+                    <li><strong>Geo-disaster recovery:</strong> Provides geographic disaster recovery and geo-replication capabilities.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Event Hubs vs. IoT Hub</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Scope:</strong> Event Hubs is a general-purpose event ingestion service. IoT Hub is a specialized service for connecting and managing IoT devices, with features like device twins, per-device identity, and command-and-control capabilities.</li>
+                    <li><strong>Directionality:</strong> Event Hubs is primarily for data ingestion (one-way). IoT Hub is bi-directional, allowing you to send commands back to devices.</li>
+                    <li><strong>Use Case:</strong> Use IoT Hub when you need to manage and communicate with individual IoT devices. Use Event Hubs for high-throughput data streaming from any source, not just IoT devices.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>

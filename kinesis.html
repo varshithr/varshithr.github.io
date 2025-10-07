@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Kinesis Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #FF9900, #232F3E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="aws_topics.html" class="gradient-text">Back to AWS Topics</a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="index.html" class="hover:text-[#FF9900]">Home</a></li>
+                <li><a href="aboutme.html" class="hover:text-[#FF9900] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section id="hero" class="text-center my-12 sm:my-20">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">
+                Amazon Kinesis: Real-Time Data Streaming
+            </h1>
+            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">A deep dive into the Amazon Kinesis family of services for collecting, processing, and analyzing streaming data at any scale.</p>
+        </section>
+        <div class="space-y-8">
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Kinesis Family</h2>
+                <p class="text-gray-600 mb-4">Kinesis is not a single service, but a suite of services designed for different streaming data use cases.</p>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Kinesis Data Streams:</strong> A massively scalable and durable real-time data streaming service. It can continuously capture gigabytes of data per second from hundreds of thousands of sources. You manage the capacity by provisioning "shards."</li>
+                    <li><strong>Kinesis Data Firehose:</strong> The easiest way to reliably load streaming data into data lakes, data stores, and analytics services. It's a fully managed service that automatically scales to match the throughput of your data.</li>
+                    <li><strong>Kinesis Data Analytics:</strong> Process and analyze streaming data in real time with SQL or Apache Flink. It allows you to build complex streaming applications to perform time-series analytics, feed real-time dashboards, and create real-time alerts.</li>
+                    <li><strong>Kinesis Video Streams:</strong> Securely stream video from connected devices to AWS for analytics, machine learning, and other processing.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Kinesis Data Streams: Core Concepts</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Stream:</strong> An ordered sequence of data records. A stream is composed of one or more shards.</li>
+                    <li><strong>Shard:</strong> A uniquely identified sequence of data records in a stream. Each shard has a fixed capacity (1 MB/s and 1,000 records/s for writes; 2 MB/s for reads). The total capacity of a stream is the sum of the capacities of its shards.</li>
+                    <li><strong>Partition Key:</strong> Used to group data by shard within a stream. Kinesis uses the partition key to segregate and route records to different shards. Records with the same partition key always go to the same shard.</li>
+                    <li><strong>Producers and Consumers:</strong> Producers put data records into Kinesis Data Streams. Consumers get data records from Kinesis Data Streams. Consumers can be custom applications (using the KCL), Lambda functions, or other AWS services like Kinesis Data Firehose or Kinesis Data Analytics.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Common Architectural Patterns</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Real-Time Analytics:</strong> `Producers -> Kinesis Data Streams -> Kinesis Data Analytics (Flink/SQL) -> Real-time Dashboards / Alerts`</li>
+                    <li><strong>Stream Archiving:</strong> `Producers -> Kinesis Data Streams -> Kinesis Data Firehose -> Amazon S3`</li>
+                    <li><strong>Serverless Stream Processing:</strong> `Producers -> Kinesis Data Streams -> AWS Lambda -> DynamoDB / Other AWS Services`</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>

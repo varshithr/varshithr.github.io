@@ -26,6 +26,10 @@
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.13.8/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
@@ -60,12 +64,25 @@
             </div>
             <div class="card">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">The Architecture</h2>
-                <div class="text-center mb-4 p-6 bg-gray-100 rounded-lg">
-                    <pre class="text-sm text-left text-gray-700">
-On-Prem SQL/SaaS -> Synapse Pipelines -> ADLS Gen2 (Data Lake) -> Synapse Serverless/Dedicated Pools -> Power BI
-                                                                    |
-                                                                    +--> Synapse Spark Pools (ML)
-                    </pre>
+                <div class="mermaid text-center">
+graph TD
+    subgraph "Data Sources"
+        A[On-Prem SQL]
+        B[SaaS Platforms]
+        C[ERP Systems]
+    end
+    subgraph "Unified Analytics Platform"
+        A & B & C --> D{Synapse Pipelines};
+        D --> E[ADLS Gen2 Data Lake];
+        E --> F(Synapse Spark Pools);
+        E --> G(Synapse Serverless SQL Pools);
+        F --> H(Synapse Dedicated SQL Pools);
+        G --> H;
+    end
+    subgraph "Business Intelligence & ML"
+        F --> I{Azure ML};
+        H --> J[Power BI];
+    end
                 </div>
                 <p class="text-gray-600 mb-4">Azure Synapse Analytics was selected to break down the data silos and provide a unified workspace for all data professionals:</p>
                 <ol class="list-decimal list-inside space-y-3">

@@ -199,6 +199,17 @@
     daily_transactions;
                         </code></pre>
                     </li>
+                    <li class="mb-2"><strong><code>FIRST_VALUE(column)</code> / <code>LAST_VALUE(column)</code>:</strong> Returns the value of the specified column from the first/last row of the window frame.
+                        <pre><code>
+<span class="sql-keyword">SELECT</span>
+    employee_name,
+    department,
+    hire_date,
+    <span class="sql-function">FIRST_VALUE</span>(employee_name) <span class="sql-keyword">OVER</span> (<span class="sql-keyword">PARTITION BY</span> department <span class="sql-keyword">ORDER BY</span> hire_date) <span class="sql-keyword">as</span> first_hire_in_dept
+<span class="sql-keyword">FROM</span>
+    employees;
+                        </code></pre>
+                    </li>
                     <li class="mb-2"><strong>Aggregate Functions as Window Functions (e.g., <code>SUM()</code>, <code>AVG()</code>, <code>COUNT()</code>):</strong> Perform aggregations over a window.
                         <pre><code>
 <span class="sql-keyword">SELECT</span>
@@ -211,6 +222,32 @@
                         </code></pre>
                     </li>
                 </ul>
+            </div>
+        </div>
+
+        <!-- Advanced Aggregations -->
+        <div class="mb-6">
+            <div class="section-header" onclick="toggleSection('advanced-aggregations')">
+                <h2 class="text-2xl font-semibold">Advanced Aggregations: CUBE, ROLLUP, and GROUPING SETS</h2>
+                <span class="accordion-icon text-2xl font-bold" id="advanced-aggregations-icon">+</span>
+            </div>
+            <div id="advanced-aggregations-content" class="section-content hidden">
+                <p class="mb-4">These extensions to the <code>GROUP BY</code> clause allow you to generate multiple levels of aggregation in a single query, which is useful for reporting and OLAP-style analysis.</p>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong><code>ROLLUP(a, b)</code>:</strong> Creates subtotals that "roll up" from the most detailed level to a grand total. It generates grouping sets for `(a, b)`, `(a)`, and `()`.</li>
+                    <li class="mb-2"><strong><code>CUBE(a, b)</code>:</strong> Creates subtotals for all possible combinations of the given columns. It generates grouping sets for `(a, b)`, `(a)`, `(b)`, and `()`.</li>
+                    <li class="mb-2"><strong><code>GROUPING SETS((a, b), (a), (b), ())</code>:</strong> Allows you to explicitly specify the exact combinations (grouping sets) you want to aggregate.</li>
+                </ul>
+                <pre><code>
+<span class="sql-keyword">SELECT</span>
+    region,
+    department,
+    <span class="sql-function">SUM</span>(sales) <span class="sql-keyword">as</span> total_sales
+<span class="sql-keyword">FROM</span>
+    sales_data
+<span class="sql-keyword">GROUP BY</span>
+    <span class="sql-function">GROUPING SETS</span> ((region, department), (region), ());
+                </code></pre>
             </div>
         </div>
 
@@ -298,6 +335,12 @@
                 <span class="accordion-icon text-2xl font-bold" id="other-concepts-icon">+</span>
             </div>
             <div id="other-concepts-content" class="section-content hidden">
+                <h3 class="text-xl font-semibold mb-2 text-emerald-700">Platform-Specific Tuning Considerations:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Databricks/Spark SQL:</strong> Heavily relies on partitioning, Z-Ordering/Liquid Clustering, and broadcast joins. AQE is a key feature to leverage.</li>
+                    <li class="mb-2"><strong>BigQuery:</strong> Automatically handles many optimizations. The key is to leverage clustering and partitioning to reduce the amount of data scanned.</li>
+                    <li class="mb-2"><strong>Redshift:</strong> Requires more manual tuning of distribution styles and sort keys. Understanding the query plan is critical.</li>
+                </ul>
                 <h3 class="text-xl font-semibold mb-2 text-emerald-700">1. Common Table Expressions (CTEs):</h3>
                 <ul class="list-disc list-inside mb-4 pl-4">
                     <li class="mb-2">Improve readability and modularity of complex queries. Can sometimes aid optimization by allowing the optimizer to better understand the query flow.</li>

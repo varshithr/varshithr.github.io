@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Data Factory Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #0089D6, #0072C6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="azure_topics.html" class="gradient-text">Back to Azure Topics</a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="index.html" class="hover:text-[#0089D6]">Home</a></li>
+                <li><a href="aboutme.html" class="hover:text-[#0089D6] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section id="hero" class="text-center my-12 sm:my-20">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">
+                Azure Data Factory: Cloud-Scale Data Integration
+            </h1>
+            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">A deep dive into Azure Data Factory (ADF), the cloud-based ETL and data integration service for orchestrating and automating data movement and transformation.</p>
+        </section>
+        <div class="space-y-8">
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Core Components</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Pipelines:</strong> A logical grouping of activities that together perform a task. A pipeline could ingest data, transform it, and then load it into a data store.</li>
+                    <li><strong>Activities:</strong> Represent a single processing step in a pipeline. There are three types: data movement (e.g., Copy activity), data transformation (e.g., Mapping Data Flows, Spark), and control activities (e.g., ForEach, If Condition).</li>
+                    <li><strong>Datasets:</strong> Named views of data that simply point to or reference the data you want to use in your activities as inputs or outputs.</li>
+                    <li><strong>Linked Services:</strong> The connection strings that define the connection information needed for Data Factory to connect to external resources (e.g., Azure Blob Storage, an on-premises SQL Server).</li>
+                    <li><strong>Triggers:</strong> The unit of processing that determines when a pipeline execution needs to be kicked off. Triggers can be scheduled, tumbling window, storage event-based, or custom event-based.</li>
+                    <li><strong>Integration Runtimes (IR):</strong> The compute infrastructure used by Data Factory to provide data integration capabilities across different network environments. There are three types: Azure, Self-Hosted, and Azure-SSIS.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Key Features</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Code-Free and Code-First:</strong> Provides a rich visual interface for building pipelines with no code required, but also allows for advanced scripting and integration with SDKs.</li>
+                    <li><strong>Mapping Data Flows:</strong> A powerful, visual data transformation experience that generates and executes Spark code on a managed Spark cluster, allowing you to build complex ETL logic without writing code.</li>
+                    <li><strong>Hybrid Data Integration:</strong> The Self-Hosted Integration Runtime allows you to securely move data between the cloud and on-premises data stores.</li>
+                    <li><strong>Extensive Connectivity:</strong> Supports over 90 built-in connectors to a wide variety of SaaS, on-premises, and cloud data sources.</li>
+                    <li><strong>CI/CD Integration:</strong> Natively integrates with Azure DevOps and GitHub for source control and automated deployment of pipelines.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Data Factory vs. Synapse Pipelines</h2>
+                <p class="text-gray-600 mb-4">Azure Synapse Analytics includes a feature called Synapse Pipelines, which is based on the same technology as Azure Data Factory. However, there are some key differences:</p>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Scope:</strong> Data Factory is a standalone data integration service. Synapse Pipelines are one component of the broader Synapse Analytics workspace, which also includes Spark pools, SQL pools, and Data Explorer.</li>
+                    <li><strong>Integration:</strong> Synapse Pipelines are more tightly integrated with the other compute engines within the Synapse workspace.</li>
+                    <li><strong>User Experience:</strong> While the core functionality is the same, the user experience is slightly different, with Synapse providing a more unified studio for all analytics tasks. For pure data integration and orchestration, Data Factory is often the preferred choice. For building an end-to-end analytics platform, Synapse provides a more seamless experience.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>

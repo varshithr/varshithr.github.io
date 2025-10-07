@@ -26,6 +26,10 @@
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.13.8/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
@@ -59,13 +63,27 @@
             </div>
             <div class="card">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">The Architecture</h2>
-                <div class="text-center mb-4 p-6 bg-gray-100 rounded-lg">
-                    <pre class="text-sm text-left text-gray-700">
-On-Premises DW -> AWS DMS -> Amazon S3 (Raw) -> AWS Glue (ETL) -> Amazon S3 (Processed) -> Amazon Redshift -> Amazon QuickSight (BI)
-                                        |                                        ^
-                                        |                                        |
-                                        +-----------> AWS Step Functions (Orchestration) <-----------+
-                    </pre>
+                <div class="mermaid text-center">
+graph TD
+    subgraph "Data Sources"
+        A[On-Premises DW]
+        B[SaaS Platforms]
+    end
+    subgraph "Ingestion & Orchestration"
+        A --> C{AWS DMS};
+        B --> D{AWS Glue};
+        C --> E[Amazon S3 Raw];
+        D --> E;
+        F[AWS Step Functions] --> D;
+    end
+    subgraph "Processing & Warehousing"
+        E --> G(AWS Glue ETL);
+        G --> H[Amazon S3 Processed];
+        H --> I(Amazon Redshift);
+    end
+    subgraph "Analytics"
+        I --> J[Amazon QuickSight];
+    end
                 </div>
                 <p class="text-gray-600 mb-4">The new architecture implements a modern "Lake House" pattern on AWS, combining the scalability of a data lake with the performance and features of a data warehouse:</p>
                 <ol class="list-decimal list-inside space-y-3">

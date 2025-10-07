@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Data Lake Storage (ADLS) Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #0089D6, #0072C6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="azure_topics.html" class="gradient-text">Back to Azure Topics</a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="index.html" class="hover:text-[#0089D6]">Home</a></li>
+                <li><a href="aboutme.html" class="hover:text-[#0089D6] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section id="hero" class="text-center my-12 sm:my-20">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">
+                Azure Data Lake Storage (ADLS) Gen2
+            </h1>
+            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">A deep dive into ADLS Gen2, the massively scalable and secure data lake solution for high-performance analytics workloads on Azure.</p>
+        </section>
+        <div class="space-y-8">
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Core Concepts</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Built on Azure Blob Storage:</strong> ADLS Gen2 combines the features of ADLS Gen1 with the low-cost, tiered storage and high availability of Azure Blob Storage.</li>
+                    <li><strong>Hierarchical Namespace:</strong> This is the key differentiator from standard blob storage. It allows for organizing objects into a hierarchy of directories and subdirectories, just like a file system. This is critical for efficient data access and management in analytics workloads.</li>
+                    <li><strong>ABFS Driver:</strong> The Azure Blob File System (ABFS) driver provides a Hadoop-compatible file system interface, allowing analytics engines like Spark and Presto to access ADLS Gen2 data efficiently.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Key Features for Data Engineering</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Scalability:</strong> Designed to store and serve multiple exabytes of data with high throughput.</li>
+                    <li><strong>Security:</strong> Integrates with Azure Active Directory (Azure AD) and provides fine-grained access control using both RBAC (Role-Based Access Control) and POSIX-like ACLs (Access Control Lists).</li>
+                    <li><strong>Cost-Effectiveness:</strong> Supports tiered storage (Hot, Cool, Archive) and lifecycle management policies to automatically move data to lower-cost tiers as it ages.</li>
+                    <li><strong>Resilience:</strong> Offers various redundancy options, including LRS (Locally-redundant storage), ZRS (Zone-redundant storage), and GRS (Geo-redundant storage).</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">ADLS vs. S3</h2>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Namespace:</strong> ADLS Gen2 has a true hierarchical namespace, which can be more performant for certain analytics operations that involve directory renames and manipulations. S3 has a flat namespace with a pseudo-hierarchical structure.</li>
+                    <li><strong>Security Model:</strong> ADLS Gen2's support for both RBAC and fine-grained ACLs provides a more granular security model than S3's bucket policies and IAM roles.</li>
+                    <li><strong>Ecosystem Integration:</strong> ADLS Gen2 is deeply integrated with the Azure ecosystem, including Synapse Analytics, Databricks on Azure, and Azure Data Factory. S3 is the standard for the AWS ecosystem.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>

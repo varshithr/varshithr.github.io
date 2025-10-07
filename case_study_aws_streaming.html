@@ -26,6 +26,10 @@
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.13.8/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
@@ -59,13 +63,26 @@
             </div>
             <div class="card">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">The Architecture</h2>
-                <div class="text-center mb-4 p-6 bg-gray-100 rounded-lg">
-                    <pre class="text-sm text-left text-gray-700">
-Mobile App -> Amazon Kinesis Data Streams -> AWS Lambda (Enrichment) -> Amazon Kinesis Data Analytics (Flink) -> Amazon DynamoDB (Real-time State)
-                                                                            |
-                                                                            v
-                                                                    Amazon Kinesis Data Firehose -> Amazon S3 (Data Lake) -> Amazon Redshift (Dashboards)
-                    </pre>
+                <div class="mermaid text-center">
+graph TD
+    subgraph "Producers"
+        A[Mobile App]
+    end
+    subgraph "Real-Time Path"
+        A --> B(Kinesis Data Streams);
+        B --> C{Lambda Enrichment};
+        C --> D[Kinesis Data Analytics for Flink];
+        D --> E(DynamoDB for Real-Time State);
+    end
+    subgraph "Analytics Path"
+        B --> F(Kinesis Data Firehose);
+        F --> G(Amazon S3 Data Lake);
+        G --> H(Amazon Redshift);
+    end
+    subgraph "Consumers"
+        E --> I{App Backend};
+        H --> J[BI Dashboards];
+    end
                 </div>
                 <p class="text-gray-600 mb-4">The solution is built on a serverless, event-driven architecture designed for high throughput and low latency:</p>
                 <ol class="list-decimal list-inside space-y-3">
