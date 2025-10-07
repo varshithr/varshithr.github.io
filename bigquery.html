@@ -108,35 +108,35 @@
                     { key: "2025-09-17", data: ["UserID starts with 'A' (Block 1)", "Ignores the entire '2025-09-16' partition"] },
                 ]
             },
-            slots: {
-                title: "The Slot System (Compute Resource Model)",
-                description: "A **Slot** is a unit of computational capacity (CPU, RAM). The number of slots allocated determines the speed and concurrency of your queries.",
-                headers: ["Mode", "Slots Allocation", "Performance Goal", "Cost Model"],
+            editions: {
+                title: "BigQuery Editions (Capacity-Based Pricing)",
+                description: "BigQuery offers capacity-based pricing through Editions (Standard, Enterprise, Enterprise Plus), where you reserve computational capacity (slots) instead of paying per TB scanned.",
+                headers: ["Edition", "Use Case", "Slot Allocation", "Cost Model"],
                 rows: [
-                    { key: "On-Demand (Default)", data: ["Dynamic & Shared", "Variable/Best Effort", "Pay Per TB Scanned"] },
-                    { key: "Flat Rate (Reserved)", data: ["Fixed & Dedicated", "Consistent, Predictable Speed", "Pay Per Slot Time (Hourly/Monthly)"] },
-                    { key: "Autoscaling", data: ["Baseline + Burst", "High Concurrency with Guardrails", "Hybrid"] },
+                    { key: "On-Demand", data: ["Exploratory, low-volume", "Shared Pool (No Guarantee)", "Pay Per TB Scanned"] },
+                    { key: "Standard", data: ["Predictable workloads", "Dedicated Slots (Pay-as-you-go)", "Per Slot-Hour"] },
+                    { key: "Enterprise", data: ["Mission-critical, high concurrency", "Dedicated Slots (Annual)", "Per Slot-Hour (Discounted)"] },
+                    { key: "Enterprise Plus", data: ["Regulated industries, high security", "Dedicated Slots + Security Features", "Per Slot-Hour (Premium)"] },
                 ]
             },
-            pruningCost: {
-                title: "Query Pruning & Cost Reduction (The Trifecta)",
-                description: "The combination of Partitioning, Clustering, and Columnar storage reduces the total bytes processed, which is the primary factor in reducing BigQuery query cost.",
-                headers: ["Query", "Pruning Applied", "Bytes Processed (Example)"],
+            merge: {
+                title: "The MERGE Statement (Efficient UPSERTs)",
+                description: "The MERGE statement is a powerful DML operation that combines INSERT, UPDATE, and DELETE operations into a single, atomic transaction. It's ideal for synchronizing tables.",
+                headers: ["Operation", "Condition", "Action"],
                 rows: [
-                    { key: "SELECT * FROM LargeTable", data: ["None", "100 GB (Full Scan)"] },
-                    { key: "SELECT * FROM LargeTable WHERE date='2025-01-01'", data: ["Partition Pruning", "1 GB (Single Partition)"] },
-                    { key: "SELECT UserID FROM LargeTable WHERE date='2025-01-01'", data: ["Partition + Columnar Pruning", "0.1 GB (Single Column, Single Partition)"] },
-                    { key: "SELECT UserID FROM LargeTable WHERE date='2025-01-01' AND Country='US'", data: ["Partition + Columnar + Clustering Pruning", "0.01 GB (Hyper-Targeted)"] },
+                    { key: "WHEN MATCHED", data: ["Source row matches target row", "UPDATE target row"] },
+                    { key: "WHEN NOT MATCHED BY TARGET", data: ["Source row is new", "INSERT new row into target"] },
+                    { key: "WHEN NOT MATCHED BY SOURCE", data: ["Target row no longer in source", "DELETE row from target"] },
                 ]
             },
-            wildcards: {
-                title: "Wildcard Tables (Querying Many Tables at Once)",
-                description: "Wildcard tables allow you to run a single query against multiple tables that share a common prefix (e.g., daily log tables). The `_TABLE_SUFFIX` pseudo-column is key for filtering.",
-                headers: ["Table Name", "Wildcard Query Pattern", "Access Filtering"],
+            biglake: {
+                title: "BigLake (Querying Multi-Cloud Data)",
+                description: "BigLake allows you to create tables in BigQuery that read data directly from other cloud storage systems like AWS S3 and Azure Data Lake Storage, without data duplication.",
+                headers: ["Feature", "Benefit", "Example"],
                 rows: [
-                    { key: "logs_20250101", data: ["SELECT * FROM logs_*", "WHERE _TABLE_SUFFIX = '20250101'"] },
-                    { key: "logs_20250102", data: ["SELECT * FROM logs_*", "WHERE _TABLE_SUFFIX BETWEEN '20250101' AND '20250105'"] },
-                    { key: "logs_20250103", data: ["SELECT * FROM logs_2025*", "WHERE _TABLE_SUFFIX LIKE '03%'"] },
+                    { key: "Unified Interface", data: ["Query S3 data with GoogleSQL", "SELECT * FROM my_s3_table"] },
+                    { key: "Fine-Grained Security", data: ["Apply BigQuery column-level security to S3 data", "GRANT SELECT(column) ON my_s3_table"] },
+                    { key: "Performance Acceleration", data: ["Use BigQuery caching to speed up S3 queries", "Cached reads from S3"] },
                 ]
             }
         };
@@ -216,24 +216,24 @@
     <header class="bg-white sticky top-0 z-50 shadow-md mb-6">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="index.html" class="gradient-text">Data Engineering Concepts</a>
+                <a href="gcp_topics.html" class="gradient-text">Back to GCP Topics</a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="case_studies.html" class="hover:text-[#bc5090]">Case Studies</a></li>
+                <li><a href="index.html" class="hover:text-[#bc5090]">Home</a></li>
                 <li><a href="aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
         <svg class="w-8 h-8 mr-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-        BigQuery Schema & Performance Essentials
+        BigQuery Deep Dive: Architecture, Performance & Modern Features
     </h1>
-    <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the core concepts that enable BigQuery's massive scale and cost efficiency.</p>
+    <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the core concepts and modern features that enable BigQuery's massive scale and cost efficiency.</p>
 
     <!-- Tab Navigation -->
     <div class="flex flex-wrap gap-2 mb-8">
         <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            1. Decoupled Architecture (Dremel)
+            1. Architecture
         </button>
         <button data-tab="columnar" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
             2. Columnar Storage
@@ -242,19 +242,19 @@
             3. Nested & Repeated Fields
         </button>
         <button data-tab="partitioning" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            4. Table Partitioning (Date/Time)
+            4. Partitioning
         </button>
         <button data-tab="clustering" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            5. Clustering (Within Partitions)
+            5. Clustering
         </button>
-        <button data-tab="slots" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            6. The Slot System (Compute Model)
+        <button data-tab="editions" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+            6. Compute Editions
         </button>
-        <button data-tab="pruningCost" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            7. Query Pruning & Cost
+        <button data-tab="merge" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+            7. MERGE Statement
         </button>
-        <button data-tab="wildcards" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            8. Wildcard Tables
+        <button data-tab="biglake" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+            8. BigLake (Multi-Cloud)
         </button>
     </div>
 

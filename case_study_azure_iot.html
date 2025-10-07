@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: IoT Analytics with Azure</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #0089D6, #0072C6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="azure_topics.html" class="gradient-text">Back to Azure Topics</a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="index.html" class="hover:text-[#0089D6]">Home</a></li>
+                <li><a href="aboutme.html" class="hover:text-[#0089D6] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section id="hero" class="text-center my-12 sm:my-20">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">
+                Case Study: Predictive Maintenance for a Manufacturing Company
+            </h1>
+            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">How a heavy machinery manufacturer implemented a predictive maintenance solution using Azure IoT to reduce downtime and improve operational efficiency.</p>
+        </section>
+        <div class="space-y-8">
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Challenge</h2>
+                <p class="text-gray-600">A heavy machinery manufacturer was experiencing significant operational costs and customer dissatisfaction due to unexpected equipment failures in the field. Their maintenance schedule was based on fixed time intervals, not actual equipment usage or condition. The key challenges were:</p>
+                <ul class="list-disc list-inside mt-4 space-y-2">
+                    <li><strong>High Downtime Costs:</strong> Unplanned downtime for critical machinery resulted in substantial financial losses for their customers.</li>
+                    <li><strong>Reactive Maintenance:</strong> Maintenance was performed only after a failure occurred, which is more expensive and less efficient than proactive intervention.</li>
+                    <li><strong>Lack of Real-Time Visibility:</strong> Plant managers had no real-time insight into the health and performance of their operational fleet.</li>
+                    <li><strong>Data Overload:</strong> Thousands of sensors generated terabytes of telemetry data (vibration, temperature, pressure), but the company lacked the infrastructure to process and analyze it effectively.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Architecture</h2>
+                <div class="text-center mb-4 p-6 bg-gray-100 rounded-lg">
+                    <pre class="text-sm text-left text-gray-700">
+IoT Sensors -> Azure IoT Hub -> Azure Stream Analytics -> Azure ML (Predictions) -> Power BI (Dashboards)
+                                     |
+                                     v
+                                Azure Data Lake Storage (ADLS) -> Azure Synapse Analytics (Historical Analysis)
+                    </pre>
+                </div>
+                <p class="text-gray-600 mb-4">The solution implements an end-to-end predictive maintenance platform using a suite of integrated Azure services:</p>
+                <ol class="list-decimal list-inside space-y-3">
+                    <li><strong>Device Connectivity & Ingestion:</strong> <strong>Azure IoT Hub</strong> acts as the cloud gateway, securely connecting to and managing thousands of IoT sensors on the machinery. It ingests high-throughput telemetry data in real-time.</li>
+                    <li><strong>Real-Time Anomaly Detection:</strong> <strong>Azure Stream Analytics</strong> jobs subscribe to the IoT Hub data stream. It uses built-in anomaly detection functions to identify immediate operational issues (e.g., a sudden temperature spike) and sends real-time alerts to a monitoring dashboard.</li>
+                    <li><strong>Data Lake for Historical Analysis:</strong> All raw telemetry data from IoT Hub is simultaneously streamed to <strong>Azure Data Lake Storage (ADLS) Gen2</strong>, creating a historical archive for model training and deep analysis.</li>
+                    <li><strong>Predictive Model Development:</strong> Data scientists use <strong>Azure Machine Learning</strong> to build and train predictive models on the historical data in ADLS. They experiment with different algorithms (e.g., gradient-boosted trees) to predict the Remaining Useful Life (RUL) of equipment components.</li>
+                    <li><strong>Model Deployment & Scoring:</strong> The trained ML model is deployed as a real-time endpoint using Azure Machine Learning. The Stream Analytics job calls this endpoint to score the live telemetry data, generating a real-time RUL prediction for each machine.</li>
+                    <li><strong>Unified Analytics & BI:</strong> <strong>Azure Synapse Analytics</strong> is used to combine the historical sensor data with maintenance logs and ERP data to identify long-term trends. Plant managers and business analysts use <strong>Power BI</strong> dashboards, which connect to both Stream Analytics (for real-time data) and Synapse (for historical context), to get a complete view of fleet health.</li>
+                </ol>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Key Technical Details</h2>
+                <ul class="list-disc list-inside mt-4 space-y-3">
+                    <li><strong>Edge Computing with IoT Edge:</strong> For critical machinery requiring immediate local action, an <strong>Azure IoT Edge</strong> runtime is deployed on-site. This allows an ML model to run directly on an edge device, enabling sub-second failure detection and machine shutdown without waiting for a round trip to the cloud.</li>
+                    <li><strong>Time Series Insights for Exploration:</strong> Before building complex models, data scientists use <strong>Azure Time Series Insights</strong> for ad-hoc exploration and visualization of the raw sensor data. This helps in understanding patterns, anomalies, and correlations in the time-series data.</li>
+                    <li><strong>Scalable Model Serving:</strong> The ML model is deployed to an <strong>Azure Kubernetes Service (AKS)</strong> cluster managed by Azure Machine Learning. This provides a highly scalable and resilient environment for real-time model inference, capable of handling thousands of requests per second from the Stream Analytics job.</li>
+                    <li><strong>Continuous Improvement Feedback Loop:</strong> Maintenance work orders and failure reports are fed back into the data lake. This new data is used to regularly retrain and improve the predictive models, creating a feedback loop that makes the system more accurate over time.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>
