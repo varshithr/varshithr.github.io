@@ -12,55 +12,41 @@
             font-family: 'Inter', sans-serif;
             background-color: #f7f9fb;
         }
-        .bq-cell {
-            min-height: 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem;
-            transition: all 0.3s ease;
-            font-size: 0.75rem;
-            line-height: 1.2;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-align: center;
-        }
-        .header-cell {
-            background-color: #6d28d9; /* Deep Purple */
-            color: white;
-            font-weight: 600;
-            border: 1px solid #581c87;
-        }
-        .concept-cell {
-            background-color: #e9d5ff; /* Light Purple */
-            color: #4c1d95;
-            font-weight: 700;
-            text-align: left;
-            padding-left: 1rem;
-            cursor: pointer;
-        }
-        .data-cell {
-            background-color: #ffffff;
-            color: #1f2937;
-            border: 1px solid #e5e7eb;
-            font-size: 0.875rem;
-            cursor: pointer;
-        }
-        /* Specific styling for concepts */
-        .columnar-cell {
-            background-color: #ecfdf5; /* Light Green */
-            color: #065f46;
-            font-weight: 500;
-        }
-        .nested-cell {
-            background-color: #fffbeb; /* Light Yellow */
-            color: #92400e;
-            font-weight: 500;
-        }
-        .pruning-cell {
-            background-color: #fee2e2; /* Light Red/Pink */
-            color: #991b1b;
-            font-weight: 600;
+        /* Responsive Table Styles */
+        @media (max-width: 767px) {
+            .responsive-table thead {
+                display: none;
+            }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td {
+                display: block;
+                width: 100%;
+            }
+            .responsive-table tr {
+                margin-bottom: 1rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                background-color: white;
+            }
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: right;
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            .responsive-table td::before {
+                content: attr(data-label);
+                text-align: left;
+                font-weight: 600;
+                color: #5b21b6; /* Purple-700 */
+                padding-right: 1rem;
+                white-space: nowrap;
+            }
+            .responsive-table td:last-child {
+                border-bottom: none;
+            }
         }
     </style>
     <script>
@@ -178,48 +164,30 @@
 
             // 3. Generate Table HTML
             const currentConcept = concepts[state.currentTab];
-            let html = `<div class="overflow-x-auto shadow-xl rounded-xl">`;
-            // Dynamic grid layout: 180px for Concept, rest split evenly
-            html += `<div class="grid" style="grid-template-columns: 180px repeat(${currentConcept.headers.length - 1}, 1fr);">`;
+            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
 
-            // Headers
+            // Desktop Headers
+            html += '<thead class="bg-purple-800 text-white"><tr>';
             currentConcept.headers.forEach(header => {
-                html += `<div class="header-cell bq-cell h-12 flex items-center justify-center">${header}</div>`;
+                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
             });
+            html += '</tr></thead>';
 
-            // Rows
-            currentConcept.rows.forEach((row, rowIndex) => {
-                // Concept/Row Identifier Cell
-                let conceptCellClasses = 'concept-cell bq-cell h-16';
-                let dataCellClasses = 'data-cell bq-cell h-16';
+            // Body
+            html += '<tbody>';
+            currentConcept.rows.forEach(row => {
+                html += '<tr class="md:border-b md:border-gray-200">';
+                // First cell is the key, styled differently
+                html += `<td data-label="${currentConcept.headers[0]}" class="font-semibold text-purple-800 md:bg-purple-50">${row.key}</td>`;
 
-                // Specific styling/content overrides for concepts
-                if (state.currentTab === 'columnar') {
-                    conceptCellClasses = 'concept-cell bq-cell h-16 bg-blue-100 text-blue-800';
-                    dataCellClasses = 'columnar-cell bq-cell h-16';
-                }
-                if (state.currentTab === 'nested') {
-                    conceptCellClasses = 'concept-cell bq-cell h-16 bg-yellow-100 text-yellow-800';
-                    dataCellClasses = 'nested-cell bq-cell h-16';
-                }
-                if (state.currentTab === 'pruningCost') {
-                    conceptCellClasses = 'concept-cell bq-cell h-16 bg-red-100 text-red-800';
-                    dataCellClasses = 'pruning-cell bq-cell h-16';
-                }
-
-                html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
-
-                // Data Cells
-                currentConcept.headers.slice(1).forEach((header, colIndex) => {
-                    const data = row.data[colIndex];
-                    let cellContent = data;
-                    let cellClasses = dataCellClasses;
-
-                    html += `<div class="${cellClasses}" title="${header}: ${data}">${cellContent}</div>`;
+                // Data cells
+                row.data.forEach((cellData, colIndex) => {
+                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}">${cellData}</td>`;
                 });
+                html += '</tr>';
             });
+            html += '</tbody></table>';
 
-            html += `</div></div>`;
             container.innerHTML = html;
         };
 
@@ -286,7 +254,7 @@
     </div>
 
     <!-- BigQuery Visualizer Container -->
-    <div id="table-container" class="mt-8 overflow-x-auto">
+    <div id="table-container" class="mt-8">
         <!-- Visual table will be generated here -->
     </div>
 </body>

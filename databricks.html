@@ -13,63 +13,6 @@
             background-color: #f0f4f8; /* Light blue-gray background */
             color: #333;
         }
-        .container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 1.5rem;
-            background-color: #ffffff;
-            border-radius: 1rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-        }
-        .section-header {
-            background-color: #4f46e5; /* Indigo */
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 0.75rem;
-            margin-bottom: 1rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background-color 0.3s ease;
-        }
-        .section-header:hover {
-            background-color: #4338ca; /* Darker indigo on hover */
-        }
-        .section-content {
-            background-color: #f8fafc; /* Lighter background for content */
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid #e2e8f0; /* Light border */
-        }
-        .accordion-icon {
-            transition: transform 0.3s ease;
-        }
-        .accordion-icon.rotated {
-            transform: rotate(90deg);
-        }
-        .table-container {
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-        th, td {
-            padding: 0.75rem 1rem;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        th {
-            background-color: #eff6ff; /* Light blue for table header */
-            font-weight: 600;
-            color: #1e3a8a; /* Darker blue for header text */
-        }
-        td {
-            background-color: #ffffff;
-        }
         .cheatsheet-item {
             margin-bottom: 1rem;
             padding-bottom: 1rem;
@@ -85,17 +28,52 @@
             color: #4f46e5;
             margin-bottom: 0.5rem;
         }
+        /* Responsive Table Styles */
+        @media (max-width: 767px) {
+            .responsive-table thead {
+                display: none;
+            }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td {
+                display: block;
+                width: 100%;
+            }
+            .responsive-table tr {
+                margin-bottom: 1rem;
+                border: 1px solid #e2e8f0;
+                border-radius: 0.5rem;
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            }
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: right;
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid #e2e8f0;
+            }
+            .responsive-table td::before {
+                content: attr(data-label);
+                text-align: left;
+                font-weight: 600;
+                color: #4f46e5; /* Indigo */
+                padding-right: 1rem;
+                white-space: nowrap;
+            }
+            .responsive-table td:last-child {
+                border-bottom: none;
+            }
+        }
     </style>
 </head>
 <body class="p-4 sm:p-6 md:p-8">
-    <div class="container">
+    <div class="container mx-auto max-w-5xl p-4 sm:p-6">
         <a href="index.html" class="text-gray-600 hover:text-indigo-600 hover:underline font-semibold mb-6 inline-block">&larr; Back to Home</a>
-        <h1 class="text-4xl font-bold text-center mb-8 text-indigo-700">Understanding Databricks & Lakehouse Architecture</h1>
+        <h1 class="text-3xl sm:text-4xl font-bold text-center mb-8 text-indigo-700">Understanding Databricks & Lakehouse Architecture</h1>
 
         <!-- What is Databricks? -->
         <div class="mb-6">
             <div class="section-header" onclick="toggleSection('what-is-databricks')">
-                <h2 class="text-2xl font-semibold">What is Databricks?</h2>
+                <h2 class="text-xl sm:text-2xl font-semibold">What is Databricks?</h2>
                 <span class="accordion-icon text-2xl font-bold" id="what-is-databricks-icon">+</span>
             </div>
             <div id="what-is-databricks-content" class="section-content hidden">
@@ -181,65 +159,65 @@ BI Tools / ML Models / Data Science
             </div>
             <div id="databricks-dataproc-content" class="section-content hidden">
                 <p class="mb-4">While both Databricks and Google Cloud Dataproc provide managed Apache Spark services, they cater to slightly different needs and offer distinct advantages.</p>
-                <div class="table-container">
-                    <table class="min-w-full rounded-lg shadow-md">
+                <div class="overflow-x-auto">
+                    <table class="w-full responsive-table">
                         <thead>
                             <tr>
-                                <th>Feature</th>
-                                <th>Databricks</th>
-                                <th>Google Cloud Dataproc</th>
+                                <th class="p-3 text-left font-semibold text-sm text-indigo-800 bg-indigo-100">Feature</th>
+                                <th class="p-3 text-left font-semibold text-sm text-indigo-800 bg-indigo-100">Databricks</th>
+                                <th class="p-3 text-left font-semibold text-sm text-indigo-800 bg-indigo-100">Google Cloud Dataproc</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="text-sm">
                             <tr>
-                                <td class="font-semibold">Core Offering</td>
-                                <td>Unified Data & AI Platform (Lakehouse)</td>
-                                <td>Managed Apache Spark, Hadoop, Flink, Presto on GCP</td>
+                                <td data-label="Feature" class="font-semibold">Core Offering</td>
+                                <td data-label="Databricks">Unified Data & AI Platform (Lakehouse)</td>
+                                <td data-label="Google Cloud Dataproc">Managed Apache Spark, Hadoop, Flink, Presto on GCP</td>
                             </tr>
                             <tr>
-                                <td class="font-semibold">Architecture Focus</td>
-                                <td>Lakehouse (Delta Lake, Unity Catalog, Photon)</td>
-                                <td>Traditional Data Lake (GCS) with Spark/Hadoop clusters</td>
+                                <td data-label="Feature" class="font-semibold">Architecture Focus</td>
+                                <td data-label="Databricks">Lakehouse (Delta Lake, Unity Catalog, Photon)</td>
+                                <td data-label="Google Cloud Dataproc">Traditional Data Lake (GCS) with Spark/Hadoop clusters</td>
                             </tr>
                             <tr>
-                                <td class="font-semibold">Managed Service Level</td>
-                                <td>Higher level of abstraction, fully managed platform including compute, storage layer (Delta Lake), governance (Unity Catalog), and ML lifecycle (MLflow).</td>
-                                <td>Managed clusters for open-source frameworks. More control over underlying infrastructure.</td>
+                                <td data-label="Feature" class="font-semibold">Managed Service Level</td>
+                                <td data-label="Databricks">Higher level of abstraction, fully managed platform including compute, storage layer (Delta Lake), governance (Unity Catalog), and ML lifecycle (MLflow).</td>
+                                <td data-label="Google Cloud Dataproc">Managed clusters for open-source frameworks. More control over underlying infrastructure.</td>
                             </tr>
                             <tr>
-                                <td class="font-semibold">Performance Optimization</td>
-                                <td>Photon engine, Delta Lake optimizations for ACID transactions and indexing.</td>
-                                <td>Standard Spark optimizations, relies on underlying GCP infrastructure.</td>
+                                <td data-label="Feature" class="font-semibold">Performance Optimization</td>
+                                <td data-label="Databricks">Photon engine, Delta Lake optimizations for ACID transactions and indexing.</td>
+                                <td data-label="Google Cloud Dataproc">Standard Spark optimizations, relies on underlying GCP infrastructure.</td>
                             </tr>
                             <tr>
-                                <td class="font-semibold">Data Governance</td>
-                                <td>Unity Catalog for centralized, fine-grained access control across all data assets.</td>
-                                <td>Relies on GCP IAM and other GCP services for governance.</td>
+                                <td data-label="Feature" class="font-semibold">Data Governance</td>
+                                <td data-label="Databricks">Unity Catalog for centralized, fine-grained access control across all data assets.</td>
+                                <td data-label="Google Cloud Dataproc">Relies on GCP IAM and other GCP services for governance.</td>
                             </tr>
                             <tr>
-                                <td class="font-semibold">Machine Learning</td>
-                                <td>Integrated MLflow for full ML lifecycle management, Databricks ML Runtime.</td>
-                                <td>Integrates with Vertex AI and other GCP ML services, but MLflow needs to be set up.</td>
+                                <td data-label="Feature" class="font-semibold">Machine Learning</td>
+                                <td data-label="Databricks">Integrated MLflow for full ML lifecycle management, Databricks ML Runtime.</td>
+                                <td data-label="Google Cloud Dataproc">Integrates with Vertex AI and other GCP ML services, but MLflow needs to be set up.</td>
                             </tr>
                             <tr>
-                                <td class="font-semibold">Data Warehousing</td>
-                                <td>Databricks SQL for high-performance SQL analytics on the Lakehouse.</td>
-                                <td>Can run SQL on Spark, but not a dedicated data warehousing experience like DBSQL.</td>
+                                <td data-label="Feature" class="font-semibold">Data Warehousing</td>
+                                <td data-label="Databricks">Databricks SQL for high-performance SQL analytics on the Lakehouse.</td>
+                                <td data-label="Google Cloud Dataproc">Can run SQL on Spark, but not a dedicated data warehousing experience like DBSQL.</td>
                             </tr>
                             <tr>
-                                <td class="font-semibold">Cost Model</td>
-                                <td>DBUs (Databricks Units) based on compute usage, plus cloud infrastructure costs. Often higher for basic Spark, but can be more cost-effective for end-to-end solutions.</td>
-                                <td>Per-second billing for compute resources (VMs, storage), generally more granular control over costs.</td>
+                                <td data-label="Feature" class="font-semibold">Cost Model</td>
+                                <td data-label="Databricks">DBUs (Databricks Units) based on compute usage, plus cloud infrastructure costs. Often higher for basic Spark, but can be more cost-effective for end-to-end solutions.</td>
+                                <td data-label="Google Cloud Dataproc">Per-second billing for compute resources (VMs, storage), generally more granular control over costs.</td>
                             </tr>
                             <tr>
-                                <td class="font-semibold">Open Source Focus</td>
-                                <td>Strong commitment to open source (Spark, Delta Lake, MLflow).</td>
-                                <td>Provides managed open-source frameworks (Spark, Hadoop, etc.).</td>
+                                <td data-label="Feature" class="font-semibold">Open Source Focus</td>
+                                <td data-label="Databricks">Strong commitment to open source (Spark, Delta Lake, MLflow).</td>
+                                <td data-label="Google Cloud Dataproc">Provides managed open-source frameworks (Spark, Hadoop, etc.).</td>
                             </tr>
                             <tr>
-                                <td class="font-semibold">Use Cases</td>
-                                <td>Unified data & AI platforms, complex ML pipelines, real-time analytics, data warehousing on cloud data lakes.</td>
-                                <td>Lift-and-shift Hadoop/Spark workloads, custom big data processing, integrating with other GCP services.</td>
+                                <td data-label="Feature" class="font-semibold">Use Cases</td>
+                                <td data-label="Databricks">Unified data & AI platforms, complex ML pipelines, real-time analytics, data warehousing on cloud data lakes.</td>
+                                <td data-label="Google Cloud Dataproc">Lift-and-shift Hadoop/Spark workloads, custom big data processing, integrating with other GCP services.</td>
                             </tr>
                         </tbody>
                     </table>
