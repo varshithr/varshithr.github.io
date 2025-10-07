@@ -12,59 +12,41 @@
             font-family: 'Inter', sans-serif;
             background-color: #f7f9fb;
         }
-        .dataproc-cell {
-            min-height: 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem;
-            transition: all 0.3s ease;
-            font-size: 0.75rem;
-            line-height: 1.2;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-align: center;
-            white-space: nowrap;
-        }
-        .header-cell {
-            background-color: #FABC05; /* Google Yellow/Orange */
-            color: #1F2937; /* Dark text on light header */
-            font-weight: 600;
-            border: 1px solid #EAA000;
-        }
-        .concept-cell {
-            background-color: #fffde7; /* Very Light Yellow */
-            color: #1f2937;
-            font-weight: 700;
-            text-align: left;
-            padding-left: 1rem;
-            cursor: pointer;
-        }
-        .data-cell {
-            background-color: #ffffff;
-            color: #1f2937;
-            border: 1px solid #e5e7eb;
-            font-size: 0.875rem;
-            cursor: pointer;
-        }
-        /* Specific styling for concepts using Google colors */
-        /* Blue for Execution/Compute */
-        .execution-cell {
-            background-color: #D1E3FF; 
-            color: #1A73E8;
-            font-weight: 600;
-        }
-        /* Green for Data/Storage */
-        .data-plane-cell {
-            background-color: #E6F4EA; 
-            color: #34A853;
-            font-weight: 600;
-        }
-        /* Red/Orange for Management/Serverless */
-        .metadata-cell {
-            background-color: #FEEFC3; 
-            color: #F9AB00;
-            font-weight: 600;
+        /* Responsive Table Styles */
+        @media (max-width: 767px) {
+            .responsive-table thead {
+                display: none;
+            }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td {
+                display: block;
+                width: 100%;
+            }
+            .responsive-table tr {
+                margin-bottom: 1rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                background-color: white;
+            }
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: right;
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            .responsive-table td::before {
+                content: attr(data-label);
+                text-align: left;
+                font-weight: 600;
+                color: #b98700; /* Yellow-700 */
+                padding-right: 1rem;
+                white-space: nowrap;
+            }
+            .responsive-table td:last-child {
+                border-bottom: none;
+            }
         }
     </style>
     <script>
@@ -178,64 +160,30 @@
 
             // 3. Generate Table HTML
             const currentConcept = concepts[state.currentTab];
-            let html = `<div class="overflow-x-auto shadow-xl rounded-xl">`;
-            // Dynamic grid layout: 180px for Concept, rest split evenly
-            html += `<div class="grid" style="grid-template-columns: 180px repeat(${currentConcept.headers.length - 1}, 1fr);">`;
+            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
 
-            // Headers
+            // Desktop Headers
+            html += '<thead class="bg-yellow-500 text-gray-800"><tr>';
             currentConcept.headers.forEach(header => {
-                html += `<div class="header-cell dataproc-cell h-12 flex items-center justify-center">${header}</div>`;
+                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
             });
+            html += '</tr></thead>';
 
-            // Rows
-            currentConcept.rows.forEach((row, rowIndex) => {
-                // Concept/Row Identifier Cell
-                let conceptCellClasses = 'concept-cell dataproc-cell h-16';
-                let dataCellClasses = 'data-cell dataproc-cell h-16';
+            // Body
+            html += '<tbody>';
+            currentConcept.rows.forEach(row => {
+                html += '<tr class="md:border-b md:border-gray-200">';
+                // First cell is the key, styled differently
+                html += `<td data-label="${currentConcept.headers[0]}" class="font-semibold text-yellow-800 md:bg-yellow-50">${row.key}</td>`;
                 
-                // Specific styling logic for Dataproc concepts
-                if (state.currentTab === 'architecture') {
-                    if (row.key.includes('Master Node') || row.key.includes('Worker Nodes')) dataCellClasses = 'execution-cell dataproc-cell h-16'; // Compute
-                    if (row.key.includes('Managed Service')) dataCellClasses = 'metadata-cell dataproc-cell h-16'; // Management
-                }
-                if (state.currentTab === 'cluster') {
-                    if (row.key.includes('Workers')) dataCellClasses = 'execution-cell dataproc-cell h-16'; // Compute/Scaling
-                    if (row.key.includes('Initialization Action') || row.key.includes('Autoscaling Policy')) dataCellClasses = 'metadata-cell dataproc-cell h-16'; // Management/Config
-                }
-                if (state.currentTab === 'job') {
-                    if (row.key.includes('Job')) dataCellClasses = 'execution-cell dataproc-cell h-16'; // Execution
-                    if (row.key.includes('History Server')) dataCellClasses = 'metadata-cell dataproc-cell h-16'; // Monitoring
-                }
-                if (state.currentTab === 'storage') {
-                    if (row.key.includes('GCS') || row.key.includes('BigQuery')) dataCellClasses = 'data-plane-cell dataproc-cell h-16'; // Data
-                    if (row.key.includes('Ephemeral Clusters')) dataCellClasses = 'execution-cell dataproc-cell h-16'; // Compute
-                }
-                if (state.currentTab === 'serverless') {
-                    if (row.key.includes('Compute') || row.key.includes('Sessions') || row.key.includes('Provisioning')) dataCellClasses = 'metadata-cell dataproc-cell h-16'; // Serverless/Management
-                    if (row.key.includes('Cost Model')) dataCellClasses = 'execution-cell dataproc-cell h-16'; // Cost
-                }
-                if (state.currentTab === 'advanced') {
-                    if (row.key.includes('Gateway') || row.key.includes('Metastore')) dataCellClasses = 'data-plane-cell dataproc-cell h-16'; // Networking/Governance
-                    if (row.key.includes('Fast Shutdown') || row.key.includes('Personal Cluster')) dataCellClasses = 'execution-cell dataproc-cell h-16'; // Efficiency/Compute
-                }
-                if (state.currentTab === 'security') {
-                    if (row.key.includes('IAM') || row.key.includes('Kerberos')) dataCellClasses = 'metadata-cell dataproc-cell h-16'; // Access Control
-                    if (row.key.includes('VPC Peering') || row.key.includes('Encryption')) dataCellClasses = 'data-plane-cell dataproc-cell h-16'; // Network/Data Protection
-                }
-
-                html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
-
-                // Data Cells
-                currentConcept.headers.slice(1).forEach((header, colIndex) => {
-                    const data = row.data[colIndex];
-                    let cellContent = data;
-                    let cellClasses = dataCellClasses;
-
-                    html += `<div class="${cellClasses}" title="${header}: ${data}">${cellContent}</div>`;
+                // Data cells
+                row.data.forEach((cellData, colIndex) => {
+                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}">${cellData}</td>`;
                 });
+                html += '</tr>';
             });
+            html += '</tbody></table>';
 
-            html += `</div></div>`;
             container.innerHTML = html;
         };
 
@@ -260,41 +208,41 @@
         };
     </script>
 </head>
-<body class="p-8">
+<body class="p-4 sm:p-8">
     <a href="index.html" class="text-gray-600 hover:text-yellow-600 hover:underline font-semibold mb-6 inline-block">&larr; Back to Home</a>
-    <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
         <svg class="w-8 h-8 mr-3 text-yellow-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM5 9a1 1 0 000 2h10a1 1 0 100-2H5z" clip-rule="evenodd"></path></svg>
         Google Cloud Dataproc Visual Deep Dive
     </h1>
-    <p class="text-lg text-gray-600 mb-8">Click on the tabs below to explore the fundamental components of Google Cloud Dataproc, the managed service for Spark, Hadoop, and other open-source data analytics frameworks.</p>
+    <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the fundamental components of Google Cloud Dataproc, the managed service for Spark, Hadoop, and other open-source data analytics frameworks.</p>
 
     <!-- Tab Navigation -->
-    <div class="flex flex-wrap space-x-4 space-y-2 mb-8">
-        <button data-tab="architecture" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+    <div class="flex flex-wrap gap-2 mb-8">
+        <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
             1. Core Architecture
         </button>
-        <button data-tab="cluster" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+        <button data-tab="cluster" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
             2. Cluster Lifecycle & Scaling
         </button>
-        <button data-tab="job" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+        <button data-tab="job" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
             3. Job Management
         </button>
-        <button data-tab="storage" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+        <button data-tab="storage" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
             4. Storage Integration
         </button>
-        <button data-tab="serverless" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+        <button data-tab="serverless" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
             5. Dataproc Serverless
         </button>
-        <button data-tab="advanced" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+        <button data-tab="advanced" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
             6. Advanced Features
         </button>
-        <button data-tab="security" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+        <button data-tab="security" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
             7. Security & Governance
         </button>
     </div>
 
     <!-- Explanation Bar -->
-    <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md">
+    <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base">
         <!-- Message will be populated by JS -->
     </div>
 
