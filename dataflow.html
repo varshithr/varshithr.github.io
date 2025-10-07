@@ -311,8 +311,18 @@
         };
     </script>
 </head>
-<body class="p-8">
-    <a href="index.html" class="text-gray-600 hover:text-indigo-600 hover:underline font-semibold mb-6 inline-block">&larr; Back to Home</a>
+<body class="p-4 sm:p-8">
+    <header class="bg-white sticky top-0 z-50 shadow-md mb-6">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="index.html" class="gradient-text">Data Engineering Concepts</a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="case_studies.html" class="hover:text-[#bc5090]">Case Studies</a></li>
+                <li><a href="aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
     <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
         <svg class="w-8 h-8 mr-3 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
         Cloud Dataflow (Apache Beam) Pipeline Essentials

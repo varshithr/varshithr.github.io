@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Varshith Manchikanti - Data Engineer & Architect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for professional aesthetic and subtle effects */
+        :root {
+            /* NEW COLOR SCHEME: Clean Light Theme with Teal Accent */
+            --primary-color: #0d9488; /* Teal-700 for strong contrast accent */
+            --bg-color: #ffffff; /* White background */
+            --text-color: #1f2937; /* Dark Gray text (Slate-800) */
+            --card-bg: #f8fafc; /* Very light background for cards (Slate-50) */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        .skill-badge {
+            background-color: var(--primary-color);
+            color: white; /* Ensure text is white on dark badge */
+            transition: transform 0.2s;
+        }
+        .skill-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .experience-card {
+            background-color: var(--card-bg);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05); /* Lighter shadow for light theme */
+            border-left: 4px solid var(--primary-color);
+            transition: box-shadow 0.3s ease;
+        }
+        .experience-card:hover {
+            box-shadow: 0 15px 20px rgba(0, 0, 0, 0.1);
+        }
+        /* Custom scrollbar for subtle professional look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; } /* Gray-300 */
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; } /* Gray-400 */
+
+        /* Icon Utility */
+        .icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            display: inline-block;
+            vertical-align: middle;
+            stroke-width: 2;
+            stroke: currentColor;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <header class="bg-white sticky top-0 z-50 shadow-md mb-6">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="index.html" class="gradient-text">Data Engineering Concepts</a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="case_studies.html" class="hover:text-[#bc5090]">Case Studies</a></li>
+                <li><a href="index.html" class="hover:text-[#bc5090]">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="max-w-5xl mx-auto space-y-16">
+        
+        <!-- HEADER SECTION -->
+        <header class="text-center pt-4 md:pt-10 pb-8 border-b border-gray-300">
+            <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-teal-700 to-sky-800">
+                VARSHITH MANCHIKANTI
+            </h1>
+            <p class="text-2xl mt-2 font-light text-gray-700">
+                Accomplished Data Engineer & Architect
+            </p>
+            
+            <!-- Contact Bar -->
+            <div class="flex flex-wrap justify-center gap-4 md:gap-8 mt-6 text-sm text-gray-500">
+                <a href="tel:+917416760120" class="flex items-center hover:text-teal-700 transition">
+                    <svg class="icon mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 3.08 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    +91-7416760120
+                </a>
+                <a href="mailto:varshith528@live.com" class="flex items-center hover:text-teal-700 transition">
+                    <svg class="icon mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    varshith528@live.com
+                </a>
+                <a href="https://github.com/varshithr" target="_blank" class="flex items-center hover:text-teal-700 transition">
+                    <svg class="icon mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.93 2c0 0-1.01.31-3.3 1.24A11.08 11.08 0 0 0 12 3c-1.92 0-3.84.27-5.7.77-2.28-.93-3.3-1.24-3.3-1.24A5.07 5.07 0 0 0 4 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    github.com/varshithr
+                </a>
+                <a href="https://linkedin.com/in/varshithr" target="_blank" class="flex items-center hover:text-teal-700 transition">
+                    <svg class="icon mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                    linkedin.com/in/varshithr
+                </a>
+            </div>
+        </header>
+
+        <!-- SUMMARY -->
+        <section class="space-y-4">
+            <h2 class="text-3xl font-semibold section-title pb-2">SUMMARY</h2>
+            <p class="text-gray-700 leading-relaxed bg-gray-100/70 p-6 rounded-xl shadow-md">
+                Accomplished and certified Data Engineer & Architect with <strong class="text-teal-800">11+ years of experience</strong> designing, orchestrating, and
+                streamlining large-scale data engineering and analytics solutions. Demonstrated track record in leveraging <strong class="text-teal-800">AI/GenAI</strong>
+                to automate processes, accelerate insights, and drive innovation across finance, telecom, retail, and healthcare domains.
+            </p>
+        </section>
+
+        <!-- EDUCATION -->
+        <section>
+            <h2 class="text-3xl font-semibold section-title pb-2">EDUCATION</h2>
+            <div class="mt-8 space-y-6">
+                <div class="p-5 rounded-xl bg-gray-50">
+                    <h3 class="text-xl font-semibold text-teal-700">M.Tech in Software Systems (Data Analytics)</h3>
+                    <p class="text-lg font-medium mt-1 text-gray-700">Birla Institute of Technology & Science, Pilani</p>
+                </div>
+                <div class="p-5 rounded-xl bg-gray-50">
+                    <h3 class="text-xl font-semibold text-teal-700">B.Tech in Computer Science</h3>
+                    <p class="text-lg font-medium mt-1 text-gray-700">JNTU College of Engineering, Pulivendula</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- EXPERIENCE -->
+        <section>
+            <h2 class="text-3xl font-semibold section-title pb-2">EXPERIENCE</h2>
+            <div class="mt-8 space-y-10">
+
+                <!-- Candescent (NEW - Sept 2025 – Present) -->
+                <div class="experience-card p-6 rounded-xl">
+                    <div class="flex justify-between items-start flex-col sm:flex-row">
+                        <h3 class="text-2xl font-bold text-teal-700">Candescent</h3>
+                        <span class="text-sm text-gray-500 font-medium whitespace-nowrap mt-1 sm:mt-0">Sept 2025 – Present</span>
+                    </div>
+                    <p class="text-xl font-medium text-gray-700 mb-4">Software Engineer IV | Hyderabad, India</p>
+                    <ul class="list-disc ml-6 space-y-3 text-gray-600">
+                        <li>Driving <strong class="text-teal-800">real-time big data stream processing</strong> in the digital banking domain, handling volumes of <strong class="text-teal-800">70-100 million transactions per day</strong>.</li>
+                        <li>Engineered and optimized large-scale data pipelines on <strong class="text-teal-800">GCP</strong> utilizing <strong class="text-teal-800">PySpark</strong>, <strong class="text-teal-800">Databricks</strong>, <strong class="text-teal-800">Dataflow</strong>, and <strong class="text-teal-800">Dataproc</strong> for processing and storing data in <strong class="text-teal-800">BigQuery</strong> and <strong class="text-teal-800">Bigtable</strong>.</li>
+                        <li>Applied advanced data engineering techniques to support critical financial analysis and compliance reporting.</li>
+                    </ul>
+                </div>
+
+                <!-- Franklin Templeton -->
+                <div class="experience-card p-6 rounded-xl">
+                    <div class="flex justify-between items-start flex-col sm:flex-row">
+                        <h3 class="text-2xl font-bold text-teal-700">Franklin Templeton Investments</h3>
+                        <span class="text-sm text-gray-500 font-medium whitespace-nowrap mt-1 sm:mt-0">Aug 2020 – Sept 2025</span>
+                    </div>
+                    <p class="text-xl font-medium text-gray-700 mb-4">Lead Data Engineer | Hyderabad, India</p>
+                    <ul class="list-disc ml-6 space-y-3 text-gray-600">
+                        <li>Orchestrated deployment of a <strong class="font-semibold">Copilot Studio–powered chatbot for Compliance</strong>, earning runner-up in a global PoC showcase.</li>
+                        <li>Engineered a Streamlit application to classify and enrich third-party distribution data via <strong class="font-semibold">Databricks Llama endpoints and Crew.ai</strong>, accelerating data quality efforts.</li>
+                        <li>Migrated Azure Databricks workloads (ADLS Gen2) to <strong class="font-semibold">AWS with UC workflow upgrades</strong> during a major cloud consolidation—streamlined operations across teams.</li>
+                        <li>Implemented a production-grade, fine-tuned <strong class="font-semibold">SparkNLP NER solution</strong>, standardizing entity extraction at minimal cost.</li>
+                        <li>Spearheaded <strong class="font-semibold">Xceptor-based automation of 105+ internal processes</strong>, realizing <strong class="font-semibold">260 man-days in annual savings</strong> and significantly reducing error rates.</li>
+                    </ul>
+                </div>
+
+                <!-- SpringML Inc. -->
+                <div class="experience-card p-6 rounded-xl">
+                    <div class="flex justify-between items-start flex-col sm:flex-row">
+                        <h3 class="text-2xl font-bold text-teal-700">SpringML Inc.</h3>
+                        <span class="text-sm text-gray-500 font-medium whitespace-nowrap mt-1 sm:mt-0">Nov 2018 – Aug 2020</span>
+                    </div>
+                    <p class="text-xl font-medium text-gray-700 mb-4">Senior Data Engineer | Hyderabad, India</p>
+                    <ul class="list-disc ml-6 space-y-3 text-gray-600">
+                        <li>Architected and optimized end-to-end ML pipelines on GCP (<strong class="font-semibold">Kubeflow, TFX, Composer</strong>), enabling seamless model training & serving.</li>
+                        <li>Developed ETL jobs to ingest and transform <strong class="font-semibold">terabyte-scale data</strong> into <strong class="font-semibold">BigQuery, Bigtable, and Cloud Storage</strong>—accelerating analytics readiness.</li>
+                        <li>Designed and deployed Angular/React UIs and Python Flask back-ends on App Engine for real-time dashboards and data APIs.</li>
+                        <li>Migrated legacy Hadoop workloads to <strong class="font-semibold">GCP Dataproc</strong>, streamlining Spark job orchestration and reducing infrastructure costs.</li>
+                        <li class="mt-4 font-semibold text-gray-700">Key Client Achievements:</li>
+                        <ul class="list-circle ml-4 space-y-1 text-gray-600">
+                            <li>**Publishers Clearing House:** Automated ML model lifecycle (Kubeflow, KFServing) with CI/CD, yielding <strong class="font-semibold">$142K annual savings</strong>.</li>
+                            <li>**CBRE Inc.:** Engineered secure GCP VPCs, VPNs, Dataflow pipelines, and BigQuery schemas for enterprise data migration.</li>
+                            <li>**iHuddl Investments:** Built real-time dashboards (<strong class="font-semibold">Angular, D3.js</strong>), WebSocket data pipelines, and scalable App Engine services.</li>
+                        </ul>
+                    </ul>
+                </div>
+
+                <!-- ScriptBees IT Pvt Ltd. -->
+                <div class="experience-card p-6 rounded-xl">
+                    <div class="flex justify-between items-start flex-col sm:flex-row">
+                        <h3 class="text-2xl font-bold text-teal-700">ScriptBees IT Pvt Ltd.</h3>
+                        <span class="text-sm text-gray-500 font-medium whitespace-nowrap mt-1 sm:mt-0">Feb 2017 – Oct 2018</span>
+                    </div>
+                    <p class="text-xl font-medium text-gray-700 mb-4">Senior Software Engineer | Hyderabad, India</p>
+                    <ul class="list-disc ml-6 space-y-3 text-gray-600">
+                        <li>Designed <strong class="font-semibold">PySpark architectures</strong> and authored fuzzy-logic engines for invoice processing (EY GST solution).</li>
+                        <li>Scraped and structured multi-source news data using <strong class="font-semibold">BeautifulSoup and Dryscrape</strong> for a regional media portal.</li>
+                        <li>Developed <strong class="font-semibold">RPA bots</strong> (Automagica, Python) and integrated testing pipelines via Jenkins for Verizon Wireless process automation.</li>
+                    </ul>
+                </div>
+
+                <!-- Tech Mahindra Limited -->
+                <div class="experience-card p-6 rounded-xl">
+                    <div class="flex justify-between items-start flex-col sm:flex-row">
+                        <h3 class="text-2xl font-bold text-teal-700">Tech Mahindra Limited</h3>
+                        <span class="text-sm text-gray-500 font-medium whitespace-nowrap mt-1 sm:mt-0">Sept 2014 – Jan 2017</span>
+                    </div>
+                    <p class="text-xl font-medium text-gray-700 mb-4">Software Engineer | Hyderabad, India</p>
+                    <ul class="list-disc ml-6 space-y-3 text-gray-600">
+                        <li>Processed and provisioned OSS/BSS orders for TalkTalk & BT integration, enhancing order-tracking portals.</li>
+                        <li>Led data exploration, <strong class="font-semibold">feature engineering (SciPy, Pandas)</strong>, and visualization (Matplotlib) for retail analytics on the X-Retail platform.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SKILLS -->
+        <section class="space-y-6">
+            <h2 class="text-3xl font-semibold section-title pb-2">TECHNICAL SKILLS</h2>
+            
+            <!-- Skill Category Component -->
+            <div id="skills-container" class="space-y-6">
+                
+                <!-- Category 1 -->
+                <div class="p-4 rounded-lg bg-gray-50">
+                    <h3 class="text-xl font-bold text-sky-700 mb-3">Programming & Frameworks</h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Python</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">SQL</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Flask</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Django</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">FastAPI</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">PySpark</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Keras</span>
+                    </div>
+                </div>
+
+                <!-- Category 2 -->
+                <div class="p-4 rounded-lg bg-gray-50">
+                    <h3 class="text-xl font-bold text-sky-700 mb-3">Data, Cloud & Databases</h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">GCP</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Azure</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">AWS</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Dataflow</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Dataproc</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Snowflake</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">MongoDB</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">PostgreSQL</span>
+                    </div>
+                </div>
+                
+                <!-- Category 3 -->
+                <div class="p-4 rounded-lg bg-gray-50">
+                    <h3 class="text-xl font-bold text-sky-700 mb-3">Data & AI Engineering (MLOps, GenAI, Tools)</h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Kubeflow</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">MLflow</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">TFX</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Airflow</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">CI/CD (GitLab, Jenkins)</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Databricks Mosaic AI Agent Framework</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Crew.ai</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">LangChain</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Copilot Studio</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Docker/Kubernetes</span>
+                    </div>
+                </div>
+
+                <!-- Category 4 -->
+                <div class="p-4 rounded-lg bg-gray-50">
+                    <h3 class="text-xl font-bold text-sky-700 mb-3">Domain Expertise & Leadership</h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Financial Services</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Clinical/Health-Admin Data</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Retail & E-Com</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">OSS/BSS & Telecom</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Project Management</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Cross-functional Collaboration</span>
+                        <span class="skill-badge text-xs font-semibold px-3 py-1 rounded-full text-white">Innovation & Problem-Solving</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- INNOVATION & PROJECTS -->
+        <section>
+            <h2 class="text-3xl font-semibold section-title pb-2">INNOVATION & PROJECTS</h2>
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-5 rounded-xl bg-gray-50">
+                    <h3 class="text-xl font-semibold text-teal-700">Data Quality Orchestration</h3>
+                    <p class="text-gray-600 mt-1">Built a custom <strong class="font-semibold">Mosaic AI orchestration</strong> system for efficient data quality triage.</p>
+                </div>
+                <div class="p-5 rounded-xl bg-gray-50">
+                    <h3 class="text-xl font-semibold text-teal-700">ZPL Rendering Engine</h3>
+                    <p class="text-gray-600 mt-1">Developed a Python-based <strong class="font-semibold">ZPL-to-image converter</strong> (Zebra Programming Language).</p>
+                </div>
+                <div class="p-5 rounded-xl bg-gray-50">
+                    <h3 class="text-xl font-semibold text-teal-700">Compliance Chatbot Pioneer</h3>
+                    <p class="text-gray-600 mt-1">Created a <strong class="font-semibold">Copilot Studio–driven Compliance chatbot</strong> for Franklin Templeton.</p>
+                </div>
+                <div class="p-5 rounded-xl bg-gray-50">
+                    <h3 class="text-xl font-semibold text-teal-700">Community Engagement</h3>
+                    <p class="text-gray-600 mt-1">Regular speaker and organizer at <strong class="font-semibold">Hyderabad Data Community</strong> hackathons.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- FOOTER -->
+        <footer class="text-center text-gray-400 text-sm pt-8 pb-4 border-t border-gray-300 mt-10">
+            <p>Varshith Manchikanti | Data Engineer & Architect</p>
+        </footer>
+
+    </div>
+</body>
+</html>
