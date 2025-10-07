@@ -12,65 +12,41 @@
             font-family: 'Inter', sans-serif;
             background-color: #f7f9fb;
         }
-        .bigtable-cell {
-            min-height: 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem;
-            transition: all 0.3s ease;
-            font-size: 0.75rem;
-            line-height: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .header-cell {
-            background-color: #1e3a8a; /* Dark Blue */
-            color: white;
-            font-weight: 600;
-            border: 1px solid #102e70;
-            text-align: center;
-        }
-        .rowkey-cell {
-            background-color: #3b82f6; /* Blue */
-            color: white;
-            font-weight: 700;
-            text-align: left;
-            padding-left: 1rem;
-            cursor: pointer;
-        }
-        .data-cell {
-            background-color: #ffffff;
-            color: #1f2937;
-            border: 1px solid #e5e7eb;
-            font-size: 0.875rem;
-            cursor: pointer;
-        }
-        .sparse-cell {
-            background-color: #f3f4f6;
-            color: #9ca3af;
-            border: 1px dashed #d1d5db;
-            font-style: italic;
-            cursor: default;
-        }
-        .hotspot-ring {
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.5); /* Red Ring */
-        }
-        .range-highlight {
-            background-color: #d1fae5 !important; /* Light Green */
-            font-weight: 600;
-        }
-        /* Style for the new replication tab */
-        .replication-cell {
-             background-color: #fef3c7; /* Yellow for primary/replica contrast */
-             color: #92400e;
-             font-weight: 500;
-        }
-        .consistency-cell {
-             background-color: #dbeafe; /* Light blue for consistency model */
-             color: #1e40af;
-             font-weight: 600;
+        /* Responsive Table Styles */
+        @media (max-width: 767px) {
+            .responsive-table thead {
+                display: none;
+            }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td {
+                display: block;
+                width: 100%;
+            }
+            .responsive-table tr {
+                margin-bottom: 1rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                background-color: white;
+            }
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: right;
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            .responsive-table td::before {
+                content: attr(data-label);
+                text-align: left;
+                font-weight: 600;
+                color: #1e40af; /* Blue-700 */
+                padding-right: 1rem;
+                white-space: nowrap;
+            }
+            .responsive-table td:last-child {
+                border-bottom: none;
+            }
         }
     </style>
     <script>
@@ -109,12 +85,12 @@
                 description: "A Bad Design uses sequential keys, causing all writes to hit the same small tablet (server) leading to a bottleneck (hotspot).",
                 headers: ["Row Key (Bad)", "Data", "Tablet Node"],
                 rows: [
-                    { key: "20250101#00:00:01", data: ["Write 1"], node: "Tablet A (Hot!)" },
-                    { key: "20250101#00:00:02", data: ["Write 2"], node: "Tablet A (Hot!)" },
-                    { key: "20250101#00:00:03", data: ["Write 3"], node: "Tablet A (Hot!)" },
-                    { key: "20250101#00:00:04", data: ["Write 4"], node: "Tablet A (Hot!)" },
-                    { key: "20250102#00:00:01", data: ["Write 5"], node: "Tablet B" },
-                    { key: "20250102#00:00:02", data: ["Write 6"], node: "Tablet B" },
+                    { key: "20250101#00:00:01", data: ["Write 1", "Tablet A (Hot!)"] },
+                    { key: "20250101#00:00:02", data: ["Write 2", "Tablet A (Hot!)"] },
+                    { key: "20250101#00:00:03", data: ["Write 3", "Tablet A (Hot!)"] },
+                    { key: "20250101#00:00:04", data: ["Write 4", "Tablet A (Hot!)"] },
+                    { key: "20250102#00:00:01", data: ["Write 5", "Tablet B"] },
+                    { key: "20250102#00:00:02", data: ["Write 6", "Tablet B"] },
                 ]
             },
             reverseTs: {
@@ -123,10 +99,10 @@
                 headers: ["Row Key (Best)", "Value", "Sort Order"],
                 rows: [
                     // MAX_VALUE - TS (Newest first)
-                    { key: "SensorXYZ#9223372036854775807", data: ["28.5 C"], order: "Latest Reading" }, 
-                    { key: "SensorXYZ#9223372036854775806", data: ["28.4 C"], order: "Next Latest" },
-                    { key: "SensorXYZ#9223372036854775805", data: ["28.0 C"], order: "Older Reading" },
-                    { key: "SensorABC#9223372036854775807", data: ["15.1 V"], order: "Other Sensor" },
+                    { key: "SensorXYZ#9223372036854775807", data: ["28.5 C", "Latest Reading"] },
+                    { key: "SensorXYZ#9223372036854775806", data: ["28.4 C", "Next Latest"] },
+                    { key: "SensorXYZ#9223372036854775805", data: ["28.0 C", "Older Reading"] },
+                    { key: "SensorABC#9223372036854775807", data: ["15.1 V", "Other Sensor"] },
                 ]
             },
             colFamilies: {
@@ -144,13 +120,12 @@
                 description: "Bigtable is optimized for scale and low-latency access by **Row Key**—it does not support joins. Related data must be denormalized (duplicated) across multiple row keys to support different query patterns.",
                 headers: ["Row Key", "Data Stored", "Query Type Served"],
                 rows: [
-                    { key: "User#123", data: ["Profile: Alice", "Region: US"], purpose: "Primary Profile Lookup" },
-                    { key: "User#123#Post#1", data: ["Post Content: Hello World"], purpose: "Full Timeline Scan" },
-                    { key: "Region#US#User#123", data: ["Profile: Alice, Region: US"], purpose: "Secondary Index (Geographic Query)" },
-                    { key: "Post#1#Comments", data: ["Comment 1, Comment 2"], purpose: "Fan-out/Joined Data" },
+                    { key: "User#123", data: ["Profile: Alice, Region: US", "Primary Profile Lookup"] },
+                    { key: "User#123#Post#1", data: ["Post Content: Hello World", "Full Timeline Scan"] },
+                    { key: "Region#US#User#123", data: ["Profile: Alice, Region: US", "Secondary Index (Geographic Query)"] },
+                    { key: "Post#1#Comments", data: ["Comment 1, Comment 2", "Fan-out/Joined Data"] },
                 ]
             },
-            // NEW CONCEPT 7: Replication and Consistency
             replication: {
                 title: "Replication & Consistency (High Availability)",
                 description: "Bigtable uses replication across multiple zones (clusters). Writes go to the primary, and are asynchronously replicated. Reads from any replica are eventually consistent.",
@@ -162,7 +137,6 @@
                     { key: "Failover Event", data: ["Zone A Offline", "Promoted to Primary (T2)", "Available"] },
                 ]
             },
-            // NEW CONCEPT 8: Pre-splitting
             splits: {
                 title: "Split Keys (Pre-splitting for Immediate Distribution)",
                 description: "You can define Split Keys during table creation to immediately distribute the data across multiple tablet servers, ensuring balanced load from the first write.",
@@ -200,71 +174,35 @@
 
             // 3. Generate Table HTML
             const currentConcept = concepts[state.currentTab];
-            let html = `<div class="overflow-x-auto shadow-xl rounded-xl">`;
-            // Dynamic grid layout: 180px for Row Key, rest split evenly
-            html += `<div class="grid" style="grid-template-columns: 180px repeat(${currentConcept.headers.length - 1}, 1fr);">`;
+            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
 
-            // Headers
+            // Desktop Headers
+            html += '<thead class="bg-blue-800 text-white"><tr>';
             currentConcept.headers.forEach(header => {
-                html += `<div class="header-cell h-12 flex items-center justify-center">${header}</div>`;
+                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
             });
+            html += '</tr></thead>';
 
-            // Rows
-            currentConcept.rows.forEach((row, rowIndex) => {
-                // Row Key Cell
-                let rowKeyClasses = 'rowkey-cell h-16';
-                let dataKeyClasses = 'data-cell h-16';
-
-                // Add special classes based on concept for visual effect
-                if (state.currentTab === 'hotspot' && rowIndex < 4) {
-                    rowKeyClasses += ' hotspot-ring bg-red-500 hover:bg-red-600';
+            // Body
+            html += '<tbody>';
+            currentConcept.rows.forEach(row => {
+                html += '<tr class="md:border-b md:border-gray-200">';
+                // First cell is the key, styled differently
+                let rowKeyClasses = 'font-semibold text-blue-800 md:bg-blue-50';
+                if (state.currentTab === 'hotspot' && row.key.startsWith('20250101')) {
+                    rowKeyClasses += ' md:bg-red-200';
                 }
-                if (state.currentTab === 'rowKey' || state.currentTab === 'denormalization') {
-                     // Highlight the range for User001/User#123
-                    if (row.key.startsWith('User001') || row.key.startsWith('User#123')) {
-                         rowKeyClasses += ' range-highlight bg-green-200 text-green-800';
-                         dataKeyClasses += ' range-highlight';
-                    }
-                }
+                html += `<td data-label="${currentConcept.headers[0]}" class="${rowKeyClasses}">${row.key}</td>`;
                 
-                html += `<div class="${rowKeyClasses}" title="Row Key: ${row.key}">${row.key}</div>`;
-
-                // Data Cells
-                currentConcept.headers.slice(1).forEach((header, colIndex) => {
-                    const data = row.data[colIndex];
-                    let cellContent = data;
-                    let cellClasses = dataKeyClasses;
-
-                    if (!data) {
-                        cellContent = state.currentTab === 'table' ? '— SPARSE —' : '';
-                        cellClasses = 'sparse-cell h-16';
-                    }
-                    
-                    // Specific styling/content overrides for new tabs
-                    if (state.currentTab === 'hotspot' && colIndex === 1) {
-                        cellContent = row.node;
-                    }
-                    if (state.currentTab === 'reverseTs' && colIndex === 1) {
-                        cellContent = row.order;
-                    }
-                    if (state.currentTab === 'denormalization' && colIndex === 1) {
-                        cellContent = row.purpose;
-                    }
-                    if (state.currentTab === 'replication') {
-                        cellClasses = (colIndex === 0) ? 'replication-cell h-16 bg-yellow-200' : 
-                                      (colIndex === 1) ? 'replication-cell h-16 bg-yellow-100' :
-                                      'consistency-cell h-16';
-                    }
-                    if (state.currentTab === 'splits') {
-                        cellClasses = (colIndex === 0) ? 'data-cell h-16' : 
-                                      'data-cell h-16 bg-blue-50';
-                    }
-                    
-                    html += `<div class="${cellClasses}" title="${header}: ${data}">${cellContent}</div>`;
+                // Data cells
+                row.data.forEach((cellData, colIndex) => {
+                    let cellContent = cellData || '<span class="text-gray-400 italic">— SPARSE —</span>';
+                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}">${cellContent}</td>`;
                 });
+                html += '</tr>';
             });
+            html += '</tbody></table>';
 
-            html += `</div></div>`;
             container.innerHTML = html;
         };
 
@@ -289,44 +227,44 @@
         };
     </script>
 </head>
-<body class="p-8">
+<body class="p-4 sm:p-8">
     <a href="index.html" class="text-gray-600 hover:text-blue-600 hover:underline font-semibold mb-6 inline-block">&larr; Back to Home</a>
-    <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
         <svg class="w-8 h-8 mr-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4zm5 9a1 1 0 10-2 0 1 1 0 002 0zM7 5a1 1 0 00-1 1v4a1 1 0 001 1h6a1 1 0 001-1V6a1 1 0 00-1-1H7z" clip-rule="evenodd"></path></svg>
         Bigtable Schema Design Essentials
     </h1>
-    <p class="text-lg text-gray-600 mb-8">Click on the tabs below to explore the core concepts that define an efficient Bigtable schema.</p>
+    <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the core concepts that define an efficient Bigtable schema.</p>
 
     <!-- Tab Navigation -->
-    <div class="flex flex-wrap space-x-4 space-y-2 mb-8">
-        <button data-tab="table" class="tab-button py-2 px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+    <div class="flex flex-wrap gap-2 mb-8">
+        <button data-tab="table" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
             1. Sparse Table Structure
         </button>
-        <button data-tab="rowKey" class="tab-button py-2 px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+        <button data-tab="rowKey" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
             2. Row Key Sorting & Range Read
         </button>
-        <button data-tab="hotspot" class="tab-button py-2 px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+        <button data-tab="hotspot" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
             3. Hotspotting (What to AVOID)
         </button>
-        <button data-tab="reverseTs" class="tab-button py-2 px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+        <button data-tab="reverseTs" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
             4. Reverse Timestamps (Best Practice)
         </button>
-        <button data-tab="colFamilies" class="tab-button py-2 px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+        <button data-tab="colFamilies" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
             5. Column Families (Locality)
         </button>
-        <button data-tab="denormalization" class="tab-button py-2 px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+        <button data-tab="denormalization" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
             6. Denormalization (No-Join Rule)
         </button>
-        <button data-tab="replication" class="tab-button py-2 px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+        <button data-tab="replication" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
             7. Replication & Consistency
         </button>
-        <button data-tab="splits" class="tab-button py-2 px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+        <button data-tab="splits" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
             8. Split Keys (Pre-splitting)
         </button>
     </div>
 
     <!-- Explanation Bar -->
-    <div id="message-bar" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-8 rounded-md shadow-md">
+    <div id="message-bar" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base">
         <!-- Message will be populated by JS -->
     </div>
 
