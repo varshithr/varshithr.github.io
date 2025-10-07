@@ -63,6 +63,42 @@
             color: #ff8f00;
             font-weight: 600;
         }
+        /* Responsive Table Styles */
+        @media (max-width: 767px) {
+            .responsive-table thead {
+                display: none;
+            }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td {
+                display: block;
+                width: 100%;
+            }
+            .responsive-table tr {
+                margin-bottom: 1rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                background-color: white;
+            }
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: right;
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            .responsive-table td::before {
+                content: attr(data-label);
+                text-align: left;
+                font-weight: 600;
+                color: #4c6a85; /* Databricks blue */
+                padding-right: 1rem;
+                white-space: nowrap;
+            }
+            .responsive-table td:last-child {
+                border-bottom: none;
+            }
+        }
     </style>
     <script>
         // Global State
@@ -208,60 +244,84 @@
 
             // 3. Generate Table HTML
             const currentConcept = concepts[state.currentTab];
-            let html = `<div class="overflow-x-auto shadow-xl rounded-xl">`;
-            // Dynamic grid layout: 180px for Concept, rest split evenly
-            html += `<div class="grid" style="grid-template-columns: 180px repeat(${currentConcept.headers.length - 1}, 1fr);">`;
+            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
 
-            // Headers
+            // Desktop Headers
+            html += '<thead class="bg-gray-700 text-white"><tr>';
             currentConcept.headers.forEach(header => {
-                html += `<div class="header-cell databricks-cell h-12 flex items-center justify-center">${header}</div>`;
+                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
             });
+            html += '</tr></thead>';
 
-            // Rows
-            currentConcept.rows.forEach((row, rowIndex) => {
-                // Concept/Row Identifier Cell
-                let conceptCellClasses = 'concept-cell databricks-cell h-16';
-                let dataCellClasses = 'data-cell databricks-cell h-16';
+            // Body
+            html += '<tbody>';
+            currentConcept.rows.forEach(row => {
+                html += '<tr class="md:border-b md:border-gray-20">';
+                
+                // First cell is the key, styled differently
+                let rowKeyClasses = 'font-semibold text-gray-800 md:bg-gray-100';
                 
                 // Specific styling/content overrides for concepts
                 if (state.currentTab === 'architecture') {
-                    if (row.key.includes('Control Plane')) dataCellClasses = 'execution-cell databricks-cell h-16';
-                    if (row.key.includes('Data Plane') || row.key.includes('Delta Lake')) dataCellClasses = 'data-plane-cell databricks-cell h-16';
-                    if (row.key.includes('Unity Catalog')) dataCellClasses = 'metadata-cell databricks-cell h-16';
+                    if (row.key.includes('Control Plane')) rowKeyClasses = 'font-semibold text-gray-800 md:bg-cyan-100';
+                    if (row.key.includes('Data Plane') || row.key.includes('Delta Lake')) rowKeyClasses = 'font-semibold text-gray-800 md:bg-pink-100';
+                    if (row.key.includes('Unity Catalog')) rowKeyClasses = 'font-semibold text-gray-80 md:bg-yellow-100';
                 }
                 if (state.currentTab === 'clusters' && row.key.includes('Node')) {
-                    dataCellClasses = 'execution-cell databricks-cell h-16';
+                    rowKeyClasses = 'font-semibold text-gray-800 md:bg-cyan-100';
                 }
                 if (state.currentTab === 'dataframes') {
-                    if (row.key === 'Transformation') dataCellClasses = 'execution-cell databricks-cell h-16';
-                    if (row.key === 'Action') dataCellClasses = 'data-plane-cell databricks-cell h-16';
+                    if (row.key === 'Transformation') rowKeyClasses = 'font-semibold text-gray-800 md:bg-cyan-100';
+                    if (row.key === 'Action') rowKeyClasses = 'font-semibold text-gray-800 md:bg-pink-100';
                 }
                 if (state.currentTab === 'execution' || state.currentTab === 'devops' || state.currentTab === 'mlflow') {
-                    dataCellClasses = 'execution-cell databricks-cell h-16';
-                    if (row.key === 'Job Execution' || row.key === 'CI/CD Pipeline' || row.key === 'Models' || row.key === 'Model Registry') dataCellClasses = 'data-plane-cell databricks-cell h-16';
+                    rowKeyClasses = 'font-semibold text-gray-800 md:bg-cyan-100';
+                    if (row.key === 'Job Execution' || row.key === 'CI/CD Pipeline' || row.key === 'Models' || row.key === 'Model Registry') rowKeyClasses = 'font-semibold text-gray-800 md:bg-pink-100';
                 }
                 if (state.currentTab === 'unityCatalog' || state.currentTab === 'dlt') {
-                    if (row.key === 'Metastore' || row.key === 'Expectations') dataCellClasses = 'metadata-cell databricks-cell h-16';
-                    if (row.key === 'Tables/Views' || row.key === 'Medallion Architecture') dataCellClasses = 'data-plane-cell databricks-cell h-16';
+                    if (row.key === 'Metastore' || row.key === 'Expectations') rowKeyClasses = 'font-semibold text-gray-800 md:bg-yellow-10';
+                    if (row.key === 'Tables/Views' || row.key === 'Medallion Architecture') rowKeyClasses = 'font-semibold text-gray-800 md:bg-pink-100';
                 }
                 if (state.currentTab === 'advanced') {
-                    if (row.key.includes('Serverless') || row.key.includes('Photon')) dataCellClasses = 'execution-cell databricks-cell h-16';
-                    if (row.key.includes('Mosaic') || row.key.includes('Databricks SQL')) dataCellClasses = 'metadata-cell databricks-cell h-16';
+                    if (row.key.includes('Serverless') || row.key.includes('Photon')) rowKeyClasses = 'font-semibold text-gray-800 md:bg-cyan-100';
+                    if (row.key.includes('Mosaic') || row.key.includes('Databricks SQL')) rowKeyClasses = 'font-semibold text-gray-800 md:bg-yellow-100';
                 }
 
-                html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
+                html += `<td data-label="${currentConcept.headers[0]}" class="${rowKeyClasses}">${row.key}</td>`;
+                
+                // Data cells
+                row.data.forEach((cellData, colIndex) => {
+                    let cellClasses = 'data-cell';
+                    if (state.currentTab === 'architecture') {
+                        if (row.key.includes('Control Plane') && colIndex === 0) cellClasses = 'execution-cell';
+                        if ((row.key.includes('Data Plane') || row.key.includes('Delta Lake')) && colIndex === 0) cellClasses = 'data-plane-cell';
+                        if (row.key.includes('Unity Catalog') && colIndex === 0) cellClasses = 'metadata-cell';
+                    }
+                    if (state.currentTab === 'clusters' && row.key.includes('Node') && colIndex === 0) {
+                        cellClasses = 'execution-cell';
+                    }
+                    if (state.currentTab === 'dataframes') {
+                        if (row.key === 'Transformation' && colIndex === 0) cellClasses = 'execution-cell';
+                        if (row.key === 'Action' && colIndex === 0) cellClasses = 'data-plane-cell';
+                    }
+                    if (state.currentTab === 'execution' || state.currentTab === 'devops' || state.currentTab === 'mlflow') {
+                        cellClasses = 'execution-cell';
+                        if ((row.key === 'Job Execution' || row.key === 'CI/CD Pipeline' || row.key === 'Models' || row.key === 'Model Registry') && colIndex === 0) cellClasses = 'data-plane-cell';
+                    }
+                    if (state.currentTab === 'unityCatalog' || state.currentTab === 'dlt') {
+                        if ((row.key === 'Metastore' || row.key === 'Expectations') && colIndex === 0) cellClasses = 'metadata-cell';
+                        if ((row.key === 'Tables/Views' || row.key === 'Medallion Architecture') && colIndex === 0) cellClasses = 'data-plane-cell';
+                    }
+                    if (state.currentTab === 'advanced') {
+                        if ((row.key.includes('Serverless') || row.key.includes('Photon')) && colIndex === 0) cellClasses = 'execution-cell';
+                        if ((row.key.includes('Mosaic') || row.key.includes('Databricks SQL')) && colIndex === 0) cellClasses = 'metadata-cell';
+                    }
 
-                // Data Cells
-                currentConcept.headers.slice(1).forEach((header, colIndex) => {
-                    const data = row.data[colIndex];
-                    let cellContent = data;
-                    let cellClasses = dataCellClasses;
-
-                    html += `<div class="${cellClasses}" title="${header}: ${data}">${cellContent}</div>`;
+                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}" class="${cellClasses}">${cellData}</td>`;
                 });
+                html += '</tr>';
             });
-
-            html += `</div></div>`;
+            html += '</tbody></table>';
             container.innerHTML = html;
         };
 

@@ -68,6 +68,42 @@
             color: #991b1b;
             font-weight: 700;
         }
+        /* Responsive Table Styles */
+        @media (max-width: 767px) {
+            .responsive-table thead {
+                display: none;
+            }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td {
+                display: block;
+                width: 100%;
+            }
+            .responsive-table tr {
+                margin-bottom: 1rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                background-color: white;
+            }
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: right;
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            .responsive-table td::before {
+                content: attr(data-label);
+                text-align: left;
+                font-weight: 600;
+                color: #1e3a8a; /* Dataflow blue */
+                padding-right: 1rem;
+                white-space: nowrap;
+            }
+            .responsive-table td:last-child {
+                border-bottom: none;
+            }
+        }
     </style>
     <script>
         // Global State
@@ -184,68 +220,73 @@
 
             // 3. Generate Table HTML
             const currentConcept = concepts[state.currentTab];
-            let html = `<div class="overflow-x-auto shadow-xl rounded-xl">`;
-            // Dynamic grid layout: 180px for Concept, rest split evenly
-            html += `<div class="grid" style="grid-template-columns: 180px repeat(${currentConcept.headers.length - 1}, 1fr);">`;
+            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
 
-            // Headers
+            // Desktop Headers
+            html += '<thead class="bg-indigo-800 text-white"><tr>';
             currentConcept.headers.forEach(header => {
-                html += `<div class="header-cell dataflow-cell h-12 flex items-center justify-center">${header}</div>`;
+                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
             });
+            html += '</tr></thead>';
 
-            // Rows
-            currentConcept.rows.forEach((row, rowIndex) => {
-                // Concept/Row Identifier Cell
-                let conceptCellClasses = 'concept-cell dataflow-cell h-16';
-                let dataCellClasses = 'data-cell dataflow-cell h-16';
-
+            // Body
+            html += '<tbody>';
+            currentConcept.rows.forEach(row => {
+                html += '<tr class="md:border-b md:border-gray-20">';
+                
+                // First cell is the key, styled differently
+                let rowKeyClasses = 'font-semibold text-indigo-800 md:bg-indigo-50';
+                
                 // Specific styling/content overrides for concepts
                 if (state.currentTab === 'pcollections') {
-                    if (row.key === 'Bounded') dataCellClasses = 'bounded-cell dataflow-cell h-16';
-                    if (row.key === 'Unbounded') dataCellClasses = 'unbounded-cell dataflow-cell h-16';
+                    if (row.key === 'Bounded') rowKeyClasses = 'font-semibold text-indigo-800 md:bg-cyan-100';
+                    if (row.key === 'Unbounded') rowKeyClasses = 'font-semibold text-indigo-800 md:bg-green-100';
                 }
                 if (state.currentTab === 'watermarks') {
-                    if (row.key.includes('Event Time')) dataCellClasses = 'time-event dataflow-cell h-16';
-                    if (row.key.includes('Processing Time')) dataFlowClasses = 'time-processing dataflow-cell h-16';
+                    if (row.key.includes('Event Time')) rowKeyClasses = 'font-semibold text-indigo-800 md:bg-yellow-100';
+                    if (row.key.includes('Processing Time')) rowKeyClasses = 'font-semibold text-indigo-800 md:bg-red-100';
                 }
                 if (state.currentTab === 'windowing') {
-                     // Make the visual representation stand out
-                    currentConcept.headers.slice(1).forEach((header, colIndex) => {
-                        const data = row.data[colIndex];
-                        let cellContent = data;
-                        let cellClasses = dataCellClasses;
-
-                        if (header.includes('Visual')) cellClasses = 'data-cell dataflow-cell h-16 font-mono text-xs text-left px-2';
-
-                        // Render Row Header
-                        if (colIndex === 0) {
-                            html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
-                            html += `<div class="${dataCellClasses}" title="${currentConcept.headers[1]}: ${row.data[0]}">${row.data[0]}</div>`;
-                        }
-
-                        // Render remaining cells (skipping the first one handled above)
-                        if (colIndex > 0) {
-                            html += `<div class="${cellClasses}" title="${header}: ${data}">${cellContent}</div>`;
-                        }
-                    });
-                    return; // Skip default row rendering below
+                    rowKeyClasses = 'font-semibold text-indigo-800 md:bg-indigo-50';
+                }
+                if (state.currentTab === 'runners') {
+                    rowKeyClasses = 'font-semibold text-indigo-800 md:bg-indigo-50';
+                }
+                if (state.currentTab === 'stateTimers') {
+                    rowKeyClasses = 'font-semibold text-indigo-800 md:bg-indigo-50';
+                }
+                if (state.currentTab === 'transforms') {
+                    rowKeyClasses = 'font-semibold text-indigo-800 md:bg-indigo-50';
+                }
+                if (state.currentTab === 'triggers') {
+                    rowKeyClasses = 'font-semibold text-indigo-800 md:bg-indigo-50';
+                }
+                if (state.currentTab === 'architecture') {
+                    rowKeyClasses = 'font-semibold text-indigo-800 md:bg-indigo-50';
                 }
 
+                html += `<td data-label="${currentConcept.headers[0]}" class="${rowKeyClasses}">${row.key}</td>`;
+                
+                // Data cells
+                row.data.forEach((cellData, colIndex) => {
+                    let cellClasses = 'data-cell';
+                    if (state.currentTab === 'pcollections') {
+                        if (row.key === 'Bounded' && colIndex === 0) cellClasses = 'bounded-cell';
+                        if (row.key === 'Unbounded' && colIndex === 0) cellClasses = 'unbounded-cell';
+                    }
+                    if (state.currentTab === 'watermarks') {
+                        if (row.key.includes('Event Time') && colIndex === 0) cellClasses = 'time-event';
+                        if (row.key.includes('Processing Time') && colIndex === 0) cellClasses = 'time-processing';
+                    }
+                    if (state.currentTab === 'windowing') {
+                        if (currentConcept.headers[colIndex + 1].includes('Visual')) cellClasses = 'data-cell font-mono text-xs text-left px-2';
+                    }
 
-
-                html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
-
-                // Data Cells
-                currentConcept.headers.slice(1).forEach((header, colIndex) => {
-                    const data = row.data[colIndex];
-                    let cellContent = data;
-                    let cellClasses = dataCellClasses;
-
-                    html += `<div class="${cellClasses}" title="${header}: ${data}">${cellContent}</div>`;
+                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}" class="${cellClasses}">${cellData}</td>`;
                 });
+                html += '</tr>';
             });
-
-            html += `</div></div>`;
+            html += '</tbody></table>';
             container.innerHTML = html;
         };
 

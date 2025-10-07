@@ -66,6 +66,42 @@
             color: #34A853;
             font-weight: 600;
         }
+        /* Responsive Table Styles */
+        @media (max-width: 767px) {
+            .responsive-table thead {
+                display: none;
+            }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td {
+                display: block;
+                width: 100%;
+            }
+            .responsive-table tr {
+                margin-bottom: 1rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                background-color: white;
+            }
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: right;
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            .responsive-table td::before {
+                content: attr(data-label);
+                text-align: left;
+                font-weight: 600;
+                color: #4285F4; /* GKE blue */
+                padding-right: 1rem;
+                white-space: nowrap;
+            }
+            .responsive-table td:last-child {
+                border-bottom: none;
+            }
+        }
     </style>
     <script>
         // Global State
@@ -178,63 +214,90 @@
 
             // 3. Generate Table HTML
             const currentConcept = concepts[state.currentTab];
-            let html = `<div class="overflow-x-auto shadow-xl rounded-xl">`;
-            // Dynamic grid layout: 180px for Concept, rest split evenly
-            html += `<div class="grid" style="grid-template-columns: 180px repeat(${currentConcept.headers.length - 1}, 1fr);">`;
+            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
 
-            // Headers
+            // Desktop Headers
+            html += '<thead class="bg-blue-600 text-white"><tr>';
             currentConcept.headers.forEach(header => {
-                html += `<div class="header-cell gke-cell h-12 flex items-center justify-center">${header}</div>`;
+                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
             });
+            html += '</tr></thead>';
 
-            // Rows
-            currentConcept.rows.forEach((row, rowIndex) => {
-                // Concept/Row Identifier Cell
-                let conceptCellClasses = 'concept-cell gke-cell h-16';
-                let dataCellClasses = 'data-cell gke-cell h-16';
+            // Body
+            html += '<tbody>';
+            currentConcept.rows.forEach(row => {
+                html += '<tr class="md:border-b md:border-gray-20">';
                 
-                // Specific styling logic for GKE concepts
+                // First cell is the key, styled differently
+                let rowKeyClasses = 'font-semibold text-blue-800 md:bg-blue-50';
+                
+                // Specific styling/content overrides for concepts
                 if (state.currentTab === 'architecture') {
-                    if (row.key.includes('Control Plane') || row.key.includes('API Server') || row.key.includes('etcd')) dataCellClasses = 'metadata-cell gke-cell h-16'; // Control Plane/Metadata
-                    if (row.key.includes('Node Pool')) dataCellClasses = 'execution-cell gke-cell h-16'; // Compute
+                    if (row.key.includes('Control Plane') || row.key.includes('API Server') || row.key.includes('etcd')) rowKeyClasses = 'font-semibold text-blue-800 md:bg-green-100'; // Control Plane/Metadata
+                    if (row.key.includes('Node Pool')) rowKeyClasses = 'font-semibold text-blue-800 md:bg-cyan-10'; // Compute
                 }
                 if (state.currentTab === 'workloads') {
-                    dataCellClasses = 'execution-cell gke-cell h-16';
-                    if (row.key === 'Service') dataCellClasses = 'data-plane-cell gke-cell h-16'; // Networking
+                    rowKeyClasses = 'font-semibold text-blue-800 md:bg-cyan-100';
+                    if (row.key === 'Service') rowKeyClasses = 'font-semibold text-blue-800 md:bg-yellow-10'; // Networking
                 }
                 if (state.currentTab === 'networking') {
-                    dataCellClasses = 'data-plane-cell gke-cell h-16'; // Networking
+                    rowKeyClasses = 'font-semibold text-blue-800 md:bg-yellow-100'; // Networking
                 }
                 if (state.currentTab === 'storage') {
-                    dataCellClasses = 'data-plane-cell gke-cell h-16'; // Storage/State
-                    if (row.key === 'StatefulSet') dataCellClasses = 'execution-cell gke-cell h-16'; // Workload controller
+                    rowKeyClasses = 'font-semibold text-blue-800 md:bg-yellow-10'; // Storage/State
+                    if (row.key === 'StatefulSet') rowKeyClasses = 'font-semibold text-blue-800 md:bg-cyan-100'; // Workload controller
                 }
                 if (state.currentTab === 'modes') {
-                    if (row.key.includes('Management') || row.key.includes('Security')) dataCellClasses = 'metadata-cell gke-cell h-16'; // Governance/Management
-                    if (row.key.includes('Cost Model') || row.key.includes('Configuration')) dataCellClasses = 'execution-cell gke-cell h-16'; // Compute/Resource
+                    if (row.key.includes('Management') || row.key.includes('Security')) rowKeyClasses = 'font-semibold text-blue-800 md:bg-green-100'; // Governance/Management
+                    if (row.key.includes('Cost Model') || row.key.includes('Configuration')) rowKeyClasses = 'font-semibold text-blue-800 md:bg-cyan-100'; // Compute/Resource
                 }
-                 if (state.currentTab === 'security') {
-                    if (row.key.includes('IAM') || row.key.includes('RBAC')) dataCellClasses = 'metadata-cell gke-cell h-16'; // Access Control
-                    if (row.key.includes('Binary Authorization') || row.key.includes('Workload Identity')) dataCellClasses = 'data-plane-cell gke-cell h-16'; // Policy/Service Access
+                if (state.currentTab === 'security') {
+                    if (row.key.includes('IAM') || row.key.includes('RBAC')) rowKeyClasses = 'font-semibold text-blue-800 md:bg-green-100'; // Access Control
+                    if (row.key.includes('Binary Authorization') || row.key.includes('Workload Identity')) rowKeyClasses = 'font-semibold text-blue-800 md:bg-yellow-100'; // Policy/Service Access
                 }
                 if (state.currentTab === 'advanced') {
-                    if (row.key.includes('Autoscaler')) dataCellClasses = 'execution-cell gke-cell h-16'; // Scaling/Compute
-                    if (row.key.includes('Anthos')) dataCellClasses = 'metadata-cell gke-cell h-16'; // Platform Management
+                    if (row.key.includes('Autoscaler')) rowKeyClasses = 'font-semibold text-blue-800 md:bg-cyan-100'; // Scaling/Compute
+                    if (row.key.includes('Anthos')) rowKeyClasses = 'font-semibold text-blue-800 md:bg-green-100'; // Platform Management
                 }
 
-                html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
+                html += `<td data-label="${currentConcept.headers[0]}" class="${rowKeyClasses}">${row.key}</td>`;
+                
+                // Data cells
+                row.data.forEach((cellData, colIndex) => {
+                    let cellClasses = 'data-cell';
+                    if (state.currentTab === 'architecture') {
+                        if ((row.key.includes('Control Plane') || row.key.includes('API Server') || row.key.includes('etcd')) && colIndex === 0) cellClasses = 'metadata-cell'; // Control Plane/Metadata
+                        if (row.key.includes('Node Pool') && colIndex === 0) cellClasses = 'execution-cell'; // Compute
+                    }
+                    if (state.currentTab === 'workloads') {
+                        cellClasses = 'execution-cell';
+                        if (row.key === 'Service' && colIndex === 0) cellClasses = 'data-plane-cell'; // Networking
+                    }
+                    if (state.currentTab === 'networking') {
+                        cellClasses = 'data-plane-cell'; // Networking
+                    }
+                    if (state.currentTab === 'storage') {
+                        cellClasses = 'data-plane-cell'; // Storage/State
+                        if (row.key === 'StatefulSet' && colIndex === 0) cellClasses = 'execution-cell'; // Workload controller
+                    }
+                    if (state.currentTab === 'modes') {
+                        if ((row.key.includes('Management') || row.key.includes('Security')) && colIndex === 0) cellClasses = 'metadata-cell'; // Governance/Management
+                        if ((row.key.includes('Cost Model') || row.key.includes('Configuration')) && colIndex === 0) cellClasses = 'execution-cell'; // Compute/Resource
+                    }
+                    if (state.currentTab === 'security') {
+                        if ((row.key.includes('IAM') || row.key.includes('RBAC')) && colIndex === 0) cellClasses = 'metadata-cell'; // Access Control
+                        if ((row.key.includes('Binary Authorization') || row.key.includes('Workload Identity')) && colIndex === 0) cellClasses = 'data-plane-cell'; // Policy/Service Access
+                    }
+                    if (state.currentTab === 'advanced') {
+                        if (row.key.includes('Autoscaler') && colIndex === 0) cellClasses = 'execution-cell'; // Scaling/Compute
+                        if (row.key.includes('Anthos') && colIndex === 0) cellClasses = 'metadata-cell'; // Platform Management
+                    }
 
-                // Data Cells
-                currentConcept.headers.slice(1).forEach((header, colIndex) => {
-                    const data = row.data[colIndex];
-                    let cellContent = data;
-                    let cellClasses = dataCellClasses;
-
-                    html += `<div class="${cellClasses}" title="${header}: ${data}">${cellContent}</div>`;
+                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}" class="${cellClasses}">${cellData}</td>`;
                 });
+                html += '</tr>';
             });
-
-            html += `</div></div>`;
+            html += '</tbody></table>';
             container.innerHTML = html;
         };
 
