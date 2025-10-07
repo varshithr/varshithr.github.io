@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Geospatial Analytics at Scale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #d94b3d, #ff6361);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .flow-arrow {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .flow-arrow::after {
+            content: '→';
+            font-size: 2.5rem;
+            color: #ff6361;
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+        @media (max-width: 1023px) {
+            .flow-arrow::after {
+                content: '↓';
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-gray-800">
+                <span class="gradient-text">Geospatial Analytics Case Study</span>
+            </div>
+             <ul class="flex space-x-6 text-gray-600 font-medium">
+                <li><a href="index.html" class="text-gray-600 hover:text-red-600 hover:underline">Home</a></li>
+                <li><a href="#challenge" class="hover:text-[#ff6361]">Challenge</a></li>
+                <li><a href="#solution" class="hover:text-[#ff6361]">Solution</a></li>
+                <li><a href="#features" class="hover:text-[#ff6361]">Key Patterns</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="hero" class="text-center mb-20">
+            <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight">Real-Time Geospatial Intelligence for Urban Mobility</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">How a global ride-sharing service processes billions of GPS signals daily to power its real-time demand hotspotting and dynamic pricing engine.</p>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card text-center">
+                    <div class="text-5xl font-extrabold gradient-text">20B+</div>
+                    <p class="text-gray-500 mt-2">GPS Pings Processed Daily</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-5xl font-extrabold gradient-text">&lt;500ms</div>
+                    <p class="text-gray-500 mt-2">Latency for Hotspot Detection</p>
+                </div>
+                <div class="card text-center">
+                    <div class="text-5xl font-extrabold gradient-text">100K</div>
+                    <p class="text-gray-500 mt-2">Queries Per Second Supported</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="challenge" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2">The Challenge: Analyzing a Firehose of Location Data</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">The service needs to understand supply and demand across a city in real-time. This requires ingesting and analyzing a massive, continuous stream of GPS data from driver and rider apps.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card">
+                    <div class="flex items-center mb-4">
+                        <span class="text-5xl mr-4">📍</span>
+                        <div>
+                             <h3 class="text-xl font-bold text-gray-800">High-Throughput Ingestion</h3>
+                            <p class="text-sm font-medium text-[#ff6361]">Unbounded, Unrelenting Data</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Millions of devices sending location updates every few seconds creates a high-volume, unbounded data stream that must be captured without loss and with low latency.</p>
+                </div>
+                <div class="card">
+                    <div class="flex items-center mb-4">
+                        <span class="text-5xl mr-4">🗺️</span>
+                         <div>
+                            <h3 class="text-xl font-bold text-gray-800">Complex Spatial Queries</h3>
+                            <p class="text-sm font-medium text-[#ff6361]">"Near Me" at Scale</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Answering questions like "How many drivers are within 1km of this rider?" or "What is the demand in this hexagonal grid cell?" across an entire city in real-time is computationally expensive.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="solution" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2">The Solution: A Hybrid Architecture for Speed and Scale</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">A purpose-built data platform combining streaming services for real-time insights (Lambda) with a data warehouse for historical analytics (Kappa), using specialized geospatial indexing.</p>
+
+            <div class="card mb-12">
+                 <h3 class="text-2xl font-bold text-center mb-6">Geospatial Data Processing Flow</h3>
+                 <div class="flex flex-col lg:flex-row justify-center items-center">
+                     <div class="text-center p-4 m-2 border-2 border-[#d94b3d] rounded-lg bg-[#d94b3d]/10 w-full lg:w-1/3">
+                         <div class="text-2xl font-bold text-[#d94b3d]">1. Ingest & Geohash</div>
+                         <p class="text-sm text-gray-600">Pub/Sub ingests GPS data, and a Dataflow job enriches it with a Geohash.</p>
+                     </div>
+                     <div class="flow-arrow hidden lg:flex"></div>
+                     <div class="flow-arrow flex lg:hidden"></div>
+                     <div class="text-center p-4 m-2 border-2 border-[#ff6361] rounded-lg bg-[#ff6361]/10 w-full lg:w-1/3">
+                         <div class="text-2xl font-bold text-[#ff6361]">2. Real-Time & Batch Layers</div>
+                         <p class="text-sm text-gray-600">Data is sent to Bigtable for real-time lookups and to BigQuery for long-term storage.</p>
+                     </div>
+                     <div class="flow-arrow hidden lg:flex"></div>
+                     <div class="flow-arrow flex lg:hidden"></div>
+                     <div class="text-center p-4 m-2 border-2 border-[#bc5090] rounded-lg bg-[#bc5090]/10 w-full lg:w-1/3">
+                         <div class="text-2xl font-bold text-[#bc5090]">3. Consume & Analyze</div>
+                         <p class="text-sm text-gray-600">APIs query Bigtable for hotspots; analysts query BigQuery for trends.</p>
+                     </div>
+                 </div>
+            </div>
+        </section>
+
+        <hr class="my-16 border-gray-200">
+
+        <section id="features" class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-2">Key Data Engineering Patterns Applied</h2>
+            <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">This solution relies on powerful data engineering patterns to handle the unique challenges of geospatial data at massive scale.</p>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">🌐 Geohashing for Spatial Indexing</h3>
+                    <p class="text-gray-600">Latitude/longitude pairs are converted into a single string (a "geohash"). This transforms a 2D proximity search into a 1D prefix search, which is extremely fast in key-value stores like Bigtable. Finding nearby drivers becomes a simple key range scan.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">⚡️ Hybrid Lambda/Kappa Architecture</h3>
+                    <p class="text-gray-600">The system uses two paths: a "speed layer" (Dataflow → Bigtable) for low-latency, real-time dashboards and a "batch/serving layer" (Dataflow → BigQuery) for historical analysis, model training, and complex, large-scale queries.</p>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">🎯 Purpose-Built Data Stores</h3>
+                    <p class="text-gray-600">Instead of a one-size-fits-all database, the architecture uses the right tool for the job: Bigtable for high-throughput writes and low-latency key lookups (current driver locations), and BigQuery for analytical power over massive historical datasets.</p>
+                </div>
+             </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+
+</body>
+</html>

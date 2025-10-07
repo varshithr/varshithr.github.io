@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Engineering Case Studies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .card-content {
+            flex-grow: 1;
+        }
+        .card-link {
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-gray-800">
+                <span class="gradient-text">Case Studies</span>
+            </div>
+            <ul class="flex space-x-6 text-gray-600 font-medium">
+                <li><a href="index.html" class="text-slate-600 hover:text-teal-600 transition-colors">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-6 py-12">
+        <section id="hero" class="text-center mb-20">
+            <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight">Real-World Data Engineering Scenarios</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">A collection of case studies demonstrating practical applications of data engineering technologies.</p>
+        </section>
+        <div id="case-studies-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Real-Time IoT Analytics with Auto Loader</h3>
+                    <p class="text-gray-600">A case study on how a manufacturing company uses Databricks Auto Loader to ingest and analyze real-time IoT sensor data.</p>
+                </div>
+                <div class="card-link">
+                    <a href="autoloader.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">View Case Study &rarr;</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Modern Fintech Data Platform</h3>
+                    <p class="text-gray-600">An infographic visualizing the architecture of a high-speed data platform for portfolio analytics and risk management.</p>
+                </div>
+                <div class="card-link">
+                    <a href="case1.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">View Case Study &rarr;</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">E-commerce Analytics with BigQuery</h3>
+                    <p class="text-gray-600">How a fast-growing online retailer uses Google BigQuery to analyze petabytes of sales and user behavior data for instant insights.</p>
+                </div>
+                <div class="card-link">
+                    <a href="case_study_bigquery.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">View Case Study &rarr;</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Real-Time Anomaly Detection with Dataflow</h3>
+                    <p class="text-gray-600">How a major financial institution uses Google Cloud Dataflow to detect fraudulent activity in real-time transaction streams.</p>
+                </div>
+                <div class="card-link">
+                    <a href="case_study_dataflow.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">View Case Study &rarr;</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Genomics Sequencing Pipeline on GCP</h3>
+                    <p class="text-gray-600">How a research institute orchestrates a multi-day bioinformatics workflow on Google Cloud to accelerate cancer research.</p>
+                </div>
+                <div class="card-link">
+                    <a href="case_study_genomics.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">View Case Study &rarr;</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Geospatial Analytics at Scale</h3>
+                    <p class="text-gray-600">How a ride-sharing service processes billions of GPS signals daily to power its real-time demand hotspotting and dynamic pricing engine.</p>
+                </div>
+                <div class="card-link">
+                    <a href="case_study_geospatial.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">View Case Study &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>

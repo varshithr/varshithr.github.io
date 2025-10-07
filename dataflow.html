@@ -72,7 +72,7 @@
     <script>
         // Global State
         const state = {
-            currentTab: 'architecture', 
+            currentTab: 'architecture',
             message: "Click a concept tab above to explore the core components and abstractions of the Apache Beam programming model used by Dataflow.",
         };
 
@@ -198,7 +198,7 @@
                 // Concept/Row Identifier Cell
                 let conceptCellClasses = 'concept-cell dataflow-cell h-16';
                 let dataCellClasses = 'data-cell dataflow-cell h-16';
-                
+
                 // Specific styling/content overrides for concepts
                 if (state.currentTab === 'pcollections') {
                     if (row.key === 'Bounded') dataCellClasses = 'bounded-cell dataflow-cell h-16';
@@ -214,15 +214,15 @@
                         const data = row.data[colIndex];
                         let cellContent = data;
                         let cellClasses = dataCellClasses;
-                        
+
                         if (header.includes('Visual')) cellClasses = 'data-cell dataflow-cell h-16 font-mono text-xs text-left px-2';
-                        
+
                         // Render Row Header
                         if (colIndex === 0) {
                             html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
                             html += `<div class="${dataCellClasses}" title="${currentConcept.headers[1]}: ${row.data[0]}">${row.data[0]}</div>`;
                         }
-                        
+
                         // Render remaining cells (skipping the first one handled above)
                         if (colIndex > 0) {
                             html += `<div class="${cellClasses}" title="${header}: ${data}">${cellContent}</div>`;
@@ -232,7 +232,7 @@
                 }
 
 
-                
+
                 html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
 
                 // Data Cells
@@ -251,7 +251,7 @@
 
         /**
          * Switches the active concept tab.
-         * @param {string} tabName 
+         * @param {string} tabName
          */
         const switchTab = (tabName) => {
             state.currentTab = tabName;

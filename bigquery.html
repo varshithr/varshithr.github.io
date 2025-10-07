@@ -66,7 +66,7 @@
     <script>
         // Global State
         const state = {
-            currentTab: 'architecture', 
+            currentTab: 'architecture',
             message: "Click a concept tab above to explore BigQuery's design for massive-scale analytics.",
         };
 
@@ -192,7 +192,7 @@
                 // Concept/Row Identifier Cell
                 let conceptCellClasses = 'concept-cell bq-cell h-16';
                 let dataCellClasses = 'data-cell bq-cell h-16';
-                
+
                 // Specific styling/content overrides for concepts
                 if (state.currentTab === 'columnar') {
                     conceptCellClasses = 'concept-cell bq-cell h-16 bg-blue-100 text-blue-800';
@@ -206,7 +206,7 @@
                     conceptCellClasses = 'concept-cell bq-cell h-16 bg-red-100 text-red-800';
                     dataCellClasses = 'pruning-cell bq-cell h-16';
                 }
-                
+
                 html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
 
                 // Data Cells
@@ -225,7 +225,7 @@
 
         /**
          * Switches the active concept tab.
-         * @param {string} tabName 
+         * @param {string} tabName
          */
         const switchTab = (tabName) => {
             state.currentTab = tabName;
