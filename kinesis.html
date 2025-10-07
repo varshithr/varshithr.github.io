@@ -1,34 +1,116 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amazon Kinesis Deep Dive</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #F0F4F8;
-            color: #1E293B;
+            background-color: #f7f9fb;
         }
-        .gradient-text {
-            background: linear-gradient(90deg, #FF9900, #232F3E);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .card {
-            background-color: white;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        @media (max-width: 767px) {
+            .responsive-table thead { display: none; }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; }
+            .responsive-table tr { margin-bottom: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); background-color: white; }
+            .responsive-table td { display: flex; justify-content: space-between; align-items: center; text-align: right; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; }
+            .responsive-table td::before { content: attr(data-label); text-align: left; font-weight: 600; color: #b98700; padding-right: 1rem; white-space: nowrap; }
+            .responsive-table td:last-child { border-bottom: none; }
         }
     </style>
+    <script>
+        const state = { currentTab: 'family' };
+        const concepts = {
+            family: {
+                title: "1. The Kinesis Family",
+                description: "Kinesis is a suite of services designed for different streaming data use cases, from raw ingestion to complex analytics.",
+                headers: ["Service", "Primary Function", "Key Use Case"],
+                rows: [
+                    { key: "Kinesis Data Streams", data: ["Scalable and durable real-time data streaming", "Ingesting high-volume data from thousands of sources"] },
+                    { key: "Kinesis Data Firehose", data: ["Reliably load streaming data into data stores", "Simplest way to archive streaming data to S3, Redshift, etc."] },
+                    { key: "Kinesis Data Analytics", data: ["Real-time stream processing with SQL or Flink", "Running time-series analytics and creating real-time alerts"] },
+                ]
+            },
+            streams: {
+                title: "2. Kinesis Data Streams: Core Concepts",
+                description: "Data Streams is the foundation for custom streaming applications, giving you control over capacity and consumers.",
+                headers: ["Concept", "Description", "Analogy"],
+                rows: [
+                    { key: "Stream", data: ["An ordered sequence of data records", "A conveyor belt"] },
+                    { key: "Shard", data: ["A uniquely identified sequence of records within a stream", "A lane on the conveyor belt with a fixed capacity"] },
+                    { key: "Partition Key", data: ["Used to group and route data to a specific shard", "The sorter that directs items to a specific lane"] },
+                    { key: "Consumer", data: ["An application that processes data from a stream", "The worker at the end of the conveyor belt lane"] },
+                ]
+            },
+            firehose: {
+                title: "3. Kinesis Data Firehose: Simple and Serverless",
+                description: "Firehose is a fully managed service for delivering real-time streaming data to destinations like S3, Redshift, and Elasticsearch.",
+                headers: ["Feature", "Description", "Benefit"],
+                rows: [
+                    { key: "Fully Managed", data: ["No shards or capacity to manage", "Automatically scales to match data throughput"] },
+                    { key: "Data Transformation", data: ["Use built-in Lambda functions to transform data on the fly", "Clean, enrich, or filter data before it's delivered"] },
+                    { key: "Buffering", data: ["Buffers incoming data to a specified size or time interval", "Creates larger, optimized files in the destination (e.g., S3)"] },
+                    { key: "Source Integration", data: ["Can be a direct source or consume from Kinesis Data Streams", "Flexible integration with your existing architecture"] },
+                ]
+            },
+            analytics: {
+                title: "4. Kinesis Data Analytics: Real-Time Insights",
+                description: "Process and analyze streaming data in real time using standard SQL or Apache Flink.",
+                headers: ["Engine", "Use Case", "Complexity"],
+                rows: [
+                    { key: "SQL", data: ["Simple time-series analytics, filtering, and aggregations", "Low - ideal for analysts and simple alerting"] },
+                    { key: "Apache Flink", data: ["Complex event processing, stateful analytics, and ML", "High - for building sophisticated, custom streaming applications"] },
+                ]
+            }
+        };
+        const render = () => {
+            const container = document.getElementById('table-container');
+            const messageBar = document.getElementById('message-bar');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => {
+                btn.classList.remove('bg-gray-700', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+                if (btn.dataset.tab === state.currentTab) {
+                    btn.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+                    btn.classList.add('bg-gray-700', 'text-white', 'shadow-lg');
+                }
+            });
+            messageBar.innerHTML = `<span class="font-bold">${concepts[state.currentTab].title}</span>: ${concepts[state.currentTab].description}`;
+            const currentConcept = concepts[state.currentTab];
+            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
+            html += '<thead class="bg-yellow-500 text-gray-800"><tr>';
+            currentConcept.headers.forEach(header => {
+                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
+            });
+            html += '</tr></thead>';
+            html += '<tbody>';
+            currentConcept.rows.forEach(row => {
+                html += '<tr class="md:border-b md:border-gray-200">';
+                html += `<td data-label="${currentConcept.headers[0]}" class="font-semibold text-yellow-800 md:bg-yellow-50">${row.key}</td>`;
+                row.data.forEach((cellData, colIndex) => {
+                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}">${cellData}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        };
+        const switchTab = (tabName) => {
+            state.currentTab = tabName;
+            render();
+        };
+        window.onload = () => {
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => switchTab(button.dataset.tab));
+            });
+            switchTab('family');
+        };
+    </script>
 </head>
-<body class="antialiased">
-    <header class="bg-white sticky top-0 z-50 shadow-md">
+<body class="p-4 sm:p-8">
+    <header class="bg-white sticky top-0 z-50 shadow-md mb-6">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
                 <a href="aws_topics.html" class="gradient-text">Back to AWS Topics</a>
@@ -39,45 +121,17 @@
             </ul>
         </nav>
     </header>
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <section id="hero" class="text-center my-12 sm:my-20">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">
-                Amazon Kinesis: Real-Time Data Streaming
-            </h1>
-            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">A deep dive into the Amazon Kinesis family of services for collecting, processing, and analyzing streaming data at any scale.</p>
-        </section>
-        <div class="space-y-8">
-            <div class="card">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Kinesis Family</h2>
-                <p class="text-gray-600 mb-4">Kinesis is not a single service, but a suite of services designed for different streaming data use cases.</p>
-                <ul class="list-disc list-inside space-y-2">
-                    <li><strong>Kinesis Data Streams:</strong> A massively scalable and durable real-time data streaming service. It can continuously capture gigabytes of data per second from hundreds of thousands of sources. You manage the capacity by provisioning "shards."</li>
-                    <li><strong>Kinesis Data Firehose:</strong> The easiest way to reliably load streaming data into data lakes, data stores, and analytics services. It's a fully managed service that automatically scales to match the throughput of your data.</li>
-                    <li><strong>Kinesis Data Analytics:</strong> Process and analyze streaming data in real time with SQL or Apache Flink. It allows you to build complex streaming applications to perform time-series analytics, feed real-time dashboards, and create real-time alerts.</li>
-                    <li><strong>Kinesis Video Streams:</strong> Securely stream video from connected devices to AWS for analytics, machine learning, and other processing.</li>
-                </ul>
-            </div>
-            <div class="card">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Kinesis Data Streams: Core Concepts</h2>
-                <ul class="list-disc list-inside space-y-2">
-                    <li><strong>Stream:</strong> An ordered sequence of data records. A stream is composed of one or more shards.</li>
-                    <li><strong>Shard:</strong> A uniquely identified sequence of data records in a stream. Each shard has a fixed capacity (1 MB/s and 1,000 records/s for writes; 2 MB/s for reads). The total capacity of a stream is the sum of the capacities of its shards.</li>
-                    <li><strong>Partition Key:</strong> Used to group data by shard within a stream. Kinesis uses the partition key to segregate and route records to different shards. Records with the same partition key always go to the same shard.</li>
-                    <li><strong>Producers and Consumers:</strong> Producers put data records into Kinesis Data Streams. Consumers get data records from Kinesis Data Streams. Consumers can be custom applications (using the KCL), Lambda functions, or other AWS services like Kinesis Data Firehose or Kinesis Data Analytics.</li>
-                </ul>
-            </div>
-            <div class="card">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Common Architectural Patterns</h2>
-                <ul class="list-disc list-inside space-y-2">
-                    <li><strong>Real-Time Analytics:</strong> `Producers -> Kinesis Data Streams -> Kinesis Data Analytics (Flink/SQL) -> Real-time Dashboards / Alerts`</li>
-                    <li><strong>Stream Archiving:</strong> `Producers -> Kinesis Data Streams -> Kinesis Data Firehose -> Amazon S3`</li>
-                    <li><strong>Serverless Stream Processing:</strong> `Producers -> Kinesis Data Streams -> AWS Lambda -> DynamoDB / Other AWS Services`</li>
-                </ul>
-            </div>
-        </div>
-    </main>
-    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
-        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
-    </footer>
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
+        Amazon Kinesis: Real-Time Data Streaming
+    </h1>
+    <p class="text-base sm:text-lg text-gray-600 mb-8">A deep dive into the Amazon Kinesis family of services for collecting, processing, and analyzing streaming data at any scale.</p>
+    <div class="flex flex-wrap gap-2 mb-8">
+        <button data-tab="family" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">1. The Kinesis Family</button>
+        <button data-tab="streams" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">2. Data Streams</button>
+        <button data-tab="firehose" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">3. Data Firehose</button>
+        <button data-tab="analytics" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">4. Data Analytics</button>
+    </div>
+    <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base"></div>
+    <div id="table-container" class="mt-8"></div>
 </body>
 </html>

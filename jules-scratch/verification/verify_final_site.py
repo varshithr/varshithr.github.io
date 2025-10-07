@@ -29,9 +29,10 @@ def run_verification(playwright):
     page.screenshot(path="jules-scratch/verification/04_final_aws_case_studies.png")
 
     page.get_by_role("link", name="View Case Study →").first.click()
-    expect(page).to_have_title("Case Study: E-Commerce Personalization with AWS")
-    page.wait_for_timeout(1000) # Wait for mermaid to render
-    page.screenshot(path="jules-scratch/verification/05_final_aws_ml_case_study.png")
+    expect(page).to_have_title("Case Study: Netflix's Resilient Data Platform with WAL")
+    page.locator(".mermaid").scroll_into_view_if_needed()
+    page.wait_for_timeout(1500) # Wait for mermaid to render
+    page.screenshot(path="jules-scratch/verification/05_final_netflix_wal_case_study.png")
 
     # 3. Azure Section
     page.goto(f"{base_path}/index.html")
@@ -40,7 +41,7 @@ def run_verification(playwright):
     page.screenshot(path="jules-scratch/verification/06_final_azure_topics.png")
 
     page.get_by_role("link", name="Learn more →").first.click()
-    expect(page).to_have_title("Azure Data Lake Storage (ADLS) Deep Dive")
+    expect(page).to_have_title("Azure Data Lake Storage (ADLS) Gen2 Deep Dive")
     page.screenshot(path="jules-scratch/verification/07_final_adls_page.png")
     page.go_back()
 
@@ -50,7 +51,8 @@ def run_verification(playwright):
 
     page.get_by_role("link", name="View Case Study →").first.click()
     expect(page).to_have_title("Case Study: AI-Powered Personalization at ASOS with Azure")
-    page.wait_for_timeout(1000) # Wait for mermaid to render
+    page.locator(".mermaid").scroll_into_view_if_needed()
+    page.wait_for_timeout(1500) # Wait for mermaid to render
     page.screenshot(path="jules-scratch/verification/09_final_azure_personalization_case_study.png")
 
     # 4. Databricks Enriched Content
@@ -72,7 +74,8 @@ def run_verification(playwright):
 
     page.get_by_role("link", name="View Case Study →").first.click()
     expect(page).to_have_title("Case Study: Scaling MySQL at Shopify with Vitess")
-    page.wait_for_timeout(1000) # Wait for mermaid to render
+    page.locator(".mermaid").scroll_into_view_if_needed()
+    page.wait_for_timeout(1500) # Wait for mermaid to render
     page.screenshot(path="jules-scratch/verification/13_final_shopify_case_study.png")
 
     browser.close()
