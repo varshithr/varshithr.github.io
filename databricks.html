@@ -13,6 +13,34 @@
             background-color: #f0f4f8; /* Light blue-gray background */
             color: #333;
         }
+        .section-header {
+            background-color: #4f46e5; /* Indigo */
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        .section-header:hover {
+            background-color: #4338ca; /* Darker indigo on hover */
+        }
+        .section-content {
+            background-color: #f8fafc; /* Lighter background for content */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0; /* Light border */
+        }
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        .accordion-icon.rotated {
+            transform: rotate(90deg);
+        }
         .cheatsheet-item {
             margin-bottom: 1rem;
             padding-bottom: 1rem;

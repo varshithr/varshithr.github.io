@@ -12,66 +12,41 @@
             font-family: 'Inter', sans-serif;
             background-color: #f7f9fb;
         }
-        .composer-cell {
-            min-height: 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem;
-            transition: all 0.3s ease;
-            font-size: 0.75rem;
-            line-height: 1.2;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-align: center;
-            white-space: nowrap;
-        }
-        .header-cell {
-            background-color: #164e63; /* Dark Teal */
-            color: white;
-            font-weight: 600;
-            border: 1px solid #0e7490;
-        }
-        .concept-cell {
-            background-color: #e0f2f7; /* Light Cyan */
-            color: #155e75;
-            font-weight: 700;
-            text-align: left;
-            padding-left: 1rem;
-            cursor: pointer;
-        }
-        .data-cell {
-            background-color: #ffffff;
-            color: #1f2937;
-            border: 1px solid #e5e7eb;
-            font-size: 0.875rem;
-            cursor: pointer;
-        }
-        /* Specific styling for concepts */
-        .flow-cell {
-            background-color: #d1fae5; /* Green for flow/success */
-            color: #065f46;
-            font-weight: 600;
-        }
-        .external-cell {
-            background-color: #fef3c7; /* Yellow for external/connections */
-            color: #92400e;
-            font-weight: 500;
-        }
-        .state-success {
-            background-color: #d1fae5;
-            color: #065f46;
-            font-weight: 700;
-        }
-        .state-running {
-            background-color: #bfdbfe;
-            color: #1e40af;
-            font-weight: 700;
-        }
-        .state-failed {
-            background-color: #fee2e2;
-            color: #991b1b;
-            font-weight: 700;
+        /* Responsive Table Styles */
+        @media (max-width: 767px) {
+            .responsive-table thead {
+                display: none;
+            }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td {
+                display: block;
+                width: 100%;
+            }
+            .responsive-table tr {
+                margin-bottom: 1rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                background-color: white;
+            }
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: right;
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            .responsive-table td::before {
+                content: attr(data-label);
+                text-align: left;
+                font-weight: 600;
+                color: #0e7490; /* Teal-700 */
+                padding-right: 1rem;
+                white-space: nowrap;
+            }
+            .responsive-table td:last-child {
+                border-bottom: none;
+            }
         }
     </style>
     <script>
@@ -193,60 +168,30 @@
 
             // 3. Generate Table HTML
             const currentConcept = concepts[state.currentTab];
-            let html = `<div class="overflow-x-auto shadow-xl rounded-xl">`;
-            // Dynamic grid layout: 180px for Concept, rest split evenly
-            html += `<div class="grid" style="grid-template-columns: 180px repeat(${currentConcept.headers.length - 1}, 1fr);">`;
+            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
 
-            // Headers
+            // Desktop Headers
+            html += '<thead class="bg-teal-800 text-white"><tr>';
             currentConcept.headers.forEach(header => {
-                html += `<div class="header-cell composer-cell h-12 flex items-center justify-center">${header}</div>`;
+                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
             });
+            html += '</tr></thead>';
 
-            // Rows
-            currentConcept.rows.forEach((row, rowIndex) => {
-                // Concept/Row Identifier Cell
-                let conceptCellClasses = 'concept-cell composer-cell h-16';
-                let dataCellClasses = 'data-cell composer-cell h-16';
+            // Body
+            html += '<tbody>';
+            currentConcept.rows.forEach(row => {
+                html += '<tr class="md:border-b md:border-gray-200">';
+                // First cell is the key, styled differently
+                html += `<td data-label="${currentConcept.headers[0]}" class="font-semibold text-teal-800 md:bg-teal-50">${row.key}</td>`;
                 
-                // Specific styling/content overrides for concepts
-                if (state.currentTab === 'architecture' && rowIndex < 3) {
-                    dataCellClasses = 'flow-cell composer-cell h-16'; // Worker, Scheduler, Webserver are active components
-                }
-                if (state.currentTab === 'operators' && row.key.includes('BigQuery')) {
-                    dataCellClasses = 'external-cell composer-cell h-16';
-                }
-                if (state.currentTab === 'taskStates') {
-                    conceptCellClasses = 'concept-cell composer-cell h-16 text-center';
-                    
-                    let stateColorClass = 'data-cell'; // Default
-                    if (row.key === 'Success') stateColorClass = 'state-success';
-                    if (row.key === 'Running') stateColorClass = 'state-running';
-                    if (row.key === 'Failed' || row.key === 'Upstream Failed') stateColorClass = 'state-failed';
-
-                    html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
-                    
-                    // Apply state color to the visual status cell
-                    html += `<div class="${stateColorClass} composer-cell h-16" title="Status">${row.data[0]}</div>`;
-                    
-                    // Keep the last cell standard data
-                    html += `<div class="data-cell composer-cell h-16" title="Next Action">${row.data[1]}</div>`;
-                    
-                    return; // Skip default row rendering below
-                }
-                
-                html += `<div class="${conceptCellClasses}" title="${row.key}">${row.key}</div>`;
-
-                // Data Cells
-                currentConcept.headers.slice(1).forEach((header, colIndex) => {
-                    const data = row.data[colIndex];
-                    let cellContent = data;
-                    let cellClasses = dataCellClasses;
-
-                    html += `<div class="${cellClasses}" title="${header}: ${data}">${cellContent}</div>`;
+                // Data cells
+                row.data.forEach((cellData, colIndex) => {
+                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}">${cellData}</td>`;
                 });
+                html += '</tr>';
             });
+            html += '</tbody></table>';
 
-            html += `</div></div>`;
             container.innerHTML = html;
         };
 
@@ -271,44 +216,44 @@
         };
     </script>
 </head>
-<body class="p-8">
+<body class="p-4 sm:p-8">
     <a href="index.html" class="text-gray-600 hover:text-teal-600 hover:underline font-semibold mb-6 inline-block">&larr; Back to Home</a>
-    <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
         <svg class="w-8 h-8 mr-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-7-9a1 1 0 000 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414l1.293 1.293H3z" clip-rule="evenodd"></path></svg>
         Cloud Composer (Apache Airflow) Essentials
     </h1>
-    <p class="text-lg text-gray-600 mb-8">Click on the tabs below to explore the fundamental components and concepts of building pipelines with Airflow.</p>
+    <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the fundamental components and concepts of building pipelines with Airflow.</p>
 
     <!-- Tab Navigation -->
-    <div class="flex flex-wrap space-x-4 space-y-2 mb-8">
-        <button data-tab="architecture" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+    <div class="flex flex-wrap gap-2 mb-8">
+        <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
             1. Core Architecture (Components)
         </button>
-        <button data-tab="dags" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+        <button data-tab="dags" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
             2. DAGs (The Blueprint)
         </button>
-        <button data-tab="operators" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+        <button data-tab="operators" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
             3. Operators (Actions)
         </button>
-        <button data-tab="sensors" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+        <button data-tab="sensors" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
             4. Sensors (Waiting)
         </button>
-        <button data-tab="connections" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+        <button data-tab="connections" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
             5. Connections & Hooks
         </button>
-        <button data-tab="xcoms" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+        <button data-tab="xcoms" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
             6. XComs (Data Sharing)
         </button>
-        <button data-tab="taskStates" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+        <button data-tab="taskStates" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
             7. Task States (Lifecycle)
         </button>
-        <button data-tab="scaling" class="tab-button py-2 px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+        <button data-tab="scaling" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
             8. Scaling & Workers
         </button>
     </div>
 
     <!-- Explanation Bar -->
-    <div id="message-bar" class="bg-cyan-100 border-l-4 border-cyan-500 text-cyan-800 p-4 mb-8 rounded-md shadow-md">
+    <div id="message-bar" class="bg-cyan-100 border-l-4 border-cyan-500 text-cyan-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base">
         <!-- Message will be populated by JS -->
     </div>
 
