@@ -97,10 +97,10 @@
     <header class="bg-white sticky top-0 z-50 shadow-md mb-6">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="index.html" class="gradient-text">Data Engineering Concepts</a>
+                <a href="databricks_topics.html" class="gradient-text">Back to Databricks Topics</a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="case_studies.html" class="hover:text-[#bc5090]">Case Studies</a></li>
+                <li><a href="index.html" class="hover:text-[#bc5090]">Home</a></li>
                 <li><a href="aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
@@ -130,9 +130,9 @@
                 <p class="mb-4">The Lakehouse architecture is a new, open data management paradigm that combines the best features of data lakes and data warehouses. It's designed to handle all types of data (structured, semi-structured, unstructured) and support all data workloads (BI, AI, ML) on a single platform.</p>
                 <h3 class="text-xl font-semibold mb-2 text-indigo-600">Key Components of Databricks Lakehouse:</h3>
                 <ul class="list-disc list-inside mb-4 pl-4">
-                    <li class="mb-2"><strong>Delta Lake:</strong> An open-source storage layer that brings ACID transactions, schema enforcement, scalability, and data versioning to data lakes. It's the foundation of the Lakehouse, enabling reliable data pipelines.</li>
-                    <li class="mb-2"><strong>Photon:</strong> A vectorized query engine built for the Databricks Lakehouse. It significantly speeds up SQL and data frame operations, especially on large datasets, by leveraging modern CPU architectures.</li>
-                    <li class="mb-2"><strong>Unity Catalog:</strong> A unified governance solution for data and AI on the Lakehouse. It provides a central place to manage data access, auditing, and lineage across all data assets (tables, files, ML models).</li>
+                    <li class="mb-2"><strong>Delta Lake:</strong> An open-source storage layer built on open formats (Parquet) that brings ACID transactions, schema enforcement, and data versioning (Time Travel) to your data lake. This is the core component that adds reliability and performance.</li>
+                    <li class="mb-2"><strong>Photon Engine:</strong> A high-performance, C++ based vectorized query engine that is compatible with Apache Spark APIs. Instead of processing data row-by-row, Photon processes data in batches (vectors), taking full advantage of modern CPU hardware (SIMD). This results in significant performance improvements for SQL and DataFrame operations.</li>
+                    <li class="mb-2"><strong>Unity Catalog:</strong> A unified governance solution for data and AI assets across multiple workspaces and clouds. It provides a central place to manage permissions, auditing, and data lineage, treating the Lakehouse as a single, governable entity.</li>
                 </ul>
                 <h3 class="text-xl font-semibold mb-2 text-indigo-600">Why Lakehouse?</h3>
                 <p class="mb-4">Traditional architectures often lead to data silos (data lakes for raw data, data warehouses for structured BI). The Lakehouse eliminates these silos, offering:</p>
@@ -168,161 +168,138 @@ BI Tools / ML Models / Data Science
             </div>
         </div>
 
-        <!-- Latest Databricks Features -->
+        <!-- Databricks SQL -->
         <div class="mb-6">
-            <div class="section-header" onclick="toggleSection('databricks-features')">
-                <h2 class="text-2xl font-semibold">Key Databricks Features & Offerings</h2>
-                <span class="accordion-icon text-2xl font-bold" id="databricks-features-icon">+</span>
+            <div class="section-header" onclick="toggleSection('databricks-sql')">
+                <h2 class="text-2xl font-semibold">Databricks SQL Serverless</h2>
+                <span class="accordion-icon text-2xl font-bold" id="databricks-sql-icon">+</span>
             </div>
-            <div id="databricks-features-content" class="section-content hidden">
-                <ul class="list-disc list-inside pl-4">
-                    <li class="mb-2"><strong>Delta Lake:</strong> (As explained above) Ensures data reliability and performance in the data lake.</li>
-                    <li class="mb-2"><strong>MLflow:</strong> An open-source platform for managing the end-to-end machine learning lifecycle, including experimentation, reproducibility, deployment, and a central model registry.</li>
-                    <li class="mb-2"><strong>Unity Catalog:</strong> (As explained above) Centralized governance for data and AI assets.</li>
-                    <li class="mb-2"><strong>Photon Engine:</strong> (As explained above) High-performance query engine for SQL and DataFrame operations.</li>
-                    <li class="mb-2"><strong>Databricks SQL:</strong> A serverless data warehousing experience on the Lakehouse, allowing analysts to run SQL queries on large datasets with high performance.</li>
-                    <li class="mb-2"><strong>Databricks Machine Learning:</strong> A comprehensive platform for the full ML lifecycle, integrating MLflow, autoML capabilities, and optimized environments for training and inference.</li>
-                    <li class="mb-2"><strong>Databricks Workflows:</strong> Orchestration service to build and manage data, analytics, and ML pipelines.</li>
-                    <li class="mb-2"><strong>DBSQL Serverless:</strong> Provides instant compute for SQL workloads, reducing operational overhead and improving query performance.</li>
-                    <li class="mb-2"><strong>Lakehouse Federation:</strong> Allows querying data in other systems (e.g., PostgreSQL, MySQL, Snowflake) directly from Databricks without ingesting it, using Unity Catalog for governance.</li>
+            <div id="databricks-sql-content" class="section-content hidden">
+                <p class="mb-4">Databricks SQL is a serverless data warehouse built on the Lakehouse architecture. It provides a familiar SQL interface for data analysts to run queries on the same data used for data science and machine learning, eliminating data silos and reducing complexity.</p>
+                <h3 class="text-xl font-semibold mb-2 text-indigo-600">Key Benefits:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Serverless Compute:</strong> Instant, elastic compute that starts up and shuts down in seconds, so you only pay for the queries you run.</li>
+                    <li class="mb-2"><strong>High Performance:</strong> Powered by the Photon engine, it delivers leading price/performance for BI and SQL workloads.</li>
+                    <li class="mb-2"><strong>Unified Governance:</strong> Integrated with Unity Catalog for end-to-end governance, from data ingestion to BI dashboards.</li>
+                    <li class="mb-2"><strong>BI Tool Integration:</strong> Seamlessly connects with popular BI tools like Tableau, Power BI, and Looker.</li>
                 </ul>
+                <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <h4 class="font-bold text-blue-800 mb-2">Example: Connecting Power BI to Gold Layer</h4>
+                    <pre class="bg-gray-100 p-3 rounded text-sm overflow-x-auto">
+1. Open Power BI Desktop.
+2. Get Data -> Azure -> Azure Databricks.
+3. Enter Server Hostname and HTTP Path from your DBSQL endpoint.
+4. Authenticate (e.g., with Azure AD or a Personal Access Token).
+5. Navigate to your Gold catalog and select the 'quarterly_sales' table.
+6. Start building visualizations on live, governed data.
+                    </pre>
+                </div>
             </div>
         </div>
 
-        <!-- Databricks vs. Dataproc -->
+        <!-- Medallion Architecture In-Depth -->
         <div class="mb-6">
-            <div class="section-header" onclick="toggleSection('databricks-dataproc')">
-                <h2 class="text-2xl font-semibold">Databricks vs. Google Cloud Dataproc</h2>
-                <span class="accordion-icon text-2xl font-bold" id="databricks-dataproc-icon">+</span>
+            <div class="section-header" onclick="toggleSection('medallion-architecture')">
+                <h2 class="text-2xl font-semibold">Medallion Architecture In-Depth</h2>
+                <span class="accordion-icon text-2xl font-bold" id="medallion-architecture-icon">+</span>
             </div>
-            <div id="databricks-dataproc-content" class="section-content hidden">
-                <p class="mb-4">While both Databricks and Google Cloud Dataproc provide managed Apache Spark services, they cater to slightly different needs and offer distinct advantages.</p>
+            <div id="medallion-architecture-content" class="section-content hidden">
+                <p class="mb-4">The Medallion Architecture is a data design pattern for logically organizing data in a lakehouse. The goal is to incrementally and progressively improve the structure and quality of data as it flows through the layers (from Bronze to Silver to Gold).</p>
                 <div class="overflow-x-auto">
                     <table class="w-full responsive-table">
                         <thead>
                             <tr>
-                                <th class="p-3 text-left font-semibold text-sm text-indigo-800 bg-indigo-100">Feature</th>
-                                <th class="p-3 text-left font-semibold text-sm text-indigo-800 bg-indigo-100">Databricks</th>
-                                <th class="p-3 text-left font-semibold text-sm text-indigo-800 bg-indigo-100">Google Cloud Dataproc</th>
+                                <th class="p-3 text-left font-semibold text-sm text-indigo-800 bg-indigo-100">Layer</th>
+                                <th class="p-3 text-left font-semibold text-sm text-indigo-800 bg-indigo-100">Purpose</th>
+                                <th class="p-3 text-left font-semibold text-sm text-indigo-800 bg-indigo-100">Common Operations</th>
+                                <th class="p-3 text-left font-semibold text-sm text-indigo-800 bg-indigo-100">Example</th>
                             </tr>
                         </thead>
                         <tbody class="text-sm">
                             <tr>
-                                <td data-label="Feature" class="font-semibold">Core Offering</td>
-                                <td data-label="Databricks">Unified Data & AI Platform (Lakehouse)</td>
-                                <td data-label="Google Cloud Dataproc">Managed Apache Spark, Hadoop, Flink, Presto on GCP</td>
+                                <td data-label="Layer" class="font-semibold">Bronze (Raw)</td>
+                                <td data-label="Purpose">Ingest raw data from sources. Append-only, immutable. Provides a historical archive.</td>
+                                <td data-label="Common Operations">Batch or stream ingestion (e.g., Auto Loader), schema inference.</td>
+                                <td data-label="Example">JSON files from a Kafka topic landed as-is into a Delta table.</td>
                             </tr>
                             <tr>
-                                <td data-label="Feature" class="font-semibold">Architecture Focus</td>
-                                <td data-label="Databricks">Lakehouse (Delta Lake, Unity Catalog, Photon)</td>
-                                <td data-label="Google Cloud Dataproc">Traditional Data Lake (GCS) with Spark/Hadoop clusters</td>
+                                <td data-label="Layer" class="font-semibold">Silver (Validated)</td>
+                                <td data-label="Purpose">Cleaned, filtered, and enriched data. Provides a single source of truth for analytics.</td>
+                                <td data-label="Common Operations">Deduplication, data type casting, handling nulls, joining with lookup tables.</td>
+                                <td data-label="Example">User session data is cleaned, and user IDs are joined with a user dimension table.</td>
                             </tr>
                             <tr>
-                                <td data-label="Feature" class="font-semibold">Managed Service Level</td>
-                                <td data-label="Databricks">Higher level of abstraction, fully managed platform including compute, storage layer (Delta Lake), governance (Unity Catalog), and ML lifecycle (MLflow).</td>
-                                <td data-label="Google Cloud Dataproc">Managed clusters for open-source frameworks. More control over underlying infrastructure.</td>
-                            </tr>
-                            <tr>
-                                <td data-label="Feature" class="font-semibold">Performance Optimization</td>
-                                <td data-label="Databricks">Photon engine, Delta Lake optimizations for ACID transactions and indexing.</td>
-                                <td data-label="Google Cloud Dataproc">Standard Spark optimizations, relies on underlying GCP infrastructure.</td>
-                            </tr>
-                            <tr>
-                                <td data-label="Feature" class="font-semibold">Data Governance</td>
-                                <td data-label="Databricks">Unity Catalog for centralized, fine-grained access control across all data assets.</td>
-                                <td data-label="Google Cloud Dataproc">Relies on GCP IAM and other GCP services for governance.</td>
-                            </tr>
-                            <tr>
-                                <td data-label="Feature" class="font-semibold">Machine Learning</td>
-                                <td data-label="Databricks">Integrated MLflow for full ML lifecycle management, Databricks ML Runtime.</td>
-                                <td data-label="Google Cloud Dataproc">Integrates with Vertex AI and other GCP ML services, but MLflow needs to be set up.</td>
-                            </tr>
-                            <tr>
-                                <td data-label="Feature" class="font-semibold">Data Warehousing</td>
-                                <td data-label="Databricks">Databricks SQL for high-performance SQL analytics on the Lakehouse.</td>
-                                <td data-label="Google Cloud Dataproc">Can run SQL on Spark, but not a dedicated data warehousing experience like DBSQL.</td>
-                            </tr>
-                            <tr>
-                                <td data-label="Feature" class="font-semibold">Cost Model</td>
-                                <td data-label="Databricks">DBUs (Databricks Units) based on compute usage, plus cloud infrastructure costs. Often higher for basic Spark, but can be more cost-effective for end-to-end solutions.</td>
-                                <td data-label="Google Cloud Dataproc">Per-second billing for compute resources (VMs, storage), generally more granular control over costs.</td>
-                            </tr>
-                            <tr>
-                                <td data-label="Feature" class="font-semibold">Open Source Focus</td>
-                                <td data-label="Databricks">Strong commitment to open source (Spark, Delta Lake, MLflow).</td>
-                                <td data-label="Google Cloud Dataproc">Provides managed open-source frameworks (Spark, Hadoop, etc.).</td>
-                            </tr>
-                            <tr>
-                                <td data-label="Feature" class="font-semibold">Use Cases</td>
-                                <td data-label="Databricks">Unified data & AI platforms, complex ML pipelines, real-time analytics, data warehousing on cloud data lakes.</td>
-                                <td data-label="Google Cloud Dataproc">Lift-and-shift Hadoop/Spark workloads, custom big data processing, integrating with other GCP services.</td>
+                                <td data-label="Layer" class="font-semibold">Gold (Aggregated)</td>
+                                <td data-label="Purpose">Business-level aggregates, ready for BI and reporting. Optimized for performance.</td>
+                                <td data-label="Common Operations">Aggregations (e.g., weekly sales), complex joins, feature engineering.</td>
+                                <td data-label="Example">A 'quarterly_sales' table is created by aggregating the Silver-level sales data.</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <p class="mt-4 text-sm text-gray-700"><strong>In summary:</strong> Databricks offers a more opinionated, fully integrated, and optimized platform for the Lakehouse paradigm, ideal for organizations seeking a unified data and AI strategy. Dataproc provides a flexible, managed service for open-source big data frameworks on GCP, offering more control over the underlying infrastructure and better for those already heavily invested in the GCP ecosystem or needing specific Hadoop ecosystem components.</p>
             </div>
         </div>
 
-        <!-- Interview Cheatsheet -->
+        <!-- Unity Catalog In-Depth -->
         <div class="mb-6">
-            <div class="section-header" onclick="toggleSection('interview-cheatsheet')">
-                <h2 class="text-2xl font-semibold">Interview Cheatsheet: Key Concepts</h2>
-                <span class="accordion-icon text-2xl font-bold" id="interview-cheatsheet-icon">+</span>
+            <div class="section-header" onclick="toggleSection('unity-catalog')">
+                <h2 class="text-2xl font-semibold">Unity Catalog In-Depth</h2>
+                <span class="accordion-icon text-2xl font-bold" id="unity-catalog-icon">+</span>
             </div>
-            <div id="interview-cheatsheet-content" class="section-content hidden">
-                <div class="cheatsheet-item">
-                    <h4>Apache Spark</h4>
-                    <p>An open-source, distributed processing system used for big data workloads. It provides in-memory processing for faster analytics and supports various languages (Scala, Python, Java, R).</p>
+            <div id="unity-catalog-content" class="section-content hidden">
+                <p class="mb-4">Unity Catalog is the comprehensive governance solution for the Databricks Lakehouse. It provides a centralized place to manage all data and AI assets, enabling fine-grained control and end-to-end lineage.</p>
+                <h3 class="text-xl font-semibold mb-2 text-indigo-600">Core Features:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Centralized Metadata & 3-Level Namespace:</strong> One metastore to rule them all, spanning multiple workspaces. It introduces a three-level namespace (`catalog.schema.table`) for better data organization.</li>
+                    <li class="mb-2"><strong>Fine-Grained Access Control:</strong> Use standard SQL GRANT/REVOKE statements to manage permissions on catalogs, schemas, tables, and views. It also supports Row-Level Security and Column-Level Masking.</li>
+                    <li class="mb-2"><strong>Automated Data Lineage:</strong> Automatically captures and visualizes lineage for all queries, notebooks, and dashboards, down to the column level, across all languages.</li>
+                    <li class="mb-2"><strong>Data Discovery:</strong> A built-in data explorer allows users to easily search for and discover relevant data assets using tags and metadata.</li>
+                    <li class="mb-2"><strong>Secure Data Sharing:</strong> Use Delta Sharing, an open protocol, to securely share live data with other organizations without duplicating it, regardless of the platform they use.</li>
+                    <li class="mb-2"><strong>Attribute Based Access Control (ABAC):</strong> Use tags to control access to data assets, simplifying governance at scale by grouping assets and principals by their attributes.</li>
+                </ul>
+                <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <h4 class="font-bold text-blue-800 mb-2">Example: Granting Access with Unity Catalog</h4>
+                    <pre class="bg-gray-100 p-3 rounded text-sm overflow-x-auto">
+-- Grant usage on the catalog
+GRANT USE_CATALOG ON CATALOG marketing_data TO `analysts`;
+
+-- Grant usage on the schema
+GRANT USE_SCHEMA ON SCHEMA marketing_data.web_analytics TO `analysts`;
+
+-- Grant select on a specific table
+GRANT SELECT ON TABLE marketing_data.web_analytics.page_views TO `analysts`;
+                    </pre>
                 </div>
-                <div class="cheatsheet-item">
-                    <h4>Data Lake</h4>
-                    <p>A centralized repository that allows you to store all your structured and unstructured data at any scale. It stores data in its native format and is ideal for big data analytics, machine learning, and real-time processing.</p>
-                </div>
-                <div class="cheatsheet-item">
-                    <h4>Data Warehouse</h4>
-                    <p>A system used for reporting and data analysis, and is a core component of business intelligence. Data warehouses store historical data from various sources in a structured, schema-on-write format, optimized for fast querying and reporting.</p>
-                </div>
-                <div class="cheatsheet-item">
-                    <h4>Data Lakehouse</h4>
-                    <p>Combines the best features of data lakes (flexibility, raw data storage, cost-effectiveness) and data warehouses (structure, ACID transactions, performance, governance) into a single, unified platform.</p>
-                </div>
-                <div class="cheatsheet-item">
-                    <h4>Delta Lake</h4>
-                    <p>An open-source storage layer that brings ACID transactions, scalable metadata handling, and unified streaming and batch data processing to data lakes. It enables building a Lakehouse architecture.</p>
-                </div>
-                <div class="cheatsheet-item">
-                    <h4>ACID Properties (in Delta Lake context)</h4>
-                    <ul class="list-disc list-inside pl-4">
-                        <li><strong>Atomicity:</strong> All operations within a transaction succeed or all fail.</li>
-                        <li><strong>Consistency:</strong> Data remains valid according to defined rules after a transaction.</li>
-                        <li><strong>Isolation:</strong> Concurrent transactions execute independently without interfering with each other.</li>
-                        <li><strong>Durability:</strong> Once a transaction is committed, the changes are permanent.</li>
-                    </ul>
-                </div>
-                <div class="cheatsheet-item">
-                    <h4>ETL vs. ELT</h4>
-                    <ul class="list-disc list-inside pl-4">
-                        <li><strong>ETL (Extract, Transform, Load):</strong> Data is extracted from sources, transformed (cleaned, aggregated) in a staging area, and then loaded into a data warehouse. Traditional approach.</li>
-                        <li><strong>ELT (Extract, Load, Transform):</strong> Data is extracted from sources, loaded directly into the target system (like a data lake), and then transformed within that system. Favored in cloud environments and with data lakes due to scalable storage and compute.</li>
-                    </ul>
-                </div>
-                <div class="cheatsheet-item">
-                    <h4>Medallion Architecture (Bronze, Silver, Gold)</h4>
-                    <p>A data design pattern used in Lakehouse environments to incrementally improve the structure and quality of data as it flows through the system:</p>
-                    <ul class="list-disc list-inside pl-4">
-                        <li><strong>Bronze Layer (Raw):</strong> Contains raw, untransformed data, ingested directly from source systems.</li>
-                        <li><strong>Silver Layer (Cleaned/Refined):</strong> Data from the Bronze layer is cleaned, filtered, and enriched. It's typically normalized and ready for feature engineering.</li>
-                        <li><strong>Gold Layer (Curated/Aggregated):</strong> Highly refined, aggregated, and business-ready data, optimized for specific use cases like BI dashboards, reporting, or machine learning models.</li>
-                    </ul>
-                </div>
-                <div class="cheatsheet-item">
-                    <h4>Data Governance</h4>
-                    <p>The overall management of the availability, usability, integrity, and security of data used in an enterprise. It includes policies, processes, and technologies (like Unity Catalog) to ensure data quality and compliance.</p>
-                </div>
-                <div class="cheatsheet-item">
-                    <h4>Data Lineage</h4>
-                    <p>A data's lifecycle, including its origin, where it moves over time, and what transformations it undergoes. It's crucial for auditing, debugging, and understanding data quality.</p>
+            </div>
+        </div>
+
+        <!-- Delta Lake Internals -->
+        <div class="mb-6">
+            <div class="section-header" onclick="toggleSection('delta-lake-internals')">
+                <h2 class="text-2xl font-semibold">Delta Lake Internals: The Transaction Log</h2>
+                <span class="accordion-icon text-2xl font-bold" id="delta-lake-internals-icon">+</span>
+            </div>
+            <div id="delta-lake-internals-content" class="section-content hidden">
+                <p class="mb-4">The power of Delta Lake comes from the `_delta_log` directory, which is stored alongside the data files (Parquet). This transaction log is the single source of truth that defines the state of a Delta table.</p>
+                <h3 class="text-xl font-semibold mb-2 text-indigo-600">How it Works:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Ordered Atomic Commits:</strong> Every transaction (e.g., INSERT, UPDATE, DELETE, MERGE) is recorded as an ordered, atomic commit in the transaction log. Each commit produces a new JSON file (e.g., `000000.json`, `000001.json`).</li>
+                    <li class="mb-2"><strong>Log Entries:</strong> These JSON files contain "actions" that describe changes to the table, such as adding or removing a data file, changing metadata (schema), or updating statistics.</li>
+                    <li class="mb-2"><strong>Checkpoints:</strong> To avoid having to read thousands of small JSON files, Delta Lake periodically compacts the transaction log into a Parquet file called a checkpoint. This checkpoint contains the aggregated state of the table up to that point, providing a much faster way for readers to get the current state of the table.</li>
+                    <li class="mb-2"><strong>ACID Transactions:</strong> The transaction log enables ACID properties. When a write occurs, Delta first writes the data files, then commits an entry to the log. This two-phase commit protocol ensures atomicity. The optimistic concurrency control model handles conflicts between concurrent writes.</li>
+                </ul>
+                <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <h4 class="font-bold text-blue-800 mb-2">Example `_delta_log` Directory Structure:</h4>
+                    <pre class="bg-gray-100 p-3 rounded text-sm overflow-x-auto">
+/path/to/table/
+  ├── _delta_log/
+  │   ├── 000000.json
+  │   ├── 000001.json
+  │   ├── ...
+  │   └── 000010.checkpoint.parquet
+  ├── part-00000-....c000.snappy.parquet
+  └── part-00001-....c000.snappy.parquet
+                    </pre>
                 </div>
             </div>
         </div>

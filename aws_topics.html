@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Engineering Topics</title>
+    <title>AWS Topics</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +15,7 @@
             color: #1E293B;
         }
         .gradient-text {
-            background: linear-gradient(90deg, #58508d, #bc5090);
+            background: linear-gradient(90deg, #FF9900, #232F3E);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -45,62 +45,74 @@
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <span class="gradient-text">Data Engineering Concepts</span>
+                <a href="index.html" class="hover:text-gray-600">Data Engineering Concepts</a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="index.html" class="hover:text-[#FF9900]">Home</a></li>
+                <li><a href="aboutme.html" class="hover:text-[#FF9900] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <section id="hero" class="text-center my-12 sm:my-20">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">A Collection of Data Engineering Topics</h1>
-            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">An overview of various technologies and concepts in the data engineering landscape. Select a category to learn more.</p>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">
+                <span class="gradient-text">Amazon Web Services</span>
+            </h1>
+            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">A curated collection of deep dives into AWS data engineering services and real-world case studies.</p>
         </section>
         <div id="topics-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="card">
                 <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Google Cloud Platform</h3>
-                    <p class="text-gray-600">Explore data engineering services on GCP, including BigQuery, Dataflow, and more.</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">AWS Case Studies</h3>
+                    <p class="text-gray-600">Explore real-world examples of how companies leverage AWS for data-intensive applications.</p>
                 </div>
                 <div class="card-link">
-                    <a href="gcp_topics.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">Explore GCP &rarr;</a>
+                    <a href="aws_case_studies.html" class="font-semibold text-[#FF9900] hover:text-[#232F3E]">View Case Studies &rarr;</a>
                 </div>
             </div>
             <div class="card">
                 <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Amazon Web Services</h3>
-                    <p class="text-gray-600">Discover AWS services for data engineering, such as Redshift, EMR, and Glue.</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Amazon S3</h3>
+                    <p class="text-gray-600">A deep dive into the foundational storage service for building data lakes on AWS.</p>
                 </div>
                 <div class="card-link">
-                    <a href="aws_topics.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">Explore AWS &rarr;</a>
+                    <a href="s3.html" class="font-semibold text-[#FF9900] hover:text-[#232F3E]">Learn more &rarr;</a>
                 </div>
             </div>
             <div class="card">
                 <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Microsoft Azure</h3>
-                    <p class="text-gray-600">Learn about Azure's data services, including Synapse Analytics and Data Factory.</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">AWS Glue</h3>
+                    <p class="text-gray-600">Explore the serverless data integration service for ETL and data cataloging.</p>
                 </div>
                 <div class="card-link">
-                    <a href="azure_topics.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">Explore Azure &rarr;</a>
+                    <a href="glue.html" class="font-semibold text-[#FF9900] hover:text-[#232F3E]">Learn more &rarr;</a>
                 </div>
             </div>
             <div class="card">
                 <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Databricks</h3>
-                    <p class="text-gray-600">Dive into the Databricks Lakehouse platform for unified data and AI.</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Amazon EMR</h3>
+                    <p class="text-gray-600">Learn about the managed cluster platform for running big data frameworks like Spark and Hadoop.</p>
                 </div>
                 <div class="card-link">
-                    <a href="databricks_topics.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">Explore Databricks &rarr;</a>
+                    <a href="emr.html" class="font-semibold text-[#FF9900] hover:text-[#232F3E]">Learn more &rarr;</a>
                 </div>
             </div>
             <div class="card">
                 <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">SQL & Data Modeling</h3>
-                    <p class="text-gray-600">Master essential SQL techniques and data modeling concepts for analytics.</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Amazon Redshift</h3>
+                    <p class="text-gray-600">A deep dive into the cloud data warehouse for high-performance analytics.</p>
                 </div>
                 <div class="card-link">
-                    <a href="sql_topics.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">Explore SQL &rarr;</a>
+                    <a href="redshift.html" class="font-semibold text-[#FF9900] hover:text-[#232F3E]">Learn more &rarr;</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Amazon Kinesis</h3>
+                    <p class="text-gray-600">Explore the family of services for real-time data streaming and analytics.</p>
+                </div>
+                <div class="card-link">
+                    <a href="kinesis.html" class="font-semibold text-[#FF9900] hover:text-[#232F3E]">Learn more &rarr;</a>
                 </div>
             </div>
         </div>
