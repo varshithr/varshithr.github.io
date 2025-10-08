@@ -30,6 +30,15 @@
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
+        @media print {
+            header, footer, #download-pdf {
+                display: none;
+            }
+            main {
+                margin: 0;
+                padding: 0;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -268,5 +277,11 @@
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
+
+    <!-- Floating Download Button -->
+    <button id="download-pdf" onclick="window.print()" class="fixed bottom-8 right-8 bg-[#58508d] hover:bg-[#4a427a] text-white font-bold p-4 rounded-full shadow-lg transition transform hover:scale-110 z-50" title="Download as PDF">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+    </button>
+
 </body>
 </html>
