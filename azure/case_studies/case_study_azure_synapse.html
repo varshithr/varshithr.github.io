@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Unified Analytics with Azure Synapse</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #0089D6, #0072C6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.13.8/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../index.html" class="gradient-text">Back to Azure Topics</a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../index.html" class="hover:text-[#0089D6]">Home</a></li>
+                <li><a href="../../aboutme.html" class="hover:text-[#0089D6] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section id="hero" class="text-center my-12 sm:my-20">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">
+                Case Study: Unified Analytics Platform for a CPG Company
+            </h1>
+            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">How a global consumer packaged goods (CPG) company built a unified analytics platform with Azure Synapse to analyze sales, marketing, and supply chain data.</p>
+        </section>
+        <div class="space-y-8">
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Challenge</h2>
+                <p class="text-gray-600">A global CPG company was struggling to get a unified view of its operations. Their data was fragmented across numerous systems:</p>
+                <ul class="list-disc list-inside mt-4 space-y-2">
+                    <li>An on-premises SQL Server for sales and transactional data.</li>
+                    <li>A separate cloud data warehouse for marketing campaign data.</li>
+                    <li>Multiple ERP systems (like SAP) for supply chain and inventory management.</li>
+                    <li>Third-party market share data delivered as flat files.</li>
+                </ul>
+                <p class="text-gray-600 mt-2">This fragmentation made it incredibly difficult to answer critical business questions, such as "How does a social media campaign in a specific region impact store-level inventory?" The goal was to create a single, unified analytics platform to provide a 360-degree view of the business.</p>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Architecture</h2>
+                <div class="mermaid text-center">
+graph TD
+    subgraph "Data Sources"
+        A[On-Prem SQL]
+        B[SaaS Platforms]
+        C[ERP Systems]
+    end
+    subgraph "Unified Analytics Platform"
+        A & B & C --> D{Synapse Pipelines};
+        D --> E[ADLS Gen2 Data Lake];
+        E --> F(Synapse Spark Pools);
+        E --> G(Synapse Serverless SQL Pools);
+        F --> H(Synapse Dedicated SQL Pools);
+        G --> H;
+    end
+    subgraph "Business Intelligence & ML"
+        F --> I{Azure ML};
+        H --> J[Power BI];
+    end
+                </div>
+                <p class="text-gray-600 mb-4">Azure Synapse Analytics was selected to break down the data silos and provide a unified workspace for all data professionals:</p>
+                <ol class="list-decimal list-inside space-y-3">
+                    <li><strong>Data Integration Hub:</strong> <strong>Synapse Pipelines</strong> (powered by Azure Data Factory) act as the central ingestion engine. It uses pre-built connectors to pull data from the on-premises SQL Server, the marketing warehouse, and the ERP systems, landing it all in <strong>Azure Data Lake Storage (ADLS) Gen2</strong>.</li>
+                    <li><strong>The Enterprise Data Lake:</strong> ADLS Gen2 serves as the single source of truth, storing all raw and processed data in a hierarchical namespace optimized for analytics.</li>
+                    <li><strong>Multi-Modal Compute:</strong> This is where Synapse shines. Different teams use different compute engines on the same data lake, all within the <strong>Synapse Studio</strong> workspace:
+                        <ul class="list-disc list-inside ml-6 mt-2">
+                            <li><strong>Data Engineers</strong> use <strong>Synapse Spark Pools</strong> to run large-scale data transformation jobs in Scala and Python, cleaning and modeling the data into a star schema.</li>
+                            <li><strong>Data Analysts</strong> use <strong>Synapse Serverless SQL Pools</strong> for ad-hoc, exploratory queries directly on the files in the data lake, paying only for the queries they run.</li>
+                            <li><strong>BI Professionals</strong> use <strong>Synapse Dedicated SQL Pools</strong> (a provisioned MPP data warehouse) to host the final, curated data models for high-performance dashboards.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Machine Learning & BI:</strong> Data scientists use the same Synapse Spark Pools to train demand forecasting models. The results are written back to the data lake and served to business users via interactive <strong>Power BI</strong> reports that are seamlessly integrated into the Synapse Studio.</li>
+                </ol>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Key Technical Details</h2>
+                <ul class="list-disc list-inside mt-4 space-y-3">
+                    <li><strong>Unified Workspace with Synapse Studio:</strong> The ability for data engineers, analysts, and data scientists to collaborate in a single web UI was a major productivity booster. It eliminated the need to switch between different tools for data integration, data warehousing, and machine learning.</li>
+                    <li><strong>Cost Optimization with Hybrid Compute:</strong> The company heavily utilized the serverless SQL pools for data exploration, which significantly reduced costs compared to running a dedicated data warehouse 24/7. Dedicated pools were reserved for the most critical, high-concurrency BI workloads.</li>
+                    <li><strong>Code-Free and Code-First Flexibility:</strong> Data engineers used the visual, drag-and-drop Data Flows within Synapse Pipelines for standard ETL tasks, which accelerated development. For more complex transformations, they used Spark notebooks, providing the flexibility to switch between low-code and code-first approaches.</li>
+                    <li><strong>End-to-End Security and Governance:</strong> The entire platform is secured with <strong>Azure Active Directory</strong>. Synapse's built-in capabilities for column-level security (CLS) and row-level security (RLS) ensure that different user groups (e.g., marketing, finance) can only see the data they are authorized to access, even when querying the same underlying tables.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>

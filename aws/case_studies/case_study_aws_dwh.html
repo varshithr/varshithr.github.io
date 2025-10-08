@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Modern Data Warehouse on AWS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #FF9900, #232F3E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.13.8/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../index.html" class="gradient-text">Back to AWS Topics</a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../index.html" class="hover:text-[#FF9900]">Home</a></li>
+                <li><a href="../../aboutme.html" class="hover:text-[#FF9900] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section id="hero" class="text-center my-12 sm:my-20">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">
+                Case Study: Building a Modern Data Warehouse for a Retail Giant
+            </h1>
+            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">How a large retail company migrated from a legacy on-premises data warehouse to a scalable, cloud-native solution on AWS to unify their sales, inventory, and supply chain data.</p>
+        </section>
+        <div class="space-y-8">
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Challenge</h2>
+                <p class="text-gray-600">A global retail giant with thousands of stores and a massive online presence was hampered by its legacy on-premises data warehouse. The key problems were:</p>
+                <ul class="list-disc list-inside mt-4 space-y-2">
+                    <li><strong>Query Performance:</strong> Nightly ETL jobs took over 8 hours, and complex analytical queries could run for hours, delaying critical business decisions on inventory management and marketing campaigns.</li>
+                    <li><strong>Data Silos:</strong> Sales data, supply chain information, and customer clickstream data were stored in separate, unintegrated systems, making a 360-degree view of the customer journey impossible.</li>
+                    <li><strong>Scalability and Cost:</strong> The on-premises system was expensive to scale, requiring large upfront hardware investments. It couldn't handle the exponential growth of semi-structured data from their e-commerce platform.</li>
+                    <li><strong>Limited Analytics:</strong> The rigid structure of the old warehouse made it difficult for data scientists to access raw data for building machine learning models for demand forecasting.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Architecture</h2>
+                <div class="mermaid text-center">
+graph TD
+    subgraph "Data Sources"
+        A[On-Premises DW]
+        B[SaaS Platforms]
+    end
+    subgraph "Ingestion & Orchestration"
+        A --> C{AWS DMS};
+        B --> D{AWS Glue};
+        C --> E[Amazon S3 Raw];
+        D --> E;
+        F[AWS Step Functions] --> D;
+    end
+    subgraph "Processing & Warehousing"
+        E --> G(AWS Glue ETL);
+        G --> H[Amazon S3 Processed];
+        H --> I(Amazon Redshift);
+    end
+    subgraph "Analytics"
+        I --> J[Amazon QuickSight];
+    end
+                </div>
+                <p class="text-gray-600 mb-4">The new architecture implements a modern "Lake House" pattern on AWS, combining the scalability of a data lake with the performance and features of a data warehouse:</p>
+                <ol class="list-decimal list-inside space-y-3">
+                    <li><strong>Data Ingestion & Migration:</strong> <strong>AWS Database Migration Service (DMS)</strong> with the Schema Conversion Tool (SCT) was used for a one-time migration of the historical data from the on-premises Teradata warehouse to <strong>Amazon S3</strong>. Ongoing data is ingested via various pipelines into the S3 "landing zone."</li>
+                    <li><strong>Data Lake Foundation:</strong> <strong>Amazon S3</strong> serves as the central data lake, providing a cost-effective and durable storage layer for raw, semi-structured (JSON clickstreams), and processed (Parquet) data.</li>
+                    <li><strong>ETL & Data Cataloging:</strong> <strong>AWS Glue</strong> is used for all ETL operations. Glue Crawlers scan the S3 data lake to automatically infer schemas and populate the <strong>Glue Data Catalog</strong>. Glue ETL jobs, written in PySpark, transform the raw data into a cleaned, partitioned, and columnar Parquet format in the "processed" layer of the data lake.</li>
+                    <li><strong>Orchestration:</strong> <strong>AWS Step Functions</strong> orchestrates the entire data pipeline. It triggers Glue jobs based on a schedule or events, manages dependencies between jobs, and handles error retries, providing a fully auditable workflow.</li>
+                    <li><strong>Data Warehousing & Analytics:</strong> <strong>Amazon Redshift</strong> acts as the high-performance query engine. It uses <strong>Redshift Spectrum</strong> to directly query the processed Parquet files in S3 without needing to load all the data. This provides a "single source of truth" and decouples storage from compute. Only the most critical "hot" data and aggregated tables are stored locally in Redshift for maximum performance.</li>
+                    <li><strong>Business Intelligence:</strong> <strong>Amazon QuickSight</strong> connects to Redshift to provide interactive dashboards and reports for thousands of business users, from inventory managers to marketing analysts.</li>
+                </ol>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Key Technical Details</h2>
+                <ul class="list-disc list-inside mt-4 space-y-3">
+                    <li><strong>Decoupled Storage and Compute:</strong> The Lake House architecture is the cornerstone of this solution. By using S3 as the persistent storage layer and Redshift as the query engine, the company can scale compute resources up or down on demand (e.g., adding more Redshift nodes for month-end reporting) without altering the storage layer, leading to significant cost savings.</li>
+                    <li><strong>Columnar Data Format (Parquet):</strong> All processed data in the S3 data lake is stored in Apache Parquet format. This columnar layout, combined with snappy compression, drastically reduces the amount of data scanned by Redshift Spectrum, improving query performance and lowering costs.</li>
+                    <li><strong>Dimensional Modeling in the Lake House:</strong> AWS Glue jobs are used to model the data into a classic star schema (fact and dimension tables) directly within the S3 data lake. This makes it easy for BI tools to consume the data and for analysts to write intuitive queries.</li>
+                    <li><strong>Concurrency Scaling in Redshift:</strong> To handle peak query loads from business users, Redshift's Concurrency Scaling feature is enabled. It automatically adds and removes cluster capacity to provide consistent performance, even with thousands of concurrent queries.</li>
+                    <li><strong>Robust Orchestration with Step Functions:</strong> Instead of relying on complex cron jobs, AWS Step Functions provides a visual workflow that is easy to monitor, debug, and extend. Its built-in error handling and state management make the entire data platform more resilient.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>

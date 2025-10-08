@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bigtable Visual Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        /* Responsive Table Styles */
+        @media (max-width: 767px) {
+            .responsive-table thead {
+                display: none;
+            }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td {
+                display: block;
+                width: 100%;
+            }
+            .responsive-table tr {
+                margin-bottom: 1rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                background-color: white;
+            }
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: right;
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            .responsive-table td::before {
+                content: attr(data-label);
+                text-align: left;
+                font-weight: 600;
+                color: #1e40af; /* Blue-700 */
+                padding-right: 1rem;
+                white-space: nowrap;
+            }
+            .responsive-table td:last-child {
+                border-bottom: none;
+            }
+        }
+    </style>
+    <script>
+        // Global State
+        const state = {
+            currentTab: 'table', 
+            message: "Click a concept tab above to explore Bigtable's design.",
+        };
+
+        // Core Concepts Data
+        const concepts = {
+            table: {
+                title: "Bigtable: The Sparse Table",
+                description: "Bigtable is a sparse, multi-dimensional map. Unlike traditional relational tables, a column only takes up space if a row actually uses it.",
+                headers: ["Row Key", "CF:colA (Family:Data)", "CF:colB (Family:Settings)", "CF_TS:Temp (Family:Time Series)"],
+                rows: [
+                    { key: "User001#Post100", data: ["Hello world", "config=true", "25.0@1719234000"] },
+                    { key: "User002#Post101", data: ["Data Science Report", "config=false", ""] },
+                    { key: "User001#Post099", data: ["", "", "24.5@1719233400"] },
+                    { key: "User003#Log456", data: ["", "status=OK", ""] },
+                ]
+            },
+            rowKey: {
+                title: "The Power of the Row Key (Lexicographical Sorting)",
+                description: "Rows are sorted like words in a dictionary. This is crucial for fast 'Range Reads.' Note how 'User001#Post100' is separated from 'User001#Post099' because 'Post099' comes before 'Post100' alphabetically.",
+                headers: ["Row Key (Sorted)", "Data"],
+                rows: [
+                    { key: "User001#Post099", data: ["Version 2"] },
+                    { key: "User001#Post100", data: ["Version 1"] },
+                    { key: "User002#Post101", data: ["Version 3"] },
+                    { key: "User003#Log456", data: ["Version 4"] },
+                ]
+            },
+            hotspot: {
+                title: "Avoiding Hotspots (Sequential Keys)",
+                description: "A Bad Design uses sequential keys, causing all writes to hit the same small tablet (server) leading to a bottleneck (hotspot).",
+                headers: ["Row Key (Bad)", "Data", "Tablet Node"],
+                rows: [
+                    { key: "20250101#00:00:01", data: ["Write 1", "Tablet A (Hot!)"] },
+                    { key: "20250101#00:00:02", data: ["Write 2", "Tablet A (Hot!)"] },
+                    { key: "20250101#00:00:03", data: ["Write 3", "Tablet A (Hot!)"] },
+                    { key: "20250101#00:00:04", data: ["Write 4", "Tablet A (Hot!)"] },
+                    { key: "20250102#00:00:01", data: ["Write 5", "Tablet B"] },
+                    { key: "20250102#00:00:02", data: ["Write 6", "Tablet B"] },
+                ]
+            },
+            reverseTs: {
+                title: "Reverse Timestamps for Newest-First Reads",
+                description: "To get the latest data first, you prepend a high-cardinality ID with a **Reverse Timestamp** (`Long.MAX_VALUE - timestamp`). This makes new data sort before old data.",
+                headers: ["Row Key (Best)", "Value", "Sort Order"],
+                rows: [
+                    // MAX_VALUE - TS (Newest first)
+                    { key: "SensorXYZ#9223372036854775807", data: ["28.5 C", "Latest Reading"] },
+                    { key: "SensorXYZ#9223372036854775806", data: ["28.4 C", "Next Latest"] },
+                    { key: "SensorXYZ#9223372036854775805", data: ["28.0 C", "Older Reading"] },
+                    { key: "SensorABC#9223372036854775807", data: ["15.1 V", "Other Sensor"] },
+                ]
+            },
+            colFamilies: {
+                title: "Column Families for Locality (The Disk Grouping)",
+                description: "Column Families (CFs) are physical groupings of data. Columns in the same CF are stored together on disk, making reads across them very fast. Columns in different CFs are stored separately.",
+                headers: ["Row Key", "CF_USER:Name", "CF_PROFILE:Bio", "CF_POSTS:Title"],
+                rows: [
+                    { key: "User900", data: ["Alice", "Loves Bigtable", "Post A"] },
+                    { key: "User901", data: ["Bob", "Data Architect", "Post B"] },
+                    { key: "User902", data: ["", "Casual User", "Post C"] },
+                ]
+            },
+            denormalization: {
+                title: "The No-Join Rule (Denormalization)",
+                description: "Bigtable is optimized for scale and low-latency access by **Row Key**—it does not support joins. Related data must be denormalized (duplicated) across multiple row keys to support different query patterns.",
+                headers: ["Row Key", "Data Stored", "Query Type Served"],
+                rows: [
+                    { key: "User#123", data: ["Profile: Alice, Region: US", "Primary Profile Lookup"] },
+                    { key: "User#123#Post#1", data: ["Post Content: Hello World", "Full Timeline Scan"] },
+                    { key: "Region#US#User#123", data: ["Profile: Alice, Region: US", "Secondary Index (Geographic Query)"] },
+                    { key: "Post#1#Comments", data: ["Comment 1, Comment 2", "Fan-out/Joined Data"] },
+                ]
+            },
+            replication: {
+                title: "Replication & Consistency (High Availability)",
+                description: "Bigtable uses replication across multiple zones (clusters). Writes go to the primary, and are asynchronously replicated. Reads from any replica are eventually consistent.",
+                headers: ["Write Operation", "Zone A (Primary)", "Zone B (Replica)", "Read Consistency"],
+                rows: [
+                    { key: "Write: Sensor#1 Data", data: ["Received & Acknowledged (T1)", "Pending Replication", "Eventual"] },
+                    { key: "Write: Sensor#2 Data", data: ["Received & Acknowledged (T2)", "Replication in Progress (T1)", "Eventual"] },
+                    { key: "Read: Sensor#1 Data", data: ["Returns T1 (Latest)", "Might return T0 (Stale)", "Eventual"] },
+                    { key: "Failover Event", data: ["Zone A Offline", "Promoted to Primary (T2)", "Available"] },
+                ]
+            },
+            splits: {
+                title: "Split Keys (Pre-splitting for Immediate Distribution)",
+                description: "You can define Split Keys during table creation to immediately distribute the data across multiple tablet servers, ensuring balanced load from the first write.",
+                headers: ["Row Key Range Start", "Row Key Range End", "Assigned Tablet"],
+                rows: [
+                    { key: "(Start of Table)", data: ["A0000", "Tablet 1 / Server A"] },
+                    { key: "A0000", data: ["F0000", "Tablet 2 / Server B"] },
+                    { key: "F0000", data: ["M0000", "Tablet 3 / Server C"] },
+                    { key: "M0000", data: ["Z9999", "Tablet 4 / Server D"] },
+                    { key: "Z9999", data: ["(End of Table)", "Tablet 5 / Server E"] },
+                ]
+            }
+        };
+
+        /**
+         * Converts the global state into HTML and updates the DOM.
+         */
+        const render = () => {
+            const container = document.getElementById('table-container');
+            const messageBar = document.getElementById('message-bar');
+            const tabButtons = document.querySelectorAll('.tab-button');
+
+            // 1. Update Tabs
+            tabButtons.forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-white', 'text-blue-600', 'hover:bg-blue-50');
+                if (btn.dataset.tab === state.currentTab) {
+                    btn.classList.remove('bg-white', 'text-blue-600', 'hover:bg-blue-50');
+                    btn.classList.add('bg-blue-600', 'text-white', 'shadow-lg');
+                }
+            });
+
+            // 2. Update Message Bar
+            messageBar.innerHTML = `<span class="font-bold">${concepts[state.currentTab].title}</span>: ${concepts[state.currentTab].description}`;
+
+            // 3. Generate Table HTML
+            const currentConcept = concepts[state.currentTab];
+            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
+
+            // Desktop Headers
+            html += '<thead class="bg-blue-800 text-white"><tr>';
+            currentConcept.headers.forEach(header => {
+                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
+            });
+            html += '</tr></thead>';
+
+            // Body
+            html += '<tbody>';
+            currentConcept.rows.forEach(row => {
+                html += '<tr class="md:border-b md:border-gray-200">';
+                // First cell is the key, styled differently
+                let rowKeyClasses = 'font-semibold text-blue-800 md:bg-blue-50';
+                if (state.currentTab === 'hotspot' && row.key.startsWith('20250101')) {
+                    rowKeyClasses += ' md:bg-red-200';
+                }
+                html += `<td data-label="${currentConcept.headers[0]}" class="${rowKeyClasses}">${row.key}</td>`;
+                
+                // Data cells
+                row.data.forEach((cellData, colIndex) => {
+                    let cellContent = cellData || '<span class="text-gray-400 italic">— SPARSE —</span>';
+                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}">${cellContent}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+
+            container.innerHTML = html;
+        };
+
+        /**
+         * Switches the active concept tab.
+         * @param {string} tabName 
+         */
+        const switchTab = (tabName) => {
+            state.currentTab = tabName;
+            render();
+        };
+
+        // Initial setup and event listeners
+        window.onload = () => {
+            // Set up tab listeners
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => switchTab(button.dataset.tab));
+            });
+
+            // Start with the 'table' tab
+            render();
+        };
+    </script>
+</head>
+<body class="p-4 sm:p-8">
+    <header class="bg-white sticky top-0 z-50 shadow-md mb-6">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="index.html" class="gradient-text">Back to GCP Topics</a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../index.html" class="hover:text-[#bc5090]">Home</a></li>
+                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
+        <svg class="w-8 h-8 mr-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4zm5 9a1 1 0 10-2 0 1 1 0 002 0zM7 5a1 1 0 00-1 1v4a1 1 0 001 1h6a1 1 0 001-1V6a1 1 0 00-1-1H7z" clip-rule="evenodd"></path></svg>
+        Bigtable Schema Design Essentials
+    </h1>
+    <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the core concepts that define an efficient Bigtable schema.</p>
+
+    <!-- Tab Navigation -->
+    <div class="flex flex-wrap gap-2 mb-8">
+        <button data-tab="table" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+            1. Sparse Table Structure
+        </button>
+        <button data-tab="rowKey" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+            2. Row Key Sorting & Range Read
+        </button>
+        <button data-tab="hotspot" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+            3. Hotspotting (What to AVOID)
+        </button>
+        <button data-tab="reverseTs" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+            4. Reverse Timestamps (Best Practice)
+        </button>
+        <button data-tab="colFamilies" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+            5. Column Families (Locality)
+        </button>
+        <button data-tab="denormalization" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+            6. Denormalization (No-Join Rule)
+        </button>
+        <button data-tab="replication" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+            7. Replication & Consistency
+        </button>
+        <button data-tab="splits" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+            8. Split Keys (Pre-splitting)
+        </button>
+    </div>
+
+    <!-- Explanation Bar -->
+    <div id="message-bar" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base">
+        <!-- Message will be populated by JS -->
+    </div>
+
+    <!-- Bigtable Visualizer Container -->
+    <div id="table-container" class="mt-8">
+        <!-- Visual table will be generated here -->
+    </div>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Netflix's Data Revolution with Looker Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #4285F4, #34A853);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.13.8/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="index.html" class="gradient-text">Back to GCP Case Studies</a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../index.html" class="hover:text-[#34A853]">Home</a></li>
+                <li><a href="../../aboutme.html" class="hover:text-[#34A853] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section id="hero" class="text-center my-12 sm:my-20">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">
+                Case Study: Netflix's Data Revolution with Looker Studio
+            </h1>
+            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">How Netflix leveraged Google's Looker Studio to democratize data and drive content strategy for over 230 million subscribers.</p>
+        </section>
+        <div class="space-y-8">
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Challenge: Data Silos at Scale</h2>
+                <p class="text-gray-600">Netflix processes approximately 1.3 trillion events per day from a global user base. Their previous BI approach, a mix of custom-built dashboards and various third-party tools, created several problems:</p>
+                <ul class="list-disc list-inside mt-4 space-y-2">
+                    <li><strong>Data Silos:</strong> Different departments had their own BI tools, leading to inconsistent metrics and a fragmented view of the business.</li>
+                    <li><strong>Limited Accessibility:</strong> Access to data was limited to a small number of analysts, creating a bottleneck for decision-making.</li>
+                    <li><strong>Lack of Real-Time Insights:</strong> The existing tools were not agile enough to provide the near-instantaneous insights needed to guide content recommendations and platform adjustments.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Architecture: A Unified BI Platform on GCP</h2>
+                <p class="text-gray-600 mb-4">Netflix chose Looker Studio for its seamless integration with their existing GCP infrastructure, particularly BigQuery.</p>
+                <div class="mermaid text-center">
+graph TD
+    subgraph "Data Sources"
+        A[User Events]
+        B[Content Metadata]
+        C[Internal Systems]
+    end
+    subgraph "Data Platform"
+        A & B & C --> D{Google BigQuery};
+    end
+    subgraph "Analytics & BI"
+        D --> E(Looker Studio);
+        E --> F[Content Strategy Dashboards];
+        E --> G[User Experience Reports];
+        E --> H[Operational Monitoring];
+    end
+                </div>
+                <ol class="list-decimal list-inside space-y-3 mt-4">
+                    <li><strong>Centralized Data Warehouse:</strong> All of Netflix's diverse data sources are consolidated into <strong>Google BigQuery</strong>, which serves as the single source of truth for their analytics data.</li>
+                    <li><strong>Unified Visualization Layer:</strong> <strong>Looker Studio</strong> connects directly to BigQuery, providing a unified platform for all data visualization and reporting needs. This eliminated the need for multiple BI tools.</li>
+                    <li><strong>Democratized Data Access:</strong> With Looker Studio, teams across the organization can create and share their own dashboards and reports, enabling self-service analytics and reducing the reliance on a central analytics team.</li>
+                </ol>
+            </div>
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Key Technical Details & Outcomes</h2>
+                <ul class="list-disc list-inside mt-4 space-y-3">
+                    <li><strong>BigQuery Integration:</strong> Looker Studio's native connector for BigQuery allows it to leverage BigQuery's powerful query engine to analyze petabytes of data with impressive speed.</li>
+                    <li><strong>Data Modeling with LookML:</strong> While not explicitly mentioned in the article, a key feature of Looker (the enterprise version of Looker Studio) is LookML, a semantic modeling layer that allows for defining business logic and metrics in a centralized, reusable way. This ensures consistency across all reports and dashboards.</li>
+                    <li><strong>Improved Content Strategy:</strong> By analyzing viewing patterns and user engagement data in Looker Studio, Netflix's content acquisition and creation teams can make more data-driven decisions about what content to license or produce.</li>
+                    <li><strong>Enhanced User Experience:</strong> The A/B testing and user behavior analysis performed in Looker Studio helps Netflix to optimize the user interface and content recommendation algorithms, leading to higher user engagement and retention.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>
