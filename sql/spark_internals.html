@@ -84,8 +84,8 @@
         }
     </style>
 </head>
-<body class="p-4 sm:p-6 md:p-8">
-    <header class="bg-white sticky top-0 z-50 shadow-md mb-6">
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
                 <a href="index.html" class="flex items-center">
@@ -98,6 +98,9 @@
             </ul>
         </nav>
     </header>
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
     <div class="container">
         <h1 class="text-4xl font-bold text-center mb-8 text-teal-700">Spark Internals, Performance & Best Practices</h1>
 
@@ -291,5 +294,11 @@ df_large.join(broadcast(df_small), "key")</code></pre>
             }
         }
     </script>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
 </body>
 </html>

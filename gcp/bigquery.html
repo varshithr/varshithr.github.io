@@ -212,8 +212,8 @@
         };
     </script>
 </head>
-<body class="p-4 sm:p-8">
-    <header class="bg-white sticky top-0 z-50 shadow-md mb-6">
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
                 <a href="index.html" class="flex items-center">
@@ -226,48 +226,57 @@
             </ul>
         </nav>
     </header>
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
-        <svg class="w-8 h-8 mr-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-        BigQuery Deep Dive: Architecture, Performance & Modern Features
-    </h1>
-    <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the core concepts and modern features that enable BigQuery's massive scale and cost efficiency.</p>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
+                    <svg class="w-8 h-8 mr-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    BigQuery Deep Dive: Architecture, Performance & Modern Features
+                </h1>
+                <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the core concepts and modern features that enable BigQuery's massive scale and cost efficiency.</p>
 
-    <!-- Tab Navigation -->
-    <div class="flex flex-wrap gap-2 mb-8">
-        <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            1. Architecture
-        </button>
-        <button data-tab="columnar" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            2. Columnar Storage
-        </button>
-        <button data-tab="nested" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            3. Nested & Repeated Fields
-        </button>
-        <button data-tab="partitioning" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            4. Partitioning
-        </button>
-        <button data-tab="clustering" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            5. Clustering
-        </button>
-        <button data-tab="editions" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            6. Compute Editions
-        </button>
-        <button data-tab="merge" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            7. MERGE Statement
-        </button>
-        <button data-tab="biglake" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-            8. BigLake (Multi-Cloud)
-        </button>
-    </div>
+                <!-- Tab Navigation -->
+                <div class="flex flex-wrap gap-2 mb-8">
+                    <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+                        1. Architecture
+                    </button>
+                    <button data-tab="columnar" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+                        2. Columnar Storage
+                    </button>
+                    <button data-tab="nested" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+                        3. Nested & Repeated Fields
+                    </button>
+                    <button data-tab="partitioning" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+                        4. Partitioning
+                    </button>
+                    <button data-tab="clustering" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+                        5. Clustering
+                    </button>
+                    <button data-tab="editions" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+                        6. Compute Editions
+                    </button>
+                    <button data-tab="merge" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+                        7. MERGE Statement
+                    </button>
+                    <button data-tab="biglake" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
+                        8. BigLake (Multi-Cloud)
+                    </button>
+                </div>
 
-    <!-- Explanation Bar -->
-    <div id="message-bar" class="bg-indigo-100 border-l-4 border-indigo-500 text-indigo-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base">
-        <!-- Message will be populated by JS -->
-    </div>
+                <!-- Explanation Bar -->
+                <div id="message-bar" class="bg-indigo-100 border-l-4 border-indigo-500 text-indigo-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base">
+                    <!-- Message will be populated by JS -->
+                </div>
 
-    <!-- BigQuery Visualizer Container -->
-    <div id="table-container" class="mt-8">
-        <!-- Visual table will be generated here -->
-    </div>
+                <!-- BigQuery Visualizer Container -->
+                <div id="table-container" class="mt-8">
+                    <!-- Visual table will be generated here -->
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
 </body>
 </html>

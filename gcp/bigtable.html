@@ -227,8 +227,8 @@
         };
     </script>
 </head>
-<body class="p-4 sm:p-8">
-    <header class="bg-white sticky top-0 z-50 shadow-md mb-6">
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
                 <a href="index.html" class="flex items-center">
@@ -241,48 +241,57 @@
             </ul>
         </nav>
     </header>
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
-        <svg class="w-8 h-8 mr-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4zm5 9a1 1 0 10-2 0 1 1 0 002 0zM7 5a1 1 0 00-1 1v4a1 1 0 001 1h6a1 1 0 001-1V6a1 1 0 00-1-1H7z" clip-rule="evenodd"></path></svg>
-        Bigtable Schema Design Essentials
-    </h1>
-    <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the core concepts that define an efficient Bigtable schema.</p>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
+                    <svg class="w-8 h-8 mr-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4zm5 9a1 1 0 10-2 0 1 1 0 002 0zM7 5a1 1 0 00-1 1v4a1 1 0 001 1h6a1 1 0 001-1V6a1 1 0 00-1-1H7z" clip-rule="evenodd"></path></svg>
+                    Bigtable Schema Design Essentials
+                </h1>
+                <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the core concepts that define an efficient Bigtable schema.</p>
 
-    <!-- Tab Navigation -->
-    <div class="flex flex-wrap gap-2 mb-8">
-        <button data-tab="table" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
-            1. Sparse Table Structure
-        </button>
-        <button data-tab="rowKey" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
-            2. Row Key Sorting & Range Read
-        </button>
-        <button data-tab="hotspot" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
-            3. Hotspotting (What to AVOID)
-        </button>
-        <button data-tab="reverseTs" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
-            4. Reverse Timestamps (Best Practice)
-        </button>
-        <button data-tab="colFamilies" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
-            5. Column Families (Locality)
-        </button>
-        <button data-tab="denormalization" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
-            6. Denormalization (No-Join Rule)
-        </button>
-        <button data-tab="replication" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
-            7. Replication & Consistency
-        </button>
-        <button data-tab="splits" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
-            8. Split Keys (Pre-splitting)
-        </button>
-    </div>
+                <!-- Tab Navigation -->
+                <div class="flex flex-wrap gap-2 mb-8">
+                    <button data-tab="table" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+                        1. Sparse Table Structure
+                    </button>
+                    <button data-tab="rowKey" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+                        2. Row Key Sorting & Range Read
+                    </button>
+                    <button data-tab="hotspot" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+                        3. Hotspotting (What to AVOID)
+                    </button>
+                    <button data-tab="reverseTs" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+                        4. Reverse Timestamps (Best Practice)
+                    </button>
+                    <button data-tab="colFamilies" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+                        5. Column Families (Locality)
+                    </button>
+                    <button data-tab="denormalization" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+                        6. Denormalization (No-Join Rule)
+                    </button>
+                    <button data-tab="replication" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+                        7. Replication & Consistency
+                    </button>
+                    <button data-tab="splits" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-blue-600 transition duration-150 ease-in-out">
+                        8. Split Keys (Pre-splitting)
+                    </button>
+                </div>
 
-    <!-- Explanation Bar -->
-    <div id="message-bar" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base">
-        <!-- Message will be populated by JS -->
-    </div>
+                <!-- Explanation Bar -->
+                <div id="message-bar" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base">
+                    <!-- Message will be populated by JS -->
+                </div>
 
-    <!-- Bigtable Visualizer Container -->
-    <div id="table-container" class="mt-8">
-        <!-- Visual table will be generated here -->
-    </div>
+                <!-- Bigtable Visualizer Container -->
+                <div id="table-container" class="mt-8">
+                    <!-- Visual table will be generated here -->
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
 </body>
 </html>

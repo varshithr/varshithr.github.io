@@ -93,8 +93,8 @@
         }
     </style>
 </head>
-<body class="p-4 sm:p-6 md:p-8">
-    <header class="bg-white sticky top-0 z-50 shadow-md mb-6">
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
                 <a href="index.html" class="flex items-center">
@@ -107,6 +107,9 @@
             </ul>
         </nav>
     </header>
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
     <div class="container mx-auto max-w-5xl p-4 sm:p-6">
         <h1 class="text-3xl sm:text-4xl font-bold text-center mb-8 text-indigo-700">Understanding Databricks & Lakehouse Architecture</h1>
 
@@ -323,5 +326,11 @@ GRANT SELECT ON TABLE marketing_data.web_analytics.page_views TO `analysts`;
             }
         }
     </script>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
 </body>
 </html>
