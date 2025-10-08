@@ -222,45 +222,54 @@
             </ul>
         </nav>
     </header>
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
-        <svg class="w-8 h-8 mr-3 text-yellow-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM5 9a1 1 0 000 2h10a1 1 0 100-2H5z" clip-rule="evenodd"></path></svg>
-        Google Cloud Dataproc Visual Deep Dive
-    </h1>
-    <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the fundamental components of Google Cloud Dataproc, the managed service for Spark, Hadoop, and other open-source data analytics frameworks.</p>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
+                    <svg class="w-8 h-8 mr-3 text-yellow-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM5 9a1 1 0 000 2h10a1 1 0 100-2H5z" clip-rule="evenodd"></path></svg>
+                    Google Cloud Dataproc Visual Deep Dive
+                </h1>
+                <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the fundamental components of Google Cloud Dataproc, the managed service for Spark, Hadoop, and other open-source data analytics frameworks.</p>
 
-    <!-- Tab Navigation -->
-    <div class="flex flex-wrap gap-2 mb-8">
-        <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            1. Core Architecture
-        </button>
-        <button data-tab="cluster" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            2. Cluster Lifecycle & Scaling
-        </button>
-        <button data-tab="job" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            3. Job Management
-        </button>
-        <button data-tab="storage" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            4. Storage Integration
-        </button>
-        <button data-tab="serverless" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            5. Dataproc Serverless
-        </button>
-        <button data-tab="advanced" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            6. Advanced Features
-        </button>
-        <button data-tab="security" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            7. Security & Governance
-        </button>
-    </div>
+                <!-- Tab Navigation -->
+                <div class="flex flex-wrap gap-2 mb-8">
+                    <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+                        1. Core Architecture
+                    </button>
+                    <button data-tab="cluster" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+                        2. Cluster Lifecycle & Scaling
+                    </button>
+                    <button data-tab="job" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+                        3. Job Management
+                    </button>
+                    <button data-tab="storage" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+                        4. Storage Integration
+                    </button>
+                    <button data-tab="serverless" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+                        5. Dataproc Serverless
+                    </button>
+                    <button data-tab="advanced" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+                        6. Advanced Features
+                    </button>
+                    <button data-tab="security" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+                        7. Security & Governance
+                    </button>
+                </div>
 
-    <!-- Explanation Bar -->
-    <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base">
-        <!-- Message will be populated by JS -->
-    </div>
+                <!-- Explanation Bar -->
+                <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base">
+                    <!-- Message will be populated by JS -->
+                </div>
 
-    <!-- Dataproc Visualizer Container -->
-    <div id="table-container" class="mt-8">
-        <!-- Visual table will be generated here -->
-    </div>
+                <!-- Dataproc Visualizer Container -->
+                <div id="table-container" class="mt-8">
+                    <!-- Visual table will be generated here -->
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
 </body>
 </html>

@@ -230,48 +230,57 @@
             </ul>
         </nav>
     </header>
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
-        <svg class="w-8 h-8 mr-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-7-9a1 1 0 000 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414l1.293 1.293H3z" clip-rule="evenodd"></path></svg>
-        Cloud Composer (Apache Airflow) Essentials
-    </h1>
-    <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the fundamental components and concepts of building pipelines with Airflow.</p>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
+                    <svg class="w-8 h-8 mr-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-7-9a1 1 0 000 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414l1.293 1.293H3z" clip-rule="evenodd"></path></svg>
+                    Cloud Composer (Apache Airflow) Essentials
+                </h1>
+                <p class="text-base sm:text-lg text-gray-600 mb-8">Click on the tabs below to explore the fundamental components and concepts of building pipelines with Airflow.</p>
 
-    <!-- Tab Navigation -->
-    <div class="flex flex-wrap gap-2 mb-8">
-        <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
-            1. Core Architecture (Components)
-        </button>
-        <button data-tab="dags" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
-            2. DAGs (The Blueprint)
-        </button>
-        <button data-tab="operators" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
-            3. Operators (Actions)
-        </button>
-        <button data-tab="sensors" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
-            4. Sensors (Waiting)
-        </button>
-        <button data-tab="connections" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
-            5. Connections & Hooks
-        </button>
-        <button data-tab="xcoms" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
-            6. XComs (Data Sharing)
-        </button>
-        <button data-tab="taskStates" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
-            7. Task States (Lifecycle)
-        </button>
-        <button data-tab="scaling" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
-            8. Scaling & Workers
-        </button>
-    </div>
+                <!-- Tab Navigation -->
+                <div class="flex flex-wrap gap-2 mb-8">
+                    <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+                        1. Core Architecture (Components)
+                    </button>
+                    <button data-tab="dags" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+                        2. DAGs (The Blueprint)
+                    </button>
+                    <button data-tab="operators" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+                        3. Operators (Actions)
+                    </button>
+                    <button data-tab="sensors" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+                        4. Sensors (Waiting)
+                    </button>
+                    <button data-tab="connections" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+                        5. Connections & Hooks
+                    </button>
+                    <button data-tab="xcoms" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+                        6. XComs (Data Sharing)
+                    </button>
+                    <button data-tab="taskStates" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+                        7. Task States (Lifecycle)
+                    </button>
+                    <button data-tab="scaling" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-teal-700 transition duration-150 ease-in-out">
+                        8. Scaling & Workers
+                    </button>
+                </div>
 
-    <!-- Explanation Bar -->
-    <div id="message-bar" class="bg-cyan-100 border-l-4 border-cyan-500 text-cyan-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base">
-        <!-- Message will be populated by JS -->
-    </div>
+                <!-- Explanation Bar -->
+                <div id="message-bar" class="bg-cyan-100 border-l-4 border-cyan-500 text-cyan-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base">
+                    <!-- Message will be populated by JS -->
+                </div>
 
-    <!-- Composer Visualizer Container -->
-    <div id="table-container" class="mt-8">
-        <!-- Visual table will be generated here -->
-    </div>
+                <!-- Composer Visualizer Container -->
+                <div id="table-container" class="mt-8">
+                    <!-- Visual table will be generated here -->
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
 </body>
 </html>

@@ -325,48 +325,57 @@
             </ul>
         </nav>
     </header>
-    <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
-        <svg class="w-8 h-8 mr-3 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-        Cloud Dataflow (Apache Beam) Pipeline Essentials
-    </h1>
-    <p class="text-lg text-gray-600 mb-8">Click on the tabs below to explore the core components and concepts that make up the Apache Beam programming model.</p>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
+                <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
+                    <svg class="w-8 h-8 mr-3 text-indigo-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    Cloud Dataflow (Apache Beam) Pipeline Essentials
+                </h1>
+                <p class="text-lg text-gray-600 mb-8">Click on the tabs below to explore the core components and concepts that make up the Apache Beam programming model.</p>
 
-    <!-- Tab Navigation -->
-    <div class="flex flex-wrap space-x-4 space-y-2 mb-8">
-        <button data-tab="architecture" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            1. Beam Architecture (SDK/Runner)
-        </button>
-        <button data-tab="pcollections" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            2. PCollections (Data Abstraction)
-        </button>
-        <button data-tab="transforms" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            3. PTransforms (ParDo, GBK)
-        </button>
-        <button data-tab="windowing" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            4. Windowing (Time-based Slicing)
-        </button>
-        <button data-tab="watermarks" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            5. Watermarks (Time Tracking)
-        </button>
-        <button data-tab="triggers" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            6. Triggers (When to Emit)
-        </button>
-        <button data-tab="stateTimers" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            7. State & Timers (Context)
-        </button>
-        <button data-tab="runners" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
-            8. Execution Runners (Dataflow)
-        </button>
-    </div>
+                <!-- Tab Navigation -->
+                <div class="flex flex-wrap space-x-4 space-y-2 mb-8">
+                    <button data-tab="architecture" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
+                        1. Beam Architecture (SDK/Runner)
+                    </button>
+                    <button data-tab="pcollections" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
+                        2. PCollections (Data Abstraction)
+                    </button>
+                    <button data-tab="transforms" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
+                        3. PTransforms (ParDo, GBK)
+                    </button>
+                    <button data-tab="windowing" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
+                        4. Windowing (Time-based Slicing)
+                    </button>
+                    <button data-tab="watermarks" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
+                        5. Watermarks (Time Tracking)
+                    </button>
+                    <button data-tab="triggers" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
+                        6. Triggers (When to Emit)
+                    </button>
+                    <button data-tab="stateTimers" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
+                        7. State & Timers (Context)
+                    </button>
+                    <button data-tab="runners" class="tab-button py-2 px-4 rounded-lg font-semibold border border-indigo-700 transition duration-150 ease-in-out">
+                        8. Execution Runners (Dataflow)
+                    </button>
+                </div>
 
-    <!-- Explanation Bar -->
-    <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md">
-        <!-- Message will be populated by JS -->
-    </div>
+                <!-- Explanation Bar -->
+                <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md">
+                    <!-- Message will be populated by JS -->
+                </div>
 
-    <!-- Dataflow Visualizer Container -->
-    <div id="table-container" class="mt-8">
-        <!-- Visual table will be generated here -->
-    </div>
+                <!-- Dataflow Visualizer Container -->
+                <div id="table-container" class="mt-8">
+                    <!-- Visual table will be generated here -->
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
 </body>
 </html>

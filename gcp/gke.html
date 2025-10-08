@@ -336,45 +336,54 @@
             </ul>
         </nav>
     </header>
-    <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
-        <svg class="w-8 h-8 mr-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM13 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2zM13 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2z"></path></svg>
-        Google Kubernetes Engine (GKE) Visual Deep Dive
-    </h1>
-    <p class="text-lg text-gray-600 mb-8">Click on the tabs below to explore the fundamental components of Google Kubernetes Engine (GKE), Google Cloud's managed Kubernetes service.</p>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
+                <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
+                    <svg class="w-8 h-8 mr-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM13 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2zM13 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2z"></path></svg>
+                    Google Kubernetes Engine (GKE) Visual Deep Dive
+                </h1>
+                <p class="text-lg text-gray-600 mb-8">Click on the tabs below to explore the fundamental components of Google Kubernetes Engine (GKE), Google Cloud's managed Kubernetes service.</p>
 
-    <!-- Tab Navigation -->
-    <div class="flex flex-wrap space-x-4 space-y-2 mb-8">
-        <button data-tab="architecture" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            1. Core Architecture
-        </button>
-        <button data-tab="workloads" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            2. Workload Basics (Pods/Deployments)
-        </button>
-        <button data-tab="networking" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            3. Networking
-        </button>
-        <button data-tab="storage" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            4. Storage & State
-        </button>
-        <button data-tab="modes" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            5. Operational Modes (Standard/Autopilot)
-        </button>
-        <button data-tab="security" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            6. Security & Governance
-        </button>
-        <button data-tab="advanced" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            7. Advanced Scaling
-        </button>
-    </div>
+                <!-- Tab Navigation -->
+                <div class="flex flex-wrap space-x-4 space-y-2 mb-8">
+                    <button data-tab="architecture" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+                        1. Core Architecture
+                    </button>
+                    <button data-tab="workloads" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+                        2. Workload Basics (Pods/Deployments)
+                    </button>
+                    <button data-tab="networking" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+                        3. Networking
+                    </button>
+                    <button data-tab="storage" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+                        4. Storage & State
+                    </button>
+                    <button data-tab="modes" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+                        5. Operational Modes (Standard/Autopilot)
+                    </button>
+                    <button data-tab="security" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+                        6. Security & Governance
+                    </button>
+                    <button data-tab="advanced" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
+                        7. Advanced Scaling
+                    </button>
+                </div>
 
-    <!-- Explanation Bar -->
-    <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md">
-        <!-- Message will be populated by JS -->
-    </div>
+                <!-- Explanation Bar -->
+                <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md">
+                    <!-- Message will be populated by JS -->
+                </div>
 
-    <!-- GKE Visualizer Container -->
-    <div id="table-container" class="mt-8">
-        <!-- Visual table will be generated here -->
-    </div>
+                <!-- GKE Visualizer Container -->
+                <div id="table-container" class="mt-8">
+                    <!-- Visual table will be generated here -->
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
 </body>
 </html>
