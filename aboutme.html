@@ -30,6 +30,15 @@
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
+        @media print {
+            header, footer, #download-pdf {
+                display: none;
+            }
+            main {
+                margin: 0;
+                padding: 0;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -45,7 +54,7 @@
         </nav>
     </header>
 
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12" id="content-to-print">
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
         <!-- HEADER SECTION -->
         <section class="text-center my-12">
@@ -270,36 +279,9 @@
     </footer>
 
     <!-- Floating Download Button -->
-    <button id="download-pdf" class="fixed bottom-8 right-8 bg-[#58508d] hover:bg-[#4a427a] text-white font-bold p-4 rounded-full shadow-lg transition transform hover:scale-110 z-50" title="Download as PDF">
+    <button id="download-pdf" onclick="window.print()" class="fixed bottom-8 right-8 bg-[#58508d] hover:bg-[#4a427a] text-white font-bold p-4 rounded-full shadow-lg transition transform hover:scale-110 z-50" title="Download as PDF">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
     </button>
 
-    <!-- PDF Generation Script -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script>
-        document.getElementById('download-pdf').addEventListener('click', function () {
-            const element = document.getElementById('content-to-print');
-            const opt = {
-                margin:       0.5,
-                filename:     'Varshith_Manchikanti_Resume.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  {
-                    scale: 4, // Increase scale for better resolution
-                    useCORS: true, // Ensure external resources are loaded
-                    letterRendering: true,
-                },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
-                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] } // Better page break handling
-            };
-
-            // Hide the button before generating the PDF
-            document.getElementById('download-pdf').style.display = 'none';
-
-            html2pdf().from(element).set(opt).save().then(function() {
-                // Show the button again after the PDF is generated
-                document.getElementById('download-pdf').style.display = 'block';
-            });
-        });
-    </script>
 </body>
 </html>
