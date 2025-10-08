@@ -45,7 +45,7 @@
         </nav>
     </header>
 
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12" id="content-to-print">
         
         <!-- HEADER SECTION -->
         <section class="text-center my-12">
@@ -278,18 +278,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
         document.getElementById('download-pdf').addEventListener('click', function () {
-            const element = document.body; // Or a specific element like document.getElementById('content-to-print')
+            const element = document.getElementById('content-to-print');
             const opt = {
                 margin:       0.5,
                 filename:     'Varshith_Manchikanti_Resume.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                html2canvas:  {
+                    scale: 4, // Increase scale for better resolution
+                    useCORS: true, // Ensure external resources are loaded
+                    letterRendering: true,
+                },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] } // Better page break handling
             };
-            // Hide the button before printing
+
+            // Hide the button before generating the PDF
             document.getElementById('download-pdf').style.display = 'none';
 
-            html2pdf().set(opt).from(element).save().then(function() {
+            html2pdf().from(element).set(opt).save().then(function() {
                 // Show the button again after the PDF is generated
                 document.getElementById('download-pdf').style.display = 'block';
             });
