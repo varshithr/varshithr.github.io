@@ -1,27 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced SQL Techniques</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
-        }
-        .gradient-text {
-            background: linear-gradient(90deg, #336791, #5E97C4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .card {
-            background-color: white;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-        }
         @media (max-width: 767px) {
             .responsive-table thead { display: none; }
             .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; }
@@ -32,24 +13,10 @@
         }
     </style>
 </head>
-<body class="antialiased">
-    <header class="bg-white sticky top-0 z-50 shadow-md">
-        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-            <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="index.html" class="flex items-center">
-                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
-                    <span class="gradient-text">Back to SQL Topics</span>
-                </a>
-            </div>
-            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../aboutme.html" class="hover:text-[#336791] font-semibold">About Me</a></li>
-                <li><a href="../case_studies.html" class="hover:text-[#336791] font-semibold">Case Studies</a></li>
-            </ul>
-        </nav>
-    </header>
+<body class="antialiased" data-base-path=".." data-page-type="deep-dive" data-topic-name="SQL" data-topic-color="#336791">
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="space-y-8">
-            <div class="card">
+            <div class="card" style="cursor: default;">
                 <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
                     Advanced SQL Techniques: Beyond the Basics
                 </h1>
@@ -295,8 +262,6 @@
             </div>
         </div>
     </main>
-    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
-        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
-    </footer>
+    <script src="../js/main.js"></script>
 </body>
 </html>

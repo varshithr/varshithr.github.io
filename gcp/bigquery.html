@@ -1,62 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BigQuery Visual Deep Dive</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom font */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
-        }
         /* Responsive Table Styles */
         @media (max-width: 767px) {
-            .responsive-table thead {
-                display: none;
-            }
-            .responsive-table tbody, .responsive-table tr, .responsive-table td {
-                display: block;
-                width: 100%;
-            }
-            .responsive-table tr {
-                margin-bottom: 1rem;
-                border: 1px solid #e5e7eb;
-                border-radius: 0.5rem;
-                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-                background-color: white;
-            }
-            .responsive-table td {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                text-align: right;
-                padding: 0.75rem 1rem;
-                border-bottom: 1px solid #e5e7eb;
-            }
-            .responsive-table td::before {
-                content: attr(data-label);
-                text-align: left;
-                font-weight: 600;
-                color: #5b21b6; /* Purple-700 */
-                padding-right: 1rem;
-                white-space: nowrap;
-            }
-            .responsive-table td:last-child {
-                border-bottom: none;
-            }
+            .responsive-table thead { display: none; }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; }
+            .responsive-table tr { margin-bottom: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); background-color: white; }
+            .responsive-table td { display: flex; justify-content: space-between; align-items: center; text-align: right; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; }
+            .responsive-table td::before { content: attr(data-label); text-align: left; font-weight: 600; color: #5b21b6; padding-right: 1rem; white-space: nowrap; }
+            .responsive-table td:last-child { border-bottom: none; }
         }
     </style>
     <script>
-        // Global State
-        const state = {
-            currentTab: 'architecture',
-            message: "Click a concept tab above to explore BigQuery's design for massive-scale analytics.",
-        };
-
-        // Core Concepts Data
+        // Global State, concepts data, and render functions remain the same...
+        const state = { currentTab: 'architecture' };
+        const concepts = { /* ... concept data ... */ };
+        // (The large concepts object is omitted for brevity but remains in the file)
         const concepts = {
             architecture: {
                 title: "BigQuery Architecture (Decoupled Storage & Compute)",
@@ -141,94 +102,46 @@
             }
         };
 
-        /**
-         * Converts the global state into HTML and updates the DOM.
-         */
         const render = () => {
             const container = document.getElementById('table-container');
             const messageBar = document.getElementById('message-bar');
             const tabButtons = document.querySelectorAll('.tab-button');
-
-            // 1. Update Tabs
             tabButtons.forEach(btn => {
-                btn.classList.remove('bg-purple-700', 'text-white');
+                btn.classList.remove('bg-purple-700', 'text-white', 'shadow-lg');
                 btn.classList.add('bg-white', 'text-purple-700', 'hover:bg-purple-50');
                 if (btn.dataset.tab === state.currentTab) {
                     btn.classList.remove('bg-white', 'text-purple-700', 'hover:bg-purple-50');
                     btn.classList.add('bg-purple-700', 'text-white', 'shadow-lg');
                 }
             });
-
-            // 2. Update Message Bar
             messageBar.innerHTML = `<span class="font-bold">${concepts[state.currentTab].title}</span>: ${concepts[state.currentTab].description}`;
-
-            // 3. Generate Table HTML
             const currentConcept = concepts[state.currentTab];
-            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
-
-            // Desktop Headers
-            html += '<thead class="bg-purple-800 text-white"><tr>';
-            currentConcept.headers.forEach(header => {
-                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
-            });
-            html += '</tr></thead>';
-
-            // Body
-            html += '<tbody>';
+            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden"><thead class="bg-purple-800 text-white"><tr>';
+            currentConcept.headers.forEach(header => { html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`; });
+            html += '</tr></thead><tbody>';
             currentConcept.rows.forEach(row => {
-                html += '<tr class="md:border-b md:border-gray-200">';
-                // First cell is the key, styled differently
-                html += `<td data-label="${currentConcept.headers[0]}" class="font-semibold text-purple-800 md:bg-purple-50">${row.key}</td>`;
-
-                // Data cells
-                row.data.forEach((cellData, colIndex) => {
-                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}">${cellData}</td>`;
-                });
+                html += `<tr class="md:border-b md:border-gray-200"><td data-label="${currentConcept.headers[0]}" class="font-semibold text-purple-800 md:bg-purple-50">${row.key}</td>`;
+                row.data.forEach((cellData, colIndex) => { html += `<td data-label="${currentConcept.headers[colIndex + 1]}">${cellData}</td>`; });
                 html += '</tr>';
             });
             html += '</tbody></table>';
-
             container.innerHTML = html;
         };
+        const switchTab = (tabName) => { state.currentTab = tabName; render(); };
 
-        /**
-         * Switches the active concept tab.
-         * @param {string} tabName
-         */
-        const switchTab = (tabName) => {
-            state.currentTab = tabName;
-            render();
-        };
-
-        // Initial setup and event listeners
-        window.onload = () => {
-            // Set up tab listeners
+        // Ensure this runs after the main DOM is parsed.
+        document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.tab-button').forEach(button => {
                 button.addEventListener('click', () => switchTab(button.dataset.tab));
             });
-
-            // Start with the 'architecture' tab
             switchTab('architecture');
-        };
+        });
     </script>
 </head>
-<body class="antialiased">
-    <header class="bg-white sticky top-0 z-50 shadow-md">
-        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-            <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="index.html" class="flex items-center">
-                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
-                    <span class="gradient-text">Back to GCP Topics</span>
-                </a>
-            </div>
-            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../aboutme.html" class="hover:text-[#34A853] font-semibold">About Me</a></li>
-            </ul>
-        </nav>
-    </header>
+<body class="antialiased" data-base-path=".." data-page-type="deep-dive" data-topic-name="GCP" data-topic-color="#34A853">
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="space-y-8">
-            <div class="card">
+            <div class="card" style="cursor: default;"> <!-- Override cursor for this non-clickable card -->
                 <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
                     <svg class="w-8 h-8 mr-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                     BigQuery Deep Dive: Architecture, Performance & Modern Features
@@ -237,46 +150,21 @@
 
                 <!-- Tab Navigation -->
                 <div class="flex flex-wrap gap-2 mb-8">
-                    <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-                        1. Architecture
-                    </button>
-                    <button data-tab="columnar" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-                        2. Columnar Storage
-                    </button>
-                    <button data-tab="nested" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-                        3. Nested & Repeated Fields
-                    </button>
-                    <button data-tab="partitioning" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-                        4. Partitioning
-                    </button>
-                    <button data-tab="clustering" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-                        5. Clustering
-                    </button>
-                    <button data-tab="editions" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-                        6. Compute Editions
-                    </button>
-                    <button data-tab="merge" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-                        7. MERGE Statement
-                    </button>
-                    <button data-tab="biglake" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">
-                        8. BigLake (Multi-Cloud)
-                    </button>
+                    <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">1. Architecture</button>
+                    <button data-tab="columnar" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">2. Columnar Storage</button>
+                    <button data-tab="nested" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">3. Nested & Repeated Fields</button>
+                    <button data-tab="partitioning" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">4. Partitioning</button>
+                    <button data-tab="clustering" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">5. Clustering</button>
+                    <button data-tab="editions" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">6. Compute Editions</button>
+                    <button data-tab="merge" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">7. MERGE Statement</button>
+                    <button data-tab="biglake" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-purple-700 transition duration-150 ease-in-out">8. BigLake (Multi-Cloud)</button>
                 </div>
 
-                <!-- Explanation Bar -->
-                <div id="message-bar" class="bg-indigo-100 border-l-4 border-indigo-500 text-indigo-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base">
-                    <!-- Message will be populated by JS -->
-                </div>
-
-                <!-- BigQuery Visualizer Container -->
-                <div id="table-container" class="mt-8">
-                    <!-- Visual table will be generated here -->
-                </div>
+                <div id="message-bar" class="bg-indigo-100 border-l-4 border-indigo-500 text-indigo-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base"></div>
+                <div id="table-container" class="mt-8"></div>
             </div>
         </div>
     </main>
-    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
-        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
-    </footer>
+    <script src="../js/main.js"></script>
 </body>
 </html>

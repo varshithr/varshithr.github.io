@@ -1,0 +1,23 @@
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // This script is loaded dynamically, so we need to wait for the DOM to be ready.
+        // However, since this file is loaded on DOMContentLoaded, we can run it immediately.
+        // A secondary check ensures it runs safely if loaded asynchronously.
+        const ClickeableCards = () => {
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const link = card.querySelector('.card-link a');
+                    if (link) {
+                        window.location.href = link.href;
+                    }
+                });
+            });
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', ClickeableCards);
+        } else {
+            ClickeableCards();
+        }
+    });
+</script>

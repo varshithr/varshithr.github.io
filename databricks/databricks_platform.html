@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Databricks Lakehouse Platform Visual Deep Dive</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom font */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
@@ -76,7 +73,7 @@
                 margin-bottom: 1rem;
                 border: 1px solid #e5e7eb;
                 border-radius: 0.5rem;
-                box-shadow: 0 1px 3px 0 rgba(0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
                 background-color: white;
             }
             .responsive-table td {
@@ -221,15 +218,10 @@
             }
         };
 
-        /**
-         * Converts the global state into HTML and updates the DOM.
-         */
         const render = () => {
             const container = document.getElementById('table-container');
             const messageBar = document.getElementById('message-bar');
             const tabButtons = document.querySelectorAll('.tab-button');
-
-            // 1. Update Tabs
             tabButtons.forEach(btn => {
                 btn.classList.remove('bg-gray-700', 'text-white');
                 btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-50');
@@ -238,30 +230,18 @@
                     btn.classList.add('bg-gray-700', 'text-white', 'shadow-lg');
                 }
             });
-
-            // 2. Update Message Bar
             messageBar.innerHTML = `<span class="font-bold">${concepts[state.currentTab].title}</span>: ${concepts[state.currentTab].description}`;
-
-            // 3. Generate Table HTML
             const currentConcept = concepts[state.currentTab];
             let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
-
-            // Desktop Headers
             html += '<thead class="bg-gray-700 text-white"><tr>';
             currentConcept.headers.forEach(header => {
                 html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
             });
             html += '</tr></thead>';
-
-            // Body
             html += '<tbody>';
             currentConcept.rows.forEach(row => {
                 html += '<tr class="md:border-b md:border-gray-20">';
-                
-                // First cell is the key, styled differently
                 let rowKeyClasses = 'font-semibold text-gray-800 md:bg-gray-100';
-                
-                // Specific styling/content overrides for concepts
                 if (state.currentTab === 'architecture') {
                     if (row.key.includes('Control Plane')) rowKeyClasses = 'font-semibold text-gray-800 md:bg-cyan-100';
                     if (row.key.includes('Data Plane') || row.key.includes('Delta Lake')) rowKeyClasses = 'font-semibold text-gray-800 md:bg-pink-100';
@@ -286,10 +266,7 @@
                     if (row.key.includes('Serverless') || row.key.includes('Photon')) rowKeyClasses = 'font-semibold text-gray-800 md:bg-cyan-100';
                     if (row.key.includes('Mosaic') || row.key.includes('Databricks SQL')) rowKeyClasses = 'font-semibold text-gray-800 md:bg-yellow-100';
                 }
-
                 html += `<td data-label="${currentConcept.headers[0]}" class="${rowKeyClasses}">${row.key}</td>`;
-                
-                // Data cells
                 row.data.forEach((cellData, colIndex) => {
                     let cellClasses = 'data-cell';
                     if (state.currentTab === 'architecture') {
@@ -316,7 +293,6 @@
                         if ((row.key.includes('Serverless') || row.key.includes('Photon')) && colIndex === 0) cellClasses = 'execution-cell';
                         if ((row.key.includes('Mosaic') || row.key.includes('Databricks SQL')) && colIndex === 0) cellClasses = 'metadata-cell';
                     }
-
                     html += `<td data-label="${currentConcept.headers[colIndex + 1]}" class="${cellClasses}">${cellData}</td>`;
                 });
                 html += '</tr>';
@@ -324,99 +300,47 @@
             html += '</tbody></table>';
             container.innerHTML = html;
         };
-
-        /**
-         * Switches the active concept tab.
-         * @param {string} tabName 
-         */
         const switchTab = (tabName) => {
             state.currentTab = tabName;
             render();
         };
 
-        // Initial setup and event listeners
-        window.onload = () => {
-            // Set up tab listeners
+        document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.tab-button').forEach(button => {
                 button.addEventListener('click', () => switchTab(button.dataset.tab));
             });
-
-            // Start with the 'architecture' tab
             switchTab('architecture');
-        };
+        });
     </script>
 </head>
-<body class="antialiased">
-    <header class="bg-white sticky top-0 z-50 shadow-md">
-        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-            <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="index.html" class="flex items-center">
-                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
-                    <span class="gradient-text">Back to Databricks Topics</span>
-                </a>
-            </div>
-            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../aboutme.html" class="hover:text-[#FF3621] font-semibold">About Me</a></li>
-            </ul>
-        </nav>
-    </header>
-<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<body class="antialiased" data-base-path=".." data-page-type="deep-dive" data-topic-name="Databricks" data-topic-color="#FF3621">
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="space-y-8">
-            <div class="card">
-    <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
-        <svg class="w-8 h-8 mr-3 text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a8 8 0 00-8 8c0 1.25.176 2.45.518 3.559L10 16.5l7.482-2.941A8 8 0 0018 10a8 8 0 00-8-8zm-1.5 8a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM10 18a8 8 0 100-16 8 8 0 000 16zM10 5a1 1 0 00-1 1v1a1 1 0 002 0V6a1 1 0 00-1-1zM5 10a1 1 0 000 2h1a1 1 0 000-2H5zM14 10a1 1 0 000 2h1a1 1 0 000-2h-1z"></path></svg>
-        Databricks Lakehouse Platform Visual Deep Dive
-    </h1>
-    <p class="text-lg text-gray-600 mb-8">Click on the tabs below to explore the fundamental components of the Databricks Lakehouse Platform, based on Apache Spark and Delta Lake.</p>
+            <div class="card" style="cursor: default;">
+                <h1 class="text-4xl font-extrabold text-gray-800 mb-6 flex items-center">
+                    Databricks Lakehouse Platform Visual Deep Dive
+                </h1>
+                <p class="text-lg text-gray-600 mb-8">Click on the tabs below to explore the fundamental components of the Databricks Lakehouse Platform, based on Apache Spark and Delta Lake.</p>
 
-    <!-- Tab Navigation -->
-    <div class="flex flex-wrap space-x-4 space-y-2 mb-8">
-        <button data-tab="architecture" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            1. Architecture (Control/Data Plane)
-        </button>
-        <button data-tab="clusters" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            2. Clusters (Driver/Executor)
-        </button>
-        <button data-tab="deltaLake" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            3. Delta Lake (ACID)
-        </button>
-        <button data-tab="dataframes" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            4. DataFrames (Abstraction)
-        </button>
-        <button data-tab="execution" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            5. Execution (Lazy/DAGs)
-        </button>
-        <button data-tab="unityCatalog" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            6. Unity Catalog (Governance)
-        </button>
-        <button data-tab="dlt" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            7. Delta Live Tables (DLT)
-        </button>
-        <button data-tab="mlflow" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            8. MLflow (MLOps)
-        </button>
-        <button data-tab="devops" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            9. CI/CD & dbx
-        </button>
-        <button data-tab="advanced" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">
-            10. Advanced Features (Serverless/Photon)
-        </button>
-    </div>
+                <!-- Tab Navigation -->
+                <div class="flex flex-wrap space-x-4 space-y-2 mb-8">
+                    <button data-tab="architecture" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">1. Architecture (Control/Data Plane)</button>
+                    <button data-tab="clusters" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">2. Clusters (Driver/Executor)</button>
+                    <button data-tab="deltaLake" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">3. Delta Lake (ACID)</button>
+                    <button data-tab="dataframes" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">4. DataFrames (Abstraction)</button>
+                    <button data-tab="execution" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">5. Execution (Lazy/DAGs)</button>
+                    <button data-tab="unityCatalog" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">6. Unity Catalog (Governance)</button>
+                    <button data-tab="dlt" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">7. Delta Live Tables (DLT)</button>
+                    <button data-tab="mlflow" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">8. MLflow (MLOps)</button>
+                    <button data-tab="devops" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">9. CI/CD & dbx</button>
+                    <button data-tab="advanced" class="tab-button py-2 px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">10. Advanced Features (Serverless/Photon)</button>
+                </div>
 
-    <!-- Explanation Bar -->
-    <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md">
-        <!-- Message will be populated by JS -->
-    </div>
-
-    <!-- Databricks Visualizer Container -->
-    <div id="table-container" class="mt-8">
-        <!-- Visual table will be generated here -->
-    </div>
+                <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md"></div>
+                <div id="table-container" class="mt-8"></div>
             </div>
         </div>
     </main>
-    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
-        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
-    </footer>
+    <script src="../js/main.js"></script>
 </body>
 </html>

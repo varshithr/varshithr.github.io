@@ -1,16 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Azure Synapse Analytics Deep Dive</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
-        }
         @media (max-width: 767px) {
             .responsive-table thead { display: none; }
             .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; }
@@ -100,48 +92,34 @@
             state.currentTab = tabName;
             render();
         };
-        window.onload = () => {
+
+        document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.tab-button').forEach(button => {
                 button.addEventListener('click', () => switchTab(button.dataset.tab));
             });
             switchTab('architecture');
-        };
+        });
     </script>
 </head>
-<body class="antialiased">
-    <header class="bg-white sticky top-0 z-50 shadow-md">
-        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-            <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="index.html" class="flex items-center">
-                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
-                    <span class="gradient-text">Back to Azure Topics</span>
-                </a>
-            </div>
-            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../aboutme.html" class="hover:text-[#0089D6] font-semibold">About Me</a></li>
-            </ul>
-        </nav>
-    </header>
-<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<body class="antialiased" data-base-path=".." data-page-type="deep-dive" data-topic-name="Azure" data-topic-color="#0089D6">
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="space-y-8">
-            <div class="card">
-    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
-        Azure Synapse Analytics: The Unified Analytics Platform
-    </h1>
-    <p class="text-base sm:text-lg text-gray-600 mb-8">A deep dive into Azure Synapse Analytics, the limitless analytics service that brings together data integration, enterprise data warehousing, and big data analytics.</p>
-    <div class="flex flex-wrap gap-2 mb-8">
-        <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">1. Unified Architecture</button>
-        <button data-tab="sqlPools" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">2. SQL Pools</button>
-        <button data-tab="sparkPools" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">3. Spark Pools</button>
-        <button data-tab="integration" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">4. Data Integration</button>
-    </div>
-    <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base"></div>
-    <div id="table-container" class="mt-8"></div>
+            <div class="card" style="cursor: default;">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
+                    Azure Synapse Analytics: The Unified Analytics Platform
+                </h1>
+                <p class="text-base sm:text-lg text-gray-600 mb-8">A deep dive into Azure Synapse Analytics, the limitless analytics service that brings together data integration, enterprise data warehousing, and big data analytics.</p>
+                <div class="flex flex-wrap gap-2 mb-8">
+                    <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">1. Unified Architecture</button>
+                    <button data-tab="sqlPools" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">2. SQL Pools</button>
+                    <button data-tab="sparkPools" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">3. Spark Pools</button>
+                    <button data-tab="integration" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">4. Data Integration</button>
+                </div>
+                <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base"></div>
+                <div id="table-container" class="mt-8"></div>
             </div>
         </div>
     </main>
-    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
-        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
-    </footer>
+    <script src="../js/main.js"></script>
 </body>
 </html>
