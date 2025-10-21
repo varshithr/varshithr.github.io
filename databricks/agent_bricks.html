@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building AI Agents with Databricks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #FF6150, #FF3621);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+        .step-card {
+            background-color: #f8fafc;
+            border-left: 4px solid #FF6150;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Back to Databricks Topics</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../aboutme.html" class="hover:text-[#FF6150] font-semibold">About Me</a></li>
+                <li><a href="../case_studies.html" class="hover:text-[#FF6150] font-semibold">Case Studies</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
+                    Building AI Agents on the Databricks Platform
+                </h1>
+                <p class="text-base sm:text-lg text-gray-600 mb-8">A conceptual guide to developing and deploying autonomous AI agents using the powerful tools available in Databricks.</p>
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">The Core Components of an AI Agent</h2>
+                <p class="mb-4 text-gray-600">An AI agent can be broken down into several key components. Here's how you can build each of them on Databricks:</p>
+
+                <div class="step-card">
+                    <h3 class="font-bold text-xl mb-2">1. The Knowledge Base: Unity Catalog and Delta Lake</h3>
+                    <p>Every AI agent needs a reliable and up-to-date source of information. Databricks provides the perfect foundation with Delta Lake for storing your data and Unity Catalog for governing it.</p>
+                    <ul class="list-disc list-inside mt-2 space-y-1">
+                        <li><strong>Delta Lake:</strong> Store structured and unstructured data, including documents, images, and more.</li>
+                        <li><strong>Unity Catalog:</strong> Provide a single source of truth for your agent, with built-in data lineage and governance.</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3 class="font-bold text-xl mb-2">2. The "Brain": Large Language Models (LLMs) and MLflow</h3>
+                    <p>The core of your AI agent is the Large Language Model that powers its reasoning and decision-making. MLflow is the ideal tool for managing the lifecycle of these models.</p>
+                    <ul class="list-disc list-inside mt-2 space-y-1">
+                        <li><strong>MLflow Models:</strong> Package, deploy, and track your LLMs, whether they are open-source models like Llama 2 or custom-trained models.</li>
+                        <li><strong>MLflow Model Registry:</strong> Manage the versions and stages of your models, ensuring that your agent is always using the best available model.</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3 class="font-bold text-xl mb-2">3. The Tools: Databricks Functions and External APIs</h3>
+                    <p>To be truly useful, an AI agent needs to be able to take action. You can expose Databricks functions and external APIs as tools that your agent can call.</p>
+                    <ul class="list-disc list-inside mt-2 space-y-1">
+                        <li><strong>Databricks SQL Functions:</strong> Allow your agent to query data and generate insights on the fly.</li>
+                        <li><strong>External APIs:</strong> Connect your agent to the outside world, allowing it to perform actions like sending emails, creating reports, or updating external systems.</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <h3 class="font-bold text-xl mb-2">4. The User Interface: Databricks AI/BI Dashboards</h3>
+                    <p>The AI/BI dashboarding capabilities in Databricks provide a natural and intuitive way for users to interact with your AI agent.</p>
+                    <ul class="list-disc list-inside mt-2 space-y-1">
+                        <li><strong>Natural Language Interface:</strong> Users can ask questions and give commands in plain English.</li>
+                        <li><strong>Interactive Visualizations:</strong> The agent can present information and insights in a clear and easy-to-understand format.</li>
+                    </ul>
+                </div>
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Example Use Cases for AI Agents</h2>
+                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                    <li><strong>Data Analyst Agent:</strong> An agent that can automatically generate reports, answer questions about data, and even create new visualizations.</li>
+                    <li><strong>Marketing Automation Agent:</strong> An agent that can analyze customer data, identify new segments, and launch targeted marketing campaigns.</li>
+                    <li><strong>Security Operations Agent:</strong> An agent that can monitor for security threats, investigate incidents, and take automated remediation actions.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>
