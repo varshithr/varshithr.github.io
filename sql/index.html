@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQL Topics</title>
+    <title>SQL & Data Modeling Topics</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,6 +52,7 @@
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
                 <li><a href="../aboutme.html" class="hover:text-[#336791] font-semibold">About Me</a></li>
+                <li><a href="../case_studies.html" class="hover:text-[#336791] font-semibold">Case Studies</a></li>
             </ul>
         </nav>
     </header>
@@ -60,13 +61,13 @@
             <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">
                 <span class="gradient-text">SQL & Data Modeling</span>
             </h1>
-            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">A curated collection of deep dives into SQL, data modeling, and query optimization techniques.</p>
+            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">Essential SQL techniques, data modeling concepts, and best practices for analytics and data engineering.</p>
         </section>
         <div id="topics-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="card">
                 <div class="card-content">
                     <h3 class="text-xl font-bold text-gray-800 mb-2">SQL Case Studies</h3>
-                    <p class="text-gray-600">Explore real-world examples of advanced SQL usage and optimization.</p>
+                    <p class="text-gray-600">Real-world examples of advanced SQL techniques and optimization strategies.</p>
                 </div>
                 <div class="card-link">
                     <a href="case_studies/index.html" class="font-semibold text-[#336791] hover:text-[#5E97C4]">View Case Studies &rarr;</a>
@@ -74,8 +75,17 @@
             </div>
             <div class="card">
                 <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Dimensional Modeling</h3>
-                    <p class="text-gray-600">Learn about dimensional modeling techniques and best practices for designing Lakehouse pipelines.</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Advanced SQL Techniques</h3>
+                    <p class="text-gray-600">Window functions, CTEs, recursive queries, and performance optimization strategies.</p>
+                </div>
+                <div class="card-link">
+                    <a href="advanced_sql.html" class="font-semibold text-[#336791] hover:text-[#5E97C4]">Learn more &rarr;</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Data Modeling Fundamentals</h3>
+                    <p class="text-gray-600">Star schemas, snowflake schemas, dimensional modeling, and data warehouse design.</p>
                 </div>
                 <div class="card-link">
                     <a href="dim_model.html" class="font-semibold text-[#336791] hover:text-[#5E97C4]">Learn more &rarr;</a>
@@ -83,17 +93,17 @@
             </div>
             <div class="card">
                 <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">SQL Querying & Tuning</h3>
-                    <p class="text-gray-600">Learn advanced SQL features and tuning strategies for querying large datasets efficiently.</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Query Optimization</h3>
+                    <p class="text-gray-600">Execution plans, indexing strategies, and performance tuning techniques.</p>
                 </div>
                 <div class="card-link">
                     <a href="sqltuning.html" class="font-semibold text-[#336791] hover:text-[#5E97C4]">Learn more &rarr;</a>
                 </div>
             </div>
-             <div class="card">
+            <div class="card">
                 <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Spark Internals & Tuning</h3>
-                    <p class="text-gray-600">Understand Spark's internal architecture to write more efficient and performant applications.</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Spark SQL & Internals</h3>
+                    <p class="text-gray-600">Understanding Spark SQL engine and optimization techniques for big data.</p>
                 </div>
                 <div class="card-link">
                     <a href="spark_internals.html" class="font-semibold text-[#336791] hover:text-[#5E97C4]">Learn more &rarr;</a>

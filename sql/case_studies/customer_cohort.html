@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Cohort Analysis Case Study</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #336791, #5E97C4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+        .code-block {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Back to SQL Case Studies</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../aboutme.html" class="hover:text-[#336791] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4">Case Study: Customer Cohort Analysis</h1>
+                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6">
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Advanced SQL</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Window Functions</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Business Intelligence</span>
+                </div>
+                <p class="text-lg text-gray-700 mb-6">This case study demonstrates how to perform customer cohort analysis using advanced SQL techniques to understand customer retention and behavior patterns over time.</p>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Business Context</h2>
+                <p class="mb-4 text-gray-600">An e-commerce company wants to understand customer retention patterns to improve marketing strategies. They need to analyze how customers acquired in different time periods (cohorts) behave over time.</p>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Technical Challenge</h2>
+                <p class="mb-4 text-gray-600">Calculate monthly retention rates for customers grouped by their acquisition month (cohort), showing how many customers from each cohort continue to make purchases over subsequent months.</p>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Implementation Approach</h2>
+                <p class="mb-4 text-gray-600">We'll use Common Table Expressions (CTEs) and window functions to:</p>
+                <ul class="list-disc pl-6 mb-6 text-gray-600">
+                    <li>Identify the cohort (acquisition month) for each customer</li>
+                    <li>Calculate the period number since acquisition</li>
+                    <li>Count active customers in each cohort-period combination</li>
+                    <li>Calculate retention rates as percentages</li>
+                </ul>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">SQL Implementation</h2>
+                <div class="code-block">
+                    -- CTE to identify customer acquisition cohort and activity periods<br>
+                    WITH customer_activities AS (<br>
+                    &nbsp;&nbsp;SELECT<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;customer_id,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;DATE_TRUNC('month', MIN(order_date))::date AS cohort_date,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;DATE_TRUNC('month', order_date)::date AS activity_month<br>
+                    &nbsp;&nbsp;FROM orders<br>
+                    &nbsp;&nbsp;GROUP BY customer_id, DATE_TRUNC('month', order_date)<br>
+                    ),<br><br>
+                    
+                    -- CTE to assign period numbers relative to cohort start<br>
+                    cohort_analysis AS (<br>
+                    &nbsp;&nbsp;SELECT<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;customer_id,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cohort_date,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;activity_month,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;1 AS has_activity,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;(EXTRACT(YEAR FROM activity_month) - EXTRACT(YEAR FROM cohort_date)) * 12 +<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;(EXTRACT(MONTH FROM activity_month) - EXTRACT(MONTH FROM cohort_date)) + 1 AS period_number<br>
+                    &nbsp;&nbsp;FROM customer_activities<br>
+                    ),<br><br>
+                    
+                    -- Calculate metrics by cohort and period<br>
+                    cohort_metrics AS (<br>
+                    &nbsp;&nbsp;SELECT<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cohort_date,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;period_number,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;COUNT(DISTINCT customer_id) AS active_customers<br>
+                    &nbsp;&nbsp;FROM cohort_analysis<br>
+                    &nbsp;&nbsp;GROUP BY cohort_date, period_number<br>
+                    ),<br><br>
+                    
+                    -- Calculate cohort sizes (customers in period 1)<br>
+                    cohort_sizes AS (<br>
+                    &nbsp;&nbsp;SELECT<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;cohort_date,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;active_customers AS cohort_size<br>
+                    &nbsp;&nbsp;FROM cohort_metrics<br>
+                    &nbsp;&nbsp;WHERE period_number = 1<br>
+                    )<br><br>
+                    
+                    -- Final result with retention rates<br>
+                    SELECT<br>
+                    &nbsp;&nbsp;cm.cohort_date,<br>
+                    &nbsp;&nbsp;cm.period_number,<br>
+                    &nbsp;&nbsp;cm.active_customers,<br>
+                    &nbsp;&nbsp;cs.cohort_size,<br>
+                    &nbsp;&nbsp;ROUND((cm.active_customers * 100.0 / cs.cohort_size), 2) AS retention_rate<br>
+                    FROM cohort_metrics cm<br>
+                    JOIN cohort_sizes cs ON cm.cohort_date = cs.cohort_date<br>
+                    ORDER BY cm.cohort_date, cm.period_number;<br>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Results Analysis</h2>
+                <p class="mb-4 text-gray-600">The query produces results that show:</p>
+                <ul class="list-disc pl-6 mb-6 text-gray-600">
+                    <li>Each cohort (acquisition month) in the first column</li>
+                    <li>Period number (1 = acquisition month, 2 = month after, etc.)</li>
+                    <li>Number of active customers in each cohort-period combination</li>
+                    <li>Retention rate as a percentage of the original cohort size</li>
+                </ul>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full shadow-xl rounded-xl overflow-hidden">
+                        <thead class="bg-blue-600 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold text-sm">Cohort Month</th>
+                                <th class="p-3 text-left font-semibold text-sm">Period</th>
+                                <th class="p-3 text-left font-semibold text-sm">Active Customers</th>
+                                <th class="p-3 text-left font-semibold text-sm">Cohort Size</th>
+                                <th class="p-3 text-left font-semibold text-sm">Retention Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b border-gray-200">
+                                <td class="p-3 text-gray-800">2023-01</td>
+                                <td class="p-3 text-gray-600">1</td>
+                                <td class="p-3 text-gray-600">1000</td>
+                                <td class="p-3 text-gray-600">1000</td>
+                                <td class="p-3 text-green-600 font-semibold">100.00%</td>
+                            </tr>
+                            <tr class="bg-gray-50 border-b border-gray-200">
+                                <td class="p-3 text-gray-800">2023-01</td>
+                                <td class="p-3 text-gray-600">2</td>
+                                <td class="p-3 text-gray-600">750</td>
+                                <td class="p-3 text-gray-600">1000</td>
+                                <td class="p-3 text-green-600 font-semibold">75.00%</td>
+                            </tr>
+                            <tr class="bg-white border-b border-gray-200">
+                                <td class="p-3 text-gray-800">2023-01</td>
+                                <td class="p-3 text-gray-600">3</td>
+                                <td class="p-3 text-gray-600">520</td>
+                                <td class="p-3 text-gray-600">1000</td>
+                                <td class="p-3 text-green-600 font-semibold">52.00%</td>
+                            </tr>
+                            <tr class="bg-gray-50 border-b border-gray-200">
+                                <td class="p-3 text-gray-800">2023-02</td>
+                                <td class="p-3 text-gray-600">1</td>
+                                <td class="p-3 text-gray-600">850</td>
+                                <td class="p-3 text-gray-600">850</td>
+                                <td class="p-3 text-green-600 font-semibold">100.00%</td>
+                            </tr>
+                            <tr class="bg-white border-b border-gray-200">
+                                <td class="p-3 text-gray-800">2023-02</td>
+                                <td class="p-3 text-gray-600">2</td>
+                                <td class="p-3 text-gray-600">620</td>
+                                <td class="p-3 text-gray-600">850</td>
+                                <td class="p-3 text-green-600 font-semibold">72.94%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Key SQL Concepts Demonstrated</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-blue-800 mb-2">Common Table Expressions (CTEs)</h3>
+                        <p class="text-gray-700">Multiple CTEs decompose complex logic into manageable steps, improving readability and maintainability.</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-blue-800 mb-2">Date Functions</h3>
+                        <p class="text-gray-700">DATE_TRUNC and EXTRACT functions for cohort period calculations and time-based analysis.</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-blue-800 mb-2">Window Functions</h3>
+                        <p class="text-gray-700">Concept of period calculation relative to a baseline date for cohort analysis.</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-blue-800 mb-2">JOIN Operations</h3>
+                        <p class="text-gray-700">Combining metrics with cohort sizes to calculate retention percentages.</p>
+                    </div>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Performance Considerations</h2>
+                <p class="mb-4 text-gray-600">For large datasets, consider:</p>
+                <ul class="list-disc pl-6 mb-6 text-gray-600">
+                    <li>Indexing on date and customer_id columns</li>
+                    <li>Partitioning by date for time-series data</li>
+                    <li>Using materialized views for frequently accessed results</li>
+                    <li>Applying appropriate data types (DATE vs TIMESTAMP)</li>
+                </ul>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Business Impact</h2>
+                <p class="mb-4 text-gray-600">This analysis helps the business:</p>
+                <ul class="list-disc pl-6 mb-6 text-gray-600">
+                    <li>Understand customer retention patterns across different acquisition periods</li>
+                    <li>Identify which marketing campaigns produce long-term customers</li>
+                    <li>Optimize customer acquisition spend based on long-term value</li>
+                    <li>Target interventions to reduce churn in specific customer segments</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>

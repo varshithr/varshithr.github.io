@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced SQL Techniques</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #336791, #5E97C4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+        @media (max-width: 767px) {
+            .responsive-table thead { display: none; }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; }
+            .responsive-table tr { margin-bottom: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); background-color: white; }
+            .responsive-table td { display: flex; justify-content: space-between; align-items: center; text-align: right; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; }
+            .responsive-table td::before { content: attr(data-label); text-align: left; font-weight: 600; color: #336791; padding-right: 1rem; white-space: nowrap; }
+            .responsive-table td:last-child { border-bottom: none; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Back to SQL Topics</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../aboutme.html" class="hover:text-[#336791] font-semibold">About Me</a></li>
+                <li><a href="../case_studies.html" class="hover:text-[#336791] font-semibold">Case Studies</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
+                    Advanced SQL Techniques: Beyond the Basics
+                </h1>
+                <p class="text-base sm:text-lg text-gray-600 mb-8">Master advanced SQL concepts including window functions, CTEs, and performance optimization strategies for complex data analysis.</p>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">1. Window Functions</h2>
+                <p class="mb-4 text-gray-600">Powerful SQL functions that perform calculations across a set of rows related to the current row.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">
+                        <thead class="bg-blue-500 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold text-sm">Function Type</th>
+                                <th class="p-3 text-left font-semibold text-sm">Purpose</th>
+                                <th class="p-3 text-left font-semibold text-sm">Example Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Function Type" class="font-semibold text-blue-800 md:bg-blue-50">Ranking Functions</td>
+                                <td data-label="Purpose">Assign ranks to rows (ROW_NUMBER, RANK, DENSE_RANK)</td>
+                                <td data-label="Example Use Case">Top-N queries, leaderboards, ranking analysis</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Function Type" class="font-semibold text-blue-800 md:bg-blue-50">Aggregate Functions</td>
+                                <td data-label="Purpose">Running totals, moving averages, cumulative calculations</td>
+                                <td data-label="Example Use Case">Sales trends, moving averages, YTD calculations</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Function Type" class="font-semibold text-blue-800 md:bg-blue-50">Value Functions</td>
+                                <td data-label="Purpose">Access values from other rows (LAG, LEAD, FIRST_VALUE)</td>
+                                <td data-label="Example Use Case">Period-over-period comparisons, filling gaps</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Function Type" class="font-semibold text-blue-800 md:bg-blue-50">Distribution Functions</td>
+                                <td data-label="Purpose">Percentiles, quartiles, and relative ranking</td>
+                                <td data-label="Example Use Case">Performance percentiles, quartile analysis</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">2. Common Table Expressions (CTEs)</h2>
+                <p class="mb-4 text-gray-600">Temporary named result sets that improve query readability and enable complex recursive queries.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">
+                        <thead class="bg-blue-500 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold text-sm">Type</th>
+                                <th class="p-3 text-left font-semibold text-sm">Description</th>
+                                <th class="p-3 text-left font-semibold text-sm">Benefits</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Type" class="font-semibold text-blue-800 md:bg-blue-50">Non-Recursive CTE</td>
+                                <td data-label="Description">Simple named query blocks for complex logic decomposition</td>
+                                <td data-label="Benefits">Improved readability, modularity, debugging</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Type" class="font-semibold text-blue-800 md:bg-blue-50">Recursive CTE</td>
+                                <td data-label="Description">Queries that reference themselves for hierarchical data</td>
+                                <td data-label="Benefits">Tree traversal, organizational charts, bill of materials</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Type" class="font-semibold text-blue-800 md:bg-blue-50">Multiple CTEs</td>
+                                <td data-label="Description">Multiple named blocks in a single query</td>
+                                <td data-label="Benefits">Breaking complex queries into logical steps</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Type" class="font-semibold text-blue-800 md:bg-blue-50">CTE with Column Names</td>
+                                <td data-label="Description">Explicitly naming columns in CTE definition</td>
+                                <td data-label="Benefits">Clear documentation, error prevention</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">3. Performance Optimization Techniques</h2>
+                <p class="mb-4 text-gray-600">Advanced strategies for optimizing SQL query performance and reducing execution time.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">
+                        <thead class="bg-blue-500 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold text-sm">Technique</th>
+                                <th class="p-3 text-left font-semibold text-sm">Approach</th>
+                                <th class="p-3 text-left font-semibold text-sm">Performance Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Technique" class="font-semibold text-blue-800 md:bg-blue-50">Index Optimization</td>
+                                <td data-label="Approach">Creating appropriate indexes on frequently queried columns</td>
+                                <td data-label="Performance Impact">Dramatically faster SELECT operations</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Technique" class="font-semibold text-blue-800 md:bg-blue-50">Query Restructuring</td>
+                                <td data-label="Approach">Rewriting queries to be more efficient (e.g., EXISTS vs IN)</td>
+                                <td data-label="Performance Impact">Reduced execution time and resource usage</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Technique" class="font-semibold text-blue-800 md:bg-blue-50">Partitioning</td>
+                                <td data-label="Approach">Splitting large tables into smaller, more manageable pieces</td>
+                                <td data-label="Performance Impact">Faster queries through partition elimination</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Technique" class="font-semibold text-blue-800 md:bg-blue-50">Subquery Optimization</td>
+                                <td data-label="Approach">Converting correlated subqueries to JOINs where possible</td>
+                                <td data-label="Performance Impact">Significant improvement for complex nested queries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">4. Advanced JOIN Patterns</h2>
+                <p class="mb-4 text-gray-600">Complex JOIN scenarios and patterns for handling challenging data relationships.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">
+                        <thead class="bg-blue-500 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold text-sm">JOIN Type</th>
+                                <th class="p-3 text-left font-semibold text-sm">Use Case</th>
+                                <th class="p-3 text-left font-semibold text-sm">Considerations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="JOIN Type" class="font-semibold text-blue-800 md:bg-blue-50">Self JOIN</td>
+                                <td data-label="Use Case">Comparing rows within the same table</td>
+                                <td data-label="Considerations">Need for table aliases to distinguish references</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="JOIN Type" class="font-semibold text-blue-800 md:bg-blue-50">Multiple JOIN Chains</td>
+                                <td data-label="Use Case">Connecting multiple tables in a complex schema</td>
+                                <td data-label="Considerations">Performance impact, proper indexing crucial</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="JOIN Type" class="font-semibold text-blue-800 md:bg-blue-50">Conditional JOIN</td>
+                                <td data-label="Use Case">JOIN based on complex conditions beyond equality</td>
+                                <td data-label="Considerations">Can be difficult to optimize, may require indexing strategy changes</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="JOIN Type" class="font-semibold text-blue-800 md:bg-blue-50">Anti-JOIN Pattern</td>
+                                <td data-label="Use Case">Finding records that don't have matches in another table</td>
+                                <td data-label="Considerations">Use NOT EXISTS or LEFT JOIN with IS NULL appropriately</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">5. Modern SQL Extensions</h2>
+                <p class="mb-4 text-gray-600">Advanced SQL features available in modern data warehouse platforms.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">
+                        <thead class="bg-blue-500 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold text-sm">Feature</th>
+                                <th class="p-3 text-left font-semibold text-sm">Platform</th>
+                                <th class="p-3 text-left font-semibold text-sm">Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Feature" class="font-semibold text-blue-800 md:bg-blue-50">JSON Functions</td>
+                                <td data-label="Platform">BigQuery, PostgreSQL, Snowflake</td>
+                                <td data-label="Use Case">Querying and manipulating JSON data fields</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Feature" class="font-semibold text-blue-800 md:bg-blue-50">Array Functions</td>
+                                <td data-label="Platform">BigQuery, PostgreSQL</td>
+                                <td data-label="Use Case">Working with arrays as data types</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Feature" class="font-semibold text-blue-800 md:bg-blue-50">Geospatial Functions</td>
+                                <td data-label="Platform">BigQuery, PostgreSQL</td>
+                                <td data-label="Use Case">Performing geospatial calculations and operations</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Feature" class="font-semibold text-blue-800 md:bg-blue-50">Time Travel/Point-in-Time</td>
+                                <td data-label="Platform">BigQuery, Snowflake, Databricks Delta</td>
+                                <td data-label="Use Case">Querying historical data states</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">6. Best Practices & Common Pitfalls</h2>
+                <p class="mb-4 text-gray-600">Key practices to follow and mistakes to avoid when writing advanced SQL.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">
+                        <thead class="bg-blue-500 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold text-sm">Practice</th>
+                                <th class="p-3 text-left font-semibold text-sm">Guidance</th>
+                                <th class="p-3 text-left font-semibold text-sm">Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Practice" class="font-semibold text-blue-800 md:bg-blue-50">Use LIMIT for Development</td>
+                                <td data-label="Guidance">Always include LIMIT when testing queries to avoid full table scans</td>
+                                <td data-label="Impact">Prevents expensive queries during development</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Practice" class="font-semibold text-blue-800 md:bg-blue-50">Explicit Column Selection</td>
+                                <td data-label="Guidance">Use specific column names instead of SELECT *</td>
+                                <td data-label="Impact">Better performance, maintainability, and schema stability</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Practice" class="font-semibold text-blue-800 md:bg-blue-50">Indexing Strategy</td>
+                                <td data-label="Guidance">Analyze query patterns to create effective indexes</td>
+                                <td data-label="Impact">Significant performance improvement for common queries</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Practice" class="font-semibold text-blue-800 md:bg-blue-50">Cost-Based Optimization</td>
+                                <td data-label="Guidance">Understand how your database optimizer works</td>
+                                <td data-label="Impact">Write queries that align with optimizer capabilities</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card mt-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Common Advanced SQL Patterns</h2>
+                
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Pivot/Unpivot Operations</h3>
+                <p class="mb-3">Transform rows into columns or vice versa for different analytical perspectives.</p>
+                
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Time Series Analysis</h3>
+                <p class="mb-3">Analyze data points collected over time sequences, often using window functions.</p>
+                
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Cohort Analysis</h3>
+                <p class="mb-3">Group and track users or entities based on shared characteristics over time.</p>
+                
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Running Calculations</h3>
+                <p class="mb-3">Maintain cumulative metrics like running totals, moving averages, and running counts.</p>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>

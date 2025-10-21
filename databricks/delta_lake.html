@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delta Lake Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #FF6150, #FF3621);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+        @media (max-width: 767px) {
+            .responsive-table thead { display: none; }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; }
+            .responsive-table tr { margin-bottom: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); background-color: white; }
+            .responsive-table td { display: flex; justify-content: space-between; align-items: center; text-align: right; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; }
+            .responsive-table td::before { content: attr(data-label); text-align: left; font-weight: 600; color: #FF6150; padding-right: 1rem; white-space: nowrap; }
+            .responsive-table td:last-child { border-bottom: none; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Back to Databricks Topics</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../aboutme.html" class="hover:text-[#FF6150] font-semibold">About Me</a></li>
+                <li><a href="../case_studies.html" class="hover:text-[#FF6150] font-semibold">Case Studies</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
+                    Delta Lake: ACID Transactions for Big Data
+                </h1>
+                <p class="text-base sm:text-lg text-gray-600 mb-8">A comprehensive deep dive into Delta Lake, the open-source storage layer that brings ACID transactions to Apache Spark and other big data frameworks.</p>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">1. Delta Lake Architecture & Concepts</h2>
+                <p class="mb-4 text-gray-600">Delta Lake is an open-source storage layer that enables building a Lakehouse architecture with ACID transactions, scalable metadata handling, and unifies streaming and batch data processing.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">
+                        <thead class="bg-red-500 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold text-sm">Component</th>
+                                <th class="p-3 text-left font-semibold text-sm">Function</th>
+                                <th class="p-3 text-left font-semibold text-sm">Key Characteristic</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Component" class="font-semibold text-red-800 md:bg-red-50">Delta Log</td>
+                                <td data-label="Function">Transaction log storing metadata and data changes</td>
+                                <td data-label="Key Characteristic">ACID compliance, versioning, and metadata tracking</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Component" class="font-semibold text-red-800 md:bg-red-50">Parquet Files</td>
+                                <td data-label="Function">Physical data storage in columnar format</td>
+                                <td data-label="Key Characteristic">Schema evolution, compression, and efficient querying</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Component" class="font-semibold text-red-800 md:bg-red-50">ACID Transactions</td>
+                                <td data-label="Function">Ensure data consistency and reliability</td>
+                                <td data-label="Key Characteristic">Atomicity, consistency, isolation, and durability</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Component" class="font-semibold text-red-800 md:bg-red-50">Schema Enforcement</td>
+                                <td data-label="Function">Maintains data quality and structure</td>
+                                <td data-label="Key Characteristic">Prevents bad data from entering the lake</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">2. Time Travel and Versioning</h2>
+                <p class="mb-4 text-gray-600">Delta Lake provides powerful capabilities for data versioning and time travel, essential for data lineage and debugging.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">
+                        <thead class="bg-red-500 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold text-sm">Feature</th>
+                                <th class="p-3 text-left font-semibold text-sm">Usage</th>
+                                <th class="p-3 text-left font-semibold text-sm">Benefit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Feature" class="font-semibold text-red-800 md:bg-red-50">Version History</td>
+                                <td data-label="Usage">Access data as of specific commit or timestamp</td>
+                                <td data-label="Benefit">Reproducible analytics and data debugging</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Feature" class="font-semibold text-red-800 md:bg-red-50">Rollback Capability</td>
+                                <td data-label="Usage">Return to previous state after unwanted changes</td>
+                                <td data-label="Benefit">Data recovery and error correction</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Feature" class="font-semibold text-red-800 md:bg-red-50">Data Lineage</td>
+                                <td data-label="Usage">Track data provenance across transformations</td>
+                                <td data-label="Benefit">Compliance and audit requirements</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Feature" class="font-semibold text-red-800 md:bg-red-50">Point-in-Time Recovery</td>
+                                <td data-label="Usage">Restore data to specific point before failure</td>
+                                <td data-label="Benefit">Disaster recovery and business continuity</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">3. Optimization Techniques</h2>
+                <p class="mb-4 text-gray-600">Advanced techniques to optimize Delta Lake performance and cost efficiency.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">
+                        <thead class="bg-red-500 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold text-sm">Technique</th>
+                                <th class="p-3 text-left font-semibold text-sm">Implementation</th>
+                                <th class="p-3 text-left font-semibold text-sm">Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Technique" class="font-semibold text-red-800 md:bg-red-50">Optimize and Z-Order</td>
+                                <td data-label="Implementation">Physically co-locate related information in the same set of files</td>
+                                <td data-label="Impact">Dramatically reduce query times through data skipping</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Technique" class="font-semibold text-red-800 md:bg-red-50">Vacuum</td>
+                                <td data-label="Implementation">Remove outdated file versions to save storage</td>
+                                <td data-label="Impact">Cost optimization for long-lived datasets</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Technique" class="font-semibold text-red-800 md:bg-red-50">Delta Cache</td>
+                                <td data-label="Implementation">Caching layer for frequently accessed data</td>
+                                <td data-label="Impact">Faster query execution for iterative workloads</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Technique" class="font-semibold text-red-800 md:bg-red-50">Dynamic File Pruning</td>
+                                <td data-label="Implementation">Efficient partition pruning based on filter predicates</td>
+                                <td data-label="Impact">Significant performance improvement for partitioned tables</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">4. Schema Management</h2>
+                <p class="mb-4 text-gray-600">Delta Lake provides robust schema management capabilities for evolving data requirements.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">
+                        <thead class="bg-red-500 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold text-sm">Feature</th>
+                                <th class="p-3 text-left font-semibold text-sm">Description</th>
+                                <th class="p-3 text-left font-semibold text-sm">Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Feature" class="font-semibold text-red-800 md:bg-red-50">Schema Enforcement</td>
+                                <td data-label="Description">Prevents writes with mismatched schemas</td>
+                                <td data-label="Use Case">Ensure data quality and consistency</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Feature" class="font-semibold text-red-800 md:bg-red-50">Schema Evolution</td>
+                                <td data-label="Description">Automatically adapt to schema changes</td>
+                                <td data-label="Use Case">Evolving data sources and requirements</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Feature" class="font-semibold text-red-800 md:bg-red-50">Schema Merging</td>
+                                <td data-label="Description">Combine schemas from different data sources</td>
+                                <td data-label="Use Case">Data integration scenarios</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Feature" class="font-semibold text-red-800 md:bg-red-50">Automatic Type Promotion</td>
+                                <td data-label="Description">Safely convert compatible data types</td>
+                                <td data-label="Use Case">Consolidating data with similar but different types</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">5. Integration with Ecosystem</h2>
+                <p class="mb-4 text-gray-600">Delta Lake integrates seamlessly with various big data and cloud platforms.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">
+                        <thead class="bg-red-500 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold text-sm">Platform</th>
+                                <th class="p-3 text-left font-semibold text-sm">Integration Pattern</th>
+                                <th class="p-3 text-left font-semibold text-sm">Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Platform" class="font-semibold text-red-800 md:bg-red-50">Apache Spark</td>
+                                <td data-label="Integration Pattern">Native support through Delta Lake Spark Connector</td>
+                                <td data-label="Use Case">Batch and streaming analytics with ACID guarantees</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Platform" class="font-semibold text-red-800 md:bg-red-50">Databricks</td>
+                                <td data-label="Integration Pattern">Built-in support with enhanced features</td>
+                                <td data-label="Use Case">Unified analytics platform with Delta Lake at core</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Platform" class="font-semibold text-red-800 md:bg-red-50">AWS S3/EMR</td>
+                                <td data-label="Integration Pattern">Delta Lake on S3 storage with EMR Spark</td>
+                                <td data-label="Use Case">Cloud-native lakehouse architecture</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Platform" class="font-semibold text-red-800 md:bg-red-50">Azure Databricks/ADLS</td>
+                                <td data-label="Integration Pattern">Delta Lake on ADLS Gen2 with Azure Databricks</td>
+                                <td data-label="Use Case">Enterprise security and governance</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">6. Performance Best Practices</h2>
+                <p class="mb-4 text-gray-600">Techniques to maximize Delta Lake performance for various workloads.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">
+                        <thead class="bg-red-500 text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold text-sm">Practice</th>
+                                <th class="p-3 text-left font-semibold text-sm">How It Works</th>
+                                <th class="p-3 text-left font-semibold text-sm">Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Practice" class="font-semibold text-red-800 md:bg-red-50">File Compaction</td>
+                                <td data-label="How It Works">Combine small files into larger ones to reduce metadata overhead</td>
+                                <td data-label="Impact">Improved query performance and reduced cluster load</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Practice" class="font-semibold text-red-800 md:bg-red-50">Partitioning Strategy</td>
+                                <td data-label="How It Works">Organize data by frequently filtered columns</td>
+                                <td data-label="Impact">Significant data skipping and query acceleration</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Practice" class="font-semibold text-red-800 md:bg-red-50">Dynamic Partition Overwrite</td>
+                                <td data-label="How It Works">Efficiently update entire partitions without full table scan</td>
+                                <td data-label="Impact">Faster ETL operations with reduced I/O</td>
+                            </tr>
+                            <tr class="md:border-b md:border-gray-200">
+                                <td data-label="Practice" class="font-semibold text-red-800 md:bg-red-50">Streaming with Structured Streaming</td>
+                                <td data-label="How It Works">Incremental data processing with exactly-once semantics</td>
+                                <td data-label="Impact">Real-time analytics with transactional consistency</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card mt-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Common Architecture Patterns</h2>
+                
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Lakehouse Architecture</h3>
+                <p class="mb-3">Combine data lake flexibility with data warehouse performance and ACID transactions using Delta Lake.</p>
+                
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Real-time Analytics Pipeline</h3>
+                <p class="mb-3">Ingest streaming data via Kafka/Event Hubs directly into Delta Lake for real-time processing and analytics.</p>
+                
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Multi-Hop Architecture</h3>
+                <p class="mb-3">Raw data (Bronze) → Cleaned data (Silver) → Aggregated data (Gold) with each layer stored as Delta tables.</p>
+                
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Machine Learning Pipeline</h3>
+                <p class="mb-3">Use Delta Lake as the feature store for ML with time travel for reproducible experiments.</p>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>

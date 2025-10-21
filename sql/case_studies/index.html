@@ -45,39 +45,76 @@
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../index.html" class="flex items-center">
+                <a href="../index.html" class="flex items-center hover:text-gray-600">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
-                    <span class="gradient-text">Back to SQL Topics</span>
+                    <span>Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../../index.html" class="hover:text-[#336791]">Home</a></li>
                 <li><a href="../../aboutme.html" class="hover:text-[#336791] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <section id="hero" class="text-center my-12 sm:my-20">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">SQL Case Studies</h1>
-            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">A collection of case studies demonstrating practical applications of advanced SQL and data modeling.</p>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">
+                <span class="gradient-text">SQL Case Studies</span>
+            </h1>
+            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">Real-world examples of advanced SQL techniques and optimization strategies.</p>
         </section>
-        <div id="case-studies-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div id="topics-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="card">
                 <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Scaling MySQL at Shopify with Vitess</h3>
-                    <p class="text-gray-600">How Shopify transitioned its massive, high-throughput MySQL database to a horizontally scalable architecture using Vitess.</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Customer Cohort Analysis</h3>
+                    <p class="text-gray-600">Using window functions and CTEs to analyze customer retention and behavior over time.</p>
                 </div>
                 <div class="card-link">
-                    <a href="case_study_shopify_vitess.html" class="font-semibold text-[#336791] hover:text-[#5E97C4]">View Case Study &rarr;</a>
+                    <a href="customer_cohort.html" class="font-semibold text-[#336791] hover:text-[#5E97C4]">Read Case Study &rarr;</a>
                 </div>
             </div>
             <div class="card">
                 <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Fintech Data Platform</h3>
-                    <p class="text-gray-600">An infographic visualizing a modern data platform for portfolio analytics and risk management.</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Sales Performance Dashboard</h3>
+                    <p class="text-gray-600">Building analytical views with complex aggregations and time-based calculations.</p>
                 </div>
                 <div class="card-link">
-                    <a href="case1.html" class="font-semibold text-[#336791] hover:text-[#5E97C4]">View Case Study &rarr;</a>
+                    <a href="sales_dashboard.html" class="font-semibold text-[#336791] hover:text-[#5E97C4]">Read Case Study &rarr;</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Inventory Optimization</h3>
+                    <p class="text-gray-600">Using lag/lead functions to predict stock levels and optimize purchasing decisions.</p>
+                </div>
+                <div class="card-link">
+                    <a href="inventory_optimization.html" class="font-semibold text-[#336791] hover:text-[#5E97C4]">Read Case Study &rarr;</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Fraud Detection Patterns</h3>
+                    <p class="text-gray-600">Identifying suspicious patterns using statistical functions and outlier detection.</p>
+                </div>
+                <div class="card-link">
+                    <a href="fraud_detection.html" class="font-semibold text-[#336791] hover:text-[#5E97C4]">Read Case Study &rarr;</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Query Performance Tuning</h3>
+                    <p class="text-gray-600">Real-world examples of optimizing slow-running queries in production systems.</p>
+                </div>
+                <div class="card-link">
+                    <a href="performance_tuning.html" class="font-semibold text-[#336791] hover:text-[#5E97C4]">Read Case Study &rarr;</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Data Quality Assessment</h3>
+                    <p class="text-gray-600">Using SQL to profile data quality, identify anomalies, and ensure data integrity.</p>
+                </div>
+                <div class="card-link">
+                    <a href="data_quality.html" class="font-semibold text-[#336791] hover:text-[#5E97C4]">Read Case Study &rarr;</a>
                 </div>
             </div>
         </div>
