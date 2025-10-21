@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,6 +29,25 @@
             margin-bottom: 1rem;
             border-radius: 0.25rem;
         }
+        .tab-button {
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            background-color: #e2e8f0; /* light gray */
+            color: #4a5568; /* dark gray text */
+        }
+        .tab-button.active {
+            background-color: #FF6150; /* primary color */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -55,72 +73,126 @@
                 </h1>
                 <p class="text-base sm:text-lg text-gray-600 mb-8">A deep dive into Databricks Lakeflow, the intelligent, unified solution for building and operating production-grade data pipelines.</p>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center mb-8">
-                    <div class="p-4 border rounded-lg">
-                        <h3 class="text-xl font-bold text-gray-800">Lakeflow Connect</h3>
-                        <p class="text-gray-600">Simple, scalable data ingestion.</p>
+                <!-- Tab Navigation -->
+                <div class="flex flex-wrap gap-4 mb-8">
+                    <button class="tab-button active" data-tab="connect">Lakeflow Connect</button>
+                    <button class="tab-button" data-tab="pipelines">Lakeflow Pipelines</button>
+                    <button class="tab-button" data-tab="jobs">Lakeflow Jobs</button>
+                    <button class="tab-button" data-tab="designer">Lakeflow Designer</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div id="connect" class="tab-content active">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Lakeflow Connect: Ingestion Made Easy</h2>
+                    <p class="mb-4 text-gray-600">Lakeflow Connect provides a seamless experience for ingesting data from a vast array of sources into the Databricks platform. It simplifies the often complex process of setting up and managing data ingestion pipelines, ensuring data is ready for analysis and transformation.</p>
+                    
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Point-and-Click Connectors</h4>
+                        <p>Out-of-the-box connectors for a wide range of data sources including transactional databases (SQL Server, MySQL, Postgres, Oracle), enterprise applications (Salesforce, Workday, Google Analytics, ServiceNow), and cloud storage. This drastically reduces the time and effort required for initial setup.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Example: Easily connect to a PostgreSQL database by providing credentials and selecting tables, without writing custom code.</em></p>
                     </div>
-                    <div class="p-4 border rounded-lg">
-                        <h3 class="text-xl font-bold text-gray-800">Lakeflow Pipelines</h3>
-                        <p class="text-gray-600">Declarative, efficient data transformation.</p>
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Change Data Capture (CDC)</h4>
+                        <p>Efficiently captures and processes changes (inserts, updates, deletes) from source systems. This enables real-time or near real-time data synchronization, ensuring your Lakehouse always has the most current data without full reloads.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Technical Detail: Utilizes log-based CDC mechanisms to track changes, minimizing impact on source systems and optimizing data transfer.</em></p>
                     </div>
-                    <div class="p-4 border rounded-lg">
-                        <h3 class="text-xl font-bold text-gray-800">Lakeflow Jobs</h3>
-                        <p class="text-gray-600">Reliable orchestration and monitoring.</p>
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Unstructured Data Support</h4>
+                        <p>Easily ingest and process unstructured data sources like logs, events, images, and various file formats. Lakeflow Connect provides tools to parse, catalog, and prepare this data for further processing within the Lakehouse.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Example: Ingest web server logs, automatically infer schema, and store them in Delta Lake for real-time anomaly detection.</em></p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Schema Inference and Evolution</h4>
+                        <p>Automatically infers schema from incoming data streams and supports schema evolution, allowing pipelines to adapt to changes in source data without manual intervention. This is crucial for maintaining robust data pipelines in dynamic environments.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Technical Detail: Leverages Delta Lake's schema evolution capabilities to handle new columns or data type changes gracefully.</em></p>
                     </div>
                 </div>
 
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">1. Lakeflow Connect: Ingestion Made Easy</h2>
-                <p class="mb-4 text-gray-600">Lakeflow Connect provides a seamless experience for ingesting data from a vast array of sources into the Databricks platform. It simplifies the often complex process of setting up and managing data ingestion pipelines.</p>
-                <div class="feature-card">
-                    <h4 class="font-bold text-lg">Point-and-Click Connectors</h4>
-                    <p>Out-of-the-box connectors for databases (SQL Server, MySQL, Postgres), enterprise applications (Salesforce, Workday), and more.</p>
-                </div>
-                <div class="feature-card">
-                    <h4 class="font-bold text-lg">Change Data Capture (CDC)</h4>
-                    <p>Efficiently captures and processes changes from source systems, enabling real-time data synchronization.</p>
-                </div>
-                <div class="feature-card">
-                    <h4 class="font-bold text-lg">Unstructured Data Support</h4>
-                    <p>Easily ingest and process unstructured data sources like logs, events, and files.</p>
-                </div>
-
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">2. Lakeflow Pipelines: Declarative and Efficient</h2>
-                <p class="mb-4 text-gray-600">Built on the foundation of Delta Live Tables, Lakeflow Pipelines allows you to define your data transformations in SQL or Python. The framework handles the rest, from orchestration to optimization.</p>
-                <div class="feature-card">
-                    <h4 class="font-bold text-lg">Declarative Pipelines</h4>
-                    <p>Define the desired end state of your data, and Lakeflow Pipelines automates the execution and orchestration.</p>
-                </div>
-                <div class="feature-card">
-                    <h4 class="font-bold text-lg">Automated Orchestration</h4>
-                    <p>Automatically manages dependencies, scheduling, and error handling for your data pipelines.</p>
-                </div>
-                <div class="feature-card">
-                    <h4 class="font-bold text-lg">Real-Time Mode</h4>
-                    <p>A new mode for Apache Spark that enables low-latency streaming with minimal code changes.</p>
+                <div id="pipelines" class="tab-content">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Lakeflow Pipelines: Declarative and Efficient</h2>
+                    <p class="mb-4 text-gray-600">Built on the foundation of Delta Live Tables (DLT), Lakeflow Pipelines allows you to define your data transformations in SQL or Python. The framework handles the rest, from orchestration to optimization, ensuring reliable and high-quality data delivery.</p>
+                    
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Declarative Data Transformation</h4>
+                        <p>Instead of defining explicit execution steps, you declare the desired state of your data tables. Lakeflow Pipelines automatically builds and manages the Directed Acyclic Graph (DAG) of transformations, ensuring data freshness and correctness.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Example: Define a Silver table as a transformation of a Bronze table, and DLT will manage the incremental updates.</em></p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Automated Orchestration and Infrastructure Management</h4>
+                        <p>Lakeflow Pipelines automates the entire pipeline lifecycle, including job scheduling, dependency management, error handling, and recovery. It also intelligently manages compute infrastructure, autoscaling clusters up and down based on workload demands.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Technical Detail: Leverages Databricks' optimized Spark runtime and Photon engine for high-performance execution.</em></p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Built-in Data Quality with Expectations</h4>
+                        <p>Define data quality rules (Expectations) directly within your pipeline code. Lakeflow Pipelines monitors data quality in real-time, allowing you to enforce constraints, quarantine bad data, or send alerts, ensuring only clean data propagates downstream.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Example: Add an expectation like <code>CONSTRAINT valid_id EXPECT (id IS NOT NULL) ON VIOLATION DROP ROW</code> to automatically filter out records with null IDs.</em></p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Real-Time Mode for Low-Latency Streaming</h4>
+                        <p>A specialized mode for Apache Spark that enables significantly lower-latency streaming data processing. This is ideal for use cases requiring immediate insights or actions, such as fraud detection or real-time personalization.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Technical Detail: Optimizes Spark's micro-batch processing for near-continuous data flow, reducing end-to-end latency.</em></p>
+                    </div>
                 </div>
 
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">3. Lakeflow Jobs: Reliable Orchestration</h2>
-                <p class="mb-4 text-gray-600">Lakeflow Jobs provides a robust and reliable way to orchestrate and monitor all of your production workloads, from data ingestion to machine learning model training.</p>
-                <div class="feature-card">
-                    <h4 class="font-bold text-lg">Unified Orchestration</h4>
-                    <p>Orchestrate a wide variety of tasks, including notebooks, SQL queries, ML models, and more, all in one place.</p>
+                <div id="jobs" class="tab-content">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Lakeflow Jobs: Reliable Orchestration</h2>
+                    <p class="mb-4 text-gray-600">Lakeflow Jobs provides a robust and reliable way to orchestrate and monitor all of your production workloads across the Databricks platform. It ensures that your data pipelines, machine learning models, and analytics tasks run smoothly and efficiently.</p>
+                    
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Unified Workflow Orchestration</h4>
+                        <p>Orchestrate a wide variety of tasks, including Lakeflow Pipelines, notebooks, SQL queries, Python scripts, JARs, and MLflow runs. This allows for end-to-end automation of complex data and AI workflows.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Example: Create a job that first runs a Lakeflow Pipeline to prepare data, then executes an MLflow training run, and finally updates a dashboard.</em></p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Advanced Scheduling and Triggers</h4>
+                        <p>Configure jobs to run on a schedule (e.g., hourly, daily), or trigger them based on events (e.g., new file arrival in cloud storage, completion of another job). Supports complex dependencies and conditional execution.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Technical Detail: Integrates with Databricks Workflows for robust scheduling, retries, and parallel execution.</em></p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Comprehensive Monitoring and Alerting</h4>
+                        <p>Provides real-time visibility into job status, performance metrics, and execution logs. Configure alerts for job failures, long-running tasks, or data quality issues, enabling proactive problem resolution.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Example: Set up email notifications for any job that fails or exceeds its typical runtime.</em></p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Data Lineage and Governance Integration</h4>
+                        <p>Automatically tracks data lineage across all job tasks, from source to destination, leveraging Unity Catalog. This provides a clear audit trail and simplifies compliance and impact analysis.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Technical Detail: Unity Catalog records metadata for all data assets touched by jobs, providing a holistic view of data flow.</em></p>
+                    </div>
                 </div>
-                <div class="feature-card">
-                    <h4 class="font-bold text-lg">Advanced Workflow Features</h4>
-                    <p>Supports complex workflows with features like triggers, branching, and looping.</p>
-                </div>
-                <div class="feature-card">
-                    <h4 class="font-bold text-lg">Comprehensive Monitoring</h4>
-                    <p>Provides real-time visibility into job status, performance, and data lineage.</p>
+
+                <div id="designer" class="tab-content">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Lakeflow Designer: Visual Pipeline Development</h2>
+                    <p class="mb-4 text-gray-600">Lakeflow Designer offers a visual, drag-and-drop interface for building and managing data pipelines. It empowers both data engineers and analysts to create complex workflows without extensive coding, accelerating development and fostering collaboration.</p>
+                    
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Intuitive Drag-and-Drop Interface</h4>
+                        <p>Visually construct data pipelines by dragging and dropping components representing data sources, transformations, and destinations. This simplifies pipeline design and makes it accessible to a broader audience.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Example: Drag a "Read CSV" component, connect it to a "Filter" component, and then to a "Write Delta" component to build a simple ETL pipeline.</em></p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Code Generation and Customization</h4>
+                        <p>While visual, Lakeflow Designer can generate underlying code (SQL or Python) for the defined pipelines. Users can inspect, modify, and extend this generated code for advanced customization, bridging the gap between visual and code-based development.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Technical Detail: The visual canvas translates user actions into DLT pipeline code, which can then be version-controlled and deployed.</em></p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Real-time Validation and Preview</h4>
+                        <p>Provides immediate feedback on pipeline design, highlighting errors or potential issues. Users can often preview data transformations at each step, ensuring correctness before full execution.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Example: See a sample of data after a filter transformation to confirm it's working as expected.</em></p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Collaboration and Version Control</h4>
+                        <p>Facilitates team collaboration on pipeline development with features like shared workspaces and integration with Git for version control. This ensures that pipeline changes are tracked and managed effectively.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Technical Detail: Pipelines designed in Lakeflow Designer can be saved as code and committed to Git repositories, enabling standard CI/CD practices.</em></p>
+                    </div>
                 </div>
 
                 <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Key Benefits of Lakeflow</h2>
                 <ul class="list-disc list-inside space-y-2 text-gray-600">
-                    <li><strong>Unified Platform:</strong> A single, integrated solution for all your data engineering needs.</li>
-                    <li><strong>AI-Powered Intelligence:</strong> The Databricks Assistant helps with pipeline development and troubleshooting.</li>
-                    <li><strong>Automated Operations:</strong> Reduces the manual effort required to build and manage data pipelines.</li>
-                    <li><strong>Built-in Governance:</strong> Integrates with Unity Catalog for end-to-end data governance.</li>
+                    <li><strong>Unified Platform:</strong> A single, integrated solution for all your data engineering needs, from ingestion to orchestration.</li>
+                    <li><strong>AI-Powered Intelligence:</strong> The Databricks Assistant helps with pipeline development, troubleshooting, and optimization.</li>
+                    <li><strong>Automated Operations:</strong> Reduces the manual effort required to build, manage, and scale data pipelines.</li>
+                    <li><strong>Built-in Governance:</strong> Integrates seamlessly with Unity Catalog for end-to-end data governance, lineage, and security.</li>
+                    <li><strong>Accelerated Development:</strong> Visual tools and declarative approaches speed up pipeline creation and deployment.</li>
                 </ul>
             </div>
         </div>
@@ -128,5 +200,27 @@
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Deactivate all buttons and hide all content
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    // Activate clicked button
+                    button.classList.add('active');
+
+                    // Show corresponding content
+                    const targetTab = button.dataset.tab;
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+        });
+    </script>
 </body>
 </html>
