@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,12 +22,41 @@
             padding: 1.5rem;
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
         }
-        .step-card {
+        .feature-card {
             background-color: #f8fafc;
             border-left: 4px solid #FF6150;
             padding: 1rem;
             margin-bottom: 1rem;
             border-radius: 0.25rem;
+        }
+        .tab-button {
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            background-color: #e2e8f0; /* light gray */
+            color: #4a5568; /* dark gray text */
+        }
+        .tab-button.active {
+            background-color: #FF6150; /* primary color */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        pre {
+            background-color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", monospace;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: #2d3748;
         }
     </style>
 </head>
@@ -55,50 +83,187 @@
                 </h1>
                 <p class="text-base sm:text-lg text-gray-600 mb-8">A conceptual guide to developing and deploying autonomous AI agents using the powerful tools available in Databricks.</p>
 
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">The Core Components of an AI Agent</h2>
-                <p class="mb-4 text-gray-600">An AI agent can be broken down into several key components. Here's how you can build each of them on Databricks:</p>
-
-                <div class="step-card">
-                    <h3 class="font-bold text-xl mb-2">1. The Knowledge Base: Unity Catalog and Delta Lake</h3>
-                    <p>Every AI agent needs a reliable and up-to-date source of information. Databricks provides the perfect foundation with Delta Lake for storing your data and Unity Catalog for governing it.</p>
-                    <ul class="list-disc list-inside mt-2 space-y-1">
-                        <li><strong>Delta Lake:</strong> Store structured and unstructured data, including documents, images, and more.</li>
-                        <li><strong>Unity Catalog:</strong> Provide a single source of truth for your agent, with built-in data lineage and governance.</li>
-                    </ul>
+                <!-- Tab Navigation -->
+                <div class="flex flex-wrap gap-4 mb-8">
+                    <button class="tab-button active" data-tab="knowledge_base">Knowledge Base</button>
+                    <button class="tab-button" data-tab="llms">The Brain (LLMs)</button>
+                    <button class="tab-button" data-tab="tools">Tools & Actions</button>
+                    <button class="tab-button" data-tab="deployment">Deployment & Monitoring</button>
                 </div>
 
-                <div class="step-card">
-                    <h3 class="font-bold text-xl mb-2">2. The "Brain": Large Language Models (LLMs) and MLflow</h3>
-                    <p>The core of your AI agent is the Large Language Model that powers its reasoning and decision-making. MLflow is the ideal tool for managing the lifecycle of these models.</p>
-                    <ul class="list-disc list-inside mt-2 space-y-1">
-                        <li><strong>MLflow Models:</strong> Package, deploy, and track your LLMs, whether they are open-source models like Llama 2 or custom-trained models.</li>
-                        <li><strong>MLflow Model Registry:</strong> Manage the versions and stages of your models, ensuring that your agent is always using the best available model.</li>
-                    </ul>
+                <!-- Tab Content -->
+                <div id="knowledge_base" class="tab-content active">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">1. The Knowledge Base: Unity Catalog and Delta Lake</h2>
+                    <p class="mb-4 text-gray-600">Every AI agent needs a reliable and up-to-date source of information to perform its tasks effectively. Databricks provides a robust foundation for this with Delta Lake for scalable data storage and Unity Catalog for comprehensive data governance.</p>
+                    
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Delta Lake for Data Storage</h4>
+                        <p>Delta Lake serves as the primary storage layer for your agent's knowledge base. It can store structured, semi-structured, and unstructured data, providing ACID transactions, schema enforcement, and time travel capabilities.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Example: Store customer interaction logs, product catalogs, internal documentation, and sensor data in Delta tables. Vector embeddings of text documents can also be stored here for RAG (Retrieval Augmented Generation) patterns.</em></p>
+                        <pre><code class="language-python"># Example: Writing data to a Delta table
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName("AgentKnowledgeBase").getOrCreate()
+
+data = [("doc1", "content of document 1"), ("doc2", "content of document 2")]
+df = spark.createDataFrame(data, ["id", "text"])
+
+df.write.format("delta").mode("overwrite").save("/mnt/delta/knowledge_base")
+
+# Example: Reading data for RAG
+knowledge_df = spark.read.format("delta").load("/mnt/delta/knowledge_base")
+# Further processing to retrieve relevant documents based on query embeddings
+</code></pre>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Unity Catalog for Data Governance</h4>
+                        <p>Unity Catalog provides a unified governance layer across all your data assets in the Lakehouse. It enables fine-grained access control, data lineage tracking, and data discovery, ensuring your agent accesses data securely and reliably.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Technical Detail: Unity Catalog manages metadata for tables, volumes, and models, allowing you to grant permissions at the table, column, or row level. This is critical for agents operating on sensitive data.</em></p>
+                        <pre><code class="language-sql">-- Example: Granting an agent (service principal) read access to a table
+GRANT SELECT ON TABLE main.default.customer_data TO `service-principal-agent`;
+
+-- Example: Viewing data lineage for a table
+-- (Conceptual, typically viewed in Unity Catalog UI or API)
+-- SELECT * FROM system.information_schema.table_lineage WHERE table_name = 'customer_data';
+</code></pre>
+                    </div>
                 </div>
 
-                <div class="step-card">
-                    <h3 class="font-bold text-xl mb-2">3. The Tools: Databricks Functions and External APIs</h3>
-                    <p>To be truly useful, an AI agent needs to be able to take action. You can expose Databricks functions and external APIs as tools that your agent can call.</p>
-                    <ul class="list-disc list-inside mt-2 space-y-1">
-                        <li><strong>Databricks SQL Functions:</strong> Allow your agent to query data and generate insights on the fly.</li>
-                        <li><strong>External APIs:</strong> Connect your agent to the outside world, allowing it to perform actions like sending emails, creating reports, or updating external systems.</li>
-                    </ul>
+                <div id="llms" class="tab-content">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">2. The "Brain": Large Language Models (LLMs) and MLflow</h2>
+                    <p class="mb-4 text-gray-600">The core intelligence of your AI agent comes from Large Language Models (LLMs). Databricks, with MLflow, provides a comprehensive platform for managing the entire lifecycle of these models, from experimentation to production deployment.</p>
+                    
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">MLflow for LLM Lifecycle Management</h4>
+                        <p>MLflow Tracking allows you to log parameters, metrics, and artifacts (including the LLM itself) during experimentation. MLflow Models provides a standard format for packaging LLMs, making them portable across different serving environments.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Example: Track fine-tuning runs for a custom LLM, comparing different hyperparameters and datasets.</em></p>
+                        <pre><code class="language-python"># Example: Logging an LLM with MLflow
+import mlflow
+import transformers
+
+with mlflow.start_run(run_name="llm_finetuning_run"):
+    # ... fine-tuning code ...
+    model = transformers.AutoModelForCausalLM.from_pretrained("my_finetuned_llm")
+    tokenizer = transformers.AutoTokenizer.from_pretrained("my_finetuned_llm")
+
+    mlflow.transformers.log_model(
+        transformers_model={'model': model, 'tokenizer': tokenizer},
+        artifact_path="llm_model",
+        input_example="What is Databricks?",
+        signature=mlflow.models.infer_signature("What is Databricks?", "The Databricks Lakehouse Platform...")
+    )
+</code></pre>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">MLflow Model Registry for Governance</h4>
+                        <p>The MLflow Model Registry provides a centralized hub for managing the versions, stages (Staging, Production, Archived), and metadata of your registered LLMs. This ensures proper governance and facilitates seamless deployment of approved models.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Technical Detail: Use webhooks to trigger CI/CD pipelines when a model transitions to "Production" stage, automating deployment to a serving endpoint.</em></p>
+                        <pre><code class="language-python"># Example: Transitioning a model to Production stage
+client = mlflow.tracking.MlflowClient()
+client.transition_model_version_stage(
+    name="MyLLMAgentModel",
+    version=1,
+    stage="Production"
+)
+</code></pre>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Databricks Model Serving</h4>
+                        <p>Deploy your registered LLMs as scalable, low-latency REST API endpoints using Databricks Model Serving. This allows your AI agents to easily query the LLM for reasoning, text generation, or other tasks.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Example: An agent can send a user query to the served LLM endpoint to generate a response or summarize a document.</em></p>
+                        <pre><code class="language-python"># Example: Invoking a served LLM endpoint (conceptual)
+import requests
+
+DATABRICKS_HOST = "..."
+DATABRICKS_TOKEN = "..."
+MODEL_ENDPOINT_URL = f"https://{DATABRICKS_HOST}/serving-endpoints/my-llm-agent-model/invocations"
+
+headers = {"Authorization": f"Bearer {DATABRICKS_TOKEN}", "Content-Type": "application/json"}
+payload = {"dataframe_split": {"columns": ["prompt"], "data": [["What is the capital of France?"]]}}
+
+response = requests.post(MODEL_ENDPOINT_URL, headers=headers, json=payload)
+print(response.json())
+</code></pre>
+                    </div>
                 </div>
 
-                <div class="step-card">
-                    <h3 class="font-bold text-xl mb-2">4. The User Interface: Databricks AI/BI Dashboards</h3>
-                    <p>The AI/BI dashboarding capabilities in Databricks provide a natural and intuitive way for users to interact with your AI agent.</p>
-                    <ul class="list-disc list-inside mt-2 space-y-1">
-                        <li><strong>Natural Language Interface:</strong> Users can ask questions and give commands in plain English.</li>
-                        <li><strong>Interactive Visualizations:</strong> The agent can present information and insights in a clear and easy-to-understand format.</li>
-                    </ul>
+                <div id="tools" class="tab-content">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">3. The Tools: Databricks Functions and External APIs</h2>
+                    <p class="mb-4 text-gray-600">To move beyond just answering questions, AI agents need the ability to perform actions. Databricks allows you to equip your agents with a rich set of tools, including custom Databricks functions and integrations with external APIs.</p>
+                    
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Databricks SQL Functions as Tools</h4>
+                        <p>Expose SQL functions, UDFs (User-Defined Functions), or even entire SQL queries as tools that your agent can invoke. This allows the agent to interact directly with your data in a structured and governed manner.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Example: An agent can call a SQL function to retrieve the latest sales figures or update a customer record.</em></p>
+                        <pre><code class="language-sql">-- Example: A SQL function to get product details
+CREATE FUNCTION get_product_details(product_id INT)
+RETURNS TABLE (id INT, name STRING, price DECIMAL(10,2))
+RETURN SELECT id, name, price FROM main.default.products WHERE id = product_id;
+
+-- Agent can then call this function:
+-- SELECT * FROM get_product_details(123);
+</code></pre>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">External APIs Integration</h4>
+                        <p>Connect your agent to external services and applications by exposing their APIs as tools. This enables your agent to perform a wide range of actions outside the Databricks environment, such as sending emails, creating tickets, or interacting with CRM systems.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Technical Detail: Implement Python functions that wrap API calls, and then register these functions as tools for your agent.</em></p>
+                        <pre><code class="language-python"># Example: Python function to send an email (to be exposed as an agent tool)
+def send_email_tool(recipient: str, subject: str, body: str):
+    # Logic to call an external email API (e.g., SendGrid, Mailgun)
+    print(f"Sending email to {recipient} with subject '{subject}'")
+    # ... actual API call ...
+    return {"status": "success", "message": "Email sent"}
+
+# Agent framework would then be configured to use this function.
+</code></pre>
+                    </div>
                 </div>
 
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Example Use Cases for AI Agents</h2>
+                <div id="deployment" class="tab-content">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">4. Deployment & Monitoring: Ensuring Agent Reliability</h2>
+                    <p class="mb-4 text-gray-600">Deploying and continuously monitoring your AI agents is crucial for their reliability and effectiveness. Databricks provides tools for robust deployment, performance tracking, and observability.</p>
+                    
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Agent Deployment as Endpoints</h4>
+                        <p>Deploy your complete AI agent (orchestration logic, LLM calls, tool invocations) as a scalable REST API endpoint using Databricks Model Serving or custom webhooks. This allows other applications or users to interact with your agent programmatically.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Example: A chatbot application can send user queries to the agent's endpoint, and the agent returns a generated response.</em></p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Monitoring Agent Performance with MLflow and Dashboards</h4>
+                        <p>Track key metrics for your agent, such as response time, accuracy, tool usage, and user satisfaction. Use MLflow Tracking to log agent interactions and outcomes, and build Databricks SQL Dashboards for real-time observability.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Technical Detail: Log agent prompts, responses, tool calls, and any feedback loops to MLflow. Create dashboards to visualize trends and identify areas for improvement.</em></p>
+                        <pre><code class="language-python"># Example: Logging agent interaction to MLflow
+import mlflow
+
+with mlflow.start_run(run_name="agent_interaction"):
+    mlflow.log_param("user_query", "Show me Q3 sales data")
+    mlflow.log_param("agent_response", "Here are the Q3 sales figures...")
+    mlflow.log_param("tool_invoked", "get_sales_data")
+    mlflow.log_metric("response_time_ms", 1250)
+    # ... log other relevant metrics ...
+</code></pre>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg">Continuous Improvement and Retraining</h4>
+                        <p>Leverage the logged data to continuously improve your agent. Identify common failure modes, gather human feedback, and use this data to fine-tune your LLMs or refine your agent's logic. Automate retraining pipelines using Databricks Workflows.</p>
+                        <p class="text-sm text-gray-500 mt-2"><em>Example: If the agent frequently misinterprets a specific type of query, collect those queries and their correct responses to create a new fine-tuning dataset.</em></p>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Key Principles for Building Effective AI Agents on Databricks</h2>
                 <ul class="list-disc list-inside space-y-2 text-gray-600">
-                    <li><strong>Data Analyst Agent:</strong> An agent that can automatically generate reports, answer questions about data, and even create new visualizations.</li>
-                    <li><strong>Marketing Automation Agent:</strong> An agent that can analyze customer data, identify new segments, and launch targeted marketing campaigns.</li>
-                    <li><strong>Security Operations Agent:</strong> An agent that can monitor for security threats, investigate incidents, and take automated remediation actions.</li>
+                    <li><strong>Data-Centric Approach:</strong> Ensure your agent has access to high-quality, governed data via Unity Catalog and Delta Lake.</li>
+                    <li><strong>Modular Design:</strong> Break down agent functionality into distinct components (LLM, tools, knowledge retrieval) for easier development and maintenance.</li>
+                    <li><strong>Observability:</strong> Implement robust logging and monitoring to understand agent behavior and identify areas for improvement.</li>
+                    <li><strong>Security and Governance:</strong> Leverage Unity Catalog's capabilities to control access to data and models used by your agent.</li>
+                    <li><strong>Scalability:</strong> Design agents to leverage Databricks' distributed computing power for handling large volumes of data and requests.</li>
                 </ul>
             </div>
         </div>
@@ -106,5 +271,32 @@
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Deactivate all buttons and hide all content
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    // Activate clicked button
+                    button.classList.add('active');
+
+                    // Show corresponding content
+                    const targetTab = button.dataset.tab;
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+
+            // Activate the first tab by default on load
+            if (tabButtons.length > 0) {
+                tabButtons[0].click();
+            }
+        });
+    </script>
 </body>
 </html>
