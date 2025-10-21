@@ -1,0 +1,16 @@
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Card click functionality
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', () => {
+                const link = card.querySelector('.card-link a');
+                if (link) {
+                    window.location.href = link.href;
+                }
+            });
+        });
+        
+        // Additional page-specific scripts can be added here
+        {{additional_scripts}}
+    });
+</script>
