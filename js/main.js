@@ -29,22 +29,6 @@ async function loadComponent(url, targetId, basePath) {
 }
 
 /**
- * Loads the common head content.
- * @param {string} basePath - The base path for resolving relative links.
- */
-async function loadHeadContent(basePath) {
-    try {
-        const response = await fetch(`${basePath}/layouts/_head.html`);
-        if (!response.ok) throw new Error(`Failed to fetch: ${response.statusText}`);
-        let html = await response.text();
-        html = html.replace(/{base_path}/g, basePath);
-        document.head.insertAdjacentHTML('beforeend', html);
-    } catch (error) {
-        console.error(`Error loading head content:`, error);
-    }
-}
-
-/**
  * Dynamically generates and loads the header content based on page type.
  * @param {string} basePath - The base path for resolving relative links.
  */
@@ -117,7 +101,6 @@ async function loadCommonComponents() {
         document.body.append(footer);
     }
 
-    await loadHeadContent(basePath);
     await loadHeader(basePath); // Use the new header loading function
 
     loadComponent(`${basePath}/layouts/_footer.html`, 'footer-placeholder', basePath);

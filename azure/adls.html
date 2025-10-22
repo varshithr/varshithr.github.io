@@ -1,106 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Azure Data Lake Storage (ADLS) Gen2 Deep Dive</title>
-    <style>
-        @media (max-width: 767px) {
-            .responsive-table thead { display: none; }
-            .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; }
-            .responsive-table tr { margin-bottom: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); background-color: white; }
-            .responsive-table td { display: flex; justify-content: space-between; align-items: center; text-align: right; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; }
-            .responsive-table td::before { content: attr(data-label); text-align: left; font-weight: 600; color: #0072C6; padding-right: 1rem; white-space: nowrap; }
-            .responsive-table td:last-child { border-bottom: none; }
-        }
-    </style>
-    <script>
-        const state = { currentTab: 'architecture' };
-        const concepts = {
-            architecture: {
-                title: "1. Core Architecture: Hierarchical Namespace",
-                description: "ADLS Gen2 is built on Azure Blob Storage but adds a hierarchical namespace, which is a key differentiator for analytics workloads.",
-                headers: ["Concept", "Description", "Benefit for Analytics"],
-                rows: [
-                    { key: "Blob Storage Foundation", data: ["Provides low-cost, tiered storage and high availability", "Leverages mature features like lifecycle management and redundancy"] },
-                    { key: "Hierarchical Namespace", data: ["Allows organizing objects into a true directory hierarchy", "Enables atomic directory manipulations and faster metadata operations"] },
-                    { key: "ABFS Driver", data: ["Azure Blob File System driver for Hadoop compatibility", "Allows engines like Spark and Presto to interact with ADLS as a file system"] },
-                ]
-            },
-            security: {
-                title: "2. Security Model: RBAC and ACLs",
-                description: "ADLS Gen2 provides a layered security model that combines role-based and fine-grained access controls.",
-                headers: ["Mechanism", "Scope", "Use Case"],
-                rows: [
-                    { key: "Azure RBAC", data: ["Assign roles at the storage account or container level", "Granting broad permissions like 'Storage Blob Data Reader' to a group"] },
-                    { key: "POSIX-like ACLs", data: ["Apply read/write/execute permissions to individual files and directories", "Granting a specific user write access to a single subdirectory"] },
-                    { key: "Service Principals & Managed Identities", data: ["Azure AD identities for applications", "Allowing services like Data Factory or Databricks to securely access data"] },
-                ]
-            },
-            tiers: {
-                title: "3. Storage Tiers & Lifecycle Management",
-                description: "ADLS Gen2 uses Azure Blob Storage tiers to optimize costs based on data access patterns.",
-                headers: ["Tier", "Designed For", "Access Cost"],
-                rows: [
-                    { key: "Hot", data: ["Frequently accessed data", "Lowest access cost, highest storage cost"] },
-                    { key: "Cool", data: ["Infrequently accessed data (stored for at least 30 days)", "Higher access cost, lower storage cost"] },
-                    { key: "Archive", data: ["Long-term archival data (stored for at least 180 days)", "Highest access cost, lowest storage cost; data is offline"] },
-                    { key: "Lifecycle Management", data: ["Automated policies to move data between tiers", "e.g., Move data from Hot to Cool after 90 days, then to Archive after a year"] },
-                ]
-            },
-            performance: {
-                title: "4. Performance Optimization",
-                description: "Techniques to maximize throughput and minimize latency for large-scale analytics.",
-                headers: ["Technique", "How It Works", "Impact"],
-                rows: [
-                    { key: "Partitioning", data: ["Organize data into directories based on common filter columns", "Allows query engines to prune data and avoid unnecessary scans"] },
-                    { key: "Columnar Formats (Parquet/ORC)", data: ["Store data in columns instead of rows", "Massively reduces I/O for analytical queries"] },
-                    { key: "Small File Compaction", data: ["Use tools like Spark to compact many small files into fewer large ones", "Reduces metadata overhead and improves read performance"] },
-                ]
-            }
-        };
-        const render = () => {
-            const container = document.getElementById('table-container');
-            const messageBar = document.getElementById('message-bar');
-            const tabButtons = document.querySelectorAll('.tab-button');
-            tabButtons.forEach(btn => {
-                btn.classList.remove('bg-gray-700', 'text-white');
-                btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-50');
-                if (btn.dataset.tab === state.currentTab) {
-                    btn.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-50');
-                    btn.classList.add('bg-gray-700', 'text-white', 'shadow-lg');
-                }
-            });
-            messageBar.innerHTML = `<span class="font-bold">${concepts[state.currentTab].title}</span>: ${concepts[state.currentTab].description}`;
-            const currentConcept = concepts[state.currentTab];
-            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
-            html += '<thead class="bg-blue-600 text-white"><tr>';
-            currentConcept.headers.forEach(header => {
-                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
-            });
-            html += '</tr></thead>';
-            html += '<tbody>';
-            currentConcept.rows.forEach(row => {
-                html += '<tr class="md:border-b md:border-gray-200">';
-                html += `<td data-label="${currentConcept.headers[0]}" class="font-semibold text-blue-800 md:bg-blue-50">${row.key}</td>`;
-                row.data.forEach((cellData, colIndex) => {
-                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}">${cellData}</td>`;
-                });
-                html += '</tr>';
-            });
-            html += '</tbody></table>';
-            container.innerHTML = html;
-        };
-        const switchTab = (tabName) => {
-            state.currentTab = tabName;
-            render();
-        };
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #F0F4F8;
+        color: #1E293B;
+    }
+    .card {
+        background-color: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer; /* Added for clickable cards */
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+    .card-content {
+        flex-grow: 1;
+    }
+    .card-link {
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+</style>
+<title>Azure Data Lake Storage (ADLS) Gen2 Deep Dive</title>
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #F0F4F8;
+        color: #1E293B;
+    }
+    .card {
+        background-color: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer; /* Added for clickable cards */
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+    .card-content {
+        flex-grow: 1;
+    }
+    .card-link {
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+</style>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.addEventListener('click', () => switchTab(button.dataset.tab));
-            });
-            switchTab('architecture');
-        });
-    </script>
 </head>
 <body class="antialiased" data-base-path=".." data-page-type="deep-dive" data-topic-name="Azure" data-topic-color="#0089D6">
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">

@@ -1,220 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud Composer (Airflow) Visual Deep Dive</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Custom font */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
-        }
-        /* Responsive Table Styles */
-        @media (max-width: 767px) {
-            .responsive-table thead {
-                display: none;
-            }
-            .responsive-table tbody, .responsive-table tr, .responsive-table td {
-                display: block;
-                width: 100%;
-            }
-            .responsive-table tr {
-                margin-bottom: 1rem;
-                border: 1px solid #e5e7eb;
-                border-radius: 0.5rem;
-                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-                background-color: white;
-            }
-            .responsive-table td {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                text-align: right;
-                padding: 0.75rem 1rem;
-                border-bottom: 1px solid #e5e7eb;
-            }
-            .responsive-table td::before {
-                content: attr(data-label);
-                text-align: left;
-                font-weight: 600;
-                color: #0e7490; /* Teal-700 */
-                padding-right: 1rem;
-                white-space: nowrap;
-            }
-            .responsive-table td:last-child {
-                border-bottom: none;
-            }
-        }
-    </style>
-    <script>
-        // Global State
-        const state = {
-            currentTab: 'architecture', 
-            message: "Click a concept tab above to explore the Airflow components managed by Cloud Composer.",
-        };
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #F0F4F8;
+        color: #1E293B;
+    }
+    .card {
+        background-color: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer; /* Added for clickable cards */
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+    .card-content {
+        flex-grow: 1;
+    }
+    .card-link {
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+</style>
+<title>Cloud Composer (Airflow) Visual Deep Dive</title>
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #F0F4F8;
+        color: #1E293B;
+    }
+    .card {
+        background-color: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer; /* Added for clickable cards */
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+    .card-content {
+        flex-grow: 1;
+    }
+    .card-link {
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+</style>
 
-        // Core Concepts Data
-        const concepts = {
-            architecture: {
-                title: "Airflow Architecture (The Engine Components)",
-                description: "Cloud Composer manages these four core components that work together to define, schedule, execute, and monitor workflows.",
-                headers: ["Component", "Role", "Physical Location"],
-                rows: [
-                    { key: "Scheduler", data: ["Parses DAGs, monitors tasks, initiates runs", "Compute Engine VM (Managed)"] },
-                    { key: "Webserver", data: ["Provides the Airflow UI for monitoring and control", "App Engine (Managed)"] },
-                    { key: "Worker(s)", data: ["Executes the actual task commands (via Celery)", "Compute Engine VM (Managed/Scalable)"] },
-                    { key: "Metadata DB", data: ["Stores all DAG/Task/Variable state and history", "Cloud SQL (Managed)"] },
-                ]
-            },
-            dags: {
-                title: "DAGs (Directed Acyclic Graphs)",
-                description: "A DAG is the blueprint for an entire workflow, defining tasks and their execution order (dependencies). 'Acyclic' means no loops.",
-                headers: ["DAG Element", "Description", "Example"],
-                rows: [
-                    { key: "DAG ID", data: ["Unique identifier for the workflow", "etl_marketing_pipeline"] },
-                    { key: "Task", data: ["A single unit of work to be performed", "extract_data (operator)"] },
-                    { key: "Dependency (>>)", data: ["Defines execution order (A >> B)", "B cannot run until A succeeds"] },
-                    { key: "Schedule", data: ["When the DAG should run (CRON)", "0 5 * * * (5 AM daily)"] },
-                ]
-            },
-            operators: {
-                title: "Operators (The Action Units)",
-                description: "Operators are classes that represent a specific task. They often contain the logic to interact with external systems (GCP or otherwise).",
-                headers: ["Operator", "Function", "GCP Service Interacted"],
-                rows: [
-                    { key: "BashOperator", data: ["Execute a shell command", "N/A (Local Worker)"] },
-                    { key: "BigQueryExecuteQueryOperator", data: ["Run a standard SQL query", "BigQuery"] },
-                    { key: "CloudDataTransferServiceOperator", data: ["Start a data transfer job", "DTS"] },
-                    { key: "PythonOperator", data: ["Call a specific Python function", "N/A (Local Worker)"] },
-                ]
-            },
-            sensors: {
-                title: "Sensors (Waiting for External Events)",
-                description: "Sensors are a type of operator that pauses execution until a certain condition is met in an external system (e.g., a file landing in Cloud Storage).",
-                headers: ["Sensor Type", "Condition Checked", "Behavior"],
-                rows: [
-                    { key: "GCSObjectAclSensor", data: ["Wait for an object's ACL to match", "Pokes the external service at intervals"] },
-                    { key: "ExternalTaskSensor", data: ["Wait for a task in another DAG to succeed", "Pokes the metadata database"] },
-                    { key: "SqlSensor", data: ["Wait for a SQL query to return a non-empty result", "Pokes the target database"] },
-                ]
-            },
-            connections: {
-                title: "Connections & Hooks (Securing Credentials)",
-                description: "Connections define credentials and endpoints for external systems. Hooks are the Python interfaces that use these connections to interact with the external APIs securely.",
-                headers: ["Element", "Role", "Security Practice"],
-                rows: [
-                    { key: "Connection ID", data: ["Key used by the Hook to retrieve credentials", "Stored in Metadata DB (Encrypted)"] },
-                    { key: "Hook (e.g., GCSHook)", data: ["Abstracts API calls using Connection info", "Handles credential rotation/access"] },
-                    { key: "External Service", data: ["The target system (e.g., Cloud Storage)", "Connection uses Service Account / OAuth"] },
-                ]
-            },
-            xcoms: {
-                title: "XComs (Cross-communication)",
-                description: "XCom (Cross-Communication) is a mechanism for small amounts of data (up to 48KB in the default setup) to be passed between tasks.",
-                headers: ["Task", "Action", "Value Passed", "Use Case"],
-                rows: [
-                    { key: "Task_A (Push)", data: ["Stores a key-value pair in Metadata DB", "File_Count: 12", "Report a summary metric"] },
-                    { key: "Task_B (Pull)", data: ["Retrieves value from Task_A by key", "File_Count: 12", "Determine next step based on count"] },
-                    { key: "Scheduler/UI", data: ["Can inspect XCom values", "File_Count: 12", "Debugging/Monitoring"] },
-                ]
-            },
-            taskStates: {
-                title: "Task States (The Lifecycle)",
-                description: "Tasks progress through various states, which define the history and current status of a workflow run. Upstream dependency failures propagate quickly.",
-                headers: ["State", "Visual Status", "Next Action"],
-                rows: [
-                    { key: "Scheduled", data: ["Grey/Light Blue", "Worker picks it up to run"] },
-                    { key: "Running", data: ["Blue", "Worker is executing the task code"] },
-                    { key: "Success", data: ["Green", "Triggers downstream tasks"] },
-                    { key: "Failed", data: ["Red", "Marks downstream tasks as 'Upstream Failed'"] },
-                    { key: "Upstream Failed", data: ["Orange", "Will not run until upstream task is cleared/retried"] },
-                ]
-            },
-            scaling: {
-                title: "Composer Scaling (Worker Resources)",
-                description: "Cloud Composer environments come in different sizes, dictating the base resources (Scheduler, DB) and the worker pool configuration.",
-                headers: ["Size", "Celery Workers (Default)", "CPU / Memory Allocation", "Concurrency/Cost Impact"],
-                rows: [
-                    { key: "Small", data: ["1 to 2 workers", "Low resource allocation", "Lowest cost, suitable for testing"] },
-                    { key: "Medium", data: ["3 to 5 workers", "Standard resource allocation", "Balanced performance and cost (default)"] },
-                    { key: "Large", data: ["5 to 20+ workers", "High resource allocation", "Max throughput and concurrency (highest cost)"] },
-                ]
-            }
-        };
-
-        /**
-         * Converts the global state into HTML and updates the DOM.
-         */
-        const render = () => {
-            const container = document.getElementById('table-container');
-            const messageBar = document.getElementById('message-bar');
-            const tabButtons = document.querySelectorAll('.tab-button');
-
-            // 1. Update Tabs
-            tabButtons.forEach(btn => {
-                btn.classList.remove('bg-teal-700', 'text-white');
-                btn.classList.add('bg-white', 'text-teal-700', 'hover:bg-teal-50');
-                if (btn.dataset.tab === state.currentTab) {
-                    btn.classList.remove('bg-white', 'text-teal-700', 'hover:bg-teal-50');
-                    btn.classList.add('bg-teal-700', 'text-white', 'shadow-lg');
-                }
-            });
-
-            // 2. Update Message Bar
-            messageBar.innerHTML = `<span class="font-bold">${concepts[state.currentTab].title}</span>: ${concepts[state.currentTab].description}`;
-
-            // 3. Generate Table HTML
-            const currentConcept = concepts[state.currentTab];
-            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
-
-            // Desktop Headers
-            html += '<thead class="bg-teal-800 text-white"><tr>';
-            currentConcept.headers.forEach(header => {
-                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
-            });
-            html += '</tr></thead>';
-
-            // Body
-            html += '<tbody>';
-            currentConcept.rows.forEach(row => {
-                html += '<tr class="md:border-b md:border-gray-200">';
-                // First cell is the key, styled differently
-                html += `<td data-label="${currentConcept.headers[0]}" class="font-semibold text-teal-800 md:bg-teal-50">${row.key}</td>`;
-                
-                // Data cells
-                row.data.forEach((cellData, colIndex) => {
-                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}">${cellData}</td>`;
-                });
-                html += '</tr>';
-            });
-            html += '</tbody></table>';
-
-            container.innerHTML = html;
-        };
-
-        /**
-         * Switches the active concept tab.
-         * @param {string} tabName 
-         */
-        const switchTab = (tabName) => {
-            state.currentTab = tabName;
-            render();
-        };
-
-        // Initial setup and event listeners
-        window.onload = () => {
-            // Set up tab listeners
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.addEventListener('click', () => switchTab(button.dataset.tab));
-            });
-
-            // Start with the 'architecture' tab
-            switchTab('architecture');
-        };
-    </script>
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">

@@ -1,317 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Databricks Lakehouse Platform Visual Deep Dive</title>
-    <style>
-        /* Custom font */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
-        }
-        .databricks-cell {
-            min-height: 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem;
-            transition: all 0.3s ease;
-            font-size: 0.75rem;
-            line-height: 1.2;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-align: center;
-            white-space: nowrap;
-        }
-        .header-cell {
-            background-color: #4c6a85; /* Slate Blue/Grey */
-            color: white;
-            font-weight: 600;
-            border: 1px solid #36495c;
-        }
-        .concept-cell {
-            background-color: #e3f2fd; /* Light Blue */
-            color: #1f2937;
-            font-weight: 700;
-            text-align: left;
-            padding-left: 1rem;
-            cursor: pointer;
-        }
-        .data-cell {
-            background-color: #ffffff;
-            color: #1f2937;
-            border: 1px solid #e5e7eb;
-            font-size: 0.875rem;
-            cursor: pointer;
-        }
-        /* Specific styling for concepts */
-        .execution-cell {
-            background-color: #e0f7fa; /* Light Cyan/Greenish */
-            color: #00838f;
-            font-weight: 600;
-        }
-        .data-plane-cell {
-            background-color: #fce4ec; /* Pink/Red for data storage */
-            color: #ad1457;
-            font-weight: 600;
-        }
-        .metadata-cell {
-            background-color: #fff8e1; /* Yellow for Metadata */
-            color: #ff8f00;
-            font-weight: 600;
-        }
-        /* Responsive Table Styles */
-        @media (max-width: 767px) {
-            .responsive-table thead {
-                display: none;
-            }
-            .responsive-table tbody, .responsive-table tr, .responsive-table td {
-                display: block;
-                width: 100%;
-            }
-            .responsive-table tr {
-                margin-bottom: 1rem;
-                border: 1px solid #e5e7eb;
-                border-radius: 0.5rem;
-                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-                background-color: white;
-            }
-            .responsive-table td {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                text-align: right;
-                padding: 0.75rem 1rem;
-                border-bottom: 1px solid #e5e7eb;
-            }
-            .responsive-table td::before {
-                content: attr(data-label);
-                text-align: left;
-                font-weight: 600;
-                color: #4c6a85; /* Databricks blue */
-                padding-right: 1rem;
-                white-space: nowrap;
-            }
-            .responsive-table td:last-child {
-                border-bottom: none;
-            }
-        }
-    </style>
-    <script>
-        // Global State
-        const state = {
-            currentTab: 'architecture', 
-            message: "Click a concept tab above to explore the core components of the Databricks Lakehouse Platform.",
-        };
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #F0F4F8;
+        color: #1E293B;
+    }
+    .card {
+        background-color: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer; /* Added for clickable cards */
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+    .card-content {
+        flex-grow: 1;
+    }
+    .card-link {
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+</style>
+<title>Databricks Lakehouse Platform Visual Deep Dive</title>
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #F0F4F8;
+        color: #1E293B;
+    }
+    .card {
+        background-color: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer; /* Added for clickable cards */
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+    .card-content {
+        flex-grow: 1;
+    }
+    .card-link {
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+</style>
 
-        // Core Concepts Data
-        const concepts = {
-            architecture: {
-                title: "Databricks Core Architecture (Control vs. Data Plane)",
-                description: "Databricks separates control logic (metadata, notebook execution commands) from data processing and storage (Compute + Cloud Storage).",
-                headers: ["Component", "Function", "Location (Plane)"],
-                rows: [
-                    { key: "Control Plane", data: ["Web app, Notebooks, Job Scheduler, Metadata DB", "Managed by Databricks"] },
-                    { key: "Data Plane", data: ["Spark Clusters (VMs), Cloud Storage (S3/GCS/ADLS)", "In your Cloud Account (VPC/VNet)"] },
-                    { key: "Unity Catalog", data: ["Unified Governance Layer for data, AI, and permissions", "Managed/Control Plane"] },
-                    { key: "Delta Lake", data: ["Storage layer providing ACID properties to data in cloud storage", "Data Plane (Cloud Storage)"] },
-                ]
-            },
-            clusters: {
-                title: "Spark Clusters (Compute Engine)",
-                description: "Clusters are groups of VMs that execute the processing logic (Spark jobs). They are composed of a Driver and Executors.",
-                headers: ["Component", "Role", "Function"],
-                rows: [
-                    { key: "Driver Node", data: ["Main VM, receives user commands (Notebook)", "Optimizes code into a physical plan, distributes tasks"] },
-                    { key: "Executor Nodes", data: ["Worker VMs, run processing tasks in parallel", "Execute the tasks on data partitions"] },
-                    { key: "DBR (Databricks Runtime)", data: ["Optimized Apache Spark version", "Includes performance enhancements (Photon) and managed libraries"] },
-                    { key: "Autoscaling", data: ["Dynamically adds/removes Executors based on workload", "Cost optimization and performance management"] },
-                ]
-            },
-            deltaLake: {
-                title: "Delta Lake (The Foundation of the Lakehouse)",
-                description: "Delta Lake is an open-source storage layer that brings reliability (ACID) and governance to data lakes.",
-                headers: ["Feature", "Description", "Benefit"],
-                rows: [
-                    { key: "ACID Properties", data: ["Atomicity, Consistency, Isolation, Durability", "Ensures data is reliable, even during concurrent writes"] },
-                    { key: "Metadata (Log)", data: ["Stores transaction history for the table (Time Travel)", "Enables historical data access and audit trails"] },
-                    { key: "Schema Enforcement", data: ["Prevents writes that don't match the table's defined schema", "Stops bad data from corrupting tables (Data Quality)"] },
-                    { key: "MERGE INTO", data: ["SQL command combining INSERT, UPDATE, and DELETE (Upsert)", "Simplifies complex ETL/ELT operations"] },
-                ]
-            },
-            dataframes: {
-                title: "DataFrames (Spark's Core Data Abstraction)",
-                description: "A DataFrame is a distributed collection of data organized into named columns, analogous to a relational table.",
-                headers: ["Concept", "Description", "Spark Operation Type"],
-                rows: [
-                    { key: "DataFrame", data: ["Schema-aware, distributed data structure", "Used for both transformations and actions"] },
-                    { key: "Transformation", data: ["Lazy operation that defines *what* to do (e.g., filter, join)", "Builds the execution graph (DAG) but runs nothing"] },
-                    { key: "Action", data: ["Eager operation that forces computation (e.g., count, write)", "Triggers the Spark job execution on the cluster"] },
-                    { key: "Tungsten Engine", data: ["Internal Spark component that optimizes processing memory/CPU usage", "Improves performance by reducing memory overhead"] },
-                ]
-            },
-            unityCatalog: {
-                title: "Unity Catalog (Data Governance)",
-                description: "Unity Catalog is Databricks' unified solution for fine-grained governance, discovery, and access control across all data assets.",
-                headers: ["Layer", "Role", "Scope"],
-                rows: [
-                    { key: "Metastore", data: ["Top-level container for metadata (databases, tables, views)", "Cloud/Workspace boundary (e.g., region)"] },
-                    { key: "Databases (Schemas)", data: ["Organizational containers for tables", "Logical grouping of related data assets"] },
-                    { key: "Tables/Views", data: ["The actual Delta Lake data or virtual representations of it", "The asset governed by RLS (Row/Column Level Security)"] },
-                    { key: "Permissions", data: ["Standard SQL `GRANT`/`REVOKE` commands", "Managed centrally across all workspaces"] },
-                ]
-            },
-            execution: {
-                title: "Execution Model (Lazy Evaluation & DAGs)",
-                description: "Spark uses lazy execution: it builds a Directed Acyclic Graph (DAG) of transformations and optimizes it before running.",
-                headers: ["Step", "Description", "Optimization Effect"],
-                rows: [
-                    { key: "Pipeline Definition", data: ["User defines transformations (filter, select, join) in code.", "No data movement, fast compilation."] },
-                    { key: "Logical Plan", data: ["Spark SQL Optimizer applies relational optimizations (e.g., pushing down filters).", "Simplifies the operations needed."] },
-                    { key: "Physical Plan", data: ["Spark chooses the most efficient execution strategy (joins, partitioning).", "Determines *how* tasks run on Executors."] },
-                    { key: "Job Execution", data: ["An Action is called, triggering the highly optimized task execution.", "Minimizes shuffle and I/O overhead."] },
-                ]
-            },
-            dlt: {
-                title: "7. Delta Live Tables (DLT) - Simplified ETL",
-                description: "DLT is a framework for building reliable, maintainable, and testable data pipelines. It handles orchestration, error handling, and data quality (Expectations).",
-                headers: ["Concept", "Role", "Benefit"],
-                rows: [
-                    { key: "Pipeline", data: ["A declarative definition of tables and views (not imperative code)", "Handles orchestration and deployment automatically"] },
-                    { key: "Expectations", data: ["Declarative data quality constraints (e.g., column cannot be null)", "Enables data quality monitoring and quarantine"] },
-                    { key: "Medallion Architecture", data: ["Enforces Bronze (raw), Silver (cleaned/conformed), Gold (aggregated) layers", "Provides structured data layering and reliability"] },
-                    { key: "Enhanced Autoscaling", data: ["Automatically scales compute based on workload and minimizes cluster idle time", "Cost optimization and efficiency"] },
-                ]
-            },
-            mlflow: {
-                title: "8. MLflow (ML Model Lifecycle Management)",
-                description: "MLflow is an open-source platform for managing the complete machine learning lifecycle, deeply integrated into Databricks.",
-                headers: ["Component", "Function", "Key Use Case"],
-                rows: [
-                    { key: "Tracking", data: ["Records code versions, data, config, and results (metrics/plots)", "Ensures reproducibility of experiments"] },
-                    { key: "Projects", data: ["Standardizes code packaging and execution environment (CI/CD for ML)", "Guarantees portability across platforms"] },
-                    { key: "Models", data: ["Standard format for packaging ML models (Python, R, etc.)", "Simplifies deployment to various serving platforms"] },
-                    { key: "Model Registry", data: ["Centralized store for model governance (versioning, stage transitions)", "Manages model promotions (Staging -> Production)"] },
-                ]
-            },
-            devops: {
-                title: "9. CI/CD and Developer Tools (dbx/Jobs)",
-                description: "Databricks supports modern DevOps practices using tools like `dbx` and native Git integration for reliable deployments.",
-                headers: ["Tool/Concept", "Purpose", "Benefit"],
-                rows: [
-                    { key: "dbx (Package)", data: ["A CLI tool and framework for building, deploying, and managing Databricks projects", "Standardizes CI/CD workflow deployment"] },
-                    { key: "Jobs", data: ["Managed, scheduled, or triggered executions of Notebooks, JARs, Python scripts", "Production scheduling and monitoring"] },
-                    { key: "Repos", data: ["Native Git integration for version control of notebooks and code files", "Enables code collaboration and merging (PR flow)"] },
-                    { key: "CI/CD Pipeline", data: ["Automated testing and deployment from Git to Databricks Workspace (e.g., GitHub Actions, Azure DevOps)", "Ensures reliable, repeatable deployments"] },
-                ]
-            },
-            advanced: {
-                title: "10. Advanced Platform Features (Serverless, Photon, Mosaic)",
-                description: "These features boost performance, simplify operations, and expand Databricks' capability into specialized domains.",
-                headers: ["Feature", "Category", "Impact"],
-                rows: [
-                    { key: "Serverless Compute", data: ["Compute Management", "Instantly provisions and manages compute resources without VPC/VNet setup (lower OpEx)"] },
-                    { key: "Photon", data: ["High-Performance Engine", "Native vectorized query engine that accelerates Spark and Delta Lake operations (10x faster SQL/DataFrames)"] },
-                    { key: "Mosaic", data: ["Geospatial Library (Open Source)", "Optimizes complex geospatial processing and analytics on Spark DataFrames (Specialized Analytics)"] },
-                    { key: "Databricks SQL", data: ["Analytics Endpoint", "Provides a high-performance, low-latency SQL experience on the Lakehouse (BI/Ad-hoc queries)"] }
-                ]
-            }
-        };
-
-        const render = () => {
-            const container = document.getElementById('table-container');
-            const messageBar = document.getElementById('message-bar');
-            const tabButtons = document.querySelectorAll('.tab-button');
-            tabButtons.forEach(btn => {
-                btn.classList.remove('bg-gray-700', 'text-white');
-                btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-50');
-                if (btn.dataset.tab === state.currentTab) {
-                    btn.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-50');
-                    btn.classList.add('bg-gray-700', 'text-white', 'shadow-lg');
-                }
-            });
-            messageBar.innerHTML = `<span class="font-bold">${concepts[state.currentTab].title}</span>: ${concepts[state.currentTab].description}`;
-            const currentConcept = concepts[state.currentTab];
-            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
-            html += '<thead class="bg-gray-700 text-white"><tr>';
-            currentConcept.headers.forEach(header => {
-                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
-            });
-            html += '</tr></thead>';
-            html += '<tbody>';
-            currentConcept.rows.forEach(row => {
-                html += '<tr class="md:border-b md:border-gray-20">';
-                let rowKeyClasses = 'font-semibold text-gray-800 md:bg-gray-100';
-                if (state.currentTab === 'architecture') {
-                    if (row.key.includes('Control Plane')) rowKeyClasses = 'font-semibold text-gray-800 md:bg-cyan-100';
-                    if (row.key.includes('Data Plane') || row.key.includes('Delta Lake')) rowKeyClasses = 'font-semibold text-gray-800 md:bg-pink-100';
-                    if (row.key.includes('Unity Catalog')) rowKeyClasses = 'font-semibold text-gray-80 md:bg-yellow-100';
-                }
-                if (state.currentTab === 'clusters' && row.key.includes('Node')) {
-                    rowKeyClasses = 'font-semibold text-gray-800 md:bg-cyan-100';
-                }
-                if (state.currentTab === 'dataframes') {
-                    if (row.key === 'Transformation') rowKeyClasses = 'font-semibold text-gray-800 md:bg-cyan-100';
-                    if (row.key === 'Action') rowKeyClasses = 'font-semibold text-gray-800 md:bg-pink-100';
-                }
-                if (state.currentTab === 'execution' || state.currentTab === 'devops' || state.currentTab === 'mlflow') {
-                    rowKeyClasses = 'font-semibold text-gray-800 md:bg-cyan-100';
-                    if (row.key === 'Job Execution' || row.key === 'CI/CD Pipeline' || row.key === 'Models' || row.key === 'Model Registry') rowKeyClasses = 'font-semibold text-gray-800 md:bg-pink-100';
-                }
-                if (state.currentTab === 'unityCatalog' || state.currentTab === 'dlt') {
-                    if (row.key === 'Metastore' || row.key === 'Expectations') rowKeyClasses = 'font-semibold text-gray-800 md:bg-yellow-10';
-                    if (row.key === 'Tables/Views' || row.key === 'Medallion Architecture') rowKeyClasses = 'font-semibold text-gray-800 md:bg-pink-100';
-                }
-                if (state.currentTab === 'advanced') {
-                    if (row.key.includes('Serverless') || row.key.includes('Photon')) rowKeyClasses = 'font-semibold text-gray-800 md:bg-cyan-100';
-                    if (row.key.includes('Mosaic') || row.key.includes('Databricks SQL')) rowKeyClasses = 'font-semibold text-gray-800 md:bg-yellow-100';
-                }
-                html += `<td data-label="${currentConcept.headers[0]}" class="${rowKeyClasses}">${row.key}</td>`;
-                row.data.forEach((cellData, colIndex) => {
-                    let cellClasses = 'data-cell';
-                    if (state.currentTab === 'architecture') {
-                        if (row.key.includes('Control Plane') && colIndex === 0) cellClasses = 'execution-cell';
-                        if ((row.key.includes('Data Plane') || row.key.includes('Delta Lake')) && colIndex === 0) cellClasses = 'data-plane-cell';
-                        if (row.key.includes('Unity Catalog') && colIndex === 0) cellClasses = 'metadata-cell';
-                    }
-                    if (state.currentTab === 'clusters' && row.key.includes('Node') && colIndex === 0) {
-                        cellClasses = 'execution-cell';
-                    }
-                    if (state.currentTab === 'dataframes') {
-                        if (row.key === 'Transformation' && colIndex === 0) cellClasses = 'execution-cell';
-                        if (row.key === 'Action' && colIndex === 0) cellClasses = 'data-plane-cell';
-                    }
-                    if (state.currentTab === 'execution' || state.currentTab === 'devops' || state.currentTab === 'mlflow') {
-                        cellClasses = 'execution-cell';
-                        if ((row.key === 'Job Execution' || row.key === 'CI/CD Pipeline' || row.key === 'Models' || row.key === 'Model Registry') && colIndex === 0) cellClasses = 'data-plane-cell';
-                    }
-                    if (state.currentTab === 'unityCatalog' || state.currentTab === 'dlt') {
-                        if ((row.key === 'Metastore' || row.key === 'Expectations') && colIndex === 0) cellClasses = 'metadata-cell';
-                        if ((row.key === 'Tables/Views' || row.key === 'Medallion Architecture') && colIndex === 0) cellClasses = 'data-plane-cell';
-                    }
-                    if (state.currentTab === 'advanced') {
-                        if ((row.key.includes('Serverless') || row.key.includes('Photon')) && colIndex === 0) cellClasses = 'execution-cell';
-                        if ((row.key.includes('Mosaic') || row.key.includes('Databricks SQL')) && colIndex === 0) cellClasses = 'metadata-cell';
-                    }
-                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}" class="${cellClasses}">${cellData}</td>`;
-                });
-                html += '</tr>';
-            });
-            html += '</tbody></table>';
-            container.innerHTML = html;
-        };
-        const switchTab = (tabName) => {
-            state.currentTab = tabName;
-            render();
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.addEventListener('click', () => switchTab(button.dataset.tab));
-            });
-            switchTab('architecture');
-        });
-    </script>
 </head>
 <body class="antialiased" data-base-path=".." data-page-type="deep-dive" data-topic-name="Databricks" data-topic-color="#FF3621">
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">

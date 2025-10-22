@@ -1,105 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Azure Synapse Analytics Deep Dive</title>
-    <style>
-        @media (max-width: 767px) {
-            .responsive-table thead { display: none; }
-            .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; }
-            .responsive-table tr { margin-bottom: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); background-color: white; }
-            .responsive-table td { display: flex; justify-content: space-between; align-items: center; text-align: right; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; }
-            .responsive-table td::before { content: attr(data-label); text-align: left; font-weight: 600; color: #0072C6; padding-right: 1rem; white-space: nowrap; }
-            .responsive-table td:last-child { border-bottom: none; }
-        }
-    </style>
-    <script>
-        const state = { currentTab: 'architecture' };
-        const concepts = {
-            architecture: {
-                title: "1. The Unified Architecture",
-                description: "Synapse Analytics integrates multiple analytics engines into a single workspace, allowing you to work with data in place.",
-                headers: ["Component", "Function", "Primary Use Case"],
-                rows: [
-                    { key: "Synapse Studio", data: ["Web-based IDE for all analytics tasks", "Development, management, and monitoring"] },
-                    { key: "Synapse SQL", data: ["T-SQL based query engine", "Data warehousing and ad-hoc queries"] },
-                    { key: "Apache Spark for Synapse", data: ["Fully managed Spark service", "Big data processing and machine learning"] },
-                    { key: "Synapse Pipelines", data: ["Data integration and orchestration engine", "Building ETL/ELT workflows"] },
-                ]
-            },
-            sqlPools: {
-                title: "2. SQL Pools: Serverless vs. Dedicated",
-                description: "Synapse offers two distinct SQL consumption models to fit different workloads and cost requirements.",
-                headers: ["Pool Type", "Compute Model", "Best For"],
-                rows: [
-                    { key: "Serverless SQL Pool", data: ["Pay-per-query, auto-scaling", "Ad-hoc data exploration, querying the data lake directly"] },
-                    { key: "Dedicated SQL Pool", data: ["Provisioned MPP data warehouse (DWUs)", "Enterprise data warehousing, predictable performance for BI"] },
-                ]
-            },
-            sparkPools: {
-                title: "3. Apache Spark Pools",
-                description: "Synapse provides a fully managed Spark environment that is deeply integrated with the rest of the platform.",
-                headers: ["Feature", "Description", "Benefit"],
-                rows: [
-                    { key: "Automatic Scaling", data: ["Clusters scale up and down based on workload", "Optimizes cost and performance"] },
-                    { key: "Fast Start-up", data: ["Clusters start in minutes", "Reduces wait time for developers and data scientists"] },
-                    { key: ".NET for Spark", data: ["Write Spark applications in C# or F#", "Enables .NET developers to leverage their existing skills"] },
-                ]
-            },
-            integration: {
-                title: "4. Data Integration",
-                description: "Synapse Pipelines provide a rich set of capabilities for data integration and orchestration.",
-                headers: ["Feature", "Description", "Use Case"],
-                rows: [
-                    { key: "90+ Connectors", data: ["Built-in connectors for a wide range of sources", "Ingesting data from on-premises systems, SaaS apps, and other clouds"] },
-                    { key: "Mapping Data Flows", data: ["Visual, code-free data transformation", "Building complex ETL logic without writing Spark code"] },
-                    { key: "Orchestration", data: ["Trigger pipelines based on schedules or events", "Automating complex data workflows"] },
-                ]
-            }
-        };
-        const render = () => {
-            const container = document.getElementById('table-container');
-            const messageBar = document.getElementById('message-bar');
-            const tabButtons = document.querySelectorAll('.tab-button');
-            tabButtons.forEach(btn => {
-                btn.classList.remove('bg-gray-700', 'text-white');
-                btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-50');
-                if (btn.dataset.tab === state.currentTab) {
-                    btn.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-50');
-                    btn.classList.add('bg-gray-700', 'text-white', 'shadow-lg');
-                }
-            });
-            messageBar.innerHTML = `<span class="font-bold">${concepts[state.currentTab].title}</span>: ${concepts[state.currentTab].description}`;
-            const currentConcept = concepts[state.currentTab];
-            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
-            html += '<thead class="bg-blue-600 text-white"><tr>';
-            currentConcept.headers.forEach(header => {
-                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
-            });
-            html += '</tr></thead>';
-            html += '<tbody>';
-            currentConcept.rows.forEach(row => {
-                html += '<tr class="md:border-b md:border-gray-200">';
-                html += `<td data-label="${currentConcept.headers[0]}" class="font-semibold text-blue-800 md:bg-blue-50">${row.key}</td>`;
-                row.data.forEach((cellData, colIndex) => {
-                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}">${cellData}</td>`;
-                });
-                html += '</tr>';
-            });
-            html += '</tbody></table>';
-            container.innerHTML = html;
-        };
-        const switchTab = (tabName) => {
-            state.currentTab = tabName;
-            render();
-        };
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #F0F4F8;
+        color: #1E293B;
+    }
+    .card {
+        background-color: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer; /* Added for clickable cards */
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+    .card-content {
+        flex-grow: 1;
+    }
+    .card-link {
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+</style>
+<title>Azure Synapse Analytics Deep Dive</title>
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #F0F4F8;
+        color: #1E293B;
+    }
+    .card {
+        background-color: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer; /* Added for clickable cards */
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+    .card-content {
+        flex-grow: 1;
+    }
+    .card-link {
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+</style>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.addEventListener('click', () => switchTab(button.dataset.tab));
-            });
-            switchTab('architecture');
-        });
-    </script>
 </head>
 <body class="antialiased" data-base-path=".." data-page-type="deep-dive" data-topic-name="Azure" data-topic-color="#0089D6">
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
