@@ -8,43 +8,43 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
-jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../learn/css/learn.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uudjLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/learn.css">
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../../index.html" class="flex items-center hover:text-gray-600">
+                <a href="/index.html" class="flex items-center hover:text-gray-600">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     <span>Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="/learn/index.html" class="hover:text-indigo-600 font-semibold">Back to Learn Topics</a></li>
+                <li><a href="/aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="main-content">
-            <h1 id="answer-key-rate-limiter-implementations">Answer Key:
-            Rate Limiter Implementations</h1>
-            <p><a
-            href="../../05-llD-patterns/rate-limiting.md#exercises">Back
-            to Exercises</a></p>
-            <hr />
-            <h2 id="exercise-1-implement-token-bucket">Exercise 1:
-            Implement Token Bucket</h2>
-            <p><strong>Question</strong>: Implement a token bucket rate
-            limiter. What are the edge cases?</p>
-            <h3 id="answer">Answer</h3>
-            <p><strong>Goal</strong>: Implement token bucket rate
-            limiter with edge case handling</p>
-            <h3 id="implementation">Implementation</h3>
-            <p><strong>Python Implementation</strong>:</p>
-            <div class="sourceCode" id="cb1"><pre
-            class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+        <div class="card">
+            <div class="card-content">
+                <h1 id="answer-key-rate-limiter-implementations">Answer Key: Rate
+Limiter Implementations</h1>
+<p><a href="../../05-llD-patterns/rate-limiting.html#exercises">Back to
+Exercises</a></p>
+<hr />
+<h2 id="exercise-1-implement-token-bucket">Exercise 1: Implement Token
+Bucket</h2>
+<p><strong>Question</strong>: Implement a token bucket rate limiter.
+What are the edge cases?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Goal</strong>: Implement token bucket rate limiter with edge
+case handling</p>
+<h3 id="implementation">Implementation</h3>
+<p><strong>Python Implementation</strong>:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TokenBucket:</span>
@@ -78,54 +78,47 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
 <span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> <span class="va">True</span></span>
 <span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
 <span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> <span class="va">False</span></span></code></pre></div>
-            <h3 id="edge-cases">Edge Cases</h3>
-            <p><strong>1. Concurrent Access</strong></p>
-            <p><strong>Issue</strong>: Multiple threads accessing bucket
-            simultaneously</p>
-            <p><strong>Solution</strong>: Use locks (threading.Lock) to
-            ensure thread safety</p>
-            <p><strong>2. Clock Skew</strong></p>
-            <p><strong>Issue</strong>: System clock changes (NTP
-            updates, time adjustments)</p>
-            <p><strong>Problem</strong>: Time calculations become
-            incorrect</p>
-            <p><strong>Solution</strong>: - Use monotonic clock
-            (<code>time.monotonic()</code>) instead of wall clock - Or
-            handle clock jumps gracefully</p>
-            <p><strong>3. First Request</strong></p>
-            <p><strong>Issue</strong>: First request after
-            initialization</p>
-            <p><strong>Solution</strong>: Initialize
-            <code>last_update</code> to current time, start with full
-            tokens</p>
-            <p><strong>4. Long Idle Period</strong></p>
-            <p><strong>Issue</strong>: No requests for long time, tokens
-            accumulate</p>
-            <p><strong>Problem</strong>: May allow burst larger than
-            intended</p>
-            <p><strong>Solution</strong>: Already handled (tokens capped
-            at capacity)</p>
-            <p><strong>5. Very High Rate</strong></p>
-            <p><strong>Issue</strong>: Rate higher than capacity</p>
-            <p><strong>Problem</strong>: Tokens added faster than
-            capacity</p>
-            <p><strong>Solution</strong>: Already handled (tokens capped
-            at capacity)</p>
-            <p><strong>6. Zero or Negative Values</strong></p>
-            <p><strong>Issue</strong>: Invalid capacity or rate
-            values</p>
-            <p><strong>Solution</strong>: Validate inputs, raise errors
-            for invalid values</p>
-            <p><strong>7. Precision Issues</strong></p>
-            <p><strong>Issue</strong>: Floating point precision in time
-            calculations</p>
-            <p><strong>Problem</strong>: Small errors accumulate</p>
-            <p><strong>Solution</strong>: Use high-precision time, or
-            use integer-based calculations</p>
-            <h3 id="improved-implementation">Improved
-            Implementation</h3>
-            <div class="sourceCode" id="cb2"><pre
-            class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<h3 id="edge-cases">Edge Cases</h3>
+<p><strong>1. Concurrent Access</strong></p>
+<p><strong>Issue</strong>: Multiple threads accessing bucket
+simultaneously</p>
+<p><strong>Solution</strong>: Use locks (threading.Lock) to ensure
+thread safety</p>
+<p><strong>2. Clock Skew</strong></p>
+<p><strong>Issue</strong>: System clock changes (NTP updates, time
+adjustments)</p>
+<p><strong>Problem</strong>: Time calculations become incorrect</p>
+<p><strong>Solution</strong>: - Use monotonic clock
+(<code>time.monotonic()</code>) instead of wall clock - Or handle clock
+jumps gracefully</p>
+<p><strong>3. First Request</strong></p>
+<p><strong>Issue</strong>: First request after initialization</p>
+<p><strong>Solution</strong>: Initialize <code>last_update</code> to
+current time, start with full tokens</p>
+<p><strong>4. Long Idle Period</strong></p>
+<p><strong>Issue</strong>: No requests for long time, tokens
+accumulate</p>
+<p><strong>Problem</strong>: May allow burst larger than intended</p>
+<p><strong>Solution</strong>: Already handled (tokens capped at
+capacity)</p>
+<p><strong>5. Very High Rate</strong></p>
+<p><strong>Issue</strong>: Rate higher than capacity</p>
+<p><strong>Problem</strong>: Tokens added faster than capacity</p>
+<p><strong>Solution</strong>: Already handled (tokens capped at
+capacity)</p>
+<p><strong>6. Zero or Negative Values</strong></p>
+<p><strong>Issue</strong>: Invalid capacity or rate values</p>
+<p><strong>Solution</strong>: Validate inputs, raise errors for invalid
+values</p>
+<p><strong>7. Precision Issues</strong></p>
+<p><strong>Issue</strong>: Floating point precision in time
+calculations</p>
+<p><strong>Problem</strong>: Small errors accumulate</p>
+<p><strong>Solution</strong>: Use high-precision time, or use
+integer-based calculations</p>
+<h3 id="improved-implementation">Improved Implementation</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TokenBucket:</span>
@@ -170,142 +163,131 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
 <span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>            tokens_to_add <span class="op">=</span> time_elapsed <span class="op">*</span> <span class="va">self</span>.rate</span>
 <span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>            current_tokens <span class="op">=</span> <span class="bu">min</span>(<span class="va">self</span>.capacity, <span class="va">self</span>.tokens <span class="op">+</span> tokens_to_add)</span>
 <span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> current_tokens</span></code></pre></div>
-            <h3 id="answer-1">Answer</h3>
-            <p><strong>Token Bucket Implementation</strong>:</p>
-            <p><strong>Key components</strong>: - Capacity (burst size)
-            - Rate (tokens per second) - Tokens (current count) - Last
-            update time - Lock (for thread safety)</p>
-            <p><strong>Edge cases</strong>: 1. <strong>Concurrent
-            access</strong>: Use locks for thread safety 2.
-            <strong>Clock skew</strong>: Use monotonic clock 3.
-            <strong>First request</strong>: Initialize last_update to
-            current time 4. <strong>Long idle</strong>: Tokens capped at
-            capacity 5. <strong>High rate</strong>: Tokens capped at
-            capacity 6. <strong>Invalid inputs</strong>: Validate
-            capacity and rate 7. <strong>Precision</strong>: Use float
-            or high-precision calculations</p>
-            <p><strong>Key principles</strong>: - <strong>Thread
-            safety</strong>: Use locks - <strong>Clock
-            handling</strong>: Use monotonic clock - <strong>Input
-            validation</strong>: Validate inputs -
-            <strong>Precision</strong>: Handle floating point
-            precision</p>
-            <hr />
-            <h2 id="exercise-2-compare-algorithms">Exercise 2: Compare
-            Algorithms</h2>
-            <p><strong>Question</strong>: Compare token bucket vs
-            sliding window log. When would you use each?</p>
-            <h3 id="answer-2">Answer</h3>
-            <p><strong>Goal</strong>: Understand tradeoffs between token
-            bucket and sliding window log</p>
-            <h3 id="comparison">Comparison</h3>
-            <table>
-            <thead>
-            <tr class="header">
-            <th>Aspect</th>
-            <th>Token Bucket</th>
-            <th>Sliding Window Log</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="odd">
-            <td><strong>Accuracy</strong></td>
-            <td>Medium (approximate)</td>
-            <td>High (precise)</td>
-            </tr>
-            <tr class="even">
-            <td><strong>Memory</strong></td>
-            <td>O(1)</td>
-            <td>O(n) where n = requests in window</td>
-            </tr>
-            <tr class="odd">
-            <td><strong>CPU</strong></td>
-            <td>O(1)</td>
-            <td>O(n) to clean old entries</td>
-            </tr>
-            <tr class="even">
-            <td><strong>Burst Handling</strong></td>
-            <td>Yes (allows bursts)</td>
-            <td>No (strict limit)</td>
-            </tr>
-            <tr class="odd">
-            <td><strong>Complexity</strong></td>
-            <td>Simple</td>
-            <td>More complex</td>
-            </tr>
-            <tr class="even">
-            <td><strong>Distributed</strong></td>
-            <td>Easy (Redis counters)</td>
-            <td>Hard (need to sync logs)</td>
-            </tr>
-            </tbody>
-            </table>
-            <h3 id="when-to-use-token-bucket">When to Use Token
-            Bucket</h3>
-            <p><strong>Use token bucket when</strong>: - <strong>Burst
-            handling needed</strong>: Need to allow bursts up to
-            capacity - <strong>Memory constrained</strong>: Limited
-            memory available - <strong>High throughput</strong>: Need to
-            handle many requests - <strong>Simple
-            implementation</strong>: Want simple, efficient solution -
-            <strong>Distributed</strong>: Need distributed rate
-            limiting</p>
-            <p><strong>Examples</strong>: - API rate limiting (allow
-            bursts) - Network traffic shaping - Resource allocation</p>
-            <h3 id="when-to-use-sliding-window-log">When to Use Sliding
-            Window Log</h3>
-            <p><strong>Use sliding window log when</strong>: -
-            <strong>Accuracy critical</strong>: Need precise limit
-            enforcement - <strong>Memory available</strong>: Have memory
-            for request logs - <strong>Low throughput</strong>: Fewer
-            requests (memory manageable) - <strong>Strict
-            limits</strong>: Need strict limit (no bursts) -
-            <strong>Single server</strong>: Not distributed</p>
-            <p><strong>Examples</strong>: - Payment processing (strict
-            limits) - Critical operations (precise control) - Low-volume
-            APIs</p>
-            <h3 id="hybrid-approach">Hybrid Approach</h3>
-            <p><strong>Best of both worlds</strong>: - Use token bucket
-            for high-volume, burst-tolerant scenarios - Use sliding
-            window log for low-volume, accuracy-critical scenarios - Or
-            use sliding window counter (compromise)</p>
-            <h3 id="answer-3">Answer</h3>
-            <p><strong>Token Bucket</strong>: - <strong>Use
-            when</strong>: Burst handling needed, memory constrained,
-            high throughput, distributed - <strong>Pros</strong>:
-            Simple, efficient, allows bursts, low memory -
-            <strong>Cons</strong>: Less accurate, approximate</p>
-            <p><strong>Sliding Window Log</strong>: - <strong>Use
-            when</strong>: Accuracy critical, memory available, low
-            throughput, strict limits - <strong>Pros</strong>: Precise,
-            accurate limit enforcement - <strong>Cons</strong>: High
-            memory, high CPU, complex, hard to distribute</p>
-            <p><strong>Recommendation</strong>: - <strong>Most
-            cases</strong>: Use token bucket (simpler, more efficient) -
-            <strong>Critical cases</strong>: Use sliding window log
-            (more accurate) - <strong>Compromise</strong>: Use sliding
-            window counter (balance)</p>
-            <hr />
-            <h2 id="exercise-3-distributed-rate-limiting">Exercise 3:
-            Distributed Rate Limiting</h2>
-            <p><strong>Question</strong>: Design a distributed rate
-            limiter. How do you ensure consistency?</p>
-            <h3 id="answer-4">Answer</h3>
-            <p><strong>Goal</strong>: Rate limiting across multiple
-            servers with consistency</p>
-            <h3 id="challenge">Challenge</h3>
-            <p><strong>Problem</strong>: Multiple servers need to share
-            rate limit state</p>
-            <p><strong>Requirements</strong>: - Consistent limits across
-            servers - Low latency - High availability - Accurate</p>
-            <h3 id="solution-options">Solution Options</h3>
-            <p><strong>1. Centralized Store (Redis)</strong></p>
-            <p><strong>Architecture</strong>: - All servers check Redis
-            for rate limits - Redis stores counters/tokens - Atomic
-            operations ensure consistency</p>
-            <p><strong>Implementation</strong>:</p>
-            <div class="sourceCode" id="cb3"><pre
-            class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> redis</span>
+<h3 id="answer-1">Answer</h3>
+<p><strong>Token Bucket Implementation</strong>:</p>
+<p><strong>Key components</strong>: - Capacity (burst size) - Rate
+(tokens per second) - Tokens (current count) - Last update time - Lock
+(for thread safety)</p>
+<p><strong>Edge cases</strong>: 1. <strong>Concurrent access</strong>:
+Use locks for thread safety 2. <strong>Clock skew</strong>: Use
+monotonic clock 3. <strong>First request</strong>: Initialize
+last_update to current time 4. <strong>Long idle</strong>: Tokens capped
+at capacity 5. <strong>High rate</strong>: Tokens capped at capacity 6.
+<strong>Invalid inputs</strong>: Validate capacity and rate 7.
+<strong>Precision</strong>: Use float or high-precision calculations</p>
+<p><strong>Key principles</strong>: - <strong>Thread safety</strong>:
+Use locks - <strong>Clock handling</strong>: Use monotonic clock -
+<strong>Input validation</strong>: Validate inputs -
+<strong>Precision</strong>: Handle floating point precision</p>
+<hr />
+<h2 id="exercise-2-compare-algorithms">Exercise 2: Compare
+Algorithms</h2>
+<p><strong>Question</strong>: Compare token bucket vs sliding window
+log. When would you use each?</p>
+<h3 id="answer-2">Answer</h3>
+<p><strong>Goal</strong>: Understand tradeoffs between token bucket and
+sliding window log</p>
+<h3 id="comparison">Comparison</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Aspect</th>
+<th>Token Bucket</th>
+<th>Sliding Window Log</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Accuracy</strong></td>
+<td>Medium (approximate)</td>
+<td>High (precise)</td>
+</tr>
+<tr class="even">
+<td><strong>Memory</strong></td>
+<td>O(1)</td>
+<td>O(n) where n = requests in window</td>
+</tr>
+<tr class="odd">
+<td><strong>CPU</strong></td>
+<td>O(1)</td>
+<td>O(n) to clean old entries</td>
+</tr>
+<tr class="even">
+<td><strong>Burst Handling</strong></td>
+<td>Yes (allows bursts)</td>
+<td>No (strict limit)</td>
+</tr>
+<tr class="odd">
+<td><strong>Complexity</strong></td>
+<td>Simple</td>
+<td>More complex</td>
+</tr>
+<tr class="even">
+<td><strong>Distributed</strong></td>
+<td>Easy (Redis counters)</td>
+<td>Hard (need to sync logs)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="when-to-use-token-bucket">When to Use Token Bucket</h3>
+<p><strong>Use token bucket when</strong>: - <strong>Burst handling
+needed</strong>: Need to allow bursts up to capacity - <strong>Memory
+constrained</strong>: Limited memory available - <strong>High
+throughput</strong>: Need to handle many requests - <strong>Simple
+implementation</strong>: Want simple, efficient solution -
+<strong>Distributed</strong>: Need distributed rate limiting</p>
+<p><strong>Examples</strong>: - API rate limiting (allow bursts) -
+Network traffic shaping - Resource allocation</p>
+<h3 id="when-to-use-sliding-window-log">When to Use Sliding Window
+Log</h3>
+<p><strong>Use sliding window log when</strong>: - <strong>Accuracy
+critical</strong>: Need precise limit enforcement - <strong>Memory
+available</strong>: Have memory for request logs - <strong>Low
+throughput</strong>: Fewer requests (memory manageable) - <strong>Strict
+limits</strong>: Need strict limit (no bursts) - <strong>Single
+server</strong>: Not distributed</p>
+<p><strong>Examples</strong>: - Payment processing (strict limits) -
+Critical operations (precise control) - Low-volume APIs</p>
+<h3 id="hybrid-approach">Hybrid Approach</h3>
+<p><strong>Best of both worlds</strong>: - Use token bucket for
+high-volume, burst-tolerant scenarios - Use sliding window log for
+low-volume, accuracy-critical scenarios - Or use sliding window counter
+(compromise)</p>
+<h3 id="answer-3">Answer</h3>
+<p><strong>Token Bucket</strong>: - <strong>Use when</strong>: Burst
+handling needed, memory constrained, high throughput, distributed -
+<strong>Pros</strong>: Simple, efficient, allows bursts, low memory -
+<strong>Cons</strong>: Less accurate, approximate</p>
+<p><strong>Sliding Window Log</strong>: - <strong>Use when</strong>:
+Accuracy critical, memory available, low throughput, strict limits -
+<strong>Pros</strong>: Precise, accurate limit enforcement -
+<strong>Cons</strong>: High memory, high CPU, complex, hard to
+distribute</p>
+<p><strong>Recommendation</strong>: - <strong>Most cases</strong>: Use
+token bucket (simpler, more efficient) - <strong>Critical
+cases</strong>: Use sliding window log (more accurate) -
+<strong>Compromise</strong>: Use sliding window counter (balance)</p>
+<hr />
+<h2 id="exercise-3-distributed-rate-limiting">Exercise 3: Distributed
+Rate Limiting</h2>
+<p><strong>Question</strong>: Design a distributed rate limiter. How do
+you ensure consistency?</p>
+<h3 id="answer-4">Answer</h3>
+<p><strong>Goal</strong>: Rate limiting across multiple servers with
+consistency</p>
+<h3 id="challenge">Challenge</h3>
+<p><strong>Problem</strong>: Multiple servers need to share rate limit
+state</p>
+<p><strong>Requirements</strong>: - Consistent limits across servers -
+Low latency - High availability - Accurate</p>
+<h3 id="solution-options">Solution Options</h3>
+<p><strong>1. Centralized Store (Redis)</strong></p>
+<p><strong>Architecture</strong>: - All servers check Redis for rate
+limits - Redis stores counters/tokens - Atomic operations ensure
+consistency</p>
+<p><strong>Implementation</strong>:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> redis</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DistributedTokenBucket:</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, redis_client, key_prefix, capacity, rate):</span>
@@ -350,77 +332,67 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
 <span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>                                 <span class="va">self</span>.capacity, <span class="va">self</span>.rate, </span>
 <span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>                                 tokens_needed, now)</span>
 <span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> result <span class="op">==</span> <span class="dv">1</span></span></code></pre></div>
-            <p><strong>Pros</strong>: - Consistent (single source of
-            truth) - Accurate - Atomic operations</p>
-            <p><strong>Cons</strong>: - Redis is single point of failure
-            - Network latency - Redis capacity</p>
-            <p><strong>2. Distributed Counters</strong></p>
-            <p><strong>Architecture</strong>: - Each server maintains
-            local counter - Periodically sync counters - Use consensus
-            algorithm</p>
-            <p><strong>Implementation</strong>: - Use Raft or Paxos for
-            consensus - More complex, eventual consistency</p>
-            <p><strong>Pros</strong>: - No single point of failure -
-            Lower latency (local checks)</p>
-            <p><strong>Cons</strong>: - Less accurate (eventual
-            consistency) - More complex - Higher overhead</p>
-            <p><strong>3. Client-Side Enforcement</strong></p>
-            <p><strong>Architecture</strong>: - Client enforces rate
-            limit - Server validates - Use tokens or quotas</p>
-            <p><strong>Pros</strong>: - Reduces server load - Lower
-            latency</p>
-            <p><strong>Cons</strong>: - Not secure (client can bypass) -
-            Less accurate</p>
-            <h3 id="recommended-solution">Recommended Solution</h3>
-            <p><strong>Use Centralized Store (Redis) with</strong>: -
-            <strong>Redis Cluster</strong>: For high availability -
-            <strong>Lua scripts</strong>: For atomicity -
-            <strong>TTL</strong>: For cleanup - <strong>Connection
-            pooling</strong>: For performance</p>
-            <h3 id="consistency-guarantees">Consistency Guarantees</h3>
-            <p><strong>Strong Consistency</strong>: - Use Redis with Lua
-            scripts (atomic operations) - Single Redis instance or Redis
-            Cluster with strong consistency</p>
-            <p><strong>Eventual Consistency</strong>: - Use distributed
-            counters - Accept some inconsistency for better
-            performance</p>
-            <h3 id="answer-5">Answer</h3>
-            <p><strong>Distributed Rate Limiter Design</strong>:</p>
-            <p><strong>Architecture</strong>: <strong>Centralized Store
-            (Redis)</strong></p>
-            <p><strong>Components</strong>: 1. <strong>Redis</strong>:
-            Stores rate limit state (counters/tokens) 2. <strong>Lua
-            scripts</strong>: Atomic operations for consistency 3.
-            <strong>Key structure</strong>:
-            <code>rate_limit:{client_id}</code> or
-            <code>rate_limit:{user_id}</code> 4. <strong>TTL</strong>:
-            Expire keys after window (cleanup)</p>
-            <p><strong>Consistency</strong>: - <strong>Atomic
-            operations</strong>: Lua scripts ensure atomicity -
-            <strong>Single source of truth</strong>: Redis is
-            authoritative - <strong>Strong consistency</strong>: All
-            servers see same state</p>
-            <p><strong>High Availability</strong>: - <strong>Redis
-            Cluster</strong>: Multiple Redis nodes -
-            <strong>Failover</strong>: Automatic failover -
-            <strong>Replication</strong>: Data replicated</p>
-            <p><strong>Performance</strong>: - <strong>Connection
-            pooling</strong>: Reuse connections -
-            <strong>Pipeline</strong>: Batch operations - <strong>Local
-            caching</strong>: Cache recent decisions (with TTL)</p>
-            <p><strong>Tradeoffs</strong>: - <strong>Consistency vs
-            Performance</strong>: Strong consistency has higher latency
-            - <strong>Accuracy vs Complexity</strong>: Centralized is
-            simpler but has single point of failure</p>
-            <p><strong>Best practice</strong>: Use Redis Cluster with
-            Lua scripts for strong consistency and high
-            availability.</p>
+<p><strong>Pros</strong>: - Consistent (single source of truth) -
+Accurate - Atomic operations</p>
+<p><strong>Cons</strong>: - Redis is single point of failure - Network
+latency - Redis capacity</p>
+<p><strong>2. Distributed Counters</strong></p>
+<p><strong>Architecture</strong>: - Each server maintains local counter
+- Periodically sync counters - Use consensus algorithm</p>
+<p><strong>Implementation</strong>: - Use Raft or Paxos for consensus -
+More complex, eventual consistency</p>
+<p><strong>Pros</strong>: - No single point of failure - Lower latency
+(local checks)</p>
+<p><strong>Cons</strong>: - Less accurate (eventual consistency) - More
+complex - Higher overhead</p>
+<p><strong>3. Client-Side Enforcement</strong></p>
+<p><strong>Architecture</strong>: - Client enforces rate limit - Server
+validates - Use tokens or quotas</p>
+<p><strong>Pros</strong>: - Reduces server load - Lower latency</p>
+<p><strong>Cons</strong>: - Not secure (client can bypass) - Less
+accurate</p>
+<h3 id="recommended-solution">Recommended Solution</h3>
+<p><strong>Use Centralized Store (Redis) with</strong>: - <strong>Redis
+Cluster</strong>: For high availability - <strong>Lua scripts</strong>:
+For atomicity - <strong>TTL</strong>: For cleanup - <strong>Connection
+pooling</strong>: For performance</p>
+<h3 id="consistency-guarantees">Consistency Guarantees</h3>
+<p><strong>Strong Consistency</strong>: - Use Redis with Lua scripts
+(atomic operations) - Single Redis instance or Redis Cluster with strong
+consistency</p>
+<p><strong>Eventual Consistency</strong>: - Use distributed counters -
+Accept some inconsistency for better performance</p>
+<h3 id="answer-5">Answer</h3>
+<p><strong>Distributed Rate Limiter Design</strong>:</p>
+<p><strong>Architecture</strong>: <strong>Centralized Store
+(Redis)</strong></p>
+<p><strong>Components</strong>: 1. <strong>Redis</strong>: Stores rate
+limit state (counters/tokens) 2. <strong>Lua scripts</strong>: Atomic
+operations for consistency 3. <strong>Key structure</strong>:
+<code>rate_limit:{client_id}</code> or <code>rate_limit:{user_id}</code>
+4. <strong>TTL</strong>: Expire keys after window (cleanup)</p>
+<p><strong>Consistency</strong>: - <strong>Atomic operations</strong>:
+Lua scripts ensure atomicity - <strong>Single source of truth</strong>:
+Redis is authoritative - <strong>Strong consistency</strong>: All
+servers see same state</p>
+<p><strong>High Availability</strong>: - <strong>Redis Cluster</strong>:
+Multiple Redis nodes - <strong>Failover</strong>: Automatic failover -
+<strong>Replication</strong>: Data replicated</p>
+<p><strong>Performance</strong>: - <strong>Connection pooling</strong>:
+Reuse connections - <strong>Pipeline</strong>: Batch operations -
+<strong>Local caching</strong>: Cache recent decisions (with TTL)</p>
+<p><strong>Tradeoffs</strong>: - <strong>Consistency vs
+Performance</strong>: Strong consistency has higher latency -
+<strong>Accuracy vs Complexity</strong>: Centralized is simpler but has
+single point of failure</p>
+<p><strong>Best practice</strong>: Use Redis Cluster with Lua scripts
+for strong consistency and high availability.</p>
+            </div>
         </div>
     </main>
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
       mermaid.initialize({ startOnLoad: true });

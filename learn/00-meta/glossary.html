@@ -8,183 +8,166 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
-jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
-    <link rel="stylesheet" href="../learn/css/learn.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uudjLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/learn.css">
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../index.html" class="flex items-center hover:text-gray-600">
+                <a href="/index.html" class="flex items-center hover:text-gray-600">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     <span>Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="/learn/index.html" class="hover:text-indigo-600 font-semibold">Back to Learn Topics</a></li>
+                <li><a href="/aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="main-content">
-            <h1 id="glossary">Glossary</h1>
-            <p>Definitions of terms used throughout this repository.</p>
-            <h2 id="a">A</h2>
-            <p><strong>API Gateway</strong>: A service that acts as a
-            single entry point for API requests, handling routing,
-            authentication, rate limiting, and other cross-cutting
-            concerns.</p>
-            <p><strong>Availability</strong>: The fraction of time a
-            system is operational and able to serve requests. Usually
-            expressed as a percentage (e.g., 99.9%).</p>
-            <h2 id="b">B</h2>
-            <p><strong>Backpressure</strong>: A mechanism where a system
-            signals upstream components to slow down when it’s
-            overloaded, preventing cascading failures.</p>
-            <p><strong>Bigtable</strong>: Google’s distributed NoSQL
-            database, designed for low-latency, high-throughput
-            workloads. Used by many Google services internally.</p>
-            <p><strong>Blast Radius</strong>: The scope of impact when a
-            component fails. A small blast radius means failures are
-            isolated.</p>
-            <h2 id="c">C</h2>
-            <p><strong>Canary Deployment</strong>: A deployment strategy
-            where a new version is deployed to a small subset of
-            instances first, monitored, and then gradually rolled
-            out.</p>
-            <p><strong>CAP Theorem</strong>: States that a distributed
-            system can guarantee at most two of: Consistency,
-            Availability, Partition tolerance.</p>
-            <p><strong>Circuit Breaker</strong>: A pattern that prevents
-            calls to a failing service, allowing it to recover and
-            preventing cascading failures.</p>
-            <p><strong>Consensus</strong>: Agreement among distributed
-            nodes on a value or state. Algorithms like Raft and Paxos
-            solve consensus.</p>
-            <p><strong>Consistency</strong>: In distributed systems,
-            refers to whether all nodes see the same data at the same
-            time. Can be strong (linearizable) or weak (eventual).</p>
-            <h2 id="d">D</h2>
-            <p><strong>Distributed System</strong>: A system where
-            components are located on different networked computers and
-            coordinate to achieve a common goal.</p>
-            <p><strong>Durability</strong>: The guarantee that once data
-            is written, it will persist even if the system fails.</p>
-            <h2 id="e">E</h2>
-            <p><strong>Error Budget</strong>: The amount of
-            unreliability a service can tolerate while still meeting its
-            SLO. Calculated as 1 - SLO.</p>
-            <p><strong>Eventual Consistency</strong>: A consistency
-            model where, after updates stop, all nodes will eventually
-            converge to the same state, but may temporarily have
-            different values.</p>
-            <h2 id="f">F</h2>
-            <p><strong>Failure Domain</strong>: A set of components that
-            fail together. Good design minimizes failure domains and
-            limits blast radius.</p>
-            <h2 id="g">G</h2>
-            <p><strong>GKE (Google Kubernetes Engine)</strong>: Google’s
-            managed Kubernetes service, running on GCP.</p>
-            <h2 id="i">I</h2>
-            <p><strong>IAM (Identity and Access Management)</strong>:
-            System for managing who can access what resources. In GCP,
-            controls authentication and authorization.</p>
-            <p><strong>Idempotency</strong>: Property where performing
-            an operation multiple times has the same effect as
-            performing it once. Critical for retries.</p>
-            <h2 id="l">L</h2>
-            <p><strong>Latency</strong>: Time taken for a request to
-            complete. Usually measured as P50 (median), P95, P99
-            (percentiles).</p>
-            <p><strong>Lease</strong>: A time-limited lock that grants
-            exclusive access to a resource. Expires automatically,
-            preventing deadlocks.</p>
-            <p><strong>Linearizability</strong>: Strongest consistency
-            model. All operations appear to occur atomically at some
-            point in time.</p>
-            <p><strong>Load Shedding</strong>: Dropping requests when a
-            system is overloaded to prevent total failure. Better to
-            serve some requests than none.</p>
-            <h2 id="m">M</h2>
-            <p><strong>Mental Model</strong>: A simplified
-            representation of how a system works, used for reasoning
-            about behavior and failures.</p>
-            <h2 id="o">O</h2>
-            <p><strong>Observability</strong>: The ability to understand
-            a system’s internal state from its external outputs
-            (metrics, logs, traces).</p>
-            <p><strong>Overload</strong>: When a system receives more
-            load than it can handle, leading to degradation or
-            failure.</p>
-            <h2 id="p">P</h2>
-            <p><strong>Partition Tolerance</strong>: The ability of a
-            distributed system to continue operating despite network
-            partitions (nodes can’t communicate).</p>
-            <p><strong>Paxos</strong>: A consensus algorithm for
-            distributed systems. Complex but proven correct.</p>
-            <p><strong>Percentile (P50, P95, P99)</strong>: A measure of
-            latency distribution. P95 means 95% of requests complete in
-            this time or less.</p>
-            <p><strong>PRR (Production Readiness Review)</strong>: A
-            review process to ensure a system is ready for production,
-            covering reliability, security, operations.</p>
-            <p><strong>Pub/Sub</strong>: Publish-subscribe messaging
-            system. Publishers send messages to topics, subscribers
-            receive messages from subscriptions.</p>
-            <h2 id="q">Q</h2>
-            <p><strong>QPS (Queries Per Second)</strong>: A measure of
-            throughput, the number of requests a system handles per
-            second.</p>
-            <p><strong>Queueing Theory</strong>: Mathematical study of
-            waiting lines. Explains tail latency and helps with capacity
-            planning.</p>
-            <h2 id="r">R</h2>
-            <p><strong>Raft</strong>: A consensus algorithm simpler than
-            Paxos, commonly used in distributed systems.</p>
-            <p><strong>Rate Limiting</strong>: Controlling the rate of
-            requests to prevent overload and ensure fair resource
-            usage.</p>
-            <p><strong>Replication</strong>: Storing copies of data on
-            multiple nodes for availability and performance.</p>
-            <p><strong>Retry</strong>: Attempting an operation again
-            after it fails. Requires idempotency to be safe.</p>
-            <h2 id="s">S</h2>
-            <p><strong>Sharding</strong>: Partitioning data across
-            multiple nodes. Each shard contains a subset of data.</p>
-            <p><strong>SLI (Service Level Indicator)</strong>: A
-            quantitative measure of service quality (e.g., latency,
-            availability, error rate).</p>
-            <p><strong>SLO (Service Level Objective)</strong>: A target
-            value for an SLI (e.g., “P95 latency &lt; 100ms”,
-            “availability &gt; 99.9%”).</p>
-            <p><strong>Spanner</strong>: Google’s globally distributed
-            SQL database with strong consistency guarantees, using
-            TrueTime for external consistency.</p>
-            <h2 id="t">T</h2>
-            <p><strong>Tail Latency</strong>: High percentiles of
-            latency (P95, P99). Often much higher than median due to
-            queueing and resource contention.</p>
-            <p><strong>Throughput</strong>: The rate at which a system
-            processes requests, usually measured in QPS or requests per
-            second.</p>
-            <p><strong>TrueTime</strong>: Google’s clock synchronization
-            service used by Spanner to provide external consistency
-            guarantees.</p>
-            <h2 id="v">V</h2>
-            <p><strong>VPC (Virtual Private Cloud)</strong>: A logically
-            isolated network in GCP where you can launch resources with
-            private IP addresses.</p>
-            <h2 id="w">W</h2>
-            <p><strong>Write-Ahead Log (WAL)</strong>: A log where
-            writes are recorded before being applied to the database,
-            enabling durability and recovery.</p>
+        <div class="card">
+            <div class="card-content">
+                <h1 id="glossary">Glossary</h1>
+<p>Definitions of terms used throughout this repository.</p>
+<h2 id="a">A</h2>
+<p><strong>API Gateway</strong>: A service that acts as a single entry
+point for API requests, handling routing, authentication, rate limiting,
+and other cross-cutting concerns.</p>
+<p><strong>Availability</strong>: The fraction of time a system is
+operational and able to serve requests. Usually expressed as a
+percentage (e.g., 99.9%).</p>
+<h2 id="b">B</h2>
+<p><strong>Backpressure</strong>: A mechanism where a system signals
+upstream components to slow down when it’s overloaded, preventing
+cascading failures.</p>
+<p><strong>Bigtable</strong>: Google’s distributed NoSQL database,
+designed for low-latency, high-throughput workloads. Used by many Google
+services internally.</p>
+<p><strong>Blast Radius</strong>: The scope of impact when a component
+fails. A small blast radius means failures are isolated.</p>
+<h2 id="c">C</h2>
+<p><strong>Canary Deployment</strong>: A deployment strategy where a new
+version is deployed to a small subset of instances first, monitored, and
+then gradually rolled out.</p>
+<p><strong>CAP Theorem</strong>: States that a distributed system can
+guarantee at most two of: Consistency, Availability, Partition
+tolerance.</p>
+<p><strong>Circuit Breaker</strong>: A pattern that prevents calls to a
+failing service, allowing it to recover and preventing cascading
+failures.</p>
+<p><strong>Consensus</strong>: Agreement among distributed nodes on a
+value or state. Algorithms like Raft and Paxos solve consensus.</p>
+<p><strong>Consistency</strong>: In distributed systems, refers to
+whether all nodes see the same data at the same time. Can be strong
+(linearizable) or weak (eventual).</p>
+<h2 id="d">D</h2>
+<p><strong>Distributed System</strong>: A system where components are
+located on different networked computers and coordinate to achieve a
+common goal.</p>
+<p><strong>Durability</strong>: The guarantee that once data is written,
+it will persist even if the system fails.</p>
+<h2 id="e">E</h2>
+<p><strong>Error Budget</strong>: The amount of unreliability a service
+can tolerate while still meeting its SLO. Calculated as 1 - SLO.</p>
+<p><strong>Eventual Consistency</strong>: A consistency model where,
+after updates stop, all nodes will eventually converge to the same
+state, but may temporarily have different values.</p>
+<h2 id="f">F</h2>
+<p><strong>Failure Domain</strong>: A set of components that fail
+together. Good design minimizes failure domains and limits blast
+radius.</p>
+<h2 id="g">G</h2>
+<p><strong>GKE (Google Kubernetes Engine)</strong>: Google’s managed
+Kubernetes service, running on GCP.</p>
+<h2 id="i">I</h2>
+<p><strong>IAM (Identity and Access Management)</strong>: System for
+managing who can access what resources. In GCP, controls authentication
+and authorization.</p>
+<p><strong>Idempotency</strong>: Property where performing an operation
+multiple times has the same effect as performing it once. Critical for
+retries.</p>
+<h2 id="l">L</h2>
+<p><strong>Latency</strong>: Time taken for a request to complete.
+Usually measured as P50 (median), P95, P99 (percentiles).</p>
+<p><strong>Lease</strong>: A time-limited lock that grants exclusive
+access to a resource. Expires automatically, preventing deadlocks.</p>
+<p><strong>Linearizability</strong>: Strongest consistency model. All
+operations appear to occur atomically at some point in time.</p>
+<p><strong>Load Shedding</strong>: Dropping requests when a system is
+overloaded to prevent total failure. Better to serve some requests than
+none.</p>
+<h2 id="m">M</h2>
+<p><strong>Mental Model</strong>: A simplified representation of how a
+system works, used for reasoning about behavior and failures.</p>
+<h2 id="o">O</h2>
+<p><strong>Observability</strong>: The ability to understand a system’s
+internal state from its external outputs (metrics, logs, traces).</p>
+<p><strong>Overload</strong>: When a system receives more load than it
+can handle, leading to degradation or failure.</p>
+<h2 id="p">P</h2>
+<p><strong>Partition Tolerance</strong>: The ability of a distributed
+system to continue operating despite network partitions (nodes can’t
+communicate).</p>
+<p><strong>Paxos</strong>: A consensus algorithm for distributed
+systems. Complex but proven correct.</p>
+<p><strong>Percentile (P50, P95, P99)</strong>: A measure of latency
+distribution. P95 means 95% of requests complete in this time or
+less.</p>
+<p><strong>PRR (Production Readiness Review)</strong>: A review process
+to ensure a system is ready for production, covering reliability,
+security, operations.</p>
+<p><strong>Pub/Sub</strong>: Publish-subscribe messaging system.
+Publishers send messages to topics, subscribers receive messages from
+subscriptions.</p>
+<h2 id="q">Q</h2>
+<p><strong>QPS (Queries Per Second)</strong>: A measure of throughput,
+the number of requests a system handles per second.</p>
+<p><strong>Queueing Theory</strong>: Mathematical study of waiting
+lines. Explains tail latency and helps with capacity planning.</p>
+<h2 id="r">R</h2>
+<p><strong>Raft</strong>: A consensus algorithm simpler than Paxos,
+commonly used in distributed systems.</p>
+<p><strong>Rate Limiting</strong>: Controlling the rate of requests to
+prevent overload and ensure fair resource usage.</p>
+<p><strong>Replication</strong>: Storing copies of data on multiple
+nodes for availability and performance.</p>
+<p><strong>Retry</strong>: Attempting an operation again after it fails.
+Requires idempotency to be safe.</p>
+<h2 id="s">S</h2>
+<p><strong>Sharding</strong>: Partitioning data across multiple nodes.
+Each shard contains a subset of data.</p>
+<p><strong>SLI (Service Level Indicator)</strong>: A quantitative
+measure of service quality (e.g., latency, availability, error
+rate).</p>
+<p><strong>SLO (Service Level Objective)</strong>: A target value for an
+SLI (e.g., “P95 latency &lt; 100ms”, “availability &gt; 99.9%”).</p>
+<p><strong>Spanner</strong>: Google’s globally distributed SQL database
+with strong consistency guarantees, using TrueTime for external
+consistency.</p>
+<h2 id="t">T</h2>
+<p><strong>Tail Latency</strong>: High percentiles of latency (P95,
+P99). Often much higher than median due to queueing and resource
+contention.</p>
+<p><strong>Throughput</strong>: The rate at which a system processes
+requests, usually measured in QPS or requests per second.</p>
+<p><strong>TrueTime</strong>: Google’s clock synchronization service
+used by Spanner to provide external consistency guarantees.</p>
+<h2 id="v">V</h2>
+<p><strong>VPC (Virtual Private Cloud)</strong>: A logically isolated
+network in GCP where you can launch resources with private IP
+addresses.</p>
+<h2 id="w">W</h2>
+<p><strong>Write-Ahead Log (WAL)</strong>: A log where writes are
+recorded before being applied to the database, enabling durability and
+recovery.</p>
+            </div>
         </div>
     </main>
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
       mermaid.initialize({ startOnLoad: true });

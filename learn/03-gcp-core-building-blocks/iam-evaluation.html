@@ -8,46 +8,46 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
-jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
-    <link rel="stylesheet" href="../learn/css/learn.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uudjLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/learn.css">
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../index.html" class="flex items-center hover:text-gray-600">
+                <a href="/index.html" class="flex items-center hover:text-gray-600">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     <span>Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="/learn/index.html" class="hover:text-indigo-600 font-semibold">Back to Learn Topics</a></li>
+                <li><a href="/aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="main-content">
-            <h1 id="iam-evaluation-model">IAM Evaluation Model</h1>
-            <p><strong>One-line summary</strong>: How GCP IAM policies
-            are evaluated, common footguns, and how to design secure
-            access controls.</p>
-            <p><strong>Prerequisites</strong>: Basic understanding of
-            authentication and authorization.</p>
-            <hr />
-            <h2 id="mental-model">Mental Model</h2>
-            <h3 id="iam-components">IAM Components</h3>
-            <p><strong>IAM (Identity and Access Management)</strong>
-            controls who can do what on which resources.</p>
-            <p><strong>Components</strong>: - <strong>Identity</strong>:
-            Who (users, service accounts, groups) -
-            <strong>Resource</strong>: What resource (projects,
-            instances, buckets) - <strong>Permission</strong>: What
-            action (read, write, delete) - <strong>Role</strong>:
-            Collection of permissions - <strong>Policy</strong>: Binding
-            of identity to role on resource</p>
-            <h3 id="policy-evaluation">Policy Evaluation</h3>
-            <pre class="mermaid"><code>flowchart TD
+        <div class="card">
+            <div class="card-content">
+                <h1 id="iam-evaluation-model">IAM Evaluation Model</h1>
+<p><strong>One-line summary</strong>: How GCP IAM policies are
+evaluated, common footguns, and how to design secure access
+controls.</p>
+<p><strong>Prerequisites</strong>: Basic understanding of authentication
+and authorization.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="iam-components">IAM Components</h3>
+<p><strong>IAM (Identity and Access Management)</strong> controls who
+can do what on which resources.</p>
+<p><strong>Components</strong>: - <strong>Identity</strong>: Who (users,
+service accounts, groups) - <strong>Resource</strong>: What resource
+(projects, instances, buckets) - <strong>Permission</strong>: What
+action (read, write, delete) - <strong>Role</strong>: Collection of
+permissions - <strong>Policy</strong>: Binding of identity to role on
+resource</p>
+<h3 id="policy-evaluation">Policy Evaluation</h3>
+<pre class="mermaid"><code>flowchart TD
     Request[Access Request] --&gt; Identity[Check Identity]
     Identity --&gt; Policy[Check Policies]
     Policy --&gt; Role[Check Roles]
@@ -55,12 +55,10 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
     Permission --&gt; Decision{Allow or Deny?}
 
     style Decision fill:#ffcc99</code></pre>
-            <p><strong>Key principle</strong>: <strong>Deny by
-            default</strong>. Access is denied unless explicitly
-            allowed.</p>
-            <h3 id="policy-hierarchy-evaluation">Policy Hierarchy
-            Evaluation</h3>
-            <pre class="mermaid"><code>graph TD
+<p><strong>Key principle</strong>: <strong>Deny by default</strong>.
+Access is denied unless explicitly allowed.</p>
+<h3 id="policy-hierarchy-evaluation">Policy Hierarchy Evaluation</h3>
+<pre class="mermaid"><code>graph TD
     Request[Access Request] --&gt; Org[Organization Policy]
     Org --&gt; Folder[Folder Policy]
     Folder --&gt; Project[Project Policy]
@@ -80,361 +78,323 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
     style Decision fill:#ffcc99
     style Allow fill:#99ff99
     style Deny fill:#ff9999</code></pre>
-            <hr />
-            <h2 id="internals-architecture">Internals &amp;
-            Architecture</h2>
-            <h3 id="policy-hierarchy">Policy Hierarchy</h3>
-            <p><strong>Resource hierarchy</strong>: Organization →
-            Folder → Project → Resource</p>
-            <p><strong>Policy inheritance</strong>: Policies are
-            inherited from parent to child.</p>
-            <p><strong>Example</strong>: - Organization policy: All
-            users can read - Project policy: Specific users can write -
-            <strong>Result</strong>: Users inherit read from org, get
-            write from project</p>
-            <h3 id="policy-evaluation-process">Policy Evaluation
-            Process</h3>
-            <ol type="1">
-            <li><strong>Collect policies</strong>: Gather all policies
-            from resource hierarchy</li>
-            <li><strong>Merge policies</strong>: Combine policies (union
-            of allows)</li>
-            <li><strong>Check identity</strong>: Verify identity is
-            authenticated</li>
-            <li><strong>Check bindings</strong>: Check if identity has
-            role binding</li>
-            <li><strong>Check permissions</strong>: Check if role has
-            required permission</li>
-            <li><strong>Decision</strong>: Allow if any policy allows,
-            deny otherwise</li>
-            </ol>
-            <h3 id="policy-types">Policy Types</h3>
-            <h4 id="iam-policy-bindings">1. IAM Policy Bindings</h4>
-            <p><strong>Structure</strong>:
-            <code>identity → role → resource</code></p>
-            <p><strong>Example</strong>:</p>
-            <pre><code>user:alice@example.com → roles/storage.objectViewer → bucket:my-bucket</code></pre>
-            <p><strong>Evaluation</strong>: Check if identity has role
-            on resource.</p>
-            <h4 id="organization-policies">2. Organization Policies</h4>
-            <p><strong>Structure</strong>: Constraints on resources.</p>
-            <p><strong>Example</strong>:
-            <code>constraints/compute.requireOsLogin</code></p>
-            <p><strong>Evaluation</strong>: Check if resource violates
-            constraint.</p>
-            <h4 id="vpc-firewall-rules">3. VPC Firewall Rules</h4>
-            <p><strong>Structure</strong>: Network-level access
-            control.</p>
-            <p><strong>Example</strong>: Allow traffic from specific IP
-            ranges.</p>
-            <p><strong>Evaluation</strong>: Check if traffic matches
-            rule.</p>
-            <h3 id="roles">Roles</h3>
-            <h4 id="predefined-roles">Predefined Roles</h4>
-            <p><strong>Types</strong>: - <strong>Viewer</strong>:
-            Read-only access - <strong>Editor</strong>: Read and write
-            access - <strong>Owner</strong>: Full access including IAM
-            management - <strong>Service-specific</strong>: Roles for
-            specific services (e.g.,
-            <code>roles/storage.objectViewer</code>)</p>
-            <h4 id="custom-roles">Custom Roles</h4>
-            <p><strong>Definition</strong>: User-defined roles with
-            specific permissions.</p>
-            <p><strong>Use case</strong>: Principle of least
-            privilege.</p>
-            <p><strong>Example</strong>: Custom role with only
-            <code>storage.objects.get</code> permission.</p>
-            <h3 id="service-accounts">Service Accounts</h3>
-            <p><strong>Service accounts</strong>: Identities for
-            applications, not users.</p>
-            <p><strong>Types</strong>: - <strong>User-managed</strong>:
-            Created by users - <strong>Google-managed</strong>: Created
-            by Google (e.g., Compute Engine default)</p>
-            <p><strong>Best practices</strong>: - Use service accounts
-            for applications - Use workload identity for GKE - Rotate
-            service account keys regularly</p>
-            <h3 id="workload-identity">Workload Identity</h3>
-            <p><strong>Workload Identity</strong>: Allows GKE pods to
-            use GCP service accounts.</p>
-            <p><strong>Process</strong>: 1. Pod uses Kubernetes service
-            account 2. Workload Identity maps KSA to GSA 3. Pod
-            authenticates as GSA 4. Pod accesses GCP resources</p>
-            <p><strong>Benefits</strong>: No need to store service
-            account keys in pods.</p>
-            <hr />
-            <h2 id="failure-modes-blast-radius">Failure Modes &amp;
-            Blast Radius</h2>
-            <h3 id="iam-failures">IAM Failures</h3>
-            <h4 id="scenario-1-overly-permissive-policies">Scenario 1:
-            Overly Permissive Policies</h4>
-            <ul>
-            <li><strong>Impact</strong>: Users have more access than
-            needed</li>
-            <li><strong>Blast radius</strong>: All resources with
-            policy</li>
-            <li><strong>Detection</strong>: IAM audit logs, access
-            reviews</li>
-            <li><strong>Recovery</strong>: Tighten policies, remove
-            unnecessary roles</li>
-            </ul>
-            <h4 id="scenario-2-missing-policies">Scenario 2: Missing
-            Policies</h4>
-            <ul>
-            <li><strong>Impact</strong>: Legitimate access denied,
-            services fail</li>
-            <li><strong>Blast radius</strong>: Affected services</li>
-            <li><strong>Detection</strong>: Access denied errors,
-            service failures</li>
-            <li><strong>Recovery</strong>: Add missing policies, verify
-            access</li>
-            </ul>
-            <h4 id="scenario-3-service-account-key-leakage">Scenario 3:
-            Service Account Key Leakage</h4>
-            <ul>
-            <li><strong>Impact</strong>: Attackers can impersonate
-            service account</li>
-            <li><strong>Blast radius</strong>: All resources accessible
-            by service account</li>
-            <li><strong>Detection</strong>: Unusual access patterns, key
-            usage alerts</li>
-            <li><strong>Recovery</strong>: Rotate keys, revoke
-            compromised keys</li>
-            </ul>
-            <h4 id="scenario-4-policy-inheritance-issues">Scenario 4:
-            Policy Inheritance Issues</h4>
-            <ul>
-            <li><strong>Impact</strong>: Unexpected access granted or
-            denied</li>
-            <li><strong>Blast radius</strong>: Resources in
-            hierarchy</li>
-            <li><strong>Detection</strong>: Access reviews, policy
-            audits</li>
-            <li><strong>Recovery</strong>: Fix policy hierarchy, verify
-            inheritance</li>
-            </ul>
-            <h3 id="common-footguns">Common Footguns</h3>
-            <h4 id="using-owner-role">1. Using Owner Role</h4>
-            <p><strong>Problem</strong>: Owner role has too many
-            permissions (can modify IAM).</p>
-            <p><strong>Solution</strong>: Use Editor role or custom
-            roles with specific permissions.</p>
-            <h4 id="service-account-keys-in-code">2. Service Account
-            Keys in Code</h4>
-            <p><strong>Problem</strong>: Keys stored in code can be
-            leaked.</p>
-            <p><strong>Solution</strong>: Use workload identity, secret
-            manager, or environment variables.</p>
-            <h4 id="public-access-on-resources">3. Public Access on
-            Resources</h4>
-            <p><strong>Problem</strong>: Resources accessible to all
-            users (including external).</p>
-            <p><strong>Solution</strong>: Use private resources, limit
-            access with IAM.</p>
-            <h4 id="overly-broad-policies">4. Overly Broad Policies</h4>
-            <p><strong>Problem</strong>: Policies grant access to too
-            many resources.</p>
-            <p><strong>Solution</strong>: Use resource-specific
-            policies, principle of least privilege.</p>
-            <h4 id="missing-audit-logs">5. Missing Audit Logs</h4>
-            <p><strong>Problem</strong>: Can’t track who accessed
-            what.</p>
-            <p><strong>Solution</strong>: Enable audit logs, monitor
-            access.</p>
-            <hr />
-            <h2 id="observability-contract">Observability Contract</h2>
-            <h3 id="metrics-to-track">Metrics to Track</h3>
-            <h4 id="iam-metrics">IAM Metrics</h4>
-            <ul>
-            <li><strong>Policy changes</strong>: Number of policy
-            changes</li>
-            <li><strong>Access denials</strong>: Number of access denied
-            errors</li>
-            <li><strong>Service account usage</strong>: Service account
-            key usage</li>
-            </ul>
-            <h4 id="audit-logs">Audit Logs</h4>
-            <ul>
-            <li><strong>Admin activity</strong>: IAM policy changes</li>
-            <li><strong>Data access</strong>: Resource access (if
-            enabled)</li>
-            <li><strong>System events</strong>: System-level events</li>
-            </ul>
-            <h3 id="logs">Logs</h3>
-            <p>Log events: - IAM policy changes - Access denied errors -
-            Service account key usage - Unusual access patterns</p>
-            <h3 id="alerts">Alerts</h3>
-            <p><strong>Critical alerts</strong>: - IAM policy changes
-            (especially Owner role) - Service account key creation -
-            Unusual access patterns - Public access granted</p>
-            <p><strong>Warning alerts</strong>: - Access denial spikes -
-            Service account key usage spikes</p>
-            <hr />
-            <h2 id="change-safety">Change Safety</h2>
-            <h3 id="policy-changes">Policy Changes</h3>
-            <h4 id="adding-policies">Adding Policies</h4>
-            <ul>
-            <li><strong>Process</strong>: Add policy binding, verify
-            access</li>
-            <li><strong>Risk</strong>: Low (additive change)</li>
-            <li><strong>Rollback</strong>: Remove policy binding</li>
-            </ul>
-            <h4 id="removing-policies">Removing Policies</h4>
-            <ul>
-            <li><strong>Process</strong>: Remove policy binding, verify
-            services still work</li>
-            <li><strong>Risk</strong>: High (may break access)</li>
-            <li><strong>Rollback</strong>: Re-add policy binding</li>
-            </ul>
-            <h4 id="changing-roles">Changing Roles</h4>
-            <ul>
-            <li><strong>Process</strong>: Update role bindings, verify
-            access</li>
-            <li><strong>Risk</strong>: Medium (may grant or revoke
-            access)</li>
-            <li><strong>Rollback</strong>: Revert role bindings</li>
-            </ul>
-            <h3 id="testing-strategy">Testing Strategy</h3>
-            <ol type="1">
-            <li><strong>Access testing</strong>: Verify users have
-            correct access</li>
-            <li><strong>Denial testing</strong>: Verify users don’t have
-            excessive access</li>
-            <li><strong>Service account testing</strong>: Verify service
-            accounts work correctly</li>
-            <li><strong>Policy inheritance testing</strong>: Verify
-            inheritance works correctly</li>
-            </ol>
-            <hr />
-            <h2 id="security-boundaries">Security Boundaries</h2>
-            <h3 id="identity-security">Identity Security</h3>
-            <ul>
-            <li><strong>Authentication</strong>: Verify identity (MFA,
-            service account keys)</li>
-            <li><strong>Authorization</strong>: Verify permissions (IAM
-            policies)</li>
-            <li><strong>Audit</strong>: Track access (audit logs)</li>
-            </ul>
-            <h3 id="resource-security">Resource Security</h3>
-            <ul>
-            <li><strong>Private resources</strong>: Use private IPs,
-            VPCs</li>
-            <li><strong>Public resources</strong>: Limit public access
-            with IAM</li>
-            <li><strong>Encryption</strong>: Encrypt data at rest and in
-            transit</li>
-            </ul>
-            <h3 id="policy-security">Policy Security</h3>
-            <ul>
-            <li><strong>Least privilege</strong>: Grant minimum
-            necessary permissions</li>
-            <li><strong>Regular reviews</strong>: Review policies
-            regularly</li>
-            <li><strong>Automation</strong>: Use policy as code
-            (Terraform, etc.)</li>
-            </ul>
-            <hr />
-            <h2 id="tradeoffs">Tradeoffs</h2>
-            <h3 id="policy-granularity">Policy Granularity</h3>
-            <p><strong>Fine-grained policies</strong>: -
-            <strong>Pros</strong>: Better security, least privilege -
-            <strong>Cons</strong>: More complex, harder to manage</p>
-            <p><strong>Coarse-grained policies</strong>: -
-            <strong>Pros</strong>: Simpler, easier to manage -
-            <strong>Cons</strong>: Less secure, more permissions than
-            needed</p>
-            <h3 id="service-account-keys-vs-workload-identity">Service
-            Account Keys vs Workload Identity</h3>
-            <p><strong>Service account keys</strong>: -
-            <strong>Pros</strong>: Works everywhere, simple -
-            <strong>Cons</strong>: Key management, security risk</p>
-            <p><strong>Workload identity</strong>: -
-            <strong>Pros</strong>: No keys, more secure -
-            <strong>Cons</strong>: GKE only, more complex</p>
-            <hr />
-            <h2 id="operational-considerations">Operational
-            Considerations</h2>
-            <h3 id="capacity-planning">Capacity Planning</h3>
-            <p><strong>IAM policies</strong>: - Limit: 1,500 bindings
-            per policy - Limit: 100 custom roles per organization</p>
-            <p><strong>Service accounts</strong>: - Limit: 100 service
-            accounts per project (can request increase)</p>
-            <h3 id="monitoring-debugging">Monitoring &amp;
-            Debugging</h3>
-            <p><strong>Monitor</strong>: - Policy changes - Access
-            denials - Service account usage - Unusual access
-            patterns</p>
-            <p><strong>Debug access issues</strong>: 1. Check identity:
-            Is user/service account authenticated? 2. Check policies:
-            Does identity have role binding? 3. Check permissions: Does
-            role have required permission? 4. Check inheritance: Are
-            policies inherited correctly? 5. Check constraints: Are
-            organization policies blocking access?</p>
-            <h3 id="incident-response">Incident Response</h3>
-            <p><strong>Common incidents</strong>: - Access denied errors
-            - Service account failures - Policy misconfigurations</p>
-            <p><strong>Response</strong>: 1. Check IAM policies 2. Check
-            service account permissions 3. Check audit logs 4. Verify
-            access 5. Fix policies if needed</p>
-            <hr />
-            <h2 id="what-staff-engineers-ask-in-reviews">What Staff
-            Engineers Ask in Reviews</h2>
-            <h3 id="design-questions">Design Questions</h3>
-            <ul>
-            <li>“What’s the IAM policy structure?”</li>
-            <li>“Who has Owner role?”</li>
-            <li>“How are service accounts used?”</li>
-            <li>“What’s the principle of least privilege?”</li>
-            </ul>
-            <h3 id="security-questions">Security Questions</h3>
-            <ul>
-            <li>“Are service account keys stored securely?”</li>
-            <li>“Is public access enabled?”</li>
-            <li>“Are audit logs enabled?”</li>
-            <li>“How are policies reviewed?”</li>
-            </ul>
-            <h3 id="operational-questions">Operational Questions</h3>
-            <ul>
-            <li>“How do we monitor IAM?”</li>
-            <li>“What alerts do we have?”</li>
-            <li>“How do we debug access issues?”</li>
-            </ul>
-            <hr />
-            <h2 id="further-reading">Further Reading</h2>
-            <p><strong>Comprehensive Guide</strong>: <a
-            href="../further-reading/iam-evaluation.html">Further Reading:
-            IAM Evaluation Model</a></p>
-            <p><strong>Quick Links</strong>: - <a
-            href="https://cloud.google.com/iam/docs">GCP IAM
-            Documentation</a> - <a
-            href="https://cloud.google.com/iam/docs/using-iam-securely">IAM
-            Best Practices</a> - “BeyondCorp: A New Approach to
-            Enterprise Security” (Google Research) - <a
-            href="https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity">Workload
-            Identity</a> - <a href="README.html">Back to GCP Core Building
-            Blocks</a></p>
-            <hr />
-            <h2 id="exercises">Exercises</h2>
-            <ol type="1">
-            <li><p><strong>Design IAM policies</strong>: Design IAM
-            policies for a multi-tier application. Who can access what?
-            What roles do you use?</p></li>
-            <li><p><strong>Service account strategy</strong>: You’re
-            deploying a GKE application that needs to access Cloud
-            Storage. Do you use service account keys or workload
-            identity? Why?</p></li>
-            <li><p><strong>Debug access issue</strong>: A service is
-            getting “permission denied” errors accessing a bucket. How
-            do you debug this?</p></li>
-            </ol>
-            <p><strong>Answer Key</strong>: <a
-            href="../../exercises/answers/iam-evaluation-answers.html">View
-            Answers</a></p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="policy-hierarchy">Policy Hierarchy</h3>
+<p><strong>Resource hierarchy</strong>: Organization → Folder → Project
+→ Resource</p>
+<p><strong>Policy inheritance</strong>: Policies are inherited from
+parent to child.</p>
+<p><strong>Example</strong>: - Organization policy: All users can read -
+Project policy: Specific users can write - <strong>Result</strong>:
+Users inherit read from org, get write from project</p>
+<h3 id="policy-evaluation-process">Policy Evaluation Process</h3>
+<ol type="1">
+<li><strong>Collect policies</strong>: Gather all policies from resource
+hierarchy</li>
+<li><strong>Merge policies</strong>: Combine policies (union of
+allows)</li>
+<li><strong>Check identity</strong>: Verify identity is
+authenticated</li>
+<li><strong>Check bindings</strong>: Check if identity has role
+binding</li>
+<li><strong>Check permissions</strong>: Check if role has required
+permission</li>
+<li><strong>Decision</strong>: Allow if any policy allows, deny
+otherwise</li>
+</ol>
+<h3 id="policy-types">Policy Types</h3>
+<h4 id="iam-policy-bindings">1. IAM Policy Bindings</h4>
+<p><strong>Structure</strong>:
+<code>identity → role → resource</code></p>
+<p><strong>Example</strong>:</p>
+<pre><code>user:alice@example.com → roles/storage.objectViewer → bucket:my-bucket</code></pre>
+<p><strong>Evaluation</strong>: Check if identity has role on
+resource.</p>
+<h4 id="organization-policies">2. Organization Policies</h4>
+<p><strong>Structure</strong>: Constraints on resources.</p>
+<p><strong>Example</strong>:
+<code>constraints/compute.requireOsLogin</code></p>
+<p><strong>Evaluation</strong>: Check if resource violates
+constraint.</p>
+<h4 id="vpc-firewall-rules">3. VPC Firewall Rules</h4>
+<p><strong>Structure</strong>: Network-level access control.</p>
+<p><strong>Example</strong>: Allow traffic from specific IP ranges.</p>
+<p><strong>Evaluation</strong>: Check if traffic matches rule.</p>
+<h3 id="roles">Roles</h3>
+<h4 id="predefined-roles">Predefined Roles</h4>
+<p><strong>Types</strong>: - <strong>Viewer</strong>: Read-only access -
+<strong>Editor</strong>: Read and write access - <strong>Owner</strong>:
+Full access including IAM management -
+<strong>Service-specific</strong>: Roles for specific services (e.g.,
+<code>roles/storage.objectViewer</code>)</p>
+<h4 id="custom-roles">Custom Roles</h4>
+<p><strong>Definition</strong>: User-defined roles with specific
+permissions.</p>
+<p><strong>Use case</strong>: Principle of least privilege.</p>
+<p><strong>Example</strong>: Custom role with only
+<code>storage.objects.get</code> permission.</p>
+<h3 id="service-accounts">Service Accounts</h3>
+<p><strong>Service accounts</strong>: Identities for applications, not
+users.</p>
+<p><strong>Types</strong>: - <strong>User-managed</strong>: Created by
+users - <strong>Google-managed</strong>: Created by Google (e.g.,
+Compute Engine default)</p>
+<p><strong>Best practices</strong>: - Use service accounts for
+applications - Use workload identity for GKE - Rotate service account
+keys regularly</p>
+<h3 id="workload-identity">Workload Identity</h3>
+<p><strong>Workload Identity</strong>: Allows GKE pods to use GCP
+service accounts.</p>
+<p><strong>Process</strong>: 1. Pod uses Kubernetes service account 2.
+Workload Identity maps KSA to GSA 3. Pod authenticates as GSA 4. Pod
+accesses GCP resources</p>
+<p><strong>Benefits</strong>: No need to store service account keys in
+pods.</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast
+Radius</h2>
+<h3 id="iam-failures">IAM Failures</h3>
+<h4 id="scenario-1-overly-permissive-policies">Scenario 1: Overly
+Permissive Policies</h4>
+<ul>
+<li><strong>Impact</strong>: Users have more access than needed</li>
+<li><strong>Blast radius</strong>: All resources with policy</li>
+<li><strong>Detection</strong>: IAM audit logs, access reviews</li>
+<li><strong>Recovery</strong>: Tighten policies, remove unnecessary
+roles</li>
+</ul>
+<h4 id="scenario-2-missing-policies">Scenario 2: Missing Policies</h4>
+<ul>
+<li><strong>Impact</strong>: Legitimate access denied, services
+fail</li>
+<li><strong>Blast radius</strong>: Affected services</li>
+<li><strong>Detection</strong>: Access denied errors, service
+failures</li>
+<li><strong>Recovery</strong>: Add missing policies, verify access</li>
+</ul>
+<h4 id="scenario-3-service-account-key-leakage">Scenario 3: Service
+Account Key Leakage</h4>
+<ul>
+<li><strong>Impact</strong>: Attackers can impersonate service
+account</li>
+<li><strong>Blast radius</strong>: All resources accessible by service
+account</li>
+<li><strong>Detection</strong>: Unusual access patterns, key usage
+alerts</li>
+<li><strong>Recovery</strong>: Rotate keys, revoke compromised keys</li>
+</ul>
+<h4 id="scenario-4-policy-inheritance-issues">Scenario 4: Policy
+Inheritance Issues</h4>
+<ul>
+<li><strong>Impact</strong>: Unexpected access granted or denied</li>
+<li><strong>Blast radius</strong>: Resources in hierarchy</li>
+<li><strong>Detection</strong>: Access reviews, policy audits</li>
+<li><strong>Recovery</strong>: Fix policy hierarchy, verify
+inheritance</li>
+</ul>
+<h3 id="common-footguns">Common Footguns</h3>
+<h4 id="using-owner-role">1. Using Owner Role</h4>
+<p><strong>Problem</strong>: Owner role has too many permissions (can
+modify IAM).</p>
+<p><strong>Solution</strong>: Use Editor role or custom roles with
+specific permissions.</p>
+<h4 id="service-account-keys-in-code">2. Service Account Keys in
+Code</h4>
+<p><strong>Problem</strong>: Keys stored in code can be leaked.</p>
+<p><strong>Solution</strong>: Use workload identity, secret manager, or
+environment variables.</p>
+<h4 id="public-access-on-resources">3. Public Access on Resources</h4>
+<p><strong>Problem</strong>: Resources accessible to all users
+(including external).</p>
+<p><strong>Solution</strong>: Use private resources, limit access with
+IAM.</p>
+<h4 id="overly-broad-policies">4. Overly Broad Policies</h4>
+<p><strong>Problem</strong>: Policies grant access to too many
+resources.</p>
+<p><strong>Solution</strong>: Use resource-specific policies, principle
+of least privilege.</p>
+<h4 id="missing-audit-logs">5. Missing Audit Logs</h4>
+<p><strong>Problem</strong>: Can’t track who accessed what.</p>
+<p><strong>Solution</strong>: Enable audit logs, monitor access.</p>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics-to-track">Metrics to Track</h3>
+<h4 id="iam-metrics">IAM Metrics</h4>
+<ul>
+<li><strong>Policy changes</strong>: Number of policy changes</li>
+<li><strong>Access denials</strong>: Number of access denied errors</li>
+<li><strong>Service account usage</strong>: Service account key
+usage</li>
+</ul>
+<h4 id="audit-logs">Audit Logs</h4>
+<ul>
+<li><strong>Admin activity</strong>: IAM policy changes</li>
+<li><strong>Data access</strong>: Resource access (if enabled)</li>
+<li><strong>System events</strong>: System-level events</li>
+</ul>
+<h3 id="logs">Logs</h3>
+<p>Log events: - IAM policy changes - Access denied errors - Service
+account key usage - Unusual access patterns</p>
+<h3 id="alerts">Alerts</h3>
+<p><strong>Critical alerts</strong>: - IAM policy changes (especially
+Owner role) - Service account key creation - Unusual access patterns -
+Public access granted</p>
+<p><strong>Warning alerts</strong>: - Access denial spikes - Service
+account key usage spikes</p>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="policy-changes">Policy Changes</h3>
+<h4 id="adding-policies">Adding Policies</h4>
+<ul>
+<li><strong>Process</strong>: Add policy binding, verify access</li>
+<li><strong>Risk</strong>: Low (additive change)</li>
+<li><strong>Rollback</strong>: Remove policy binding</li>
+</ul>
+<h4 id="removing-policies">Removing Policies</h4>
+<ul>
+<li><strong>Process</strong>: Remove policy binding, verify services
+still work</li>
+<li><strong>Risk</strong>: High (may break access)</li>
+<li><strong>Rollback</strong>: Re-add policy binding</li>
+</ul>
+<h4 id="changing-roles">Changing Roles</h4>
+<ul>
+<li><strong>Process</strong>: Update role bindings, verify access</li>
+<li><strong>Risk</strong>: Medium (may grant or revoke access)</li>
+<li><strong>Rollback</strong>: Revert role bindings</li>
+</ul>
+<h3 id="testing-strategy">Testing Strategy</h3>
+<ol type="1">
+<li><strong>Access testing</strong>: Verify users have correct
+access</li>
+<li><strong>Denial testing</strong>: Verify users don’t have excessive
+access</li>
+<li><strong>Service account testing</strong>: Verify service accounts
+work correctly</li>
+<li><strong>Policy inheritance testing</strong>: Verify inheritance
+works correctly</li>
+</ol>
+<hr />
+<h2 id="security-boundaries">Security Boundaries</h2>
+<h3 id="identity-security">Identity Security</h3>
+<ul>
+<li><strong>Authentication</strong>: Verify identity (MFA, service
+account keys)</li>
+<li><strong>Authorization</strong>: Verify permissions (IAM
+policies)</li>
+<li><strong>Audit</strong>: Track access (audit logs)</li>
+</ul>
+<h3 id="resource-security">Resource Security</h3>
+<ul>
+<li><strong>Private resources</strong>: Use private IPs, VPCs</li>
+<li><strong>Public resources</strong>: Limit public access with IAM</li>
+<li><strong>Encryption</strong>: Encrypt data at rest and in
+transit</li>
+</ul>
+<h3 id="policy-security">Policy Security</h3>
+<ul>
+<li><strong>Least privilege</strong>: Grant minimum necessary
+permissions</li>
+<li><strong>Regular reviews</strong>: Review policies regularly</li>
+<li><strong>Automation</strong>: Use policy as code (Terraform,
+etc.)</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="policy-granularity">Policy Granularity</h3>
+<p><strong>Fine-grained policies</strong>: - <strong>Pros</strong>:
+Better security, least privilege - <strong>Cons</strong>: More complex,
+harder to manage</p>
+<p><strong>Coarse-grained policies</strong>: - <strong>Pros</strong>:
+Simpler, easier to manage - <strong>Cons</strong>: Less secure, more
+permissions than needed</p>
+<h3 id="service-account-keys-vs-workload-identity">Service Account Keys
+vs Workload Identity</h3>
+<p><strong>Service account keys</strong>: - <strong>Pros</strong>: Works
+everywhere, simple - <strong>Cons</strong>: Key management, security
+risk</p>
+<p><strong>Workload identity</strong>: - <strong>Pros</strong>: No keys,
+more secure - <strong>Cons</strong>: GKE only, more complex</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<p><strong>IAM policies</strong>: - Limit: 1,500 bindings per policy -
+Limit: 100 custom roles per organization</p>
+<p><strong>Service accounts</strong>: - Limit: 100 service accounts per
+project (can request increase)</p>
+<h3 id="monitoring-debugging">Monitoring &amp; Debugging</h3>
+<p><strong>Monitor</strong>: - Policy changes - Access denials - Service
+account usage - Unusual access patterns</p>
+<p><strong>Debug access issues</strong>: 1. Check identity: Is
+user/service account authenticated? 2. Check policies: Does identity
+have role binding? 3. Check permissions: Does role have required
+permission? 4. Check inheritance: Are policies inherited correctly? 5.
+Check constraints: Are organization policies blocking access?</p>
+<h3 id="incident-response">Incident Response</h3>
+<p><strong>Common incidents</strong>: - Access denied errors - Service
+account failures - Policy misconfigurations</p>
+<p><strong>Response</strong>: 1. Check IAM policies 2. Check service
+account permissions 3. Check audit logs 4. Verify access 5. Fix policies
+if needed</p>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in
+Reviews</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>“What’s the IAM policy structure?”</li>
+<li>“Who has Owner role?”</li>
+<li>“How are service accounts used?”</li>
+<li>“What’s the principle of least privilege?”</li>
+</ul>
+<h3 id="security-questions">Security Questions</h3>
+<ul>
+<li>“Are service account keys stored securely?”</li>
+<li>“Is public access enabled?”</li>
+<li>“Are audit logs enabled?”</li>
+<li>“How are policies reviewed?”</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>“How do we monitor IAM?”</li>
+<li>“What alerts do we have?”</li>
+<li>“How do we debug access issues?”</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a
+href="../further-reading/iam-evaluation.html">Further Reading: IAM
+Evaluation Model</a></p>
+<p><strong>Quick Links</strong>: - <a
+href="https://cloud.google.com/iam/docs">GCP IAM Documentation</a> - <a
+href="https://cloud.google.com/iam/docs/using-iam-securely">IAM Best
+Practices</a> - “BeyondCorp: A New Approach to Enterprise Security”
+(Google Research) - <a
+href="https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity">Workload
+Identity</a> - <a href="README.html">Back to GCP Core Building
+Blocks</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol type="1">
+<li><p><strong>Design IAM policies</strong>: Design IAM policies for a
+multi-tier application. Who can access what? What roles do you
+use?</p></li>
+<li><p><strong>Service account strategy</strong>: You’re deploying a GKE
+application that needs to access Cloud Storage. Do you use service
+account keys or workload identity? Why?</p></li>
+<li><p><strong>Debug access issue</strong>: A service is getting
+“permission denied” errors accessing a bucket. How do you debug
+this?</p></li>
+</ol>
+<p><strong>Answer Key</strong>: <a
+href="../../exercises/answers/iam-evaluation-answers.html">View
+Answers</a></p>
+            </div>
         </div>
     </main>
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
       mermaid.initialize({ startOnLoad: true });

@@ -8,368 +8,320 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
-jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../learn/css/learn.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uudjLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/learn.css">
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../../index.html" class="flex items-center hover:text-gray-600">
+                <a href="/index.html" class="flex items-center hover:text-gray-600">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     <span>Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="/learn/index.html" class="hover:text-indigo-600 font-semibold">Back to Learn Topics</a></li>
+                <li><a href="/aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="main-content">
-            <h1 id="answer-key-prr-checklist">Answer Key: PRR
-            Checklist</h1>
-            <p><a
-            href="../../04-reliability-sre/prr-checklist.md#exercises">Back
-            to Exercises</a></p>
-            <hr />
-            <h2 id="exercise-1-run-a-prr">Exercise 1: Run a PRR</h2>
-            <p><strong>Question</strong>: Review a system design using
-            this checklist. What issues do you find?</p>
-            <h3 id="answer">Answer</h3>
-            <p><strong>System</strong>: API service with database,
-            cache, and external API dependencies</p>
-            <h3 id="prr-review-findings">PRR Review Findings</h3>
-            <p><strong>Critical Issues (Must Fix)</strong>:</p>
-            <ol type="1">
-            <li><strong>No SLIs/SLOs Defined</strong>
-            <ul>
-            <li><strong>Issue</strong>: No service level indicators or
-            objectives defined</li>
-            <li><strong>Impact</strong>: Can’t measure reliability,
-            can’t set error budgets</li>
-            <li><strong>Fix</strong>: Define SLIs (availability,
-            latency, error rate) and SLOs (targets)</li>
-            </ul></li>
-            <li><strong>No Monitoring</strong>
-            <ul>
-            <li><strong>Issue</strong>: No metrics, logs, or traces
-            configured</li>
-            <li><strong>Impact</strong>: Can’t detect problems, can’t
-            debug issues</li>
-            <li><strong>Fix</strong>: Set up metrics (latency,
-            throughput, errors), logs (structured), traces (critical
-            paths)</li>
-            </ul></li>
-            <li><strong>No On-Call</strong>
-            <ul>
-            <li><strong>Issue</strong>: No on-call rotation or
-            procedures</li>
-            <li><strong>Impact</strong>: Can’t respond to incidents</li>
-            <li><strong>Fix</strong>: Set up on-call rotation, define
-            escalation paths, create runbooks</li>
-            </ul></li>
-            <li><strong>No Rollback Plan</strong>
-            <ul>
-            <li><strong>Issue</strong>: No rollback procedure documented
-            or tested</li>
-            <li><strong>Impact</strong>: Can’t recover from bad
-            deployments</li>
-            <li><strong>Fix</strong>: Document rollback procedure, test
-            rollback, automate if possible</li>
-            </ul></li>
-            <li><strong>No Security</strong>
-            <ul>
-            <li><strong>Issue</strong>: No authentication,
-            authorization, or encryption</li>
-            <li><strong>Impact</strong>: Vulnerable to attacks, data
-            breaches</li>
-            <li><strong>Fix</strong>: Add authentication (OAuth/JWT),
-            authorization (IAM), encryption (TLS, at rest)</li>
-            </ul></li>
-            </ol>
-            <p><strong>Important Issues (Should Fix)</strong>:</p>
-            <ol type="1">
-            <li><strong>Weak SLIs</strong>
-            <ul>
-            <li><strong>Issue</strong>: Using internal metrics (CPU,
-            memory) instead of user-facing metrics</li>
-            <li><strong>Impact</strong>: SLIs don’t reflect user
-            experience</li>
-            <li><strong>Fix</strong>: Use user-facing metrics
-            (availability, latency, error rate)</li>
-            </ul></li>
-            <li><strong>Alert Fatigue</strong>
-            <ul>
-            <li><strong>Issue</strong>: Too many alerts, not
-            actionable</li>
-            <li><strong>Impact</strong>: Alerts ignored, real issues
-            missed</li>
-            <li><strong>Fix</strong>: Reduce alerts, make alerts
-            actionable, set appropriate thresholds</li>
-            </ul></li>
-            <li><strong>No Runbooks</strong>
-            <ul>
-            <li><strong>Issue</strong>: No runbooks for common
-            operations or incidents</li>
-            <li><strong>Impact</strong>: Don’t know how to respond to
-            issues</li>
-            <li><strong>Fix</strong>: Create runbooks for common
-            incidents, test runbooks</li>
-            </ul></li>
-            <li><strong>No Load Testing</strong>
-            <ul>
-            <li><strong>Issue</strong>: System not load tested</li>
-            <li><strong>Impact</strong>: Don’t know capacity limits, may
-            fail under load</li>
-            <li><strong>Fix</strong>: Run load tests, test at 2×
-            expected load, identify bottlenecks</li>
-            </ul></li>
-            <li><strong>Weak Security</strong>
-            <ul>
-            <li><strong>Issue</strong>: Security gaps (no encryption,
-            weak authentication)</li>
-            <li><strong>Impact</strong>: Security vulnerabilities</li>
-            <li><strong>Fix</strong>: Add encryption, strengthen
-            authentication, add authorization</li>
-            </ul></li>
-            </ol>
-            <p><strong>Nice-to-Have (Consider)</strong>:</p>
-            <ol type="1">
-            <li><strong>No Tracing</strong>
-            <ul>
-            <li><strong>Issue</strong>: No distributed tracing</li>
-            <li><strong>Impact</strong>: Harder to debug performance
-            issues</li>
-            <li><strong>Fix</strong>: Add tracing for critical
-            paths</li>
-            </ul></li>
-            <li><strong>No Chaos Testing</strong>
-            <ul>
-            <li><strong>Issue</strong>: No chaos engineering</li>
-            <li><strong>Impact</strong>: Don’t know how system handles
-            failures</li>
-            <li><strong>Fix</strong>: Add chaos tests, test failure
-            scenarios</li>
-            </ul></li>
-            <li><strong>No Capacity Planning</strong>
-            <ul>
-            <li><strong>Issue</strong>: No capacity planning or
-            forecasting</li>
-            <li><strong>Impact</strong>: May run out of capacity
-            unexpectedly</li>
-            <li><strong>Fix</strong>: Plan capacity, forecast growth,
-            monitor capacity</li>
-            </ul></li>
-            </ol>
-            <h3 id="answer-1">Answer</h3>
-            <p><strong>Critical Issues</strong> (Must Fix): 1. No
-            SLIs/SLOs defined 2. No monitoring configured 3. No on-call
-            rotation 4. No rollback plan 5. No security (authentication,
-            authorization, encryption)</p>
-            <p><strong>Important Issues</strong> (Should Fix): 1. Weak
-            SLIs (using internal metrics) 2. Alert fatigue (too many
-            non-actionable alerts) 3. No runbooks 4. No load testing 5.
-            Weak security</p>
-            <p><strong>Nice-to-Have</strong> (Consider): 1. No tracing
-            2. No chaos testing 3. No capacity planning</p>
-            <p><strong>Top Priority</strong>: Fix critical issues first
-            (SLIs/SLOs, monitoring, on-call, rollback, security)</p>
-            <hr />
-            <h2 id="exercise-2-fix-prr-issues">Exercise 2: Fix PRR
-            Issues</h2>
-            <p><strong>Question</strong>: A system fails PRR. What are
-            the top 3 issues to fix?</p>
-            <h3 id="answer-2">Answer</h3>
-            <p><strong>System</strong>: Failed PRR review</p>
-            <h3 id="top-3-issues-to-fix">Top 3 Issues to Fix</h3>
-            <p><strong>1. Define SLIs and SLOs</strong> (Highest
-            Priority)</p>
-            <p><strong>Why</strong>: Foundation for everything else -
-            Can’t measure reliability without SLIs - Can’t set error
-            budgets without SLOs - Can’t make data-driven decisions</p>
-            <p><strong>How</strong>: 1. Define user-facing SLIs
-            (availability, latency, error rate) 2. Set realistic SLOs
-            based on baseline 3. Calculate error budgets 4. Set up
-            monitoring to measure SLIs 5. Create SLO dashboard</p>
-            <p><strong>Timeline</strong>: 1-2 weeks</p>
-            <p><strong>2. Set Up Monitoring</strong> (High Priority)</p>
-            <p><strong>Why</strong>: Can’t detect or debug problems
-            without monitoring - Need metrics to measure SLIs - Need
-            logs to debug issues - Need traces to identify
-            bottlenecks</p>
-            <p><strong>How</strong>: 1. Set up metrics (latency,
-            throughput, errors, resources) 2. Configure structured
-            logging 3. Set up distributed tracing (if applicable) 4.
-            Create dashboards 5. Configure alerts</p>
-            <p><strong>Timeline</strong>: 1-2 weeks</p>
-            <p><strong>3. Set Up On-Call and Runbooks</strong> (High
-            Priority)</p>
-            <p><strong>Why</strong>: Can’t respond to incidents without
-            on-call - Need on-call to respond to alerts - Need runbooks
-            to know how to respond - Need escalation paths for critical
-            issues</p>
-            <p><strong>How</strong>: 1. Set up on-call rotation 2.
-            Create runbooks for common incidents 3. Define escalation
-            paths 4. Set up alerting (PagerDuty, etc.) 5. Train on-call
-            engineers</p>
-            <p><strong>Timeline</strong>: 1 week</p>
-            <h3 id="why-these-three">Why These Three?</h3>
-            <p><strong>SLIs/SLOs</strong>: Foundation - everything else
-            depends on this <strong>Monitoring</strong>: Detection -
-            can’t fix what you can’t see <strong>On-Call</strong>:
-            Response - can’t fix what you can’t respond to</p>
-            <p><strong>Order</strong>: Fix in this order (SLIs/SLOs →
-            Monitoring → On-Call)</p>
-            <h3 id="answer-3">Answer</h3>
-            <p><strong>Top 3 Issues to Fix</strong>:</p>
-            <ol type="1">
-            <li><strong>Define SLIs and SLOs</strong> (Highest Priority)
-            <ul>
-            <li>Foundation for reliability</li>
-            <li>Define user-facing metrics and targets</li>
-            <li>Set up error budgets</li>
-            <li>Timeline: 1-2 weeks</li>
-            </ul></li>
-            <li><strong>Set Up Monitoring</strong> (High Priority)
-            <ul>
-            <li>Can’t detect problems without monitoring</li>
-            <li>Set up metrics, logs, traces</li>
-            <li>Create dashboards and alerts</li>
-            <li>Timeline: 1-2 weeks</li>
-            </ul></li>
-            <li><strong>Set Up On-Call and Runbooks</strong> (High
-            Priority)
-            <ul>
-            <li>Can’t respond to incidents without on-call</li>
-            <li>Create runbooks for common incidents</li>
-            <li>Set up escalation paths</li>
-            <li>Timeline: 1 week</li>
-            </ul></li>
-            </ol>
-            <p><strong>Why these three</strong>: SLIs/SLOs are
-            foundation, monitoring enables detection, on-call enables
-            response.</p>
-            <p><strong>Order</strong>: Fix in this order for maximum
-            impact.</p>
-            <hr />
-            <h2 id="exercise-3-design-for-prr">Exercise 3: Design for
-            PRR</h2>
-            <p><strong>Question</strong>: Design a system that passes
-            PRR. What do you include?</p>
-            <h3 id="answer-4">Answer</h3>
-            <p><strong>Goal</strong>: Design system that passes PRR on
-            first review</p>
-            <h3 id="prr-ready-system-design">PRR-Ready System
-            Design</h3>
-            <p><strong>1. SLIs, SLOs &amp; Error Budgets</strong></p>
-            <p><strong>SLIs</strong>: - Availability: Fraction of
-            successful requests - Latency: P50, P95, P99 request latency
-            - Error rate: Fraction of 5xx errors</p>
-            <p><strong>SLOs</strong>: - Availability: 99.9% - P95
-            Latency: &lt; 100ms - P99 Latency: &lt; 200ms - Error rate:
-            &lt; 0.1%</p>
-            <p><strong>Error Budgets</strong>: - Calculated from SLOs -
-            Policy defined (what happens at 50%, 25%, 0%) - Tracked and
-            monitored</p>
-            <p><strong>2. Observability</strong></p>
-            <p><strong>Metrics</strong>: - Latency: P50, P95, P99
-            tracked - Throughput: QPS tracked - Errors: Error rates and
-            types tracked - Resources: CPU, memory, disk, network
-            tracked - Business: User-facing metrics tracked</p>
-            <p><strong>Logs</strong>: - Structured JSON logs - Request
-            IDs for correlation - Critical events logged - Appropriate
-            log levels</p>
-            <p><strong>Traces</strong>: - Critical paths traced - 1%
-            sampling (100% for errors) - Spans for key operations</p>
-            <p><strong>Dashboards</strong>: - Service dashboard - SLO
-            dashboard - Capacity dashboard - Business dashboard</p>
-            <p><strong>Alerts</strong>: - Critical alerts (P0) - Warning
-            alerts (P1) - Info alerts (P2) - Actionable alerts with
-            runbooks</p>
-            <p><strong>3. Incident Response</strong></p>
-            <p><strong>On-Call</strong>: - On-call rotation established
-            - Engineers trained - Procedures documented - Tools
-            available - Escalation paths clear</p>
-            <p><strong>Runbooks</strong>: - Common incidents documented
-            - Critical failures documented - Recovery procedures
-            included - Rollback procedures included - Tested and
-            accessible</p>
-            <p><strong>Incident Management</strong>: - Process defined -
-            Communication channels established - Postmortem process
-            defined - Tracking system used</p>
-            <p><strong>4. Capacity &amp; Scaling</strong></p>
-            <p><strong>Capacity Planning</strong>: - Current capacity
-            known - Target capacity provisioned - Growth forecast
-            planned - Scaling limits understood - Capacity alerts
-            configured</p>
-            <p><strong>Auto-Scaling</strong>: - Configured and tuned -
-            Scaling limits set - Metrics appropriate - Behavior
-            tested</p>
-            <p><strong>Load Testing</strong>: - Tests run - Handles
-            expected load - Handles 2× load - Graceful degradation
-            tested - Bottlenecks identified</p>
-            <p><strong>5. Security</strong></p>
-            <p><strong>Authentication</strong>: - Required for all
-            access - Appropriate mechanism - Tested - Failures
-            logged</p>
-            <p><strong>Authorization</strong>: - Checked for all
-            operations - Least privilege followed - Documented - Audited
-            - Failures logged</p>
-            <p><strong>Data Protection</strong>: - Encrypted at rest -
-            Encrypted in transit (TLS) - Keys managed securely - Data
-            classified - Retention policies defined</p>
-            <p><strong>6. Change Management</strong></p>
-            <p><strong>Deployment</strong>: - Process documented -
-            Automated - Rollback tested - Windows defined - Approvals
-            defined</p>
-            <p><strong>Feature Flags</strong>: - Used for risky changes
-            - Kill switches implemented - Management documented -
-            Tested</p>
-            <p><strong>Testing</strong>: - Unit tests adequate -
-            Integration tests exist - Load tests run regularly - Chaos
-            tests considered - Smoke tests after deployment</p>
-            <h3 id="complete-prr-ready-checklist">Complete PRR-Ready
-            Checklist</h3>
-            <p><strong>Must Have</strong>: - ✅ SLIs and SLOs defined -
-            ✅ Error budgets calculated - ✅ Monitoring configured
-            (metrics, logs, traces) - ✅ Dashboards created - ✅ Alerts
-            configured - ✅ On-call rotation established - ✅ Runbooks
-            created - ✅ Rollback procedure tested - ✅ Authentication
-            and authorization - ✅ Encryption (at rest and in transit) -
-            ✅ Load testing completed - ✅ Capacity planning done</p>
-            <p><strong>Should Have</strong>: - ✅ Distributed tracing -
-            ✅ Chaos testing - ✅ Feature flags - ✅ Canary deployments
-            - ✅ Security monitoring</p>
-            <h3 id="answer-5">Answer</h3>
-            <p><strong>PRR-Ready System Includes</strong>:</p>
-            <p><strong>1. SLIs/SLOs</strong>: - User-facing SLIs defined
-            - Realistic SLOs set - Error budgets calculated and
-            tracked</p>
-            <p><strong>2. Observability</strong>: - Metrics (latency,
-            throughput, errors, resources) - Structured logs with
-            request IDs - Distributed tracing - Dashboards and
-            alerts</p>
-            <p><strong>3. Incident Response</strong>: - On-call rotation
-            - Runbooks for common incidents - Escalation paths -
-            Postmortem process</p>
-            <p><strong>4. Capacity</strong>: - Capacity planning -
-            Auto-scaling configured - Load testing completed</p>
-            <p><strong>5. Security</strong>: - Authentication and
-            authorization - Encryption (at rest and in transit) -
-            Security monitoring</p>
-            <p><strong>6. Change Management</strong>: - Deployment
-            automation - Rollback procedure - Feature flags - Testing
-            strategy</p>
-            <p><strong>Key principle</strong>: <strong>Production-ready
-            from day one</strong> - design with operations in mind.</p>
+        <div class="card">
+            <div class="card-content">
+                <h1 id="answer-key-prr-checklist">Answer Key: PRR Checklist</h1>
+<p><a href="../../04-reliability-sre/prr-checklist.html#exercises">Back to
+Exercises</a></p>
+<hr />
+<h2 id="exercise-1-run-a-prr">Exercise 1: Run a PRR</h2>
+<p><strong>Question</strong>: Review a system design using this
+checklist. What issues do you find?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>System</strong>: API service with database, cache, and
+external API dependencies</p>
+<h3 id="prr-review-findings">PRR Review Findings</h3>
+<p><strong>Critical Issues (Must Fix)</strong>:</p>
+<ol type="1">
+<li><strong>No SLIs/SLOs Defined</strong>
+<ul>
+<li><strong>Issue</strong>: No service level indicators or objectives
+defined</li>
+<li><strong>Impact</strong>: Can’t measure reliability, can’t set error
+budgets</li>
+<li><strong>Fix</strong>: Define SLIs (availability, latency, error
+rate) and SLOs (targets)</li>
+</ul></li>
+<li><strong>No Monitoring</strong>
+<ul>
+<li><strong>Issue</strong>: No metrics, logs, or traces configured</li>
+<li><strong>Impact</strong>: Can’t detect problems, can’t debug
+issues</li>
+<li><strong>Fix</strong>: Set up metrics (latency, throughput, errors),
+logs (structured), traces (critical paths)</li>
+</ul></li>
+<li><strong>No On-Call</strong>
+<ul>
+<li><strong>Issue</strong>: No on-call rotation or procedures</li>
+<li><strong>Impact</strong>: Can’t respond to incidents</li>
+<li><strong>Fix</strong>: Set up on-call rotation, define escalation
+paths, create runbooks</li>
+</ul></li>
+<li><strong>No Rollback Plan</strong>
+<ul>
+<li><strong>Issue</strong>: No rollback procedure documented or
+tested</li>
+<li><strong>Impact</strong>: Can’t recover from bad deployments</li>
+<li><strong>Fix</strong>: Document rollback procedure, test rollback,
+automate if possible</li>
+</ul></li>
+<li><strong>No Security</strong>
+<ul>
+<li><strong>Issue</strong>: No authentication, authorization, or
+encryption</li>
+<li><strong>Impact</strong>: Vulnerable to attacks, data breaches</li>
+<li><strong>Fix</strong>: Add authentication (OAuth/JWT), authorization
+(IAM), encryption (TLS, at rest)</li>
+</ul></li>
+</ol>
+<p><strong>Important Issues (Should Fix)</strong>:</p>
+<ol type="1">
+<li><strong>Weak SLIs</strong>
+<ul>
+<li><strong>Issue</strong>: Using internal metrics (CPU, memory) instead
+of user-facing metrics</li>
+<li><strong>Impact</strong>: SLIs don’t reflect user experience</li>
+<li><strong>Fix</strong>: Use user-facing metrics (availability,
+latency, error rate)</li>
+</ul></li>
+<li><strong>Alert Fatigue</strong>
+<ul>
+<li><strong>Issue</strong>: Too many alerts, not actionable</li>
+<li><strong>Impact</strong>: Alerts ignored, real issues missed</li>
+<li><strong>Fix</strong>: Reduce alerts, make alerts actionable, set
+appropriate thresholds</li>
+</ul></li>
+<li><strong>No Runbooks</strong>
+<ul>
+<li><strong>Issue</strong>: No runbooks for common operations or
+incidents</li>
+<li><strong>Impact</strong>: Don’t know how to respond to issues</li>
+<li><strong>Fix</strong>: Create runbooks for common incidents, test
+runbooks</li>
+</ul></li>
+<li><strong>No Load Testing</strong>
+<ul>
+<li><strong>Issue</strong>: System not load tested</li>
+<li><strong>Impact</strong>: Don’t know capacity limits, may fail under
+load</li>
+<li><strong>Fix</strong>: Run load tests, test at 2× expected load,
+identify bottlenecks</li>
+</ul></li>
+<li><strong>Weak Security</strong>
+<ul>
+<li><strong>Issue</strong>: Security gaps (no encryption, weak
+authentication)</li>
+<li><strong>Impact</strong>: Security vulnerabilities</li>
+<li><strong>Fix</strong>: Add encryption, strengthen authentication, add
+authorization</li>
+</ul></li>
+</ol>
+<p><strong>Nice-to-Have (Consider)</strong>:</p>
+<ol type="1">
+<li><strong>No Tracing</strong>
+<ul>
+<li><strong>Issue</strong>: No distributed tracing</li>
+<li><strong>Impact</strong>: Harder to debug performance issues</li>
+<li><strong>Fix</strong>: Add tracing for critical paths</li>
+</ul></li>
+<li><strong>No Chaos Testing</strong>
+<ul>
+<li><strong>Issue</strong>: No chaos engineering</li>
+<li><strong>Impact</strong>: Don’t know how system handles failures</li>
+<li><strong>Fix</strong>: Add chaos tests, test failure scenarios</li>
+</ul></li>
+<li><strong>No Capacity Planning</strong>
+<ul>
+<li><strong>Issue</strong>: No capacity planning or forecasting</li>
+<li><strong>Impact</strong>: May run out of capacity unexpectedly</li>
+<li><strong>Fix</strong>: Plan capacity, forecast growth, monitor
+capacity</li>
+</ul></li>
+</ol>
+<h3 id="answer-1">Answer</h3>
+<p><strong>Critical Issues</strong> (Must Fix): 1. No SLIs/SLOs defined
+2. No monitoring configured 3. No on-call rotation 4. No rollback plan
+5. No security (authentication, authorization, encryption)</p>
+<p><strong>Important Issues</strong> (Should Fix): 1. Weak SLIs (using
+internal metrics) 2. Alert fatigue (too many non-actionable alerts) 3.
+No runbooks 4. No load testing 5. Weak security</p>
+<p><strong>Nice-to-Have</strong> (Consider): 1. No tracing 2. No chaos
+testing 3. No capacity planning</p>
+<p><strong>Top Priority</strong>: Fix critical issues first (SLIs/SLOs,
+monitoring, on-call, rollback, security)</p>
+<hr />
+<h2 id="exercise-2-fix-prr-issues">Exercise 2: Fix PRR Issues</h2>
+<p><strong>Question</strong>: A system fails PRR. What are the top 3
+issues to fix?</p>
+<h3 id="answer-2">Answer</h3>
+<p><strong>System</strong>: Failed PRR review</p>
+<h3 id="top-3-issues-to-fix">Top 3 Issues to Fix</h3>
+<p><strong>1. Define SLIs and SLOs</strong> (Highest Priority)</p>
+<p><strong>Why</strong>: Foundation for everything else - Can’t measure
+reliability without SLIs - Can’t set error budgets without SLOs - Can’t
+make data-driven decisions</p>
+<p><strong>How</strong>: 1. Define user-facing SLIs (availability,
+latency, error rate) 2. Set realistic SLOs based on baseline 3.
+Calculate error budgets 4. Set up monitoring to measure SLIs 5. Create
+SLO dashboard</p>
+<p><strong>Timeline</strong>: 1-2 weeks</p>
+<p><strong>2. Set Up Monitoring</strong> (High Priority)</p>
+<p><strong>Why</strong>: Can’t detect or debug problems without
+monitoring - Need metrics to measure SLIs - Need logs to debug issues -
+Need traces to identify bottlenecks</p>
+<p><strong>How</strong>: 1. Set up metrics (latency, throughput, errors,
+resources) 2. Configure structured logging 3. Set up distributed tracing
+(if applicable) 4. Create dashboards 5. Configure alerts</p>
+<p><strong>Timeline</strong>: 1-2 weeks</p>
+<p><strong>3. Set Up On-Call and Runbooks</strong> (High Priority)</p>
+<p><strong>Why</strong>: Can’t respond to incidents without on-call -
+Need on-call to respond to alerts - Need runbooks to know how to respond
+- Need escalation paths for critical issues</p>
+<p><strong>How</strong>: 1. Set up on-call rotation 2. Create runbooks
+for common incidents 3. Define escalation paths 4. Set up alerting
+(PagerDuty, etc.) 5. Train on-call engineers</p>
+<p><strong>Timeline</strong>: 1 week</p>
+<h3 id="why-these-three">Why These Three?</h3>
+<p><strong>SLIs/SLOs</strong>: Foundation - everything else depends on
+this <strong>Monitoring</strong>: Detection - can’t fix what you can’t
+see <strong>On-Call</strong>: Response - can’t fix what you can’t
+respond to</p>
+<p><strong>Order</strong>: Fix in this order (SLIs/SLOs → Monitoring →
+On-Call)</p>
+<h3 id="answer-3">Answer</h3>
+<p><strong>Top 3 Issues to Fix</strong>:</p>
+<ol type="1">
+<li><strong>Define SLIs and SLOs</strong> (Highest Priority)
+<ul>
+<li>Foundation for reliability</li>
+<li>Define user-facing metrics and targets</li>
+<li>Set up error budgets</li>
+<li>Timeline: 1-2 weeks</li>
+</ul></li>
+<li><strong>Set Up Monitoring</strong> (High Priority)
+<ul>
+<li>Can’t detect problems without monitoring</li>
+<li>Set up metrics, logs, traces</li>
+<li>Create dashboards and alerts</li>
+<li>Timeline: 1-2 weeks</li>
+</ul></li>
+<li><strong>Set Up On-Call and Runbooks</strong> (High Priority)
+<ul>
+<li>Can’t respond to incidents without on-call</li>
+<li>Create runbooks for common incidents</li>
+<li>Set up escalation paths</li>
+<li>Timeline: 1 week</li>
+</ul></li>
+</ol>
+<p><strong>Why these three</strong>: SLIs/SLOs are foundation,
+monitoring enables detection, on-call enables response.</p>
+<p><strong>Order</strong>: Fix in this order for maximum impact.</p>
+<hr />
+<h2 id="exercise-3-design-for-prr">Exercise 3: Design for PRR</h2>
+<p><strong>Question</strong>: Design a system that passes PRR. What do
+you include?</p>
+<h3 id="answer-4">Answer</h3>
+<p><strong>Goal</strong>: Design system that passes PRR on first
+review</p>
+<h3 id="prr-ready-system-design">PRR-Ready System Design</h3>
+<p><strong>1. SLIs, SLOs &amp; Error Budgets</strong></p>
+<p><strong>SLIs</strong>: - Availability: Fraction of successful
+requests - Latency: P50, P95, P99 request latency - Error rate: Fraction
+of 5xx errors</p>
+<p><strong>SLOs</strong>: - Availability: 99.9% - P95 Latency: &lt;
+100ms - P99 Latency: &lt; 200ms - Error rate: &lt; 0.1%</p>
+<p><strong>Error Budgets</strong>: - Calculated from SLOs - Policy
+defined (what happens at 50%, 25%, 0%) - Tracked and monitored</p>
+<p><strong>2. Observability</strong></p>
+<p><strong>Metrics</strong>: - Latency: P50, P95, P99 tracked -
+Throughput: QPS tracked - Errors: Error rates and types tracked -
+Resources: CPU, memory, disk, network tracked - Business: User-facing
+metrics tracked</p>
+<p><strong>Logs</strong>: - Structured JSON logs - Request IDs for
+correlation - Critical events logged - Appropriate log levels</p>
+<p><strong>Traces</strong>: - Critical paths traced - 1% sampling (100%
+for errors) - Spans for key operations</p>
+<p><strong>Dashboards</strong>: - Service dashboard - SLO dashboard -
+Capacity dashboard - Business dashboard</p>
+<p><strong>Alerts</strong>: - Critical alerts (P0) - Warning alerts (P1)
+- Info alerts (P2) - Actionable alerts with runbooks</p>
+<p><strong>3. Incident Response</strong></p>
+<p><strong>On-Call</strong>: - On-call rotation established - Engineers
+trained - Procedures documented - Tools available - Escalation paths
+clear</p>
+<p><strong>Runbooks</strong>: - Common incidents documented - Critical
+failures documented - Recovery procedures included - Rollback procedures
+included - Tested and accessible</p>
+<p><strong>Incident Management</strong>: - Process defined -
+Communication channels established - Postmortem process defined -
+Tracking system used</p>
+<p><strong>4. Capacity &amp; Scaling</strong></p>
+<p><strong>Capacity Planning</strong>: - Current capacity known - Target
+capacity provisioned - Growth forecast planned - Scaling limits
+understood - Capacity alerts configured</p>
+<p><strong>Auto-Scaling</strong>: - Configured and tuned - Scaling
+limits set - Metrics appropriate - Behavior tested</p>
+<p><strong>Load Testing</strong>: - Tests run - Handles expected load -
+Handles 2× load - Graceful degradation tested - Bottlenecks
+identified</p>
+<p><strong>5. Security</strong></p>
+<p><strong>Authentication</strong>: - Required for all access -
+Appropriate mechanism - Tested - Failures logged</p>
+<p><strong>Authorization</strong>: - Checked for all operations - Least
+privilege followed - Documented - Audited - Failures logged</p>
+<p><strong>Data Protection</strong>: - Encrypted at rest - Encrypted in
+transit (TLS) - Keys managed securely - Data classified - Retention
+policies defined</p>
+<p><strong>6. Change Management</strong></p>
+<p><strong>Deployment</strong>: - Process documented - Automated -
+Rollback tested - Windows defined - Approvals defined</p>
+<p><strong>Feature Flags</strong>: - Used for risky changes - Kill
+switches implemented - Management documented - Tested</p>
+<p><strong>Testing</strong>: - Unit tests adequate - Integration tests
+exist - Load tests run regularly - Chaos tests considered - Smoke tests
+after deployment</p>
+<h3 id="complete-prr-ready-checklist">Complete PRR-Ready Checklist</h3>
+<p><strong>Must Have</strong>: - ✅ SLIs and SLOs defined - ✅ Error
+budgets calculated - ✅ Monitoring configured (metrics, logs, traces) -
+✅ Dashboards created - ✅ Alerts configured - ✅ On-call rotation
+established - ✅ Runbooks created - ✅ Rollback procedure tested - ✅
+Authentication and authorization - ✅ Encryption (at rest and in
+transit) - ✅ Load testing completed - ✅ Capacity planning done</p>
+<p><strong>Should Have</strong>: - ✅ Distributed tracing - ✅ Chaos
+testing - ✅ Feature flags - ✅ Canary deployments - ✅ Security
+monitoring</p>
+<h3 id="answer-5">Answer</h3>
+<p><strong>PRR-Ready System Includes</strong>:</p>
+<p><strong>1. SLIs/SLOs</strong>: - User-facing SLIs defined - Realistic
+SLOs set - Error budgets calculated and tracked</p>
+<p><strong>2. Observability</strong>: - Metrics (latency, throughput,
+errors, resources) - Structured logs with request IDs - Distributed
+tracing - Dashboards and alerts</p>
+<p><strong>3. Incident Response</strong>: - On-call rotation - Runbooks
+for common incidents - Escalation paths - Postmortem process</p>
+<p><strong>4. Capacity</strong>: - Capacity planning - Auto-scaling
+configured - Load testing completed</p>
+<p><strong>5. Security</strong>: - Authentication and authorization -
+Encryption (at rest and in transit) - Security monitoring</p>
+<p><strong>6. Change Management</strong>: - Deployment automation -
+Rollback procedure - Feature flags - Testing strategy</p>
+<p><strong>Key principle</strong>: <strong>Production-ready from day
+one</strong> - design with operations in mind.</p>
+            </div>
         </div>
     </main>
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
       mermaid.initialize({ startOnLoad: true });

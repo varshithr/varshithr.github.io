@@ -3,74 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Answer Key: Idempotency &amp; Retry Semantics</title>
+    <title>Answer Key: Idempotency & Retry Semantics</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
-jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../learn/css/learn.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uudjLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/learn.css">
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../../index.html" class="flex items-center hover:text-gray-600">
+                <a href="/index.html" class="flex items-center hover:text-gray-600">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     <span>Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="/learn/index.html" class="hover:text-indigo-600 font-semibold">Back to Learn Topics</a></li>
+                <li><a href="/aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="main-content">
-            <h1 id="answer-key-idempotency-retry-semantics">Answer Key:
-            Idempotency &amp; Retry Semantics</h1>
-            <p><a
-            href="../../02-distributed-systems/idempotency-retries.md#exercises">Back
-            to Exercises</a></p>
-            <hr />
-            <h2 id="exercise-1-design-idempotent-payment-api">Exercise
-            1: Design Idempotent Payment API</h2>
-            <p><strong>Question</strong>: Design an idempotent payment
-            API. How do you ensure payments aren’t charged twice?</p>
-            <h3 id="answer">Answer</h3>
-            <p><strong>Goal</strong>: Ensure that retrying a payment
-            request doesn’t charge the user twice.</p>
-            <h3 id="design-components">Design Components</h3>
-            <p><strong>1. Idempotency Key</strong></p>
-            <p><strong>Client generates unique key</strong>: -
-            <strong>Format</strong>: UUID v4 (random, unpredictable) -
-            <strong>Included in</strong>: Request header
-            <code>Idempotency-Key: &lt;uuid&gt;</code> -
-            <strong>Scope</strong>: Per payment, unique per payment
-            attempt</p>
-            <p><strong>Why UUID</strong>: - Globally unique -
-            Unpredictable (can’t be guessed) - Standard format</p>
-            <p><strong>2. Server-Side Idempotency Check</strong></p>
-            <p><strong>Storage</strong>: Store idempotency keys in
-            database or distributed cache (Redis)</p>
-            <p><strong>Process</strong>: 1. <strong>Receive
-            request</strong>: Extract idempotency key from header 2.
-            <strong>Check if key exists</strong>: Query storage for key
-            3. <strong>If exists</strong>: Return cached response (same
-            payment ID, same status) 4. <strong>If not exists</strong>:
-            Process payment, store result with key</p>
-            <p><strong>Storage schema</strong>:</p>
-            <pre><code>idempotency_keys:
+        <div class="card">
+            <div class="card-content">
+                <h1 id="answer-key-idempotency-retry-semantics">Answer Key: Idempotency
+&amp; Retry Semantics</h1>
+<p><a
+href="../../02-distributed-systems/idempotency-retries.html#exercises">Back
+to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-design-idempotent-payment-api">Exercise 1: Design
+Idempotent Payment API</h2>
+<p><strong>Question</strong>: Design an idempotent payment API. How do
+you ensure payments aren’t charged twice?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Goal</strong>: Ensure that retrying a payment request doesn’t
+charge the user twice.</p>
+<h3 id="design-components">Design Components</h3>
+<p><strong>1. Idempotency Key</strong></p>
+<p><strong>Client generates unique key</strong>: -
+<strong>Format</strong>: UUID v4 (random, unpredictable) -
+<strong>Included in</strong>: Request header
+<code>Idempotency-Key: &lt;uuid&gt;</code> - <strong>Scope</strong>: Per
+payment, unique per payment attempt</p>
+<p><strong>Why UUID</strong>: - Globally unique - Unpredictable (can’t
+be guessed) - Standard format</p>
+<p><strong>2. Server-Side Idempotency Check</strong></p>
+<p><strong>Storage</strong>: Store idempotency keys in database or
+distributed cache (Redis)</p>
+<p><strong>Process</strong>: 1. <strong>Receive request</strong>:
+Extract idempotency key from header 2. <strong>Check if key
+exists</strong>: Query storage for key 3. <strong>If exists</strong>:
+Return cached response (same payment ID, same status) 4. <strong>If not
+exists</strong>: Process payment, store result with key</p>
+<p><strong>Storage schema</strong>:</p>
+<pre><code>idempotency_keys:
   - key: UUID (primary key)
   - payment_id: UUID
   - status: string (pending, completed, failed)
   - amount: decimal
   - created_at: timestamp
   - expires_at: timestamp (TTL: 24 hours)</code></pre>
-            <p><strong>3. Payment Processing</strong></p>
-            <p><strong>Idempotent flow</strong>:</p>
-            <pre class="mermaid"><code>sequenceDiagram
+<p><strong>3. Payment Processing</strong></p>
+<p><strong>Idempotent flow</strong>:</p>
+<pre class="mermaid"><code>sequenceDiagram
     participant Client
     participant API
     participant Storage
@@ -94,151 +93,133 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
             API--&gt;&gt;Client: Error response
         end
     end</code></pre>
-            <p><strong>4. Handling Race Conditions</strong></p>
-            <p><strong>Problem</strong>: Two requests with same key
-            arrive simultaneously.</p>
-            <p><strong>Solution</strong>: Use database transaction or
-            distributed lock: - <strong>Transaction</strong>: Check and
-            insert atomically - <strong>Distributed lock</strong>: Lock
-            on idempotency key - <strong>Optimistic locking</strong>:
-            Use version numbers</p>
-            <p><strong>5. TTL and Cleanup</strong></p>
-            <p><strong>TTL</strong>: 24 hours (or based on business
-            requirements)</p>
-            <p><strong>Why</strong>: - Prevents storage from growing
-            indefinitely - Allows retries within reasonable time window
-            - Cleans up old keys automatically</p>
-            <p><strong>Cleanup</strong>: - <strong>Automatic</strong>:
-            Use Redis TTL or database expiration -
-            <strong>Manual</strong>: Periodic cleanup job for old
-            keys</p>
-            <p><strong>6. Response Consistency</strong></p>
-            <p><strong>Important</strong>: Same idempotency key must
-            return same response: - Same payment ID - Same status - Same
-            amount - Same timestamp</p>
-            <p><strong>Why</strong>: Client may retry and expect same
-            result.</p>
-            <h3 id="complete-api-design">Complete API Design</h3>
-            <p><strong>Endpoint</strong>:
-            <code>POST /payments</code></p>
-            <p><strong>Request</strong>:</p>
-            <div class="sourceCode" id="cb3"><pre
-            class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<p><strong>4. Handling Race Conditions</strong></p>
+<p><strong>Problem</strong>: Two requests with same key arrive
+simultaneously.</p>
+<p><strong>Solution</strong>: Use database transaction or distributed
+lock: - <strong>Transaction</strong>: Check and insert atomically -
+<strong>Distributed lock</strong>: Lock on idempotency key -
+<strong>Optimistic locking</strong>: Use version numbers</p>
+<p><strong>5. TTL and Cleanup</strong></p>
+<p><strong>TTL</strong>: 24 hours (or based on business
+requirements)</p>
+<p><strong>Why</strong>: - Prevents storage from growing indefinitely -
+Allows retries within reasonable time window - Cleans up old keys
+automatically</p>
+<p><strong>Cleanup</strong>: - <strong>Automatic</strong>: Use Redis TTL
+or database expiration - <strong>Manual</strong>: Periodic cleanup job
+for old keys</p>
+<p><strong>6. Response Consistency</strong></p>
+<p><strong>Important</strong>: Same idempotency key must return same
+response: - Same payment ID - Same status - Same amount - Same
+timestamp</p>
+<p><strong>Why</strong>: Client may retry and expect same result.</p>
+<h3 id="complete-api-design">Complete API Design</h3>
+<p><strong>Endpoint</strong>: <code>POST /payments</code></p>
+<p><strong>Request</strong>:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;amount&quot;</span><span class="fu">:</span> <span class="fl">100.00</span><span class="fu">,</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;currency&quot;</span><span class="fu">:</span> <span class="st">&quot;USD&quot;</span><span class="fu">,</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;payment_method&quot;</span><span class="fu">:</span> <span class="st">&quot;card_123&quot;</span><span class="fu">,</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;idempotency_key&quot;</span><span class="fu">:</span> <span class="st">&quot;550e8400-e29b-41d4-a716-446655440000&quot;</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-            <p><strong>Headers</strong>:</p>
-            <pre><code>Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000</code></pre>
-            <p><strong>Response</strong> (first request):</p>
-            <div class="sourceCode" id="cb5"><pre
-            class="sourceCode json"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<p><strong>Headers</strong>:</p>
+<pre><code>Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000</code></pre>
+<p><strong>Response</strong> (first request):</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;payment_id&quot;</span><span class="fu">:</span> <span class="st">&quot;pay_123&quot;</span><span class="fu">,</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;completed&quot;</span><span class="fu">,</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;amount&quot;</span><span class="fu">:</span> <span class="fl">100.00</span><span class="fu">,</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;created_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2024-01-01T12:00:00Z&quot;</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-            <p><strong>Response</strong> (retry with same key):</p>
-            <div class="sourceCode" id="cb6"><pre
-            class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<p><strong>Response</strong> (retry with same key):</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;payment_id&quot;</span><span class="fu">:</span> <span class="st">&quot;pay_123&quot;</span><span class="fu">,</span>  <span class="er">//</span> <span class="er">Same</span> <span class="er">payment</span> <span class="er">ID</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;completed&quot;</span><span class="fu">,</span>     <span class="er">//</span> <span class="er">Same</span> <span class="er">status</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;amount&quot;</span><span class="fu">:</span> <span class="fl">100.00</span><span class="fu">,</span>          <span class="er">//</span> <span class="er">Same</span> <span class="er">amount</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;created_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2024-01-01T12:00:00Z&quot;</span>  <span class="er">//</span> <span class="er">Same</span> <span class="er">timestamp</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-            <h3 id="answer-1">Answer</h3>
-            <p><strong>Idempotent payment API design</strong>:</p>
-            <ol type="1">
-            <li><strong>Idempotency key</strong>: Client generates UUID,
-            includes in request header</li>
-            <li><strong>Server-side check</strong>: Check if key exists
-            in storage (Redis/database)</li>
-            <li><strong>If key exists</strong>: Return cached response
-            (same payment ID, status)</li>
-            <li><strong>If key doesn’t exist</strong>: Process payment,
-            store result with key</li>
-            <li><strong>Race condition handling</strong>: Use
-            transactions or distributed locks</li>
-            <li><strong>TTL</strong>: 24 hours (cleanup old keys)</li>
-            <li><strong>Response consistency</strong>: Same key returns
-            same response</li>
-            </ol>
-            <p><strong>Key principles</strong>: - <strong>Client
-            generates key</strong>: Unpredictable UUID - <strong>Server
-            validates</strong>: Check before processing - <strong>Store
-            results</strong>: Cache response for retries -
-            <strong>Handle races</strong>: Use transactions/locks -
-            <strong>Consistent responses</strong>: Same key = same
-            response</p>
-            <p><strong>Why this works</strong>: - First request
-            processes payment, stores result - Retries return cached
-            result (no duplicate charge) - Race conditions handled with
-            transactions - TTL prevents storage growth</p>
-            <hr />
-            <h2 id="exercise-2-retry-strategy">Exercise 2: Retry
-            Strategy</h2>
-            <p><strong>Question</strong>: Design a retry strategy for an
-            API that calls a downstream service. What backoff do you
-            use? What limits?</p>
-            <h3 id="answer-2">Answer</h3>
-            <p><strong>Goal</strong>: Retry failed requests
-            intelligently without overwhelming downstream service.</p>
-            <h3 id="retry-strategy-components">Retry Strategy
-            Components</h3>
-            <p><strong>1. Retryable Errors</strong></p>
-            <p><strong>Retry on</strong>: - <strong>5xx errors</strong>:
-            Server errors (500, 502, 503, 504) -
-            <strong>Timeouts</strong>: Connection timeout, request
-            timeout - <strong>Network errors</strong>: Connection
-            refused, DNS errors</p>
-            <p><strong>Don’t retry on</strong>: - <strong>4xx
-            errors</strong>: Client errors (400, 401, 403, 404) -
-            <strong>429 errors</strong>: Rate limited (may retry with
-            longer backoff) - <strong>Idempotency errors</strong>:
-            Already processed</p>
-            <p><strong>2. Exponential Backoff</strong></p>
-            <p><strong>Formula</strong>:
-            <code>wait_time = base_delay × 2^attempt + jitter</code></p>
-            <p><strong>Configuration</strong>: - <strong>Base
-            delay</strong>: 100ms - <strong>Max delay</strong>: 10
-            seconds - <strong>Jitter</strong>: Random 0-100ms</p>
-            <p><strong>Backoff schedule</strong>: - Attempt 1: 100ms +
-            jitter (0-100ms) = 100-200ms - Attempt 2: 200ms + jitter
-            (0-100ms) = 200-300ms - Attempt 3: 400ms + jitter (0-100ms)
-            = 400-500ms - Attempt 4: 800ms + jitter (0-100ms) =
-            800-900ms - Attempt 5: 1600ms + jitter (0-100ms) =
-            1600-1700ms (capped at 10s)</p>
-            <p><strong>Why exponential</strong>: - Gives downstream
-            service time to recover - Reduces load on failing service -
-            Prevents thundering herd</p>
-            <p><strong>Why jitter</strong>: - Spreads out retries from
-            multiple clients - Prevents synchronized retries - Reduces
-            thundering herd</p>
-            <p><strong>3. Retry Limits</strong></p>
-            <p><strong>Max retries</strong>: 3 (total 4 attempts:
-            initial + 3 retries)</p>
-            <p><strong>Why limit retries</strong>: - Prevents infinite
-            retries - Fails fast after reasonable attempts - Reduces
-            load on failing service</p>
-            <p><strong>Total time</strong>: ~3-4 seconds (with
-            backoff)</p>
-            <p><strong>4. Circuit Breaker Integration</strong></p>
-            <p><strong>When circuit breaker opens</strong>: - Don’t
-            retry (fail fast) - Return error immediately - Wait for
-            circuit breaker to close</p>
-            <p><strong>Why</strong>: Prevents retrying when service is
-            known to be down.</p>
-            <p><strong>5. Idempotency</strong></p>
-            <p><strong>Requirement</strong>: All operations must be
-            idempotent.</p>
-            <p><strong>Why</strong>: Retries may execute operations
-            multiple times.</p>
-            <p><strong>Implementation</strong>: Use idempotency keys
-            (see Exercise 1).</p>
-            <h3 id="complete-retry-strategy">Complete Retry
-            Strategy</h3>
-            <pre class="mermaid"><code>flowchart TD
+<h3 id="answer-1">Answer</h3>
+<p><strong>Idempotent payment API design</strong>:</p>
+<ol type="1">
+<li><strong>Idempotency key</strong>: Client generates UUID, includes in
+request header</li>
+<li><strong>Server-side check</strong>: Check if key exists in storage
+(Redis/database)</li>
+<li><strong>If key exists</strong>: Return cached response (same payment
+ID, status)</li>
+<li><strong>If key doesn’t exist</strong>: Process payment, store result
+with key</li>
+<li><strong>Race condition handling</strong>: Use transactions or
+distributed locks</li>
+<li><strong>TTL</strong>: 24 hours (cleanup old keys)</li>
+<li><strong>Response consistency</strong>: Same key returns same
+response</li>
+</ol>
+<p><strong>Key principles</strong>: - <strong>Client generates
+key</strong>: Unpredictable UUID - <strong>Server validates</strong>:
+Check before processing - <strong>Store results</strong>: Cache response
+for retries - <strong>Handle races</strong>: Use transactions/locks -
+<strong>Consistent responses</strong>: Same key = same response</p>
+<p><strong>Why this works</strong>: - First request processes payment,
+stores result - Retries return cached result (no duplicate charge) -
+Race conditions handled with transactions - TTL prevents storage
+growth</p>
+<hr />
+<h2 id="exercise-2-retry-strategy">Exercise 2: Retry Strategy</h2>
+<p><strong>Question</strong>: Design a retry strategy for an API that
+calls a downstream service. What backoff do you use? What limits?</p>
+<h3 id="answer-2">Answer</h3>
+<p><strong>Goal</strong>: Retry failed requests intelligently without
+overwhelming downstream service.</p>
+<h3 id="retry-strategy-components">Retry Strategy Components</h3>
+<p><strong>1. Retryable Errors</strong></p>
+<p><strong>Retry on</strong>: - <strong>5xx errors</strong>: Server
+errors (500, 502, 503, 504) - <strong>Timeouts</strong>: Connection
+timeout, request timeout - <strong>Network errors</strong>: Connection
+refused, DNS errors</p>
+<p><strong>Don’t retry on</strong>: - <strong>4xx errors</strong>:
+Client errors (400, 401, 403, 404) - <strong>429 errors</strong>: Rate
+limited (may retry with longer backoff) - <strong>Idempotency
+errors</strong>: Already processed</p>
+<p><strong>2. Exponential Backoff</strong></p>
+<p><strong>Formula</strong>:
+<code>wait_time = base_delay × 2^attempt + jitter</code></p>
+<p><strong>Configuration</strong>: - <strong>Base delay</strong>: 100ms
+- <strong>Max delay</strong>: 10 seconds - <strong>Jitter</strong>:
+Random 0-100ms</p>
+<p><strong>Backoff schedule</strong>: - Attempt 1: 100ms + jitter
+(0-100ms) = 100-200ms - Attempt 2: 200ms + jitter (0-100ms) = 200-300ms
+- Attempt 3: 400ms + jitter (0-100ms) = 400-500ms - Attempt 4: 800ms +
+jitter (0-100ms) = 800-900ms - Attempt 5: 1600ms + jitter (0-100ms) =
+1600-1700ms (capped at 10s)</p>
+<p><strong>Why exponential</strong>: - Gives downstream service time to
+recover - Reduces load on failing service - Prevents thundering herd</p>
+<p><strong>Why jitter</strong>: - Spreads out retries from multiple
+clients - Prevents synchronized retries - Reduces thundering herd</p>
+<p><strong>3. Retry Limits</strong></p>
+<p><strong>Max retries</strong>: 3 (total 4 attempts: initial + 3
+retries)</p>
+<p><strong>Why limit retries</strong>: - Prevents infinite retries -
+Fails fast after reasonable attempts - Reduces load on failing
+service</p>
+<p><strong>Total time</strong>: ~3-4 seconds (with backoff)</p>
+<p><strong>4. Circuit Breaker Integration</strong></p>
+<p><strong>When circuit breaker opens</strong>: - Don’t retry (fail
+fast) - Return error immediately - Wait for circuit breaker to close</p>
+<p><strong>Why</strong>: Prevents retrying when service is known to be
+down.</p>
+<p><strong>5. Idempotency</strong></p>
+<p><strong>Requirement</strong>: All operations must be idempotent.</p>
+<p><strong>Why</strong>: Retries may execute operations multiple
+times.</p>
+<p><strong>Implementation</strong>: Use idempotency keys (see Exercise
+1).</p>
+<h3 id="complete-retry-strategy">Complete Retry Strategy</h3>
+<pre class="mermaid"><code>flowchart TD
     Request[Request] --&gt; Call[Call Downstream]
     Call --&gt; Success{Success?}
     Success --&gt;|Yes| Return[Return Response]
@@ -255,15 +236,13 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
     style Success fill:#99ff99
     style Fail fill:#ff9999
     style Backoff fill:#ffcc99</code></pre>
-            <p><strong>Configuration</strong>: - <strong>Max
-            retries</strong>: 3 - <strong>Base delay</strong>: 100ms -
-            <strong>Max delay</strong>: 10 seconds -
-            <strong>Jitter</strong>: 0-100ms random - <strong>Retry
-            on</strong>: 5xx, timeouts, network errors - <strong>Don’t
-            retry on</strong>: 4xx (except 429), circuit breaker
-            open</p>
-            <p><strong>Example</strong>:</p>
-            <pre><code>Attempt 1: Call downstream → 503 error
+<p><strong>Configuration</strong>: - <strong>Max retries</strong>: 3 -
+<strong>Base delay</strong>: 100ms - <strong>Max delay</strong>: 10
+seconds - <strong>Jitter</strong>: 0-100ms random - <strong>Retry
+on</strong>: 5xx, timeouts, network errors - <strong>Don’t retry
+on</strong>: 4xx (except 429), circuit breaker open</p>
+<p><strong>Example</strong>:</p>
+<pre><code>Attempt 1: Call downstream → 503 error
 Wait: 100ms + 50ms jitter = 150ms
 Attempt 2: Call downstream → 503 error
 Wait: 200ms + 75ms jitter = 275ms
@@ -271,125 +250,108 @@ Attempt 3: Call downstream → 503 error
 Wait: 400ms + 25ms jitter = 425ms
 Attempt 4: Call downstream → 503 error
 Return error (max retries exceeded)</code></pre>
-            <h3 id="answer-3">Answer</h3>
-            <p><strong>Retry strategy</strong>:</p>
-            <ol type="1">
-            <li><strong>Retryable errors</strong>: Retry on 5xx,
-            timeouts, network errors</li>
-            <li><strong>Exponential backoff</strong>: Base 100ms, max
-            10s, with jitter</li>
-            <li><strong>Retry limits</strong>: Max 3 retries (4 total
-            attempts)</li>
-            <li><strong>Circuit breaker</strong>: Don’t retry when
-            circuit open</li>
-            <li><strong>Idempotency</strong>: All operations must be
-            idempotent</li>
-            </ol>
-            <p><strong>Backoff schedule</strong>: - Attempt 1: 100-200ms
-            - Attempt 2: 200-300ms - Attempt 3: 400-500ms - Attempt 4:
-            800-900ms (if retrying 429)</p>
-            <p><strong>Total time</strong>: ~3-4 seconds maximum</p>
-            <p><strong>Key principles</strong>: - <strong>Exponential
-            backoff</strong>: Gives service time to recover -
-            <strong>Jitter</strong>: Prevents thundering herd -
-            <strong>Retry limits</strong>: Fails fast after reasonable
-            attempts - <strong>Circuit breaker</strong>: Prevents
-            retrying when service down - <strong>Idempotency</strong>:
-            Safe to retry</p>
-            <hr />
-            <h2 id="exercise-3-handle-duplicates">Exercise 3: Handle
-            Duplicates</h2>
-            <p><strong>Question</strong>: A non-idempotent operation is
-            retried and creates duplicates. How do you detect and handle
-            duplicates?</p>
-            <h3 id="answer-4">Answer</h3>
-            <p><strong>Problem</strong>: Non-idempotent operation was
-            retried, creating duplicate records.</p>
-            <h3 id="detection-strategies">Detection Strategies</h3>
-            <p><strong>1. Unique Constraints</strong></p>
-            <p><strong>Database-level</strong>: - Add unique constraint
-            on identifying fields - Database rejects duplicates
-            automatically - <strong>Example</strong>: Unique constraint
-            on <code>(user_id, order_id)</code></p>
-            <p><strong>Pros</strong>: Simple, database enforces
-            <strong>Cons</strong>: Requires schema changes, may not
-            catch all duplicates</p>
-            <p><strong>2. Deduplication Window</strong></p>
-            <p><strong>Process</strong>: 1. Hash request content +
-            client identifier 2. Check if hash seen in time window
-            (e.g., 24 hours) 3. If seen: Return previous result 4. If
-            not seen: Process request, store hash</p>
-            <p><strong>Storage</strong>: Redis or database with TTL</p>
-            <p><strong>Hash components</strong>: - Request content
-            (body, parameters) - Client identifier (user ID, API key) -
-            Operation type</p>
-            <p><strong>3. Timestamp-Based Detection</strong></p>
-            <p><strong>Process</strong>: 1. Include timestamp in request
-            2. Check for similar requests within time window 3. If
-            found: Likely duplicate 4. If not found: Process request</p>
-            <p><strong>Time window</strong>: 5-10 minutes (typical retry
-            window)</p>
-            <p><strong>4. Request ID Tracking</strong></p>
-            <p><strong>Process</strong>: 1. Client generates request ID
-            2. Server tracks processed request IDs 3. If ID seen: Return
-            previous result 4. If ID not seen: Process request, store
-            ID</p>
-            <p><strong>Storage</strong>: Redis with TTL (24 hours)</p>
-            <h3 id="handling-duplicates">Handling Duplicates</h3>
-            <p><strong>1. Reject Duplicates</strong></p>
-            <p><strong>Response</strong>: Return error indicating
-            duplicate</p>
-            <p><strong>Example</strong>:</p>
-            <div class="sourceCode" id="cb9"><pre
-            class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<h3 id="answer-3">Answer</h3>
+<p><strong>Retry strategy</strong>:</p>
+<ol type="1">
+<li><strong>Retryable errors</strong>: Retry on 5xx, timeouts, network
+errors</li>
+<li><strong>Exponential backoff</strong>: Base 100ms, max 10s, with
+jitter</li>
+<li><strong>Retry limits</strong>: Max 3 retries (4 total attempts)</li>
+<li><strong>Circuit breaker</strong>: Don’t retry when circuit open</li>
+<li><strong>Idempotency</strong>: All operations must be idempotent</li>
+</ol>
+<p><strong>Backoff schedule</strong>: - Attempt 1: 100-200ms - Attempt
+2: 200-300ms - Attempt 3: 400-500ms - Attempt 4: 800-900ms (if retrying
+429)</p>
+<p><strong>Total time</strong>: ~3-4 seconds maximum</p>
+<p><strong>Key principles</strong>: - <strong>Exponential
+backoff</strong>: Gives service time to recover -
+<strong>Jitter</strong>: Prevents thundering herd - <strong>Retry
+limits</strong>: Fails fast after reasonable attempts - <strong>Circuit
+breaker</strong>: Prevents retrying when service down -
+<strong>Idempotency</strong>: Safe to retry</p>
+<hr />
+<h2 id="exercise-3-handle-duplicates">Exercise 3: Handle Duplicates</h2>
+<p><strong>Question</strong>: A non-idempotent operation is retried and
+creates duplicates. How do you detect and handle duplicates?</p>
+<h3 id="answer-4">Answer</h3>
+<p><strong>Problem</strong>: Non-idempotent operation was retried,
+creating duplicate records.</p>
+<h3 id="detection-strategies">Detection Strategies</h3>
+<p><strong>1. Unique Constraints</strong></p>
+<p><strong>Database-level</strong>: - Add unique constraint on
+identifying fields - Database rejects duplicates automatically -
+<strong>Example</strong>: Unique constraint on
+<code>(user_id, order_id)</code></p>
+<p><strong>Pros</strong>: Simple, database enforces
+<strong>Cons</strong>: Requires schema changes, may not catch all
+duplicates</p>
+<p><strong>2. Deduplication Window</strong></p>
+<p><strong>Process</strong>: 1. Hash request content + client identifier
+2. Check if hash seen in time window (e.g., 24 hours) 3. If seen: Return
+previous result 4. If not seen: Process request, store hash</p>
+<p><strong>Storage</strong>: Redis or database with TTL</p>
+<p><strong>Hash components</strong>: - Request content (body,
+parameters) - Client identifier (user ID, API key) - Operation type</p>
+<p><strong>3. Timestamp-Based Detection</strong></p>
+<p><strong>Process</strong>: 1. Include timestamp in request 2. Check
+for similar requests within time window 3. If found: Likely duplicate 4.
+If not found: Process request</p>
+<p><strong>Time window</strong>: 5-10 minutes (typical retry window)</p>
+<p><strong>4. Request ID Tracking</strong></p>
+<p><strong>Process</strong>: 1. Client generates request ID 2. Server
+tracks processed request IDs 3. If ID seen: Return previous result 4. If
+ID not seen: Process request, store ID</p>
+<p><strong>Storage</strong>: Redis with TTL (24 hours)</p>
+<h3 id="handling-duplicates">Handling Duplicates</h3>
+<p><strong>1. Reject Duplicates</strong></p>
+<p><strong>Response</strong>: Return error indicating duplicate</p>
+<p><strong>Example</strong>:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="st">&quot;duplicate_request&quot;</span><span class="fu">,</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;This request was already processed&quot;</span><span class="fu">,</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;original_request_id&quot;</span><span class="fu">:</span> <span class="st">&quot;req_123&quot;</span><span class="fu">,</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;original_timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2024-01-01T12:00:00Z&quot;</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-            <p><strong>When to use</strong>: When duplicates are not
-            acceptable (e.g., payments)</p>
-            <p><strong>2. Return Previous Result</strong></p>
-            <p><strong>Response</strong>: Return result from original
-            request</p>
-            <p><strong>Example</strong>:</p>
-            <div class="sourceCode" id="cb10"><pre
-            class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<p><strong>When to use</strong>: When duplicates are not acceptable
+(e.g., payments)</p>
+<p><strong>2. Return Previous Result</strong></p>
+<p><strong>Response</strong>: Return result from original request</p>
+<p><strong>Example</strong>:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;request_id&quot;</span><span class="fu">:</span> <span class="st">&quot;req_123&quot;</span><span class="fu">,</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;completed&quot;</span><span class="fu">,</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;result&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="er">...</span> <span class="fu">},</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Duplicate request, returning previous result&quot;</span></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-            <p><strong>When to use</strong>: When operation is
-            idempotent (e.g., creating user)</p>
-            <p><strong>3. Merge Duplicates</strong></p>
-            <p><strong>Process</strong>: Merge duplicate data
-            intelligently</p>
-            <p><strong>Example</strong>: Two user creation requests →
-            merge user data</p>
-            <p><strong>When to use</strong>: When duplicates can be
-            merged (e.g., user profiles)</p>
-            <p><strong>4. Flag and Review</strong></p>
-            <p><strong>Process</strong>: Flag duplicates for manual
-            review</p>
-            <p><strong>When to use</strong>: When automatic handling is
-            risky (e.g., financial transactions)</p>
-            <h3 id="complete-solution">Complete Solution</h3>
-            <p><strong>Detection</strong>: 1. <strong>Unique
-            constraints</strong>: Database-level enforcement 2.
-            <strong>Deduplication window</strong>: Hash-based detection
-            (24 hours) 3. <strong>Request ID tracking</strong>: Track
-            processed request IDs 4. <strong>Timestamp
-            checking</strong>: Check for similar requests in time
-            window</p>
-            <p><strong>Handling</strong>: 1. <strong>Reject</strong>:
-            Return error for duplicates 2. <strong>Return
-            previous</strong>: Return cached result 3.
-            <strong>Merge</strong>: Intelligently merge duplicate data
-            4. <strong>Flag</strong>: Flag for manual review</p>
-            <p><strong>Implementation</strong>:</p>
-            <div class="sourceCode" id="cb11"><pre
-            class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> handle_request(request):</span>
+<p><strong>When to use</strong>: When operation is idempotent (e.g.,
+creating user)</p>
+<p><strong>3. Merge Duplicates</strong></p>
+<p><strong>Process</strong>: Merge duplicate data intelligently</p>
+<p><strong>Example</strong>: Two user creation requests → merge user
+data</p>
+<p><strong>When to use</strong>: When duplicates can be merged (e.g.,
+user profiles)</p>
+<p><strong>4. Flag and Review</strong></p>
+<p><strong>Process</strong>: Flag duplicates for manual review</p>
+<p><strong>When to use</strong>: When automatic handling is risky (e.g.,
+financial transactions)</p>
+<h3 id="complete-solution">Complete Solution</h3>
+<p><strong>Detection</strong>: 1. <strong>Unique constraints</strong>:
+Database-level enforcement 2. <strong>Deduplication window</strong>:
+Hash-based detection (24 hours) 3. <strong>Request ID tracking</strong>:
+Track processed request IDs 4. <strong>Timestamp checking</strong>:
+Check for similar requests in time window</p>
+<p><strong>Handling</strong>: 1. <strong>Reject</strong>: Return error
+for duplicates 2. <strong>Return previous</strong>: Return cached result
+3. <strong>Merge</strong>: Intelligently merge duplicate data 4.
+<strong>Flag</strong>: Flag for manual review</p>
+<p><strong>Implementation</strong>:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> handle_request(request):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate deduplication key</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    dedup_key <span class="op">=</span> hash_request(request)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    </span>
@@ -416,51 +378,49 @@ Return error (max retries exceeded)</code></pre>
 <span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;error&quot;</span>: <span class="st">&quot;duplicate_request&quot;</span>,</span>
 <span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;message&quot;</span>: <span class="st">&quot;This request was already processed&quot;</span></span>
 <span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>        }</span></code></pre></div>
-            <h3 id="answer-5">Answer</h3>
-            <p><strong>Detect duplicates</strong>:</p>
-            <ol type="1">
-            <li><strong>Unique constraints</strong>: Database-level
-            enforcement on identifying fields</li>
-            <li><strong>Deduplication window</strong>: Hash request
-            content + client ID, check in 24-hour window</li>
-            <li><strong>Request ID tracking</strong>: Track processed
-            request IDs in Redis</li>
-            <li><strong>Timestamp checking</strong>: Check for similar
-            requests within 5-10 minute window</li>
-            </ol>
-            <p><strong>Handle duplicates</strong>:</p>
-            <ol type="1">
-            <li><strong>Reject</strong>: Return error for non-idempotent
-            operations (e.g., payments)</li>
-            <li><strong>Return previous</strong>: Return cached result
-            for idempotent operations</li>
-            <li><strong>Merge</strong>: Intelligently merge duplicate
-            data when possible</li>
-            <li><strong>Flag</strong>: Flag for manual review when
-            automatic handling is risky</li>
-            </ol>
-            <p><strong>Implementation</strong>: -
-            <strong>Storage</strong>: Redis with 24-hour TTL -
-            <strong>Hash</strong>: Request content + client ID +
-            operation type - <strong>Response</strong>: Return previous
-            result or error based on operation type</p>
-            <p><strong>Key principles</strong>: - <strong>Detect
-            early</strong>: Check before processing - <strong>Store
-            results</strong>: Cache results for duplicate detection -
-            <strong>Handle appropriately</strong>: Different strategies
-            for different operations - <strong>TTL</strong>: Cleanup old
-            deduplication keys</p>
-            <p><strong>Prevention</strong>: - <strong>Make operations
-            idempotent</strong>: Best solution (see Exercise 1) -
-            <strong>Use idempotency keys</strong>: Prevent duplicates at
-            source - <strong>Client-side deduplication</strong>: Don’t
-            retry if already succeeded</p>
+<h3 id="answer-5">Answer</h3>
+<p><strong>Detect duplicates</strong>:</p>
+<ol type="1">
+<li><strong>Unique constraints</strong>: Database-level enforcement on
+identifying fields</li>
+<li><strong>Deduplication window</strong>: Hash request content + client
+ID, check in 24-hour window</li>
+<li><strong>Request ID tracking</strong>: Track processed request IDs in
+Redis</li>
+<li><strong>Timestamp checking</strong>: Check for similar requests
+within 5-10 minute window</li>
+</ol>
+<p><strong>Handle duplicates</strong>:</p>
+<ol type="1">
+<li><strong>Reject</strong>: Return error for non-idempotent operations
+(e.g., payments)</li>
+<li><strong>Return previous</strong>: Return cached result for
+idempotent operations</li>
+<li><strong>Merge</strong>: Intelligently merge duplicate data when
+possible</li>
+<li><strong>Flag</strong>: Flag for manual review when automatic
+handling is risky</li>
+</ol>
+<p><strong>Implementation</strong>: - <strong>Storage</strong>: Redis
+with 24-hour TTL - <strong>Hash</strong>: Request content + client ID +
+operation type - <strong>Response</strong>: Return previous result or
+error based on operation type</p>
+<p><strong>Key principles</strong>: - <strong>Detect early</strong>:
+Check before processing - <strong>Store results</strong>: Cache results
+for duplicate detection - <strong>Handle appropriately</strong>:
+Different strategies for different operations - <strong>TTL</strong>:
+Cleanup old deduplication keys</p>
+<p><strong>Prevention</strong>: - <strong>Make operations
+idempotent</strong>: Best solution (see Exercise 1) - <strong>Use
+idempotency keys</strong>: Prevent duplicates at source -
+<strong>Client-side deduplication</strong>: Don’t retry if already
+succeeded</p>
+            </div>
         </div>
     </main>
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
       mermaid.initialize({ startOnLoad: true });

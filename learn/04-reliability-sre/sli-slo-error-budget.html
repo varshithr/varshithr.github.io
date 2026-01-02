@@ -3,43 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLIs, SLOs &amp; Error Budgets</title>
+    <title>SLIs, SLOs & Error Budgets</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
-jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
-    <link rel="stylesheet" href="../learn/css/learn.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uudjLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/learn.css">
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../index.html" class="flex items-center hover:text-gray-600">
+                <a href="/index.html" class="flex items-center hover:text-gray-600">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     <span>Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="/learn/index.html" class="hover:text-indigo-600 font-semibold">Back to Learn Topics</a></li>
+                <li><a href="/aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="main-content">
-            <h1 id="slis-slos-error-budgets">SLIs, SLOs &amp; Error
-            Budgets</h1>
-            <p><strong>One-line summary</strong>: How to define
-            meaningful SLIs, set appropriate SLOs, and use error budgets
-            to balance reliability and feature velocity.</p>
-            <p><strong>Prerequisites</strong>: <a
-            href="../01-foundations/README.html">Foundations</a>,
-            understanding of metrics and monitoring.</p>
-            <hr />
-            <h2 id="mental-model">Mental Model</h2>
-            <h3 id="the-slo-hierarchy">The SLO Hierarchy</h3>
-            <pre class="mermaid"><code>graph TD
+        <div class="card">
+            <div class="card-content">
+                <h1 id="slis-slos-error-budgets">SLIs, SLOs &amp; Error Budgets</h1>
+<p><strong>One-line summary</strong>: How to define meaningful SLIs, set
+appropriate SLOs, and use error budgets to balance reliability and
+feature velocity.</p>
+<p><strong>Prerequisites</strong>: <a
+href="../01-foundations/README.html">Foundations</a>, understanding of
+metrics and monitoring.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="the-slo-hierarchy">The SLO Hierarchy</h3>
+<pre class="mermaid"><code>graph TD
     SLI[SLI: Measurable Metric] --&gt; SLO[SLO: Target Value]
     SLO --&gt; ErrorBudget[Error Budget: 1 - SLO]
     ErrorBudget --&gt; Policy[Error Budget Policy]
@@ -47,22 +47,18 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
     style SLI fill:#99ccff
     style SLO fill:#ffcc99
     style ErrorBudget fill:#ff9999</code></pre>
-            <p><strong>Key insight</strong>: SLIs measure what users
-            care about. SLOs set targets. Error budgets balance
-            reliability and velocity.</p>
-            <h3 id="the-error-budget-concept">The Error Budget
-            Concept</h3>
-            <p><strong>Error budget</strong>: The amount of
-            unreliability a service can tolerate.</p>
-            <p><strong>Formula</strong>:
-            <code>Error Budget = 1 - SLO</code></p>
-            <p><strong>Example</strong>: - SLO: 99.9% availability -
-            Error Budget: 0.1% = 43.2 minutes/month</p>
-            <p><strong>Use case</strong>: When error budget is
-            exhausted, stop feature work and focus on reliability.</p>
-            <h3 id="error-budget-consumption">Error Budget
-            Consumption</h3>
-            <pre class="mermaid"><code>gantt
+<p><strong>Key insight</strong>: SLIs measure what users care about.
+SLOs set targets. Error budgets balance reliability and velocity.</p>
+<h3 id="the-error-budget-concept">The Error Budget Concept</h3>
+<p><strong>Error budget</strong>: The amount of unreliability a service
+can tolerate.</p>
+<p><strong>Formula</strong>: <code>Error Budget = 1 - SLO</code></p>
+<p><strong>Example</strong>: - SLO: 99.9% availability - Error Budget:
+0.1% = 43.2 minutes/month</p>
+<p><strong>Use case</strong>: When error budget is exhausted, stop
+feature work and focus on reliability.</p>
+<h3 id="error-budget-consumption">Error Budget Consumption</h3>
+<pre class="mermaid"><code>gantt
     title Error Budget Consumption Over Month
     dateFormat X
     axisFormat %s
@@ -71,332 +67,290 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
     Available Budget    :0, 2592000
     Consumed by Incidents :0, 1800
     Remaining Budget    :1800, 2590200</code></pre>
-            <p><strong>Visualization</strong>: Error budget starts at
-            100%, decreases with incidents, resets monthly.</p>
-            <hr />
-            <h2 id="internals-architecture">Internals &amp;
-            Architecture</h2>
-            <h3 id="sli-service-level-indicator">SLI (Service Level
-            Indicator)</h3>
-            <p><strong>Definition</strong>: A quantitative measure of
-            service quality.</p>
-            <h4 id="good-slis">Good SLIs</h4>
-            <p><strong>Characteristics</strong>: -
-            <strong>User-facing</strong>: Measures what users experience
-            - <strong>Measurable</strong>: Can be measured accurately -
-            <strong>Actionable</strong>: Changes when system behavior
-            changes</p>
-            <p><strong>Examples</strong>: -
-            <strong>Availability</strong>: Fraction of successful
-            requests - <strong>Latency</strong>: Request latency (P50,
-            P95, P99) - <strong>Error rate</strong>: Fraction of
-            requests that error - <strong>Throughput</strong>: Requests
-            processed per second</p>
-            <h4 id="bad-slis">Bad SLIs</h4>
-            <p><strong>Anti-patterns</strong>: - <strong>Internal
-            metrics</strong>: CPU utilization (users don’t care) -
-            <strong>Unmeasurable</strong>: “User satisfaction” (too
-            vague) - <strong>Non-actionable</strong>: “Uptime” (doesn’t
-            change with improvements)</p>
-            <h3 id="slo-service-level-objective">SLO (Service Level
-            Objective)</h3>
-            <p><strong>Definition</strong>: A target value for an
-            SLI.</p>
-            <h4 id="setting-slos">Setting SLOs</h4>
-            <p><strong>Process</strong>: 1. <strong>Measure
-            baseline</strong>: What’s current performance? 2.
-            <strong>Set target</strong>: What’s acceptable? 3.
-            <strong>Consider users</strong>: What do users need? 4.
-            <strong>Consider cost</strong>: What can we afford?</p>
-            <p><strong>Example</strong>: - <strong>SLI</strong>: P95
-            latency - <strong>Current</strong>: 200ms -
-            <strong>Target</strong>: 100ms - <strong>SLO</strong>: P95
-            latency &lt; 100ms</p>
-            <h4 id="slo-tiers">SLO Tiers</h4>
-            <p><strong>Tiers</strong>: - <strong>P0 (Critical)</strong>:
-            99.99% availability, &lt; 50ms P95 latency - <strong>P1
-            (Important)</strong>: 99.9% availability, &lt; 100ms P95
-            latency - <strong>P2 (Standard)</strong>: 99% availability,
-            &lt; 200ms P95 latency</p>
-            <p><strong>Use case</strong>: Different SLOs for different
-            service tiers.</p>
-            <h3 id="error-budget">Error Budget</h3>
-            <p><strong>Definition</strong>: The amount of unreliability
-            a service can tolerate.</p>
-            <h4 id="calculating-error-budget">Calculating Error
-            Budget</h4>
-            <p><strong>Formula</strong>:
-            <code>Error Budget = 1 - SLO</code></p>
-            <p><strong>Example</strong>: - SLO: 99.9% availability -
-            Error Budget: 0.1% = 43.2 minutes/month</p>
-            <p><strong>Time-based</strong>: - <strong>Monthly</strong>:
-            Error budget per month - <strong>Weekly</strong>: Error
-            budget per week - <strong>Daily</strong>: Error budget per
-            day</p>
-            <h4 id="error-budget-policy">Error Budget Policy</h4>
-            <p><strong>Policy</strong>: What to do when error budget is
-            exhausted.</p>
-            <p><strong>Options</strong>: 1. <strong>Stop feature
-            work</strong>: Focus on reliability 2. <strong>Reduce
-            SLO</strong>: Accept lower reliability 3. <strong>Increase
-            capacity</strong>: Add more resources</p>
-            <p><strong>Example</strong>: - <strong>&lt; 50% budget
-            remaining</strong>: Warning, reduce risky changes -
-            <strong>&lt; 25% budget remaining</strong>: Stop feature
-            work, focus on reliability - <strong>Budget
-            exhausted</strong>: Emergency reliability work only</p>
-            <hr />
-            <h2 id="failure-modes-blast-radius">Failure Modes &amp;
-            Blast Radius</h2>
-            <h3 id="slo-violations">SLO Violations</h3>
-            <h4 id="scenario-1-slo-too-aggressive">Scenario 1: SLO Too
-            Aggressive</h4>
-            <ul>
-            <li><strong>Impact</strong>: Constant violations, exhausted
-            error budget</li>
-            <li><strong>Blast radius</strong>: Team velocity,
-            morale</li>
-            <li><strong>Detection</strong>: SLO compliance &lt;
-            100%</li>
-            <li><strong>Recovery</strong>: Adjust SLO to realistic
-            target</li>
-            </ul>
-            <h4 id="scenario-2-slo-too-lax">Scenario 2: SLO Too Lax</h4>
-            <ul>
-            <li><strong>Impact</strong>: Poor user experience, but SLO
-            met</li>
-            <li><strong>Blast radius</strong>: User satisfaction</li>
-            <li><strong>Detection</strong>: User complaints, but SLO
-            compliance high</li>
-            <li><strong>Recovery</strong>: Tighten SLO to match user
-            expectations</li>
-            </ul>
-            <h4 id="scenario-3-sli-misconfigured">Scenario 3: SLI
-            Misconfigured</h4>
-            <ul>
-            <li><strong>Impact</strong>: SLO compliance doesn’t reflect
-            reality</li>
-            <li><strong>Blast radius</strong>: False sense of
-            security</li>
-            <li><strong>Detection</strong>: User complaints despite SLO
-            compliance</li>
-            <li><strong>Recovery</strong>: Fix SLI definition,
-            remeasure</li>
-            </ul>
-            <h3 id="error-budget-exhaustion">Error Budget
-            Exhaustion</h3>
-            <h4 id="scenario-1-budget-exhausted-early">Scenario 1:
-            Budget Exhausted Early</h4>
-            <ul>
-            <li><strong>Impact</strong>: Can’t ship features, must focus
-            on reliability</li>
-            <li><strong>Blast radius</strong>: Product velocity</li>
-            <li><strong>Detection</strong>: Error budget &lt; 0%</li>
-            <li><strong>Recovery</strong>: Fix reliability issues,
-            rebuild budget</li>
-            </ul>
-            <h4 id="scenario-2-budget-never-used">Scenario 2: Budget
-            Never Used</h4>
-            <ul>
-            <li><strong>Impact</strong>: Over-investment in reliability,
-            slow feature velocity</li>
-            <li><strong>Blast radius</strong>: Product
-            competitiveness</li>
-            <li><strong>Detection</strong>: Error budget consistently
-            high</li>
-            <li><strong>Recovery</strong>: Tighten SLO or increase risk
-            tolerance</li>
-            </ul>
-            <hr />
-            <h2 id="observability-contract">Observability Contract</h2>
-            <h3 id="metrics-to-track">Metrics to Track</h3>
-            <h4 id="sli-metrics">SLI Metrics</h4>
-            <ul>
-            <li><strong>Availability</strong>: Fraction of successful
-            requests</li>
-            <li><strong>Latency</strong>: P50, P95, P99 latency</li>
-            <li><strong>Error rate</strong>: Fraction of requests that
-            error</li>
-            <li><strong>Throughput</strong>: Requests per second</li>
-            </ul>
-            <h4 id="slo-compliance">SLO Compliance</h4>
-            <ul>
-            <li><strong>SLO compliance</strong>: Percentage of time SLO
-            is met</li>
-            <li><strong>Error budget remaining</strong>: Remaining error
-            budget</li>
-            <li><strong>Error budget burn rate</strong>: Rate of error
-            budget consumption</li>
-            </ul>
-            <h4 id="alerting">Alerting</h4>
-            <ul>
-            <li><strong>SLO violation</strong>: Alert when SLO
-            violated</li>
-            <li><strong>Error budget warning</strong>: Alert when budget
-            &lt; 50%</li>
-            <li><strong>Error budget critical</strong>: Alert when
-            budget &lt; 25%</li>
-            </ul>
-            <h3 id="dashboards">Dashboards</h3>
-            <p><strong>SLO Dashboard</strong>: - Current SLI values -
-            SLO targets - SLO compliance over time - Error budget
-            remaining</p>
-            <p><strong>Error Budget Dashboard</strong>: - Error budget
-            consumption over time - Burn rate - Projected exhaustion
-            date - Policy status</p>
-            <h3 id="logs">Logs</h3>
-            <p>Log events: - SLO violations - Error budget policy
-            triggers - SLI measurement issues</p>
-            <hr />
-            <h2 id="change-safety">Change Safety</h2>
-            <h3 id="implementing-slisslos">Implementing SLIs/SLOs</h3>
-            <h4 id="define-slis">1. Define SLIs</h4>
-            <ul>
-            <li>Choose user-facing metrics</li>
-            <li>Ensure metrics are measurable</li>
-            <li>Verify metrics are actionable</li>
-            </ul>
-            <h4 id="set-slos">2. Set SLOs</h4>
-            <ul>
-            <li>Measure baseline performance</li>
-            <li>Set realistic targets</li>
-            <li>Consider user needs and cost</li>
-            </ul>
-            <h4 id="implement-error-budgets">3. Implement Error
-            Budgets</h4>
-            <ul>
-            <li>Calculate error budgets</li>
-            <li>Define error budget policy</li>
-            <li>Set up monitoring and alerts</li>
-            </ul>
-            <h4 id="review-and-adjust">4. Review and Adjust</h4>
-            <ul>
-            <li>Review SLO compliance regularly</li>
-            <li>Adjust SLOs based on data</li>
-            <li>Update error budget policy as needed</li>
-            </ul>
-            <h3 id="testing-strategy">Testing Strategy</h3>
-            <ol type="1">
-            <li><strong>SLI validation</strong>: Verify SLIs measure
-            what they claim</li>
-            <li><strong>SLO testing</strong>: Test SLO compliance under
-            various conditions</li>
-            <li><strong>Error budget testing</strong>: Test error budget
-            calculations</li>
-            <li><strong>Policy testing</strong>: Test error budget
-            policy triggers</li>
-            </ol>
-            <hr />
-            <h2 id="security-boundaries">Security Boundaries</h2>
-            <p>SLIs/SLOs aren’t security issues, but: - <strong>SLI
-            data</strong>: May contain sensitive information (protect
-            access) - <strong>SLO targets</strong>: May reveal system
-            capabilities (keep internal) - <strong>Error
-            budget</strong>: May reveal reliability issues (keep
-            internal)</p>
-            <hr />
-            <h2 id="tradeoffs">Tradeoffs</h2>
-            <h3 id="what-we-gain-with-slisslos">What We Gain with
-            SLIs/SLOs</h3>
-            <ul>
-            <li>Clear reliability targets</li>
-            <li>Data-driven decisions</li>
-            <li>Balance between reliability and velocity</li>
-            <li>Better user experience</li>
-            </ul>
-            <h3 id="what-we-lose">What We Lose</h3>
-            <ul>
-            <li>More complex monitoring</li>
-            <li>Requires discipline to follow</li>
-            <li>May slow feature velocity (when budget exhausted)</li>
-            </ul>
-            <h3 id="when-to-use-slisslos">When to Use SLIs/SLOs</h3>
-            <ul>
-            <li><strong>Always</strong>: For production services</li>
-            <li><strong>Critical</strong>: For user-facing services</li>
-            <li><strong>Important</strong>: For services with
-            dependencies</li>
-            </ul>
-            <h3 id="alternatives">Alternatives</h3>
-            <p>If SLIs/SLOs are too complex: - <strong>SLA</strong>:
-            Service Level Agreement (contractual, not internal) -
-            <strong>Uptime targets</strong>: Simple availability targets
-            - <strong>No targets</strong>: Accept whatever reliability
-            you get (not recommended)</p>
-            <hr />
-            <h2 id="operational-considerations">Operational
-            Considerations</h2>
-            <h3 id="capacity-planning">Capacity Planning</h3>
-            <p><strong>Error budget planning</strong>: - Plan for error
-            budget consumption - Reserve budget for incidents - Plan for
-            budget exhaustion scenarios</p>
-            <h3 id="monitoring-debugging">Monitoring &amp;
-            Debugging</h3>
-            <p><strong>Monitor</strong>: - SLI values over time - SLO
-            compliance over time - Error budget consumption over time -
-            Error budget burn rate</p>
-            <p><strong>Debug SLO violations</strong>: 1. Check SLI
-            values: Are they accurate? 2. Check SLO targets: Are they
-            realistic? 3. Check error budget: Is budget being consumed?
-            4. Check incidents: What’s causing violations?</p>
-            <h3 id="incident-response">Incident Response</h3>
-            <p><strong>Common incidents</strong>: - SLO violations -
-            Error budget exhaustion - SLI measurement failures</p>
-            <p><strong>Response</strong>: 1. Investigate root cause 2.
-            Fix reliability issues 3. Rebuild error budget 4. Review and
-            adjust SLOs if needed</p>
-            <hr />
-            <h2 id="what-staff-engineers-ask-in-reviews">What Staff
-            Engineers Ask in Reviews</h2>
-            <h3 id="design-questions">Design Questions</h3>
-            <ul>
-            <li>“What are the SLIs?”</li>
-            <li>“What are the SLOs?”</li>
-            <li>“What’s the error budget policy?”</li>
-            <li>“How do we measure SLIs?”</li>
-            </ul>
-            <h3 id="scale-questions">Scale Questions</h3>
-            <ul>
-            <li>“What happens when SLO is violated?”</li>
-            <li>“What’s the error budget burn rate?”</li>
-            <li>“How do we recover from budget exhaustion?”</li>
-            </ul>
-            <h3 id="operational-questions">Operational Questions</h3>
-            <ul>
-            <li>“How do we monitor SLO compliance?”</li>
-            <li>“What alerts do we have?”</li>
-            <li>“How do we debug SLO violations?”</li>
-            </ul>
-            <hr />
-            <h2 id="further-reading">Further Reading</h2>
-            <p><strong>Comprehensive Guide</strong>: <a
-            href="../further-reading/sli-slo-error-budget.html">Further
-            Reading: SLIs, SLOs &amp; Error Budgets</a></p>
-            <p><strong>Quick Links</strong>: - “Site Reliability
-            Engineering” (SRE Book) - Chapters on SLIs/SLOs - “The Site
-            Reliability Workbook” - Practical SLO implementation - <a
-            href="prr-checklist.html">PRR Checklist</a> - <a
-            href="README.html">Back to Reliability &amp; SRE</a></p>
-            <hr />
-            <h2 id="exercises">Exercises</h2>
-            <ol type="1">
-            <li><p><strong>Define SLIs/SLOs</strong>: Define SLIs and
-            SLOs for an API service. What metrics do you use? What
-            targets?</p></li>
-            <li><p><strong>Error budget policy</strong>: Design an error
-            budget policy. What happens at 50%? 25%? 0%?</p></li>
-            <li><p><strong>Debug SLO violation</strong>: An SLO is being
-            violated. How do you debug? What do you check?</p></li>
-            </ol>
-            <p><strong>Answer Key</strong>: <a
-            href="../../exercises/answers/sli-slo-error-budget-answers.html">View
-            Answers</a></p>
+<p><strong>Visualization</strong>: Error budget starts at 100%,
+decreases with incidents, resets monthly.</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="sli-service-level-indicator">SLI (Service Level Indicator)</h3>
+<p><strong>Definition</strong>: A quantitative measure of service
+quality.</p>
+<h4 id="good-slis">Good SLIs</h4>
+<p><strong>Characteristics</strong>: - <strong>User-facing</strong>:
+Measures what users experience - <strong>Measurable</strong>: Can be
+measured accurately - <strong>Actionable</strong>: Changes when system
+behavior changes</p>
+<p><strong>Examples</strong>: - <strong>Availability</strong>: Fraction
+of successful requests - <strong>Latency</strong>: Request latency (P50,
+P95, P99) - <strong>Error rate</strong>: Fraction of requests that error
+- <strong>Throughput</strong>: Requests processed per second</p>
+<h4 id="bad-slis">Bad SLIs</h4>
+<p><strong>Anti-patterns</strong>: - <strong>Internal metrics</strong>:
+CPU utilization (users don’t care) - <strong>Unmeasurable</strong>:
+“User satisfaction” (too vague) - <strong>Non-actionable</strong>:
+“Uptime” (doesn’t change with improvements)</p>
+<h3 id="slo-service-level-objective">SLO (Service Level Objective)</h3>
+<p><strong>Definition</strong>: A target value for an SLI.</p>
+<h4 id="setting-slos">Setting SLOs</h4>
+<p><strong>Process</strong>: 1. <strong>Measure baseline</strong>:
+What’s current performance? 2. <strong>Set target</strong>: What’s
+acceptable? 3. <strong>Consider users</strong>: What do users need? 4.
+<strong>Consider cost</strong>: What can we afford?</p>
+<p><strong>Example</strong>: - <strong>SLI</strong>: P95 latency -
+<strong>Current</strong>: 200ms - <strong>Target</strong>: 100ms -
+<strong>SLO</strong>: P95 latency &lt; 100ms</p>
+<h4 id="slo-tiers">SLO Tiers</h4>
+<p><strong>Tiers</strong>: - <strong>P0 (Critical)</strong>: 99.99%
+availability, &lt; 50ms P95 latency - <strong>P1 (Important)</strong>:
+99.9% availability, &lt; 100ms P95 latency - <strong>P2
+(Standard)</strong>: 99% availability, &lt; 200ms P95 latency</p>
+<p><strong>Use case</strong>: Different SLOs for different service
+tiers.</p>
+<h3 id="error-budget">Error Budget</h3>
+<p><strong>Definition</strong>: The amount of unreliability a service
+can tolerate.</p>
+<h4 id="calculating-error-budget">Calculating Error Budget</h4>
+<p><strong>Formula</strong>: <code>Error Budget = 1 - SLO</code></p>
+<p><strong>Example</strong>: - SLO: 99.9% availability - Error Budget:
+0.1% = 43.2 minutes/month</p>
+<p><strong>Time-based</strong>: - <strong>Monthly</strong>: Error budget
+per month - <strong>Weekly</strong>: Error budget per week -
+<strong>Daily</strong>: Error budget per day</p>
+<h4 id="error-budget-policy">Error Budget Policy</h4>
+<p><strong>Policy</strong>: What to do when error budget is
+exhausted.</p>
+<p><strong>Options</strong>: 1. <strong>Stop feature work</strong>:
+Focus on reliability 2. <strong>Reduce SLO</strong>: Accept lower
+reliability 3. <strong>Increase capacity</strong>: Add more
+resources</p>
+<p><strong>Example</strong>: - <strong>&lt; 50% budget
+remaining</strong>: Warning, reduce risky changes - <strong>&lt; 25%
+budget remaining</strong>: Stop feature work, focus on reliability -
+<strong>Budget exhausted</strong>: Emergency reliability work only</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast
+Radius</h2>
+<h3 id="slo-violations">SLO Violations</h3>
+<h4 id="scenario-1-slo-too-aggressive">Scenario 1: SLO Too
+Aggressive</h4>
+<ul>
+<li><strong>Impact</strong>: Constant violations, exhausted error
+budget</li>
+<li><strong>Blast radius</strong>: Team velocity, morale</li>
+<li><strong>Detection</strong>: SLO compliance &lt; 100%</li>
+<li><strong>Recovery</strong>: Adjust SLO to realistic target</li>
+</ul>
+<h4 id="scenario-2-slo-too-lax">Scenario 2: SLO Too Lax</h4>
+<ul>
+<li><strong>Impact</strong>: Poor user experience, but SLO met</li>
+<li><strong>Blast radius</strong>: User satisfaction</li>
+<li><strong>Detection</strong>: User complaints, but SLO compliance
+high</li>
+<li><strong>Recovery</strong>: Tighten SLO to match user
+expectations</li>
+</ul>
+<h4 id="scenario-3-sli-misconfigured">Scenario 3: SLI Misconfigured</h4>
+<ul>
+<li><strong>Impact</strong>: SLO compliance doesn’t reflect reality</li>
+<li><strong>Blast radius</strong>: False sense of security</li>
+<li><strong>Detection</strong>: User complaints despite SLO
+compliance</li>
+<li><strong>Recovery</strong>: Fix SLI definition, remeasure</li>
+</ul>
+<h3 id="error-budget-exhaustion">Error Budget Exhaustion</h3>
+<h4 id="scenario-1-budget-exhausted-early">Scenario 1: Budget Exhausted
+Early</h4>
+<ul>
+<li><strong>Impact</strong>: Can’t ship features, must focus on
+reliability</li>
+<li><strong>Blast radius</strong>: Product velocity</li>
+<li><strong>Detection</strong>: Error budget &lt; 0%</li>
+<li><strong>Recovery</strong>: Fix reliability issues, rebuild
+budget</li>
+</ul>
+<h4 id="scenario-2-budget-never-used">Scenario 2: Budget Never Used</h4>
+<ul>
+<li><strong>Impact</strong>: Over-investment in reliability, slow
+feature velocity</li>
+<li><strong>Blast radius</strong>: Product competitiveness</li>
+<li><strong>Detection</strong>: Error budget consistently high</li>
+<li><strong>Recovery</strong>: Tighten SLO or increase risk
+tolerance</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics-to-track">Metrics to Track</h3>
+<h4 id="sli-metrics">SLI Metrics</h4>
+<ul>
+<li><strong>Availability</strong>: Fraction of successful requests</li>
+<li><strong>Latency</strong>: P50, P95, P99 latency</li>
+<li><strong>Error rate</strong>: Fraction of requests that error</li>
+<li><strong>Throughput</strong>: Requests per second</li>
+</ul>
+<h4 id="slo-compliance">SLO Compliance</h4>
+<ul>
+<li><strong>SLO compliance</strong>: Percentage of time SLO is met</li>
+<li><strong>Error budget remaining</strong>: Remaining error budget</li>
+<li><strong>Error budget burn rate</strong>: Rate of error budget
+consumption</li>
+</ul>
+<h4 id="alerting">Alerting</h4>
+<ul>
+<li><strong>SLO violation</strong>: Alert when SLO violated</li>
+<li><strong>Error budget warning</strong>: Alert when budget &lt;
+50%</li>
+<li><strong>Error budget critical</strong>: Alert when budget &lt;
+25%</li>
+</ul>
+<h3 id="dashboards">Dashboards</h3>
+<p><strong>SLO Dashboard</strong>: - Current SLI values - SLO targets -
+SLO compliance over time - Error budget remaining</p>
+<p><strong>Error Budget Dashboard</strong>: - Error budget consumption
+over time - Burn rate - Projected exhaustion date - Policy status</p>
+<h3 id="logs">Logs</h3>
+<p>Log events: - SLO violations - Error budget policy triggers - SLI
+measurement issues</p>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="implementing-slisslos">Implementing SLIs/SLOs</h3>
+<h4 id="define-slis">1. Define SLIs</h4>
+<ul>
+<li>Choose user-facing metrics</li>
+<li>Ensure metrics are measurable</li>
+<li>Verify metrics are actionable</li>
+</ul>
+<h4 id="set-slos">2. Set SLOs</h4>
+<ul>
+<li>Measure baseline performance</li>
+<li>Set realistic targets</li>
+<li>Consider user needs and cost</li>
+</ul>
+<h4 id="implement-error-budgets">3. Implement Error Budgets</h4>
+<ul>
+<li>Calculate error budgets</li>
+<li>Define error budget policy</li>
+<li>Set up monitoring and alerts</li>
+</ul>
+<h4 id="review-and-adjust">4. Review and Adjust</h4>
+<ul>
+<li>Review SLO compliance regularly</li>
+<li>Adjust SLOs based on data</li>
+<li>Update error budget policy as needed</li>
+</ul>
+<h3 id="testing-strategy">Testing Strategy</h3>
+<ol type="1">
+<li><strong>SLI validation</strong>: Verify SLIs measure what they
+claim</li>
+<li><strong>SLO testing</strong>: Test SLO compliance under various
+conditions</li>
+<li><strong>Error budget testing</strong>: Test error budget
+calculations</li>
+<li><strong>Policy testing</strong>: Test error budget policy
+triggers</li>
+</ol>
+<hr />
+<h2 id="security-boundaries">Security Boundaries</h2>
+<p>SLIs/SLOs aren’t security issues, but: - <strong>SLI data</strong>:
+May contain sensitive information (protect access) - <strong>SLO
+targets</strong>: May reveal system capabilities (keep internal) -
+<strong>Error budget</strong>: May reveal reliability issues (keep
+internal)</p>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="what-we-gain-with-slisslos">What We Gain with SLIs/SLOs</h3>
+<ul>
+<li>Clear reliability targets</li>
+<li>Data-driven decisions</li>
+<li>Balance between reliability and velocity</li>
+<li>Better user experience</li>
+</ul>
+<h3 id="what-we-lose">What We Lose</h3>
+<ul>
+<li>More complex monitoring</li>
+<li>Requires discipline to follow</li>
+<li>May slow feature velocity (when budget exhausted)</li>
+</ul>
+<h3 id="when-to-use-slisslos">When to Use SLIs/SLOs</h3>
+<ul>
+<li><strong>Always</strong>: For production services</li>
+<li><strong>Critical</strong>: For user-facing services</li>
+<li><strong>Important</strong>: For services with dependencies</li>
+</ul>
+<h3 id="alternatives">Alternatives</h3>
+<p>If SLIs/SLOs are too complex: - <strong>SLA</strong>: Service Level
+Agreement (contractual, not internal) - <strong>Uptime targets</strong>:
+Simple availability targets - <strong>No targets</strong>: Accept
+whatever reliability you get (not recommended)</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<p><strong>Error budget planning</strong>: - Plan for error budget
+consumption - Reserve budget for incidents - Plan for budget exhaustion
+scenarios</p>
+<h3 id="monitoring-debugging">Monitoring &amp; Debugging</h3>
+<p><strong>Monitor</strong>: - SLI values over time - SLO compliance
+over time - Error budget consumption over time - Error budget burn
+rate</p>
+<p><strong>Debug SLO violations</strong>: 1. Check SLI values: Are they
+accurate? 2. Check SLO targets: Are they realistic? 3. Check error
+budget: Is budget being consumed? 4. Check incidents: What’s causing
+violations?</p>
+<h3 id="incident-response">Incident Response</h3>
+<p><strong>Common incidents</strong>: - SLO violations - Error budget
+exhaustion - SLI measurement failures</p>
+<p><strong>Response</strong>: 1. Investigate root cause 2. Fix
+reliability issues 3. Rebuild error budget 4. Review and adjust SLOs if
+needed</p>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in
+Reviews</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>“What are the SLIs?”</li>
+<li>“What are the SLOs?”</li>
+<li>“What’s the error budget policy?”</li>
+<li>“How do we measure SLIs?”</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>“What happens when SLO is violated?”</li>
+<li>“What’s the error budget burn rate?”</li>
+<li>“How do we recover from budget exhaustion?”</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>“How do we monitor SLO compliance?”</li>
+<li>“What alerts do we have?”</li>
+<li>“How do we debug SLO violations?”</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a
+href="../further-reading/sli-slo-error-budget.html">Further Reading: SLIs,
+SLOs &amp; Error Budgets</a></p>
+<p><strong>Quick Links</strong>: - “Site Reliability Engineering” (SRE
+Book) - Chapters on SLIs/SLOs - “The Site Reliability Workbook” -
+Practical SLO implementation - <a href="prr-checklist.html">PRR
+Checklist</a> - <a href="README.html">Back to Reliability &amp;
+SRE</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol type="1">
+<li><p><strong>Define SLIs/SLOs</strong>: Define SLIs and SLOs for an
+API service. What metrics do you use? What targets?</p></li>
+<li><p><strong>Error budget policy</strong>: Design an error budget
+policy. What happens at 50%? 25%? 0%?</p></li>
+<li><p><strong>Debug SLO violation</strong>: An SLO is being violated.
+How do you debug? What do you check?</p></li>
+</ol>
+<p><strong>Answer Key</strong>: <a
+href="../../exercises/answers/sli-slo-error-budget-answers.html">View
+Answers</a></p>
+            </div>
         </div>
     </main>
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
       mermaid.initialize({ startOnLoad: true });

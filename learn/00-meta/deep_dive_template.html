@@ -8,296 +8,286 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
-jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
-    <link rel="stylesheet" href="../learn/css/learn.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uudjLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/learn.css">
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../index.html" class="flex items-center hover:text-gray-600">
+                <a href="/index.html" class="flex items-center hover:text-gray-600">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     <span>Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="/learn/index.html" class="hover:text-indigo-600 font-semibold">Back to Learn Topics</a></li>
+                <li><a href="/aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="main-content">
-            <h1 id="deep-dive-template">Deep Dive Template</h1>
-            <p>Use this template for creating staff-level deep dives on
-            any topic.</p>
-            <h2 id="title-topic-name">Title: [Topic Name]</h2>
-            <p><strong>One-line summary</strong>: [What is this and why
-            does it matter?]</p>
-            <p><strong>Prerequisites</strong>: [What should readers know
-            before diving in?]</p>
-            <hr />
-            <h2 id="mental-model">Mental Model</h2>
-            <p><strong>How to think about this
-            system/concept</strong></p>
-            <ul>
-            <li>Core abstraction</li>
-            <li>Key invariants</li>
-            <li>Critical paths</li>
-            <li>Data flow (if applicable)</li>
-            </ul>
-            <p><strong>Diagram</strong> (optional but recommended):</p>
-            <pre class="mermaid"><code>flowchart TD
+        <div class="card">
+            <div class="card-content">
+                <h1 id="deep-dive-template">Deep Dive Template</h1>
+<p>Use this template for creating staff-level deep dives on any
+topic.</p>
+<h2 id="title-topic-name">Title: [Topic Name]</h2>
+<p><strong>One-line summary</strong>: [What is this and why does it
+matter?]</p>
+<p><strong>Prerequisites</strong>: [What should readers know before
+diving in?]</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<p><strong>How to think about this system/concept</strong></p>
+<ul>
+<li>Core abstraction</li>
+<li>Key invariants</li>
+<li>Critical paths</li>
+<li>Data flow (if applicable)</li>
+</ul>
+<p><strong>Diagram</strong> (optional but recommended):</p>
+<pre class="mermaid"><code>flowchart TD
     A[Component A] --&gt; B[Component B]
     B --&gt; C[Component C]</code></pre>
-            <hr />
-            <h2 id="internals-architecture">Internals &amp;
-            Architecture</h2>
-            <h3 id="high-level-architecture">High-Level
-            Architecture</h3>
-            <ul>
-            <li>Components and their responsibilities</li>
-            <li>How components interact</li>
-            <li>Critical paths and dependencies</li>
-            </ul>
-            <h3 id="implementation-details">Implementation Details</h3>
-            <ul>
-            <li>Key algorithms or protocols</li>
-            <li>Data structures</li>
-            <li>Consistency model (if applicable)</li>
-            <li>Performance characteristics</li>
-            </ul>
-            <h3 id="design-decisions">Design Decisions</h3>
-            <ul>
-            <li>Why was it designed this way?</li>
-            <li>What alternatives were considered?</li>
-            <li>What constraints drove the design?</li>
-            </ul>
-            <hr />
-            <h2 id="failure-modes-blast-radius">Failure Modes &amp;
-            Blast Radius</h2>
-            <h3 id="failure-domains">Failure Domains</h3>
-            <ul>
-            <li>What can fail independently?</li>
-            <li>How are failures isolated?</li>
-            <li>What’s the blast radius of each failure?</li>
-            </ul>
-            <h3 id="common-failure-scenarios">Common Failure
-            Scenarios</h3>
-            <ol type="1">
-            <li><strong>Scenario</strong>: [What fails]
-            <ul>
-            <li><strong>Impact</strong>: [What breaks]</li>
-            <li><strong>Detection</strong>: [How do we know?]</li>
-            <li><strong>Recovery</strong>: [How do we fix it?]</li>
-            </ul></li>
-            <li><strong>Scenario</strong>: [Another failure]
-            <ul>
-            <li>…</li>
-            </ul></li>
-            </ol>
-            <h3 id="overload-behavior">Overload Behavior</h3>
-            <ul>
-            <li><strong>10× normal load</strong>: [What happens?]</li>
-            <li><strong>100× normal load</strong>: [What breaks?]</li>
-            <li><strong>1000× normal load</strong>: [Catastrophic
-            failure?]</li>
-            </ul>
-            <h3 id="cascading-failures">Cascading Failures</h3>
-            <ul>
-            <li>How can failures propagate?</li>
-            <li>What prevents cascades?</li>
-            <li>What makes cascades worse?</li>
-            </ul>
-            <hr />
-            <h2 id="observability-contract">Observability Contract</h2>
-            <h3 id="metrics-to-track">Metrics to Track</h3>
-            <ul>
-            <li><strong>Latency</strong>: [What latency metrics?
-            P50/P95/P99?]</li>
-            <li><strong>Throughput</strong>: [QPS? Bandwidth?]</li>
-            <li><strong>Errors</strong>: [Error rates? Error
-            types?]</li>
-            <li><strong>Resource usage</strong>: [CPU? Memory?
-            IOPS?]</li>
-            </ul>
-            <h3 id="logs">Logs</h3>
-            <ul>
-            <li>What events should be logged?</li>
-            <li>What log levels?</li>
-            <li>What information is needed for debugging?</li>
-            </ul>
-            <h3 id="traces">Traces</h3>
-            <ul>
-            <li>What operations should be traced?</li>
-            <li>What spans are critical?</li>
-            <li>How to correlate across services?</li>
-            </ul>
-            <h3 id="alerts">Alerts</h3>
-            <ul>
-            <li>What conditions require alerts?</li>
-            <li>What’s the alerting strategy?</li>
-            <li>How to avoid alert fatigue?</li>
-            </ul>
-            <hr />
-            <h2 id="change-safety">Change Safety</h2>
-            <h3 id="rollout-strategy">Rollout Strategy</h3>
-            <ul>
-            <li>How to deploy changes safely?</li>
-            <li>Canary vs blue-green vs rolling?</li>
-            <li>What’s the rollout cadence?</li>
-            </ul>
-            <h3 id="rollback-plan">Rollback Plan</h3>
-            <ul>
-            <li>How to detect bad changes?</li>
-            <li>How to roll back quickly?</li>
-            <li>What’s the rollback procedure?</li>
-            </ul>
-            <h3 id="feature-flags">Feature Flags</h3>
-            <ul>
-            <li>What should be feature-flagged?</li>
-            <li>How to control rollouts?</li>
-            <li>How to kill switches work?</li>
-            </ul>
-            <h3 id="testing-strategy">Testing Strategy</h3>
-            <ul>
-            <li>Unit tests?</li>
-            <li>Integration tests?</li>
-            <li>Chaos testing?</li>
-            <li>Load testing?</li>
-            </ul>
-            <hr />
-            <h2 id="security-boundaries">Security Boundaries</h2>
-            <h3 id="identity-authentication">Identity &amp;
-            Authentication</h3>
-            <ul>
-            <li>Who can access this?</li>
-            <li>How is identity verified?</li>
-            <li>What authentication mechanisms?</li>
-            </ul>
-            <h3 id="authorization">Authorization</h3>
-            <ul>
-            <li>What permissions are needed?</li>
-            <li>How is authorization checked?</li>
-            <li>What’s the principle of least privilege?</li>
-            </ul>
-            <h3 id="data-protection">Data Protection</h3>
-            <ul>
-            <li>How is data encrypted (at rest? in transit?)?</li>
-            <li>What’s the key management strategy?</li>
-            <li>How to prevent data exfiltration?</li>
-            </ul>
-            <h3 id="attack-surfaces">Attack Surfaces</h3>
-            <ul>
-            <li>What are the attack vectors?</li>
-            <li>How are attacks mitigated?</li>
-            <li>What’s the security monitoring?</li>
-            </ul>
-            <hr />
-            <h2 id="tradeoffs">Tradeoffs</h2>
-            <h3 id="what-we-gain">What We Gain</h3>
-            <ul>
-            <li>[Benefit 1]</li>
-            <li>[Benefit 2]</li>
-            </ul>
-            <h3 id="what-we-lose">What We Lose</h3>
-            <ul>
-            <li>[Cost 1]</li>
-            <li>[Cost 2]</li>
-            </ul>
-            <h3 id="when-to-use">When to Use</h3>
-            <ul>
-            <li>[Use case 1]</li>
-            <li>[Use case 2]</li>
-            </ul>
-            <h3 id="when-not-to-use">When NOT to Use</h3>
-            <ul>
-            <li>[Anti-pattern 1]</li>
-            <li>[Anti-pattern 2]</li>
-            </ul>
-            <h3 id="alternatives">Alternatives</h3>
-            <ul>
-            <li>[Alternative 1]: [When to use instead]</li>
-            <li>[Alternative 2]: [When to use instead]</li>
-            </ul>
-            <hr />
-            <h2 id="operational-considerations">Operational
-            Considerations</h2>
-            <h3 id="capacity-planning">Capacity Planning</h3>
-            <ul>
-            <li>How to size the system?</li>
-            <li>What are the scaling limits?</li>
-            <li>How to forecast capacity needs?</li>
-            </ul>
-            <h3 id="monitoring-debugging">Monitoring &amp;
-            Debugging</h3>
-            <ul>
-            <li>How to monitor health?</li>
-            <li>How to debug issues?</li>
-            <li>What tools are needed?</li>
-            </ul>
-            <h3 id="incident-response">Incident Response</h3>
-            <ul>
-            <li>What are common incidents?</li>
-            <li>What’s the runbook?</li>
-            <li>Who responds?</li>
-            </ul>
-            <h3 id="cost">Cost</h3>
-            <ul>
-            <li>What are the cost drivers?</li>
-            <li>How to optimize costs?</li>
-            <li>What’s the cost model?</li>
-            </ul>
-            <hr />
-            <h2 id="what-staff-engineers-ask-in-reviews">What Staff
-            Engineers Ask in Reviews</h2>
-            <h3 id="design-questions">Design Questions</h3>
-            <ul>
-            <li>“What’s the failure domain?”</li>
-            <li>“How do we detect failures?”</li>
-            <li>“What’s the blast radius?”</li>
-            <li>“How do we roll back?”</li>
-            <li>“What’s the observability contract?”</li>
-            </ul>
-            <h3 id="scale-questions">Scale Questions</h3>
-            <ul>
-            <li>“What happens at 10× load?”</li>
-            <li>“What are the bottlenecks?”</li>
-            <li>“How does it degrade?”</li>
-            </ul>
-            <h3 id="security-questions">Security Questions</h3>
-            <ul>
-            <li>“Who can access this?”</li>
-            <li>“How is data protected?”</li>
-            <li>“What’s the attack surface?”</li>
-            </ul>
-            <h3 id="operational-questions">Operational Questions</h3>
-            <ul>
-            <li>“How do we monitor this?”</li>
-            <li>“What’s the runbook?”</li>
-            <li>“How do we debug issues?”</li>
-            </ul>
-            <hr />
-            <h2 id="further-reading">Further Reading</h2>
-            <ul>
-            <li>[Related deep dives]</li>
-            <li>[Papers]</li>
-            <li>[Documentation]</li>
-            <li>[Blog posts]</li>
-            </ul>
-            <hr />
-            <h2 id="exercises">Exercises</h2>
-            <ol type="1">
-            <li>[Exercise 1: Apply concept to scenario]</li>
-            <li>[Exercise 2: Design a system using this]</li>
-            <li>[Exercise 3: Debug a failure scenario]</li>
-            </ol>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="high-level-architecture">High-Level Architecture</h3>
+<ul>
+<li>Components and their responsibilities</li>
+<li>How components interact</li>
+<li>Critical paths and dependencies</li>
+</ul>
+<h3 id="implementation-details">Implementation Details</h3>
+<ul>
+<li>Key algorithms or protocols</li>
+<li>Data structures</li>
+<li>Consistency model (if applicable)</li>
+<li>Performance characteristics</li>
+</ul>
+<h3 id="design-decisions">Design Decisions</h3>
+<ul>
+<li>Why was it designed this way?</li>
+<li>What alternatives were considered?</li>
+<li>What constraints drove the design?</li>
+</ul>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast
+Radius</h2>
+<h3 id="failure-domains">Failure Domains</h3>
+<ul>
+<li>What can fail independently?</li>
+<li>How are failures isolated?</li>
+<li>What’s the blast radius of each failure?</li>
+</ul>
+<h3 id="common-failure-scenarios">Common Failure Scenarios</h3>
+<ol type="1">
+<li><strong>Scenario</strong>: [What fails]
+<ul>
+<li><strong>Impact</strong>: [What breaks]</li>
+<li><strong>Detection</strong>: [How do we know?]</li>
+<li><strong>Recovery</strong>: [How do we fix it?]</li>
+</ul></li>
+<li><strong>Scenario</strong>: [Another failure]
+<ul>
+<li>…</li>
+</ul></li>
+</ol>
+<h3 id="overload-behavior">Overload Behavior</h3>
+<ul>
+<li><strong>10× normal load</strong>: [What happens?]</li>
+<li><strong>100× normal load</strong>: [What breaks?]</li>
+<li><strong>1000× normal load</strong>: [Catastrophic failure?]</li>
+</ul>
+<h3 id="cascading-failures">Cascading Failures</h3>
+<ul>
+<li>How can failures propagate?</li>
+<li>What prevents cascades?</li>
+<li>What makes cascades worse?</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics-to-track">Metrics to Track</h3>
+<ul>
+<li><strong>Latency</strong>: [What latency metrics? P50/P95/P99?]</li>
+<li><strong>Throughput</strong>: [QPS? Bandwidth?]</li>
+<li><strong>Errors</strong>: [Error rates? Error types?]</li>
+<li><strong>Resource usage</strong>: [CPU? Memory? IOPS?]</li>
+</ul>
+<h3 id="logs">Logs</h3>
+<ul>
+<li>What events should be logged?</li>
+<li>What log levels?</li>
+<li>What information is needed for debugging?</li>
+</ul>
+<h3 id="traces">Traces</h3>
+<ul>
+<li>What operations should be traced?</li>
+<li>What spans are critical?</li>
+<li>How to correlate across services?</li>
+</ul>
+<h3 id="alerts">Alerts</h3>
+<ul>
+<li>What conditions require alerts?</li>
+<li>What’s the alerting strategy?</li>
+<li>How to avoid alert fatigue?</li>
+</ul>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="rollout-strategy">Rollout Strategy</h3>
+<ul>
+<li>How to deploy changes safely?</li>
+<li>Canary vs blue-green vs rolling?</li>
+<li>What’s the rollout cadence?</li>
+</ul>
+<h3 id="rollback-plan">Rollback Plan</h3>
+<ul>
+<li>How to detect bad changes?</li>
+<li>How to roll back quickly?</li>
+<li>What’s the rollback procedure?</li>
+</ul>
+<h3 id="feature-flags">Feature Flags</h3>
+<ul>
+<li>What should be feature-flagged?</li>
+<li>How to control rollouts?</li>
+<li>How to kill switches work?</li>
+</ul>
+<h3 id="testing-strategy">Testing Strategy</h3>
+<ul>
+<li>Unit tests?</li>
+<li>Integration tests?</li>
+<li>Chaos testing?</li>
+<li>Load testing?</li>
+</ul>
+<hr />
+<h2 id="security-boundaries">Security Boundaries</h2>
+<h3 id="identity-authentication">Identity &amp; Authentication</h3>
+<ul>
+<li>Who can access this?</li>
+<li>How is identity verified?</li>
+<li>What authentication mechanisms?</li>
+</ul>
+<h3 id="authorization">Authorization</h3>
+<ul>
+<li>What permissions are needed?</li>
+<li>How is authorization checked?</li>
+<li>What’s the principle of least privilege?</li>
+</ul>
+<h3 id="data-protection">Data Protection</h3>
+<ul>
+<li>How is data encrypted (at rest? in transit?)?</li>
+<li>What’s the key management strategy?</li>
+<li>How to prevent data exfiltration?</li>
+</ul>
+<h3 id="attack-surfaces">Attack Surfaces</h3>
+<ul>
+<li>What are the attack vectors?</li>
+<li>How are attacks mitigated?</li>
+<li>What’s the security monitoring?</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="what-we-gain">What We Gain</h3>
+<ul>
+<li>[Benefit 1]</li>
+<li>[Benefit 2]</li>
+</ul>
+<h3 id="what-we-lose">What We Lose</h3>
+<ul>
+<li>[Cost 1]</li>
+<li>[Cost 2]</li>
+</ul>
+<h3 id="when-to-use">When to Use</h3>
+<ul>
+<li>[Use case 1]</li>
+<li>[Use case 2]</li>
+</ul>
+<h3 id="when-not-to-use">When NOT to Use</h3>
+<ul>
+<li>[Anti-pattern 1]</li>
+<li>[Anti-pattern 2]</li>
+</ul>
+<h3 id="alternatives">Alternatives</h3>
+<ul>
+<li>[Alternative 1]: [When to use instead]</li>
+<li>[Alternative 2]: [When to use instead]</li>
+</ul>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<ul>
+<li>How to size the system?</li>
+<li>What are the scaling limits?</li>
+<li>How to forecast capacity needs?</li>
+</ul>
+<h3 id="monitoring-debugging">Monitoring &amp; Debugging</h3>
+<ul>
+<li>How to monitor health?</li>
+<li>How to debug issues?</li>
+<li>What tools are needed?</li>
+</ul>
+<h3 id="incident-response">Incident Response</h3>
+<ul>
+<li>What are common incidents?</li>
+<li>What’s the runbook?</li>
+<li>Who responds?</li>
+</ul>
+<h3 id="cost">Cost</h3>
+<ul>
+<li>What are the cost drivers?</li>
+<li>How to optimize costs?</li>
+<li>What’s the cost model?</li>
+</ul>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in
+Reviews</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>“What’s the failure domain?”</li>
+<li>“How do we detect failures?”</li>
+<li>“What’s the blast radius?”</li>
+<li>“How do we roll back?”</li>
+<li>“What’s the observability contract?”</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>“What happens at 10× load?”</li>
+<li>“What are the bottlenecks?”</li>
+<li>“How does it degrade?”</li>
+</ul>
+<h3 id="security-questions">Security Questions</h3>
+<ul>
+<li>“Who can access this?”</li>
+<li>“How is data protected?”</li>
+<li>“What’s the attack surface?”</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>“How do we monitor this?”</li>
+<li>“What’s the runbook?”</li>
+<li>“How do we debug issues?”</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<ul>
+<li>[Related deep dives]</li>
+<li>[Papers]</li>
+<li>[Documentation]</li>
+<li>[Blog posts]</li>
+</ul>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol type="1">
+<li>[Exercise 1: Apply concept to scenario]</li>
+<li>[Exercise 2: Design a system using this]</li>
+<li>[Exercise 3: Debug a failure scenario]</li>
+</ol>
+            </div>
         </div>
     </main>
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
       mermaid.initialize({ startOnLoad: true });

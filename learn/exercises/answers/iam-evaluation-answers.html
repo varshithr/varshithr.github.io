@@ -8,107 +8,97 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
-jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../learn/css/learn.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uudjLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/learn.css">
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../../index.html" class="flex items-center hover:text-gray-600">
+                <a href="/index.html" class="flex items-center hover:text-gray-600">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     <span>Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="/learn/index.html" class="hover:text-indigo-600 font-semibold">Back to Learn Topics</a></li>
+                <li><a href="/aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="main-content">
-            <h1 id="answer-key-iam-evaluation-model">Answer Key: IAM
-            Evaluation Model</h1>
-            <p><a
-            href="../../03-gcp-core-building-blocks/iam-evaluation.md#exercises">Back
-            to Exercises</a></p>
-            <hr />
-            <h2 id="exercise-1-design-iam-policies">Exercise 1: Design
-            IAM Policies</h2>
-            <p><strong>Question</strong>: Design IAM policies for a
-            multi-tier application. Who can access what? What roles do
-            you use?</p>
-            <h3 id="answer">Answer</h3>
-            <p><strong>Architecture</strong>: Web tier → App tier →
-            Database tier</p>
-            <h3 id="iam-policy-design">IAM Policy Design</h3>
-            <p><strong>1. Service Accounts</strong></p>
-            <p><strong>Web Tier Service Account</strong>
-            (<code>web-tier-sa@project.iam.gserviceaccount.com</code>):
-            - <strong>Purpose</strong>: Identity for web tier (load
-            balancers, web servers) - <strong>Permissions</strong>:
-            Minimal (only what’s needed)</p>
-            <p><strong>App Tier Service Account</strong>
-            (<code>app-tier-sa@project.iam.gserviceaccount.com</code>):
-            - <strong>Purpose</strong>: Identity for app tier
-            (application servers) - <strong>Permissions</strong>: Access
-            to databases, storage, Pub/Sub</p>
-            <p><strong>Database Service Account</strong>
-            (<code>db-sa@project.iam.gserviceaccount.com</code>): -
-            <strong>Purpose</strong>: Identity for database operations -
-            <strong>Permissions</strong>: Database access only</p>
-            <p><strong>2. IAM Roles</strong></p>
-            <p><strong>Web Tier</strong>: - <strong>Role</strong>:
-            <code>roles/compute.instanceAdmin</code> (if managing
-            instances) - <strong>Or</strong>: Custom role with minimal
-            permissions - <strong>Principle</strong>: Least
-            privilege</p>
-            <p><strong>App Tier</strong>: - <strong>Role</strong>:
-            <code>roles/cloudsql.client</code> (access Cloud SQL) -
-            <strong>Role</strong>:
-            <code>roles/storage.objectViewer</code> (read from Cloud
-            Storage) - <strong>Role</strong>:
-            <code>roles/pubsub.publisher</code> (publish to Pub/Sub) -
-            <strong>Custom role</strong>: Combine permissions into
-            custom role</p>
-            <p><strong>Database</strong>: - <strong>Role</strong>:
-            <code>roles/cloudsql.instanceUser</code> (if using Cloud
-            SQL) - <strong>Or</strong>: Database-specific roles (not
-            IAM)</p>
-            <p><strong>3. User Access</strong></p>
-            <p><strong>Developers</strong>: - <strong>Role</strong>:
-            <code>roles/viewer</code> (read-only access) -
-            <strong>Scope</strong>: Project-level -
-            <strong>Purpose</strong>: View resources, read logs</p>
-            <p><strong>DevOps Engineers</strong>: -
-            <strong>Role</strong>: <code>roles/editor</code> (read and
-            write) - <strong>Scope</strong>: Project-level -
-            <strong>Purpose</strong>: Deploy, manage infrastructure</p>
-            <p><strong>Admins</strong>: - <strong>Role</strong>:
-            <code>roles/owner</code> (full access) -
-            <strong>Scope</strong>: Project-level -
-            <strong>Purpose</strong>: Full control (use sparingly)</p>
-            <p><strong>4. Resource-Level Policies</strong></p>
-            <p><strong>Cloud Storage Bucket</strong>: - <strong>App tier
-            service account</strong>:
-            <code>roles/storage.objectViewer</code> (read) -
-            <strong>DevOps</strong>:
-            <code>roles/storage.objectAdmin</code> (read/write) -
-            <strong>Developers</strong>:
-            <code>roles/storage.objectViewer</code> (read)</p>
-            <p><strong>Pub/Sub Topics</strong>: - <strong>App tier
-            service account</strong>:
-            <code>roles/pubsub.publisher</code> (publish) -
-            <strong>Consumers</strong>:
-            <code>roles/pubsub.subscriber</code> (subscribe)</p>
-            <p><strong>Cloud SQL</strong>: - <strong>App tier service
-            account</strong>: <code>roles/cloudsql.client</code>
-            (connect) - <strong>DevOps</strong>:
-            <code>roles/cloudsql.admin</code> (manage)</p>
-            <h3 id="complete-iam-policy-structure">Complete IAM Policy
-            Structure</h3>
-            <pre class="mermaid"><code>graph TD
+        <div class="card">
+            <div class="card-content">
+                <h1 id="answer-key-iam-evaluation-model">Answer Key: IAM Evaluation
+Model</h1>
+<p><a
+href="../../03-gcp-core-building-blocks/iam-evaluation.html#exercises">Back
+to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-design-iam-policies">Exercise 1: Design IAM
+Policies</h2>
+<p><strong>Question</strong>: Design IAM policies for a multi-tier
+application. Who can access what? What roles do you use?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Architecture</strong>: Web tier → App tier → Database
+tier</p>
+<h3 id="iam-policy-design">IAM Policy Design</h3>
+<p><strong>1. Service Accounts</strong></p>
+<p><strong>Web Tier Service Account</strong>
+(<code>web-tier-sa@project.iam.gserviceaccount.com</code>): -
+<strong>Purpose</strong>: Identity for web tier (load balancers, web
+servers) - <strong>Permissions</strong>: Minimal (only what’s
+needed)</p>
+<p><strong>App Tier Service Account</strong>
+(<code>app-tier-sa@project.iam.gserviceaccount.com</code>): -
+<strong>Purpose</strong>: Identity for app tier (application servers) -
+<strong>Permissions</strong>: Access to databases, storage, Pub/Sub</p>
+<p><strong>Database Service Account</strong>
+(<code>db-sa@project.iam.gserviceaccount.com</code>): -
+<strong>Purpose</strong>: Identity for database operations -
+<strong>Permissions</strong>: Database access only</p>
+<p><strong>2. IAM Roles</strong></p>
+<p><strong>Web Tier</strong>: - <strong>Role</strong>:
+<code>roles/compute.instanceAdmin</code> (if managing instances) -
+<strong>Or</strong>: Custom role with minimal permissions -
+<strong>Principle</strong>: Least privilege</p>
+<p><strong>App Tier</strong>: - <strong>Role</strong>:
+<code>roles/cloudsql.client</code> (access Cloud SQL) -
+<strong>Role</strong>: <code>roles/storage.objectViewer</code> (read
+from Cloud Storage) - <strong>Role</strong>:
+<code>roles/pubsub.publisher</code> (publish to Pub/Sub) -
+<strong>Custom role</strong>: Combine permissions into custom role</p>
+<p><strong>Database</strong>: - <strong>Role</strong>:
+<code>roles/cloudsql.instanceUser</code> (if using Cloud SQL) -
+<strong>Or</strong>: Database-specific roles (not IAM)</p>
+<p><strong>3. User Access</strong></p>
+<p><strong>Developers</strong>: - <strong>Role</strong>:
+<code>roles/viewer</code> (read-only access) - <strong>Scope</strong>:
+Project-level - <strong>Purpose</strong>: View resources, read logs</p>
+<p><strong>DevOps Engineers</strong>: - <strong>Role</strong>:
+<code>roles/editor</code> (read and write) - <strong>Scope</strong>:
+Project-level - <strong>Purpose</strong>: Deploy, manage
+infrastructure</p>
+<p><strong>Admins</strong>: - <strong>Role</strong>:
+<code>roles/owner</code> (full access) - <strong>Scope</strong>:
+Project-level - <strong>Purpose</strong>: Full control (use
+sparingly)</p>
+<p><strong>4. Resource-Level Policies</strong></p>
+<p><strong>Cloud Storage Bucket</strong>: - <strong>App tier service
+account</strong>: <code>roles/storage.objectViewer</code> (read) -
+<strong>DevOps</strong>: <code>roles/storage.objectAdmin</code>
+(read/write) - <strong>Developers</strong>:
+<code>roles/storage.objectViewer</code> (read)</p>
+<p><strong>Pub/Sub Topics</strong>: - <strong>App tier service
+account</strong>: <code>roles/pubsub.publisher</code> (publish) -
+<strong>Consumers</strong>: <code>roles/pubsub.subscriber</code>
+(subscribe)</p>
+<p><strong>Cloud SQL</strong>: - <strong>App tier service
+account</strong>: <code>roles/cloudsql.client</code> (connect) -
+<strong>DevOps</strong>: <code>roles/cloudsql.admin</code> (manage)</p>
+<h3 id="complete-iam-policy-structure">Complete IAM Policy
+Structure</h3>
+<pre class="mermaid"><code>graph TD
     Users[Users] --&gt; Dev[Developers&lt;br/&gt;Viewer]
     Users --&gt; DevOps[DevOps&lt;br/&gt;Editor]
     Users --&gt; Admin[Admins&lt;br/&gt;Owner]
@@ -124,10 +114,10 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
     style Dev fill:#99ccff
     style AppSA fill:#ffcc99
     style DB fill:#99ff99</code></pre>
-            <h3 id="policy-bindings">Policy Bindings</h3>
-            <p><strong>Project-level</strong>:</p>
-            <div class="sourceCode" id="cb2"><pre
-            class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bindings</span><span class="kw">:</span></span>
+<h3 id="policy-bindings">Policy Bindings</h3>
+<p><strong>Project-level</strong>:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bindings</span><span class="kw">:</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">role</span><span class="kw">:</span><span class="at"> roles/viewer</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">members</span><span class="kw">:</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> group:developers@company.com</span></span>
@@ -137,9 +127,9 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">role</span><span class="kw">:</span><span class="at"> roles/owner</span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">members</span><span class="kw">:</span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> user:admin@company.com</span></span></code></pre></div>
-            <p><strong>Service Account-level</strong>:</p>
-            <div class="sourceCode" id="cb3"><pre
-            class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># App tier service account</span></span>
+<p><strong>Service Account-level</strong>:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># App tier service account</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bindings</span><span class="kw">:</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">role</span><span class="kw">:</span><span class="at"> roles/cloudsql.client</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">members</span><span class="kw">:</span></span>
@@ -150,10 +140,9 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">role</span><span class="kw">:</span><span class="at"> roles/pubsub.publisher</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">members</span><span class="kw">:</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> serviceAccount:app-tier-sa@project.iam.gserviceaccount.com</span></span></code></pre></div>
-            <p><strong>Resource-level</strong> (Cloud Storage
-            bucket):</p>
-            <div class="sourceCode" id="cb4"><pre
-            class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bindings</span><span class="kw">:</span></span>
+<p><strong>Resource-level</strong> (Cloud Storage bucket):</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bindings</span><span class="kw">:</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">role</span><span class="kw">:</span><span class="at"> roles/storage.objectViewer</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">members</span><span class="kw">:</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> serviceAccount:app-tier-sa@project.iam.gserviceaccount.com</span></span>
@@ -161,117 +150,108 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">role</span><span class="kw">:</span><span class="at"> roles/storage.objectAdmin</span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">members</span><span class="kw">:</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> group:devops@company.com</span></span></code></pre></div>
-            <h3 id="answer-1">Answer</h3>
-            <p><strong>IAM Policy Design</strong>:</p>
-            <p><strong>Service Accounts</strong>: 1. <strong>Web tier
-            SA</strong>: Minimal permissions (only what’s needed) 2.
-            <strong>App tier SA</strong>:
-            <code>roles/cloudsql.client</code>,
-            <code>roles/storage.objectViewer</code>,
-            <code>roles/pubsub.publisher</code> 3. <strong>Database
-            SA</strong>: Database access only</p>
-            <p><strong>User Roles</strong>: 1.
-            <strong>Developers</strong>: <code>roles/viewer</code>
-            (read-only) 2. <strong>DevOps</strong>:
-            <code>roles/editor</code> (read/write) 3.
-            <strong>Admins</strong>: <code>roles/owner</code> (full
-            access, use sparingly)</p>
-            <p><strong>Resource-Level Policies</strong>: - <strong>Cloud
-            Storage</strong>: App tier SA can read, DevOps can
-            read/write - <strong>Pub/Sub</strong>: App tier SA can
-            publish, consumers can subscribe - <strong>Cloud
-            SQL</strong>: App tier SA can connect, DevOps can manage</p>
-            <p><strong>Key principles</strong>: - <strong>Least
-            privilege</strong>: Grant minimum necessary permissions -
-            <strong>Service accounts</strong>: Use service accounts for
-            applications - <strong>Resource-level</strong>: Use
-            resource-level policies for fine-grained control -
-            <strong>Separation of concerns</strong>: Different roles for
-            different tiers</p>
-            <hr />
-            <h2 id="exercise-2-service-account-strategy">Exercise 2:
-            Service Account Strategy</h2>
-            <p><strong>Question</strong>: You’re deploying a GKE
-            application that needs to access Cloud Storage. Do you use
-            service account keys or workload identity? Why?</p>
-            <h3 id="answer-2">Answer</h3>
-            <p><strong>Goal</strong>: Securely allow GKE pods to access
-            Cloud Storage.</p>
-            <h3 id="comparison">Comparison</h3>
-            <p><strong>Service Account Keys</strong>: -
-            <strong>How</strong>: Store service account key file in pod
-            (secret) - <strong>Pros</strong>: Works everywhere, simple -
-            <strong>Cons</strong>: Key management, security risk,
-            rotation complexity - <strong>Use case</strong>: Non-GKE
-            environments, legacy systems</p>
-            <p><strong>Workload Identity</strong>: -
-            <strong>How</strong>: Map Kubernetes service account to GCP
-            service account - <strong>Pros</strong>: No keys, more
-            secure, automatic rotation, better audit -
-            <strong>Cons</strong>: GKE only, more complex setup -
-            <strong>Use case</strong>: GKE applications
-            (recommended)</p>
-            <h3 id="analysis">Analysis</h3>
-            <p><strong>For GKE application</strong>: <strong>Use
-            Workload Identity</strong></p>
-            <p><strong>Why</strong>: 1. <strong>No keys</strong>: No
-            service account keys to manage 2. <strong>More
-            secure</strong>: Keys can’t be leaked or stolen 3.
-            <strong>Automatic</strong>: GKE handles authentication
-            automatically 4. <strong>Better audit</strong>: Better audit
-            trail in Cloud Audit Logs 5. <strong>Easier
-            rotation</strong>: No manual key rotation needed</p>
-            <p><strong>Service Account Keys Issues</strong>: -
-            <strong>Key storage</strong>: Keys stored in Kubernetes
-            secrets (can be leaked) - <strong>Key rotation</strong>:
-            Manual rotation required (complex) - <strong>Security
-            risk</strong>: Keys can be stolen or misused -
-            <strong>Audit</strong>: Harder to track key usage</p>
-            <h3 id="implementation">Implementation</h3>
-            <p><strong>Workload Identity Setup</strong>:</p>
-            <ol type="1">
-            <li><strong>Enable Workload Identity</strong>:</li>
-            </ol>
-            <div class="sourceCode" id="cb5"><pre
-            class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> container clusters update CLUSTER_NAME <span class="dt">\</span></span>
+<h3 id="answer-1">Answer</h3>
+<p><strong>IAM Policy Design</strong>:</p>
+<p><strong>Service Accounts</strong>: 1. <strong>Web tier SA</strong>:
+Minimal permissions (only what’s needed) 2. <strong>App tier
+SA</strong>: <code>roles/cloudsql.client</code>,
+<code>roles/storage.objectViewer</code>,
+<code>roles/pubsub.publisher</code> 3. <strong>Database SA</strong>:
+Database access only</p>
+<p><strong>User Roles</strong>: 1. <strong>Developers</strong>:
+<code>roles/viewer</code> (read-only) 2. <strong>DevOps</strong>:
+<code>roles/editor</code> (read/write) 3. <strong>Admins</strong>:
+<code>roles/owner</code> (full access, use sparingly)</p>
+<p><strong>Resource-Level Policies</strong>: - <strong>Cloud
+Storage</strong>: App tier SA can read, DevOps can read/write -
+<strong>Pub/Sub</strong>: App tier SA can publish, consumers can
+subscribe - <strong>Cloud SQL</strong>: App tier SA can connect, DevOps
+can manage</p>
+<p><strong>Key principles</strong>: - <strong>Least privilege</strong>:
+Grant minimum necessary permissions - <strong>Service accounts</strong>:
+Use service accounts for applications - <strong>Resource-level</strong>:
+Use resource-level policies for fine-grained control -
+<strong>Separation of concerns</strong>: Different roles for different
+tiers</p>
+<hr />
+<h2 id="exercise-2-service-account-strategy">Exercise 2: Service Account
+Strategy</h2>
+<p><strong>Question</strong>: You’re deploying a GKE application that
+needs to access Cloud Storage. Do you use service account keys or
+workload identity? Why?</p>
+<h3 id="answer-2">Answer</h3>
+<p><strong>Goal</strong>: Securely allow GKE pods to access Cloud
+Storage.</p>
+<h3 id="comparison">Comparison</h3>
+<p><strong>Service Account Keys</strong>: - <strong>How</strong>: Store
+service account key file in pod (secret) - <strong>Pros</strong>: Works
+everywhere, simple - <strong>Cons</strong>: Key management, security
+risk, rotation complexity - <strong>Use case</strong>: Non-GKE
+environments, legacy systems</p>
+<p><strong>Workload Identity</strong>: - <strong>How</strong>: Map
+Kubernetes service account to GCP service account -
+<strong>Pros</strong>: No keys, more secure, automatic rotation, better
+audit - <strong>Cons</strong>: GKE only, more complex setup -
+<strong>Use case</strong>: GKE applications (recommended)</p>
+<h3 id="analysis">Analysis</h3>
+<p><strong>For GKE application</strong>: <strong>Use Workload
+Identity</strong></p>
+<p><strong>Why</strong>: 1. <strong>No keys</strong>: No service account
+keys to manage 2. <strong>More secure</strong>: Keys can’t be leaked or
+stolen 3. <strong>Automatic</strong>: GKE handles authentication
+automatically 4. <strong>Better audit</strong>: Better audit trail in
+Cloud Audit Logs 5. <strong>Easier rotation</strong>: No manual key
+rotation needed</p>
+<p><strong>Service Account Keys Issues</strong>: - <strong>Key
+storage</strong>: Keys stored in Kubernetes secrets (can be leaked) -
+<strong>Key rotation</strong>: Manual rotation required (complex) -
+<strong>Security risk</strong>: Keys can be stolen or misused -
+<strong>Audit</strong>: Harder to track key usage</p>
+<h3 id="implementation">Implementation</h3>
+<p><strong>Workload Identity Setup</strong>:</p>
+<ol type="1">
+<li><strong>Enable Workload Identity</strong>:</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> container clusters update CLUSTER_NAME <span class="dt">\</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--workload-pool</span><span class="op">=</span>PROJECT_ID.svc.id.goog</span></code></pre></div>
-            <ol start="2" type="1">
-            <li><strong>Create GCP Service Account</strong>:</li>
-            </ol>
-            <div class="sourceCode" id="cb6"><pre
-            class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> iam service-accounts create app-sa <span class="dt">\</span></span>
+<ol start="2" type="1">
+<li><strong>Create GCP Service Account</strong>:</li>
+</ol>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> iam service-accounts create app-sa <span class="dt">\</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--display-name</span><span class="op">=</span><span class="st">&quot;App Service Account&quot;</span></span></code></pre></div>
-            <ol start="3" type="1">
-            <li><strong>Grant Permissions</strong>:</li>
-            </ol>
-            <div class="sourceCode" id="cb7"><pre
-            class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> projects add-iam-policy-binding PROJECT_ID <span class="dt">\</span></span>
+<ol start="3" type="1">
+<li><strong>Grant Permissions</strong>:</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> projects add-iam-policy-binding PROJECT_ID <span class="dt">\</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--member</span><span class="op">=</span><span class="st">&quot;serviceAccount:app-sa@PROJECT_ID.iam.gserviceaccount.com&quot;</span> <span class="dt">\</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--role</span><span class="op">=</span><span class="st">&quot;roles/storage.objectViewer&quot;</span></span></code></pre></div>
-            <ol start="4" type="1">
-            <li><strong>Create Kubernetes Service Account</strong>:</li>
-            </ol>
-            <div class="sourceCode" id="cb8"><pre
-            class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apiVersion</span><span class="kw">:</span><span class="at"> v1</span></span>
+<ol start="4" type="1">
+<li><strong>Create Kubernetes Service Account</strong>:</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apiVersion</span><span class="kw">:</span><span class="at"> v1</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kind</span><span class="kw">:</span><span class="at"> ServiceAccount</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">metadata</span><span class="kw">:</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">name</span><span class="kw">:</span><span class="at"> app-ksa</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">namespace</span><span class="kw">:</span><span class="at"> default</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">annotations</span><span class="kw">:</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">iam.gke.io/gcp-service-account</span><span class="kw">:</span><span class="at"> app-sa@PROJECT_ID.iam.gserviceaccount.com</span></span></code></pre></div>
-            <ol start="5" type="1">
-            <li><strong>Bind Kubernetes SA to GCP SA</strong>:</li>
-            </ol>
-            <div class="sourceCode" id="cb9"><pre
-            class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> iam service-accounts add-iam-policy-binding <span class="dt">\</span></span>
+<ol start="5" type="1">
+<li><strong>Bind Kubernetes SA to GCP SA</strong>:</li>
+</ol>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> iam service-accounts add-iam-policy-binding <span class="dt">\</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    app-sa@PROJECT_ID.iam.gserviceaccount.com <span class="dt">\</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--role</span> roles/iam.workloadIdentityUser <span class="dt">\</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--member</span> <span class="st">&quot;serviceAccount:PROJECT_ID.svc.id.goog[default/app-ksa]&quot;</span></span></code></pre></div>
-            <ol start="6" type="1">
-            <li><strong>Use in Pod</strong>:</li>
-            </ol>
-            <div class="sourceCode" id="cb10"><pre
-            class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apiVersion</span><span class="kw">:</span><span class="at"> v1</span></span>
+<ol start="6" type="1">
+<li><strong>Use in Pod</strong>:</li>
+</ol>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apiVersion</span><span class="kw">:</span><span class="at"> v1</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kind</span><span class="kw">:</span><span class="at"> Pod</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">metadata</span><span class="kw">:</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">name</span><span class="kw">:</span><span class="at"> app-pod</span></span>
@@ -280,117 +260,107 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">containers</span><span class="kw">:</span></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> app</span></span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">image</span><span class="kw">:</span><span class="at"> app-image</span></span></code></pre></div>
-            <h3 id="answer-3">Answer</h3>
-            <p><strong>Use Workload Identity</strong> for GKE
-            applications.</p>
-            <p><strong>Why</strong>: 1. <strong>No keys</strong>: No
-            service account keys to manage or store 2. <strong>More
-            secure</strong>: Keys can’t be leaked or stolen 3.
-            <strong>Automatic</strong>: GKE handles authentication
-            automatically 4. <strong>Better audit</strong>: Better audit
-            trail in Cloud Audit Logs 5. <strong>Easier
-            rotation</strong>: No manual key rotation needed</p>
-            <p><strong>Service Account Keys Issues</strong>: - Keys
-            stored in Kubernetes secrets (security risk) - Manual
-            rotation required (complex) - Keys can be stolen or misused
-            - Harder to audit</p>
-            <p><strong>Implementation</strong>: 1. Enable Workload
-            Identity on GKE cluster 2. Create GCP service account with
-            Cloud Storage permissions 3. Create Kubernetes service
-            account with annotation 4. Bind Kubernetes SA to GCP SA 5.
-            Use Kubernetes SA in pods</p>
-            <p><strong>Best practice</strong>: Always use Workload
-            Identity for GKE applications. Only use service account keys
-            for non-GKE environments or legacy systems.</p>
-            <hr />
-            <h2 id="exercise-3-debug-access-issue">Exercise 3: Debug
-            Access Issue</h2>
-            <p><strong>Question</strong>: A service is getting
-            “permission denied” errors accessing a bucket. How do you
-            debug this?</p>
-            <h3 id="answer-4">Answer</h3>
-            <p><strong>Problem</strong>: Service getting “permission
-            denied” errors accessing Cloud Storage bucket.</p>
-            <h3 id="debugging-steps">Debugging Steps</h3>
-            <p><strong>1. Verify Service Account</strong></p>
-            <p><strong>Check service account identity</strong>:</p>
-            <div class="sourceCode" id="cb11"><pre
-            class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In pod/container</span></span>
+<h3 id="answer-3">Answer</h3>
+<p><strong>Use Workload Identity</strong> for GKE applications.</p>
+<p><strong>Why</strong>: 1. <strong>No keys</strong>: No service account
+keys to manage or store 2. <strong>More secure</strong>: Keys can’t be
+leaked or stolen 3. <strong>Automatic</strong>: GKE handles
+authentication automatically 4. <strong>Better audit</strong>: Better
+audit trail in Cloud Audit Logs 5. <strong>Easier rotation</strong>: No
+manual key rotation needed</p>
+<p><strong>Service Account Keys Issues</strong>: - Keys stored in
+Kubernetes secrets (security risk) - Manual rotation required (complex)
+- Keys can be stolen or misused - Harder to audit</p>
+<p><strong>Implementation</strong>: 1. Enable Workload Identity on GKE
+cluster 2. Create GCP service account with Cloud Storage permissions 3.
+Create Kubernetes service account with annotation 4. Bind Kubernetes SA
+to GCP SA 5. Use Kubernetes SA in pods</p>
+<p><strong>Best practice</strong>: Always use Workload Identity for GKE
+applications. Only use service account keys for non-GKE environments or
+legacy systems.</p>
+<hr />
+<h2 id="exercise-3-debug-access-issue">Exercise 3: Debug Access
+Issue</h2>
+<p><strong>Question</strong>: A service is getting “permission denied”
+errors accessing a bucket. How do you debug this?</p>
+<h3 id="answer-4">Answer</h3>
+<p><strong>Problem</strong>: Service getting “permission denied” errors
+accessing Cloud Storage bucket.</p>
+<h3 id="debugging-steps">Debugging Steps</h3>
+<p><strong>1. Verify Service Account</strong></p>
+<p><strong>Check service account identity</strong>:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In pod/container</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-H</span> <span class="st">&quot;Metadata-Flavor: Google&quot;</span> <span class="dt">\</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/email</span></code></pre></div>
-            <p><strong>Expected</strong>: Should return service account
-            email (e.g.,
-            <code>app-sa@project.iam.gserviceaccount.com</code>)</p>
-            <p><strong>If wrong</strong>: Service account not configured
-            correctly</p>
-            <p><strong>2. Check IAM Policy</strong></p>
-            <p><strong>Check service account permissions</strong>:</p>
-            <div class="sourceCode" id="cb12"><pre
-            class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> projects get-iam-policy PROJECT_ID <span class="dt">\</span></span>
+<p><strong>Expected</strong>: Should return service account email (e.g.,
+<code>app-sa@project.iam.gserviceaccount.com</code>)</p>
+<p><strong>If wrong</strong>: Service account not configured
+correctly</p>
+<p><strong>2. Check IAM Policy</strong></p>
+<p><strong>Check service account permissions</strong>:</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> projects get-iam-policy PROJECT_ID <span class="dt">\</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--flatten</span><span class="op">=</span><span class="st">&quot;bindings[].members&quot;</span> <span class="dt">\</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--filter</span><span class="op">=</span><span class="st">&quot;bindings.members:serviceAccount:app-sa@PROJECT_ID.iam.gserviceaccount.com&quot;</span></span></code></pre></div>
-            <p><strong>Check bucket-level permissions</strong>:</p>
-            <div class="sourceCode" id="cb13"><pre
-            class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gsutil</span> iam get gs://BUCKET_NAME</span></code></pre></div>
-            <p><strong>Expected</strong>: Service account should have
-            <code>roles/storage.objectViewer</code> or
-            <code>roles/storage.objectAdmin</code></p>
-            <p><strong>If missing</strong>: Grant permissions</p>
-            <p><strong>3. Check Workload Identity (if GKE)</strong></p>
-            <p><strong>Verify Kubernetes service account</strong>:</p>
-            <div class="sourceCode" id="cb14"><pre
-            class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> get serviceaccount app-ksa <span class="at">-o</span> yaml</span></code></pre></div>
-            <p><strong>Check annotation</strong>:</p>
-            <div class="sourceCode" id="cb15"><pre
-            class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">annotations</span><span class="kw">:</span></span>
+<p><strong>Check bucket-level permissions</strong>:</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gsutil</span> iam get gs://BUCKET_NAME</span></code></pre></div>
+<p><strong>Expected</strong>: Service account should have
+<code>roles/storage.objectViewer</code> or
+<code>roles/storage.objectAdmin</code></p>
+<p><strong>If missing</strong>: Grant permissions</p>
+<p><strong>3. Check Workload Identity (if GKE)</strong></p>
+<p><strong>Verify Kubernetes service account</strong>:</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kubectl</span> get serviceaccount app-ksa <span class="at">-o</span> yaml</span></code></pre></div>
+<p><strong>Check annotation</strong>:</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">annotations</span><span class="kw">:</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">iam.gke.io/gcp-service-account</span><span class="kw">:</span><span class="at"> app-sa@PROJECT_ID.iam.gserviceaccount.com</span></span></code></pre></div>
-            <p><strong>Verify binding</strong>:</p>
-            <div class="sourceCode" id="cb16"><pre
-            class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> iam service-accounts get-iam-policy <span class="dt">\</span></span>
+<p><strong>Verify binding</strong>:</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> iam service-accounts get-iam-policy <span class="dt">\</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    app-sa@PROJECT_ID.iam.gserviceaccount.com</span></code></pre></div>
-            <p><strong>Expected</strong>: Should see binding to
-            Kubernetes service account</p>
-            <p><strong>If missing</strong>: Create binding</p>
-            <p><strong>4. Test Access</strong></p>
-            <p><strong>Test from pod</strong>:</p>
-            <div class="sourceCode" id="cb17"><pre
-            class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In pod</span></span>
+<p><strong>Expected</strong>: Should see binding to Kubernetes service
+account</p>
+<p><strong>If missing</strong>: Create binding</p>
+<p><strong>4. Test Access</strong></p>
+<p><strong>Test from pod</strong>:</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In pod</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gsutil</span> ls gs://BUCKET_NAME</span></code></pre></div>
-            <p><strong>Check error message</strong>: - “Permission
-            denied”: IAM issue - “Bucket not found”: Wrong bucket name
-            or doesn’t exist - “Access denied”: Bucket-level permissions
-            issue</p>
-            <p><strong>5. Check Audit Logs</strong></p>
-            <p><strong>View Cloud Audit Logs</strong>:</p>
-            <div class="sourceCode" id="cb18"><pre
-            class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> logging read <span class="st">&quot;resource.type=cloud_storage_bucket AND </span><span class="dt">\</span></span>
+<p><strong>Check error message</strong>: - “Permission denied”: IAM
+issue - “Bucket not found”: Wrong bucket name or doesn’t exist - “Access
+denied”: Bucket-level permissions issue</p>
+<p><strong>5. Check Audit Logs</strong></p>
+<p><strong>View Cloud Audit Logs</strong>:</p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> logging read <span class="st">&quot;resource.type=cloud_storage_bucket AND </span><span class="dt">\</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="st">  protoPayload.authenticationInfo.principalEmail=app-sa@PROJECT_ID.iam.gserviceaccount.com&quot;</span> <span class="dt">\</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--limit</span> 10</span></code></pre></div>
-            <p><strong>Look for</strong>: - Permission denied errors -
-            Successful access (if working) - Authentication failures</p>
-            <p><strong>6. Common Issues</strong></p>
-            <p><strong>Issue 1: Wrong Service Account</strong> -
-            <strong>Symptom</strong>: Service using default compute
-            service account - <strong>Fix</strong>: Configure correct
-            service account</p>
-            <p><strong>Issue 2: Missing Permissions</strong> -
-            <strong>Symptom</strong>: Service account doesn’t have
-            bucket permissions - <strong>Fix</strong>: Grant
-            <code>roles/storage.objectViewer</code> or
-            <code>roles/storage.objectAdmin</code></p>
-            <p><strong>Issue 3: Workload Identity Not
-            Configured</strong> - <strong>Symptom</strong>: GKE pod
-            can’t authenticate - <strong>Fix</strong>: Enable Workload
-            Identity and create binding</p>
-            <p><strong>Issue 4: Wrong Bucket</strong> -
-            <strong>Symptom</strong>: Bucket doesn’t exist or wrong name
-            - <strong>Fix</strong>: Verify bucket name and existence</p>
-            <p><strong>Issue 5: Bucket-Level Permissions</strong> -
-            <strong>Symptom</strong>: Bucket has restrictive ACLs -
-            <strong>Fix</strong>: Check bucket IAM policy, grant
-            access</p>
-            <h3 id="debugging-checklist">Debugging Checklist</h3>
-            <pre class="mermaid"><code>flowchart TD
+<p><strong>Look for</strong>: - Permission denied errors - Successful
+access (if working) - Authentication failures</p>
+<p><strong>6. Common Issues</strong></p>
+<p><strong>Issue 1: Wrong Service Account</strong> -
+<strong>Symptom</strong>: Service using default compute service account
+- <strong>Fix</strong>: Configure correct service account</p>
+<p><strong>Issue 2: Missing Permissions</strong> -
+<strong>Symptom</strong>: Service account doesn’t have bucket
+permissions - <strong>Fix</strong>: Grant
+<code>roles/storage.objectViewer</code> or
+<code>roles/storage.objectAdmin</code></p>
+<p><strong>Issue 3: Workload Identity Not Configured</strong> -
+<strong>Symptom</strong>: GKE pod can’t authenticate -
+<strong>Fix</strong>: Enable Workload Identity and create binding</p>
+<p><strong>Issue 4: Wrong Bucket</strong> - <strong>Symptom</strong>:
+Bucket doesn’t exist or wrong name - <strong>Fix</strong>: Verify bucket
+name and existence</p>
+<p><strong>Issue 5: Bucket-Level Permissions</strong> -
+<strong>Symptom</strong>: Bucket has restrictive ACLs -
+<strong>Fix</strong>: Check bucket IAM policy, grant access</p>
+<h3 id="debugging-checklist">Debugging Checklist</h3>
+<pre class="mermaid"><code>flowchart TD
     Error[Permission Denied Error] --&gt; CheckSA[Check Service Account]
     CheckSA --&gt; CheckIAM[Check IAM Policy]
     CheckIAM --&gt; CheckWI{Workload Identity?}
@@ -403,25 +373,25 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
 
     style Error fill:#ff9999
     style Fix fill:#99ff99</code></pre>
-            <h3 id="answer-5">Answer</h3>
-            <p><strong>Debugging steps</strong>:</p>
-            <ol type="1">
-            <li><strong>Verify service account</strong>: Check which
-            service account is being used</li>
-            <li><strong>Check IAM policy</strong>: Verify service
-            account has bucket permissions</li>
-            <li><strong>Check Workload Identity</strong> (if GKE):
-            Verify Kubernetes SA → GCP SA binding</li>
-            <li><strong>Test access</strong>: Try accessing bucket from
-            pod/container</li>
-            <li><strong>Check audit logs</strong>: Review Cloud Audit
-            Logs for errors</li>
-            <li><strong>Common issues</strong>: Wrong SA, missing
-            permissions, Workload Identity not configured</li>
-            </ol>
-            <p><strong>Commands</strong>:</p>
-            <div class="sourceCode" id="cb20"><pre
-            class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check service account</span></span>
+<h3 id="answer-5">Answer</h3>
+<p><strong>Debugging steps</strong>:</p>
+<ol type="1">
+<li><strong>Verify service account</strong>: Check which service account
+is being used</li>
+<li><strong>Check IAM policy</strong>: Verify service account has bucket
+permissions</li>
+<li><strong>Check Workload Identity</strong> (if GKE): Verify Kubernetes
+SA → GCP SA binding</li>
+<li><strong>Test access</strong>: Try accessing bucket from
+pod/container</li>
+<li><strong>Check audit logs</strong>: Review Cloud Audit Logs for
+errors</li>
+<li><strong>Common issues</strong>: Wrong SA, missing permissions,
+Workload Identity not configured</li>
+</ol>
+<p><strong>Commands</strong>:</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check service account</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-H</span> <span class="st">&quot;Metadata-Flavor: Google&quot;</span> <span class="dt">\</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/email</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -439,16 +409,16 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
 <span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Check audit logs</span></span>
 <span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="ex">gcloud</span> logging read <span class="st">&quot;resource.type=cloud_storage_bucket AND </span><span class="dt">\</span></span>
 <span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="st">  protoPayload.authenticationInfo.principalEmail=app-sa@PROJECT_ID.iam.gserviceaccount.com&quot;</span></span></code></pre></div>
-            <p><strong>Common fixes</strong>: - Grant
-            <code>roles/storage.objectViewer</code> to service account -
-            Enable Workload Identity and create binding - Verify bucket
-            name and existence - Check bucket-level IAM policy</p>
+<p><strong>Common fixes</strong>: - Grant
+<code>roles/storage.objectViewer</code> to service account - Enable
+Workload Identity and create binding - Verify bucket name and existence
+- Check bucket-level IAM policy</p>
+            </div>
         </div>
     </main>
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
       mermaid.initialize({ startOnLoad: true });

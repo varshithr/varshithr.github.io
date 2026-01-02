@@ -8,605 +8,559 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
-jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
-    <link rel="stylesheet" href="../learn/css/learn.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uudjLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/learn.css">
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../index.html" class="flex items-center hover:text-gray-600">
+                <a href="/index.html" class="flex items-center hover:text-gray-600">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     <span>Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="/learn/index.html" class="hover:text-indigo-600 font-semibold">Back to Learn Topics</a></li>
+                <li><a href="/aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="main-content">
-            <h1 id="production-readiness-review-prr-template">Production
-            Readiness Review (PRR) Template</h1>
-            <p>A PRR ensures a system is ready for production. Use this
-            checklist before launching.</p>
-            <h2 id="system-information">System Information</h2>
-            <p><strong>System Name</strong>: [Name]</p>
-            <p><strong>Team</strong>: [Team name]</p>
-            <p><strong>PRR Date</strong>: [Date]</p>
-            <p><strong>PRR Lead</strong>: [Name]</p>
-            <p><strong>Reviewers</strong>: [Names]</p>
-            <p><strong>Target Launch Date</strong>: [Date]</p>
-            <hr />
-            <h2 id="overview">Overview</h2>
-            <p><strong>Purpose</strong>: [What does this system do?]</p>
-            <p><strong>Users</strong>: [Who uses this system?]</p>
-            <p><strong>Scale</strong>: [Expected load, users, data
-            volume]</p>
-            <p><strong>Criticality</strong>: [P0/P1/P2 - how critical is
-            this system?]</p>
-            <hr />
-            <h2 id="reliability-slos">Reliability &amp; SLOs</h2>
-            <h3 id="slis-service-level-indicators">SLIs (Service Level
-            Indicators)</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Latency
-            SLI</strong>: [Definition, e.g., “P95 latency of API
-            requests”]</label>
-            <ul>
-            <li>Measurement: [How is it measured?]</li>
-            <li>Current value: [Current P95 latency]</li>
-            <li>Target: [Target P95 latency]</li>
-            </ul></li>
-            <li><label><input type="checkbox" /><strong>Availability
-            SLI</strong>: [Definition, e.g., “Fraction of successful
-            requests”]</label>
-            <ul>
-            <li>Measurement: [How is it measured?]</li>
-            <li>Current value: [Current availability]</li>
-            <li>Target: [Target availability]</li>
-            </ul></li>
-            <li><label><input type="checkbox" /><strong>Error Rate
-            SLI</strong>: [Definition]</label>
-            <ul>
-            <li>Measurement: [How is it measured?]</li>
-            <li>Current value: [Current error rate]</li>
-            <li>Target: [Target error rate]</li>
-            </ul></li>
-            <li><label><input type="checkbox" /><strong>Throughput
-            SLI</strong>: [Definition, if applicable]</label>
-            <ul>
-            <li>Measurement: [How is it measured?]</li>
-            <li>Current value: [Current throughput]</li>
-            <li>Target: [Target throughput]</li>
-            </ul></li>
-            </ul>
-            <h3 id="slos-service-level-objectives">SLOs (Service Level
-            Objectives)</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />SLOs are defined for all
-            SLIs</label></li>
-            <li><label><input type="checkbox" />SLOs are achievable
-            (based on historical data or testing)</label></li>
-            <li><label><input type="checkbox" />SLOs are
-            documented</label></li>
-            <li><label><input type="checkbox" />SLOs are communicated to
-            stakeholders</label></li>
-            </ul>
-            <h3 id="error-budgets">Error Budgets</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Error budgets are
-            calculated</label></li>
-            <li><label><input type="checkbox" />Error budget policy is
-            defined (what happens when budget is
-            exhausted?)</label></li>
-            <li><label><input type="checkbox" />Error budget tracking is
-            automated</label></li>
-            <li><label><input type="checkbox" />Error budget alerts are
-            configured</label></li>
-            </ul>
-            <h3 id="availability-targets">Availability Targets</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Availability target is
-            appropriate for criticality</label></li>
-            <li><label><input type="checkbox" />Availability is measured
-            correctly</label></li>
-            <li><label><input type="checkbox" />Planned downtime is
-            accounted for</label></li>
-            <li><label><input type="checkbox" />Unplanned downtime is
-            tracked</label></li>
-            </ul>
-            <hr />
-            <h2 id="monitoring-observability">Monitoring &amp;
-            Observability</h2>
-            <h3 id="metrics">Metrics</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Latency
-            metrics</strong>: P50, P95, P99 are tracked</label></li>
-            <li><label><input type="checkbox" /><strong>Throughput
-            metrics</strong>: QPS, requests/sec are tracked</label></li>
-            <li><label><input type="checkbox" /><strong>Error
-            metrics</strong>: Error rates, error types are
-            tracked</label></li>
-            <li><label><input type="checkbox" /><strong>Resource
-            metrics</strong>: CPU, memory, disk, network are
-            tracked</label></li>
-            <li><label><input type="checkbox" /><strong>Business
-            metrics</strong>: User-facing metrics are
-            tracked</label></li>
-            <li><label><input type="checkbox" />Metrics are exported
-            correctly</label></li>
-            <li><label><input type="checkbox" />Metrics retention is
-            configured</label></li>
-            </ul>
-            <h3 id="logging">Logging</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Critical events are
-            logged</label></li>
-            <li><label><input type="checkbox" />Log levels are
-            appropriate (INFO, WARN, ERROR)</label></li>
-            <li><label><input type="checkbox" />Logs are structured
-            (JSON or structured format)</label></li>
-            <li><label><input type="checkbox" />Logs include request IDs
-            for correlation</label></li>
-            <li><label><input type="checkbox" />Log retention is
-            configured appropriately</label></li>
-            <li><label><input type="checkbox" />Logs are searchable and
-            queryable</label></li>
-            </ul>
-            <h3 id="tracing">Tracing</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Critical paths are
-            traced</label></li>
-            <li><label><input type="checkbox" />Spans are
-            well-defined</label></li>
-            <li><label><input type="checkbox" />Trace sampling is
-            configured</label></li>
-            <li><label><input type="checkbox" />Cross-service
-            correlation works</label></li>
-            <li><label><input type="checkbox" />Traces are
-            queryable</label></li>
-            </ul>
-            <h3 id="dashboards">Dashboards</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Service
-            dashboard</strong>: Shows key metrics, health
-            status</label></li>
-            <li><label><input type="checkbox" /><strong>SLO
-            dashboard</strong>: Shows SLO compliance, error
-            budgets</label></li>
-            <li><label><input type="checkbox" /><strong>Capacity
-            dashboard</strong>: Shows resource usage,
-            scaling</label></li>
-            <li><label><input type="checkbox" /><strong>Business
-            dashboard</strong>: Shows user-facing metrics</label></li>
-            <li><label><input type="checkbox" />Dashboards are
-            accessible to on-call</label></li>
-            <li><label><input type="checkbox" />Dashboards load
-            quickly</label></li>
-            </ul>
-            <h3 id="alerting">Alerting</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Critical
-            alerts</strong>: P0 incidents (page on-call)</label></li>
-            <li><label><input type="checkbox" /><strong>Warning
-            alerts</strong>: P1 incidents (notify, don’t
-            page)</label></li>
-            <li><label><input type="checkbox" /><strong>Info
-            alerts</strong>: P2 incidents (log only)</label></li>
-            <li><label><input type="checkbox" />Alerts are actionable
-            (clear what to do)</label></li>
-            <li><label><input type="checkbox" />Alert fatigue is avoided
-            (not too many alerts)</label></li>
-            <li><label><input type="checkbox" />Alert thresholds are
-            tuned (not too sensitive/insensitive)</label></li>
-            <li><label><input type="checkbox" />Alert runbooks
-            exist</label></li>
-            <li><label><input type="checkbox" />Alert escalation paths
-            are defined</label></li>
-            </ul>
-            <hr />
-            <h2 id="incident-response">Incident Response</h2>
-            <h3 id="on-call">On-Call</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />On-call rotation is
-            established</label></li>
-            <li><label><input type="checkbox" />On-call engineers are
-            trained</label></li>
-            <li><label><input type="checkbox" />On-call procedures are
-            documented</label></li>
-            <li><label><input type="checkbox" />On-call tools are
-            available</label></li>
-            <li><label><input type="checkbox" />On-call escalation paths
-            are clear</label></li>
-            </ul>
-            <h3 id="runbooks">Runbooks</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Common
-            incidents</strong>: Runbooks exist for common
-            issues</label></li>
-            <li><label><input type="checkbox" /><strong>Critical
-            failures</strong>: Runbooks exist for critical
-            failures</label></li>
-            <li><label><input type="checkbox" /><strong>Recovery
-            procedures</strong>: Runbooks include recovery
-            steps</label></li>
-            <li><label><input type="checkbox" /><strong>Rollback
-            procedures</strong>: Runbooks include rollback
-            steps</label></li>
-            <li><label><input type="checkbox" />Runbooks are
-            tested</label></li>
-            <li><label><input type="checkbox" />Runbooks are accessible
-            during incidents</label></li>
-            </ul>
-            <h3 id="incident-management">Incident Management</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Incident response
-            process is defined</label></li>
-            <li><label><input type="checkbox" />Incident communication
-            channels are established</label></li>
-            <li><label><input type="checkbox" />Postmortem process is
-            defined</label></li>
-            <li><label><input type="checkbox" />Incident tracking system
-            is used</label></li>
-            </ul>
-            <h3 id="postmortems">Postmortems</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Postmortem template is
-            used</label></li>
-            <li><label><input type="checkbox" />Postmortems are written
-            for all P0/P1 incidents</label></li>
-            <li><label><input type="checkbox" />Postmortems include root
-            cause analysis</label></li>
-            <li><label><input type="checkbox" />Postmortems include
-            action items</label></li>
-            <li><label><input type="checkbox" />Action items are tracked
-            to completion</label></li>
-            </ul>
-            <hr />
-            <h2 id="capacity-scaling">Capacity &amp; Scaling</h2>
-            <h3 id="capacity-planning">Capacity Planning</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Current
-            capacity</strong>: Current load and capacity are
-            known</label></li>
-            <li><label><input type="checkbox" /><strong>Target
-            capacity</strong>: Capacity for launch is
-            provisioned</label></li>
-            <li><label><input type="checkbox" /><strong>Growth
-            forecast</strong>: Capacity for growth is
-            planned</label></li>
-            <li><label><input type="checkbox" /><strong>Scaling
-            limits</strong>: Maximum scale is understood</label></li>
-            <li><label><input type="checkbox" /><strong>Capacity
-            alerts</strong>: Alerts for capacity thresholds</label></li>
-            </ul>
-            <h3 id="auto-scaling">Auto-Scaling</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Auto-scaling is
-            configured (if applicable)</label></li>
-            <li><label><input type="checkbox" />Scaling policies are
-            tuned</label></li>
-            <li><label><input type="checkbox" />Scaling limits are set
-            (min/max instances)</label></li>
-            <li><label><input type="checkbox" />Scaling metrics are
-            appropriate</label></li>
-            <li><label><input type="checkbox" />Scaling behavior is
-            tested</label></li>
-            </ul>
-            <h3 id="load-testing">Load Testing</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Load tests have been
-            run</label></li>
-            <li><label><input type="checkbox" />System handles expected
-            load</label></li>
-            <li><label><input type="checkbox" />System handles 2×
-            expected load</label></li>
-            <li><label><input type="checkbox" />System degrades
-            gracefully under overload</label></li>
-            <li><label><input type="checkbox" />Bottlenecks are
-            identified and addressed</label></li>
-            </ul>
-            <h3 id="resource-limits">Resource Limits</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />CPU limits are set
-            appropriately</label></li>
-            <li><label><input type="checkbox" />Memory limits are set
-            appropriately</label></li>
-            <li><label><input type="checkbox" />Disk limits are set
-            appropriately</label></li>
-            <li><label><input type="checkbox" />Network limits are
-            understood</label></li>
-            <li><label><input type="checkbox" />Limits prevent resource
-            exhaustion</label></li>
-            </ul>
-            <hr />
-            <h2 id="security">Security</h2>
-            <h3 id="authentication">Authentication</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Authentication is
-            required for all access</label></li>
-            <li><label><input type="checkbox" />Authentication mechanism
-            is appropriate</label></li>
-            <li><label><input type="checkbox" />Authentication is
-            tested</label></li>
-            <li><label><input type="checkbox" />Authentication failures
-            are logged</label></li>
-            </ul>
-            <h3 id="authorization">Authorization</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Authorization is checked
-            for all operations</label></li>
-            <li><label><input type="checkbox" />Principle of least
-            privilege is followed</label></li>
-            <li><label><input type="checkbox" />Permissions are
-            documented</label></li>
-            <li><label><input type="checkbox" />Access is
-            audited</label></li>
-            <li><label><input type="checkbox" />Authorization failures
-            are logged</label></li>
-            </ul>
-            <h3 id="data-protection">Data Protection</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Encryption at
-            rest</strong>: Data is encrypted at rest</label></li>
-            <li><label><input type="checkbox" /><strong>Encryption in
-            transit</strong>: Data is encrypted in transit
-            (TLS)</label></li>
-            <li><label><input type="checkbox" /><strong>Key
-            management</strong>: Keys are managed securely</label></li>
-            <li><label><input type="checkbox" /><strong>Data
-            classification</strong>: Data is classified
-            appropriately</label></li>
-            <li><label><input type="checkbox" /><strong>Data
-            retention</strong>: Data retention policies are
-            defined</label></li>
-            <li><label><input type="checkbox" /><strong>Data
-            deletion</strong>: Data deletion procedures
-            exist</label></li>
-            </ul>
-            <h3 id="security-monitoring">Security Monitoring</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Security events are
-            logged</label></li>
-            <li><label><input type="checkbox" />Security alerts are
-            configured</label></li>
-            <li><label><input type="checkbox" />Security incidents are
-            tracked</label></li>
-            <li><label><input type="checkbox" />Security reviews are
-            conducted</label></li>
-            </ul>
-            <h3 id="compliance">Compliance</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Compliance requirements
-            are met (if applicable)</label></li>
-            <li><label><input type="checkbox" />Compliance documentation
-            exists</label></li>
-            <li><label><input type="checkbox" />Compliance audits are
-            planned</label></li>
-            </ul>
-            <hr />
-            <h2 id="change-management">Change Management</h2>
-            <h3 id="deployment">Deployment</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Deployment
-            process</strong>: Deployment process is
-            documented</label></li>
-            <li><label><input type="checkbox" /><strong>Deployment
-            automation</strong>: Deployments are automated</label></li>
-            <li><label><input type="checkbox" /><strong>Deployment
-            rollback</strong>: Rollback procedure is tested</label></li>
-            <li><label><input type="checkbox" /><strong>Deployment
-            windows</strong>: Deployment windows are
-            defined</label></li>
-            <li><label><input type="checkbox" /><strong>Deployment
-            approvals</strong>: Approval process is defined</label></li>
-            </ul>
-            <h3 id="feature-flags">Feature Flags</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Feature flags are used
-            for risky changes</label></li>
-            <li><label><input type="checkbox" />Kill switches are
-            implemented</label></li>
-            <li><label><input type="checkbox" />Flag management is
-            documented</label></li>
-            <li><label><input type="checkbox" />Flags are
-            tested</label></li>
-            </ul>
-            <h3 id="canary-deployments">Canary Deployments</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Canary deployment is
-            used (if applicable)</label></li>
-            <li><label><input type="checkbox" />Canary metrics are
-            monitored</label></li>
-            <li><label><input type="checkbox" />Canary rollback is
-            tested</label></li>
-            <li><label><input type="checkbox" />Canary promotion
-            criteria are defined</label></li>
-            </ul>
-            <h3 id="testing">Testing</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Unit
-            tests</strong>: Unit test coverage is adequate</label></li>
-            <li><label><input type="checkbox" /><strong>Integration
-            tests</strong>: Integration tests exist</label></li>
-            <li><label><input type="checkbox" /><strong>Load
-            tests</strong>: Load tests are run regularly</label></li>
-            <li><label><input type="checkbox" /><strong>Chaos
-            tests</strong>: Chaos tests are considered</label></li>
-            <li><label><input type="checkbox" /><strong>Smoke
-            tests</strong>: Smoke tests run after
-            deployment</label></li>
-            </ul>
-            <hr />
-            <h2 id="documentation">Documentation</h2>
-            <h3 id="architecture">Architecture</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Architecture diagram
-            exists</label></li>
-            <li><label><input type="checkbox" />Architecture is
-            documented</label></li>
-            <li><label><input type="checkbox" />Data flow is
-            documented</label></li>
-            <li><label><input type="checkbox" />Component
-            responsibilities are documented</label></li>
-            </ul>
-            <h3 id="runbooks-1">Runbooks</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Runbooks exist for
-            common operations</label></li>
-            <li><label><input type="checkbox" />Runbooks are
-            tested</label></li>
-            <li><label><input type="checkbox" />Runbooks are
-            accessible</label></li>
-            </ul>
-            <h3 id="api-documentation">API Documentation</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />API is documented (if
-            applicable)</label></li>
-            <li><label><input type="checkbox" />API examples
-            exist</label></li>
-            <li><label><input type="checkbox" />API versioning is
-            documented</label></li>
-            <li><label><input type="checkbox" />API deprecation policy
-            exists</label></li>
-            </ul>
-            <h3 id="onboarding">Onboarding</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Onboarding documentation
-            exists</label></li>
-            <li><label><input type="checkbox" />New engineers can get
-            started quickly</label></li>
-            <li><label><input type="checkbox" />Development environment
-            setup is documented</label></li>
-            </ul>
-            <hr />
-            <h2 id="dependencies">Dependencies</h2>
-            <h3 id="external-dependencies">External Dependencies</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />External dependencies
-            are identified</label></li>
-            <li><label><input type="checkbox" />Dependency SLAs are
-            understood</label></li>
-            <li><label><input type="checkbox" />Dependency failures are
-            handled gracefully</label></li>
-            <li><label><input type="checkbox" />Dependency monitoring is
-            in place</label></li>
-            <li><label><input type="checkbox" />Dependency runbooks
-            exist</label></li>
-            </ul>
-            <h3 id="internal-dependencies">Internal Dependencies</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Internal dependencies
-            are identified</label></li>
-            <li><label><input type="checkbox" />Dependency contracts are
-            documented</label></li>
-            <li><label><input type="checkbox" />Dependency failures are
-            handled gracefully</label></li>
-            <li><label><input type="checkbox" />Dependency monitoring is
-            in place</label></li>
-            </ul>
-            <h3 id="dependency-risks">Dependency Risks</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Single points of failure
-            are identified</label></li>
-            <li><label><input type="checkbox" />Dependency risks are
-            mitigated</label></li>
-            <li><label><input type="checkbox" />Fallback mechanisms
-            exist</label></li>
-            </ul>
-            <hr />
-            <h2 id="cost">Cost</h2>
-            <h3 id="cost-model">Cost Model</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Cost per
-            request/user/unit is understood</label></li>
-            <li><label><input type="checkbox" />Cost drivers are
-            identified</label></li>
-            <li><label><input type="checkbox" />Cost monitoring is in
-            place</label></li>
-            <li><label><input type="checkbox" />Cost alerts are
-            configured</label></li>
-            </ul>
-            <h3 id="cost-optimization">Cost Optimization</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Cost optimization
-            opportunities are identified</label></li>
-            <li><label><input type="checkbox" />Cost optimization is
-            planned</label></li>
-            <li><label><input type="checkbox" />Cost budgets are
-            set</label></li>
-            </ul>
-            <hr />
-            <h2 id="launch-readiness">Launch Readiness</h2>
-            <h3 id="pre-launch-checklist">Pre-Launch Checklist</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />All PRR items are
-            complete</label></li>
-            <li><label><input type="checkbox" />On-call rotation is
-            ready</label></li>
-            <li><label><input type="checkbox" />Runbooks are
-            ready</label></li>
-            <li><label><input type="checkbox" />Monitoring is
-            configured</label></li>
-            <li><label><input type="checkbox" />Alerts are
-            configured</label></li>
-            <li><label><input type="checkbox" />Dashboards are
-            ready</label></li>
-            <li><label><input type="checkbox" />Documentation is
-            complete</label></li>
-            <li><label><input type="checkbox" />Team is
-            trained</label></li>
-            </ul>
-            <h3 id="launch-plan">Launch Plan</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Launch plan is
-            documented</label></li>
-            <li><label><input type="checkbox" />Launch steps are
-            defined</label></li>
-            <li><label><input type="checkbox" />Launch rollback plan
-            exists</label></li>
-            <li><label><input type="checkbox" />Launch communication
-            plan exists</label></li>
-            <li><label><input type="checkbox" />Launch date is
-            set</label></li>
-            </ul>
-            <h3 id="post-launch">Post-Launch</h3>
-            <ul class="task-list">
-            <li><label><input type="checkbox" />Post-launch monitoring
-            plan exists</label></li>
-            <li><label><input type="checkbox" />Post-launch review is
-            scheduled</label></li>
-            <li><label><input type="checkbox" />Post-launch improvements
-            are planned</label></li>
-            </ul>
-            <hr />
-            <h2 id="prr-decision">PRR Decision</h2>
-            <ul class="task-list">
-            <li><label><input
-            type="checkbox" /><strong>Approved</strong> - System is
-            ready for production</label></li>
-            <li><label><input type="checkbox" /><strong>Approved with
-            Conditions</strong> - System is approved pending
-            fixes</label></li>
-            <li><label><input type="checkbox" /><strong>Not
-            Approved</strong> - System needs significant
-            work</label></li>
-            </ul>
-            <p><strong>PRR Lead Signature</strong>: [Name]</p>
-            <p><strong>Date</strong>: [Date]</p>
-            <p><strong>Next Steps</strong>: [What happens next?]</p>
-            <hr />
-            <h2 id="notes">Notes</h2>
-            <p>[Additional notes, concerns, or recommendations]</p>
+        <div class="card">
+            <div class="card-content">
+                <h1 id="production-readiness-review-prr-template">Production Readiness
+Review (PRR) Template</h1>
+<p>A PRR ensures a system is ready for production. Use this checklist
+before launching.</p>
+<h2 id="system-information">System Information</h2>
+<p><strong>System Name</strong>: [Name]</p>
+<p><strong>Team</strong>: [Team name]</p>
+<p><strong>PRR Date</strong>: [Date]</p>
+<p><strong>PRR Lead</strong>: [Name]</p>
+<p><strong>Reviewers</strong>: [Names]</p>
+<p><strong>Target Launch Date</strong>: [Date]</p>
+<hr />
+<h2 id="overview">Overview</h2>
+<p><strong>Purpose</strong>: [What does this system do?]</p>
+<p><strong>Users</strong>: [Who uses this system?]</p>
+<p><strong>Scale</strong>: [Expected load, users, data volume]</p>
+<p><strong>Criticality</strong>: [P0/P1/P2 - how critical is this
+system?]</p>
+<hr />
+<h2 id="reliability-slos">Reliability &amp; SLOs</h2>
+<h3 id="slis-service-level-indicators">SLIs (Service Level
+Indicators)</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Latency SLI</strong>:
+[Definition, e.g., “P95 latency of API requests”]</label>
+<ul>
+<li>Measurement: [How is it measured?]</li>
+<li>Current value: [Current P95 latency]</li>
+<li>Target: [Target P95 latency]</li>
+</ul></li>
+<li><label><input type="checkbox" /><strong>Availability SLI</strong>:
+[Definition, e.g., “Fraction of successful requests”]</label>
+<ul>
+<li>Measurement: [How is it measured?]</li>
+<li>Current value: [Current availability]</li>
+<li>Target: [Target availability]</li>
+</ul></li>
+<li><label><input type="checkbox" /><strong>Error Rate SLI</strong>:
+[Definition]</label>
+<ul>
+<li>Measurement: [How is it measured?]</li>
+<li>Current value: [Current error rate]</li>
+<li>Target: [Target error rate]</li>
+</ul></li>
+<li><label><input type="checkbox" /><strong>Throughput SLI</strong>:
+[Definition, if applicable]</label>
+<ul>
+<li>Measurement: [How is it measured?]</li>
+<li>Current value: [Current throughput]</li>
+<li>Target: [Target throughput]</li>
+</ul></li>
+</ul>
+<h3 id="slos-service-level-objectives">SLOs (Service Level
+Objectives)</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />SLOs are defined for all
+SLIs</label></li>
+<li><label><input type="checkbox" />SLOs are achievable (based on
+historical data or testing)</label></li>
+<li><label><input type="checkbox" />SLOs are documented</label></li>
+<li><label><input type="checkbox" />SLOs are communicated to
+stakeholders</label></li>
+</ul>
+<h3 id="error-budgets">Error Budgets</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Error budgets are
+calculated</label></li>
+<li><label><input type="checkbox" />Error budget policy is defined (what
+happens when budget is exhausted?)</label></li>
+<li><label><input type="checkbox" />Error budget tracking is
+automated</label></li>
+<li><label><input type="checkbox" />Error budget alerts are
+configured</label></li>
+</ul>
+<h3 id="availability-targets">Availability Targets</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Availability target is appropriate
+for criticality</label></li>
+<li><label><input type="checkbox" />Availability is measured
+correctly</label></li>
+<li><label><input type="checkbox" />Planned downtime is accounted
+for</label></li>
+<li><label><input type="checkbox" />Unplanned downtime is
+tracked</label></li>
+</ul>
+<hr />
+<h2 id="monitoring-observability">Monitoring &amp; Observability</h2>
+<h3 id="metrics">Metrics</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Latency metrics</strong>:
+P50, P95, P99 are tracked</label></li>
+<li><label><input type="checkbox" /><strong>Throughput metrics</strong>:
+QPS, requests/sec are tracked</label></li>
+<li><label><input type="checkbox" /><strong>Error metrics</strong>:
+Error rates, error types are tracked</label></li>
+<li><label><input type="checkbox" /><strong>Resource metrics</strong>:
+CPU, memory, disk, network are tracked</label></li>
+<li><label><input type="checkbox" /><strong>Business metrics</strong>:
+User-facing metrics are tracked</label></li>
+<li><label><input type="checkbox" />Metrics are exported
+correctly</label></li>
+<li><label><input type="checkbox" />Metrics retention is
+configured</label></li>
+</ul>
+<h3 id="logging">Logging</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Critical events are
+logged</label></li>
+<li><label><input type="checkbox" />Log levels are appropriate (INFO,
+WARN, ERROR)</label></li>
+<li><label><input type="checkbox" />Logs are structured (JSON or
+structured format)</label></li>
+<li><label><input type="checkbox" />Logs include request IDs for
+correlation</label></li>
+<li><label><input type="checkbox" />Log retention is configured
+appropriately</label></li>
+<li><label><input type="checkbox" />Logs are searchable and
+queryable</label></li>
+</ul>
+<h3 id="tracing">Tracing</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Critical paths are
+traced</label></li>
+<li><label><input type="checkbox" />Spans are well-defined</label></li>
+<li><label><input type="checkbox" />Trace sampling is
+configured</label></li>
+<li><label><input type="checkbox" />Cross-service correlation
+works</label></li>
+<li><label><input type="checkbox" />Traces are queryable</label></li>
+</ul>
+<h3 id="dashboards">Dashboards</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Service dashboard</strong>:
+Shows key metrics, health status</label></li>
+<li><label><input type="checkbox" /><strong>SLO dashboard</strong>:
+Shows SLO compliance, error budgets</label></li>
+<li><label><input type="checkbox" /><strong>Capacity dashboard</strong>:
+Shows resource usage, scaling</label></li>
+<li><label><input type="checkbox" /><strong>Business dashboard</strong>:
+Shows user-facing metrics</label></li>
+<li><label><input type="checkbox" />Dashboards are accessible to
+on-call</label></li>
+<li><label><input type="checkbox" />Dashboards load quickly</label></li>
+</ul>
+<h3 id="alerting">Alerting</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Critical alerts</strong>: P0
+incidents (page on-call)</label></li>
+<li><label><input type="checkbox" /><strong>Warning alerts</strong>: P1
+incidents (notify, don’t page)</label></li>
+<li><label><input type="checkbox" /><strong>Info alerts</strong>: P2
+incidents (log only)</label></li>
+<li><label><input type="checkbox" />Alerts are actionable (clear what to
+do)</label></li>
+<li><label><input type="checkbox" />Alert fatigue is avoided (not too
+many alerts)</label></li>
+<li><label><input type="checkbox" />Alert thresholds are tuned (not too
+sensitive/insensitive)</label></li>
+<li><label><input type="checkbox" />Alert runbooks exist</label></li>
+<li><label><input type="checkbox" />Alert escalation paths are
+defined</label></li>
+</ul>
+<hr />
+<h2 id="incident-response">Incident Response</h2>
+<h3 id="on-call">On-Call</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />On-call rotation is
+established</label></li>
+<li><label><input type="checkbox" />On-call engineers are
+trained</label></li>
+<li><label><input type="checkbox" />On-call procedures are
+documented</label></li>
+<li><label><input type="checkbox" />On-call tools are
+available</label></li>
+<li><label><input type="checkbox" />On-call escalation paths are
+clear</label></li>
+</ul>
+<h3 id="runbooks">Runbooks</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Common incidents</strong>:
+Runbooks exist for common issues</label></li>
+<li><label><input type="checkbox" /><strong>Critical failures</strong>:
+Runbooks exist for critical failures</label></li>
+<li><label><input type="checkbox" /><strong>Recovery
+procedures</strong>: Runbooks include recovery steps</label></li>
+<li><label><input type="checkbox" /><strong>Rollback
+procedures</strong>: Runbooks include rollback steps</label></li>
+<li><label><input type="checkbox" />Runbooks are tested</label></li>
+<li><label><input type="checkbox" />Runbooks are accessible during
+incidents</label></li>
+</ul>
+<h3 id="incident-management">Incident Management</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Incident response process is
+defined</label></li>
+<li><label><input type="checkbox" />Incident communication channels are
+established</label></li>
+<li><label><input type="checkbox" />Postmortem process is
+defined</label></li>
+<li><label><input type="checkbox" />Incident tracking system is
+used</label></li>
+</ul>
+<h3 id="postmortems">Postmortems</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Postmortem template is
+used</label></li>
+<li><label><input type="checkbox" />Postmortems are written for all
+P0/P1 incidents</label></li>
+<li><label><input type="checkbox" />Postmortems include root cause
+analysis</label></li>
+<li><label><input type="checkbox" />Postmortems include action
+items</label></li>
+<li><label><input type="checkbox" />Action items are tracked to
+completion</label></li>
+</ul>
+<hr />
+<h2 id="capacity-scaling">Capacity &amp; Scaling</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Current capacity</strong>:
+Current load and capacity are known</label></li>
+<li><label><input type="checkbox" /><strong>Target capacity</strong>:
+Capacity for launch is provisioned</label></li>
+<li><label><input type="checkbox" /><strong>Growth forecast</strong>:
+Capacity for growth is planned</label></li>
+<li><label><input type="checkbox" /><strong>Scaling limits</strong>:
+Maximum scale is understood</label></li>
+<li><label><input type="checkbox" /><strong>Capacity alerts</strong>:
+Alerts for capacity thresholds</label></li>
+</ul>
+<h3 id="auto-scaling">Auto-Scaling</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Auto-scaling is configured (if
+applicable)</label></li>
+<li><label><input type="checkbox" />Scaling policies are
+tuned</label></li>
+<li><label><input type="checkbox" />Scaling limits are set (min/max
+instances)</label></li>
+<li><label><input type="checkbox" />Scaling metrics are
+appropriate</label></li>
+<li><label><input type="checkbox" />Scaling behavior is
+tested</label></li>
+</ul>
+<h3 id="load-testing">Load Testing</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Load tests have been
+run</label></li>
+<li><label><input type="checkbox" />System handles expected
+load</label></li>
+<li><label><input type="checkbox" />System handles 2× expected
+load</label></li>
+<li><label><input type="checkbox" />System degrades gracefully under
+overload</label></li>
+<li><label><input type="checkbox" />Bottlenecks are identified and
+addressed</label></li>
+</ul>
+<h3 id="resource-limits">Resource Limits</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />CPU limits are set
+appropriately</label></li>
+<li><label><input type="checkbox" />Memory limits are set
+appropriately</label></li>
+<li><label><input type="checkbox" />Disk limits are set
+appropriately</label></li>
+<li><label><input type="checkbox" />Network limits are
+understood</label></li>
+<li><label><input type="checkbox" />Limits prevent resource
+exhaustion</label></li>
+</ul>
+<hr />
+<h2 id="security">Security</h2>
+<h3 id="authentication">Authentication</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Authentication is required for all
+access</label></li>
+<li><label><input type="checkbox" />Authentication mechanism is
+appropriate</label></li>
+<li><label><input type="checkbox" />Authentication is
+tested</label></li>
+<li><label><input type="checkbox" />Authentication failures are
+logged</label></li>
+</ul>
+<h3 id="authorization">Authorization</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Authorization is checked for all
+operations</label></li>
+<li><label><input type="checkbox" />Principle of least privilege is
+followed</label></li>
+<li><label><input type="checkbox" />Permissions are
+documented</label></li>
+<li><label><input type="checkbox" />Access is audited</label></li>
+<li><label><input type="checkbox" />Authorization failures are
+logged</label></li>
+</ul>
+<h3 id="data-protection">Data Protection</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Encryption at rest</strong>:
+Data is encrypted at rest</label></li>
+<li><label><input type="checkbox" /><strong>Encryption in
+transit</strong>: Data is encrypted in transit (TLS)</label></li>
+<li><label><input type="checkbox" /><strong>Key management</strong>:
+Keys are managed securely</label></li>
+<li><label><input type="checkbox" /><strong>Data
+classification</strong>: Data is classified appropriately</label></li>
+<li><label><input type="checkbox" /><strong>Data retention</strong>:
+Data retention policies are defined</label></li>
+<li><label><input type="checkbox" /><strong>Data deletion</strong>: Data
+deletion procedures exist</label></li>
+</ul>
+<h3 id="security-monitoring">Security Monitoring</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Security events are
+logged</label></li>
+<li><label><input type="checkbox" />Security alerts are
+configured</label></li>
+<li><label><input type="checkbox" />Security incidents are
+tracked</label></li>
+<li><label><input type="checkbox" />Security reviews are
+conducted</label></li>
+</ul>
+<h3 id="compliance">Compliance</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Compliance requirements are met (if
+applicable)</label></li>
+<li><label><input type="checkbox" />Compliance documentation
+exists</label></li>
+<li><label><input type="checkbox" />Compliance audits are
+planned</label></li>
+</ul>
+<hr />
+<h2 id="change-management">Change Management</h2>
+<h3 id="deployment">Deployment</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Deployment process</strong>:
+Deployment process is documented</label></li>
+<li><label><input type="checkbox" /><strong>Deployment
+automation</strong>: Deployments are automated</label></li>
+<li><label><input type="checkbox" /><strong>Deployment
+rollback</strong>: Rollback procedure is tested</label></li>
+<li><label><input type="checkbox" /><strong>Deployment windows</strong>:
+Deployment windows are defined</label></li>
+<li><label><input type="checkbox" /><strong>Deployment
+approvals</strong>: Approval process is defined</label></li>
+</ul>
+<h3 id="feature-flags">Feature Flags</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Feature flags are used for risky
+changes</label></li>
+<li><label><input type="checkbox" />Kill switches are
+implemented</label></li>
+<li><label><input type="checkbox" />Flag management is
+documented</label></li>
+<li><label><input type="checkbox" />Flags are tested</label></li>
+</ul>
+<h3 id="canary-deployments">Canary Deployments</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Canary deployment is used (if
+applicable)</label></li>
+<li><label><input type="checkbox" />Canary metrics are
+monitored</label></li>
+<li><label><input type="checkbox" />Canary rollback is
+tested</label></li>
+<li><label><input type="checkbox" />Canary promotion criteria are
+defined</label></li>
+</ul>
+<h3 id="testing">Testing</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Unit tests</strong>: Unit
+test coverage is adequate</label></li>
+<li><label><input type="checkbox" /><strong>Integration tests</strong>:
+Integration tests exist</label></li>
+<li><label><input type="checkbox" /><strong>Load tests</strong>: Load
+tests are run regularly</label></li>
+<li><label><input type="checkbox" /><strong>Chaos tests</strong>: Chaos
+tests are considered</label></li>
+<li><label><input type="checkbox" /><strong>Smoke tests</strong>: Smoke
+tests run after deployment</label></li>
+</ul>
+<hr />
+<h2 id="documentation">Documentation</h2>
+<h3 id="architecture">Architecture</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Architecture diagram
+exists</label></li>
+<li><label><input type="checkbox" />Architecture is
+documented</label></li>
+<li><label><input type="checkbox" />Data flow is documented</label></li>
+<li><label><input type="checkbox" />Component responsibilities are
+documented</label></li>
+</ul>
+<h3 id="runbooks-1">Runbooks</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Runbooks exist for common
+operations</label></li>
+<li><label><input type="checkbox" />Runbooks are tested</label></li>
+<li><label><input type="checkbox" />Runbooks are accessible</label></li>
+</ul>
+<h3 id="api-documentation">API Documentation</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />API is documented (if
+applicable)</label></li>
+<li><label><input type="checkbox" />API examples exist</label></li>
+<li><label><input type="checkbox" />API versioning is
+documented</label></li>
+<li><label><input type="checkbox" />API deprecation policy
+exists</label></li>
+</ul>
+<h3 id="onboarding">Onboarding</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Onboarding documentation
+exists</label></li>
+<li><label><input type="checkbox" />New engineers can get started
+quickly</label></li>
+<li><label><input type="checkbox" />Development environment setup is
+documented</label></li>
+</ul>
+<hr />
+<h2 id="dependencies">Dependencies</h2>
+<h3 id="external-dependencies">External Dependencies</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />External dependencies are
+identified</label></li>
+<li><label><input type="checkbox" />Dependency SLAs are
+understood</label></li>
+<li><label><input type="checkbox" />Dependency failures are handled
+gracefully</label></li>
+<li><label><input type="checkbox" />Dependency monitoring is in
+place</label></li>
+<li><label><input type="checkbox" />Dependency runbooks
+exist</label></li>
+</ul>
+<h3 id="internal-dependencies">Internal Dependencies</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Internal dependencies are
+identified</label></li>
+<li><label><input type="checkbox" />Dependency contracts are
+documented</label></li>
+<li><label><input type="checkbox" />Dependency failures are handled
+gracefully</label></li>
+<li><label><input type="checkbox" />Dependency monitoring is in
+place</label></li>
+</ul>
+<h3 id="dependency-risks">Dependency Risks</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Single points of failure are
+identified</label></li>
+<li><label><input type="checkbox" />Dependency risks are
+mitigated</label></li>
+<li><label><input type="checkbox" />Fallback mechanisms
+exist</label></li>
+</ul>
+<hr />
+<h2 id="cost">Cost</h2>
+<h3 id="cost-model">Cost Model</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Cost per request/user/unit is
+understood</label></li>
+<li><label><input type="checkbox" />Cost drivers are
+identified</label></li>
+<li><label><input type="checkbox" />Cost monitoring is in
+place</label></li>
+<li><label><input type="checkbox" />Cost alerts are
+configured</label></li>
+</ul>
+<h3 id="cost-optimization">Cost Optimization</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Cost optimization opportunities are
+identified</label></li>
+<li><label><input type="checkbox" />Cost optimization is
+planned</label></li>
+<li><label><input type="checkbox" />Cost budgets are set</label></li>
+</ul>
+<hr />
+<h2 id="launch-readiness">Launch Readiness</h2>
+<h3 id="pre-launch-checklist">Pre-Launch Checklist</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />All PRR items are
+complete</label></li>
+<li><label><input type="checkbox" />On-call rotation is
+ready</label></li>
+<li><label><input type="checkbox" />Runbooks are ready</label></li>
+<li><label><input type="checkbox" />Monitoring is
+configured</label></li>
+<li><label><input type="checkbox" />Alerts are configured</label></li>
+<li><label><input type="checkbox" />Dashboards are ready</label></li>
+<li><label><input type="checkbox" />Documentation is
+complete</label></li>
+<li><label><input type="checkbox" />Team is trained</label></li>
+</ul>
+<h3 id="launch-plan">Launch Plan</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Launch plan is
+documented</label></li>
+<li><label><input type="checkbox" />Launch steps are
+defined</label></li>
+<li><label><input type="checkbox" />Launch rollback plan
+exists</label></li>
+<li><label><input type="checkbox" />Launch communication plan
+exists</label></li>
+<li><label><input type="checkbox" />Launch date is set</label></li>
+</ul>
+<h3 id="post-launch">Post-Launch</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Post-launch monitoring plan
+exists</label></li>
+<li><label><input type="checkbox" />Post-launch review is
+scheduled</label></li>
+<li><label><input type="checkbox" />Post-launch improvements are
+planned</label></li>
+</ul>
+<hr />
+<h2 id="prr-decision">PRR Decision</h2>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Approved</strong> - System
+is ready for production</label></li>
+<li><label><input type="checkbox" /><strong>Approved with
+Conditions</strong> - System is approved pending fixes</label></li>
+<li><label><input type="checkbox" /><strong>Not Approved</strong> -
+System needs significant work</label></li>
+</ul>
+<p><strong>PRR Lead Signature</strong>: [Name]</p>
+<p><strong>Date</strong>: [Date]</p>
+<p><strong>Next Steps</strong>: [What happens next?]</p>
+<hr />
+<h2 id="notes">Notes</h2>
+<p>[Additional notes, concerns, or recommendations]</p>
+            </div>
         </div>
     </main>
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
       mermaid.initialize({ startOnLoad: true });

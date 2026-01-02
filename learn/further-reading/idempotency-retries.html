@@ -3,230 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Further Reading: Idempotency &amp; Retry Semantics</title>
+    <title>Further Reading: Idempotency & Retry Semantics</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
-jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
-    <link rel="stylesheet" href="../learn/css/learn.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uudjLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/learn.css">
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../index.html" class="flex items-center hover:text-gray-600">
+                <a href="/index.html" class="flex items-center hover:text-gray-600">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     <span>Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="/learn/index.html" class="hover:text-indigo-600 font-semibold">Back to Learn Topics</a></li>
+                <li><a href="/aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="main-content">
-            <h1 id="further-reading-idempotency-retry-semantics">Further
-            Reading: Idempotency &amp; Retry Semantics</h1>
-            <p><a
-            href="../02-distributed-systems/idempotency-retries.html">Back
-            to Idempotency &amp; Retry Semantics</a></p>
-            <hr />
-            <h2
-            id="designing-data-intensive-applications-kleppmann">Designing
-            Data-Intensive Applications (Kleppmann)</h2>
-            <p><strong>Book</strong>: <a
-            href="https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/">Designing
-            Data-Intensive Applications</a></p>
-            <p><strong>Why it matters</strong>: Comprehensive guide to
-            building reliable distributed systems, with detailed
-            coverage of idempotency and retry semantics.</p>
-            <h3 id="key-concepts">Key Concepts</h3>
-            <p><strong>Idempotency</strong>: - What makes an operation
-            idempotent - How to make operations idempotent - Why
-            idempotency matters for retries</p>
-            <p><strong>Retry Semantics</strong>: - At-least-once
-            delivery - At-most-once delivery - Exactly-once delivery</p>
-            <p><strong>Relevance</strong>: Provides the theoretical
-            foundation and practical techniques for implementing
-            idempotency and retries.</p>
-            <h3 id="recommended-chapters">Recommended Chapters</h3>
-            <ul>
-            <li><strong>Chapter 8: The Trouble with Distributed
-            Systems</strong>: Failures and retries</li>
-            <li><strong>Chapter 9: Consistency and Consensus</strong>:
-            Consistency models and idempotency</li>
-            <li><strong>Chapter 11: Stream Processing</strong>:
-            Exactly-once semantics</li>
-            </ul>
-            <h3 id="key-excerpts">Key Excerpts</h3>
-            <p><strong>On idempotency</strong>:</p>
-            <blockquote>
-            <p>“An idempotent operation is one that can be performed
-            multiple times without changing the result beyond the
-            initial application. This is crucial for retries, as retries
-            may execute operations multiple times.”</p>
-            </blockquote>
-            <p><strong>Key insight</strong>: Idempotency allows safe
-            retries. Without idempotency, retries can cause duplicate
-            operations or inconsistent state.</p>
-            <p><strong>On retry semantics</strong>:</p>
-            <blockquote>
-            <p>“At-least-once delivery is easier to implement than
-            exactly-once, but requires idempotency. Exactly-once is
-            harder but provides stronger guarantees.”</p>
-            </blockquote>
-            <p><strong>Relevance</strong>: Explains the tradeoffs
-            between different retry semantics and when to use each.</p>
-            <hr />
-            <h2
-            id="time-clocks-and-the-ordering-of-events-lamport-1978">Time,
-            Clocks, and the Ordering of Events (Lamport, 1978)</h2>
-            <p><strong>Paper</strong>: <a
-            href="https://lamport.azurewebsites.net/pubs/time-clocks.pdf">Time,
-            Clocks, and the Ordering of Events in a Distributed
-            System</a></p>
-            <p><strong>Why it matters</strong>: Foundational paper on
-            time and ordering in distributed systems, which is crucial
-            for understanding idempotency.</p>
-            <h3 id="key-concepts-1">Key Concepts</h3>
-            <p><strong>Logical Clocks</strong>: - How to order events
-            without synchronized clocks - Happens-before relationships -
-            Vector clocks</p>
-            <p><strong>Relevance</strong>: Understanding time and
-            ordering helps implement idempotency correctly, especially
-            when dealing with concurrent operations.</p>
-            <h3 id="key-excerpts-1">Key Excerpts</h3>
-            <p><strong>On ordering</strong>:</p>
-            <blockquote>
-            <p>“The concept of ‘happening before’ is an invariant of the
-            system. We can use this to define a consistent ordering of
-            events.”</p>
-            </blockquote>
-            <p><strong>Key insight</strong>: Even without synchronized
-            clocks, we can define a consistent ordering of events, which
-            is useful for idempotency (detecting duplicate
-            operations).</p>
-            <hr />
-            <h2 id="idempotency-patterns">Idempotency Patterns</h2>
-            <h3 id="paypals-idempotency-implementation">PayPal’s
-            Idempotency Implementation</h3>
-            <p><strong>Article</strong>: <a
-            href="https://developer.paypal.com/docs/api/overview/#idempotency">Idempotency
-            Keys</a></p>
-            <p><strong>Why it matters</strong>: Real-world example of
-            idempotency implementation in a payment system.</p>
-            <h3 id="key-concepts-2">Key Concepts</h3>
-            <p><strong>Idempotency Keys</strong>: - Client generates
-            unique key - Server uses key to detect duplicates - Returns
-            same response for duplicate requests</p>
-            <p><strong>Implementation</strong>: - Store idempotency keys
-            with responses - Check keys before processing - Return
-            cached response for duplicates</p>
-            <p><strong>Relevance</strong>: Provides a concrete example
-            of how to implement idempotency keys, which we discussed in
-            the main topic.</p>
-            <h3 id="stripes-idempotency-implementation">Stripe’s
-            Idempotency Implementation</h3>
-            <p><strong>Documentation</strong>: <a
-            href="https://stripe.com/docs/api/idempotent_requests">Stripe
-            Idempotency</a></p>
-            <p><strong>Why it matters</strong>: Another real-world
-            example with slightly different approach.</p>
-            <p><strong>Key differences</strong>: - Stripe uses
-            idempotency keys in request headers - Keys are scoped to
-            specific endpoints - Keys expire after 24 hours</p>
-            <p><strong>Relevance</strong>: Shows variations in
-            idempotency implementation approaches.</p>
-            <hr />
-            <h2 id="retry-strategies">Retry Strategies</h2>
-            <h3 id="exponential-backoff-and-jitter">Exponential Backoff
-            and Jitter</h3>
-            <p><strong>Article</strong>: <a
-            href="https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/">Exponential
-            Backoff</a></p>
-            <p><strong>Why it matters</strong>: Explains why exponential
-            backoff and jitter are important for retries.</p>
-            <h3 id="key-concepts-3">Key Concepts</h3>
-            <p><strong>Exponential Backoff</strong>: - Wait time
-            increases exponentially: 2^attempt - Gives service time to
-            recover - Reduces load on failing service</p>
-            <p><strong>Jitter</strong>: - Random variation in wait time
-            - Prevents thundering herd - Spreads out retries from
-            multiple clients</p>
-            <p><strong>Relevance</strong>: Provides the mathematical
-            foundation for retry strategies we discussed.</p>
-            <h3 id="example-implementation">Example Implementation</h3>
-            <p><strong>Without jitter</strong>: - All clients retry at
-            same time - Creates thundering herd - Overwhelms recovering
-            service</p>
-            <p><strong>With jitter</strong>: - Retries spread out over
-            time - Reduces thundering herd - Allows service to recover
-            gradually</p>
-            <hr />
-            <h2 id="additional-resources">Additional Resources</h2>
-            <h3 id="papers">Papers</h3>
-            <p><strong>“Exactly-Once Semantics in a Distributed
-            Messaging System”</strong> (Kreps, 2013) - How to achieve
-            exactly-once delivery - <a
-            href="https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/">Link</a></p>
-            <p><strong>“Idempotence is not a Medical Condition”</strong>
-            (Pat Helland, 2014) - Philosophical and practical discussion
-            of idempotency - <a
-            href="https://queue.acm.org/detail.cfm?id=2187821">Link</a></p>
-            <h3 id="books">Books</h3>
-            <p><strong>“Release It!”</strong> by Michael Nygard -
-            Chapter on circuit breakers and retries - Real-world
-            examples</p>
-            <p><strong>“Building Microservices”</strong> by Sam Newman -
-            Chapter on reliability patterns - Idempotency and retries in
-            microservices</p>
-            <h3 id="online-resources">Online Resources</h3>
-            <p><strong>Google Cloud Documentation</strong>: <a
-            href="https://cloud.google.com/apis/design/idempotency">Idempotency</a>
-            - GCP’s approach to idempotency - Best practices</p>
-            <p><strong>AWS Documentation</strong>: <a
-            href="https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Run_Instance_Idempotency.html">Idempotency</a>
-            - AWS’s approach to idempotency - Implementation
-            examples</p>
-            <hr />
-            <h2 id="key-takeaways">Key Takeaways</h2>
-            <ol type="1">
-            <li><strong>Idempotency enables safe retries</strong>:
-            Operations must be idempotent to retry safely</li>
-            <li><strong>Idempotency keys work</strong>: Client-generated
-            keys are effective for detecting duplicates</li>
-            <li><strong>Exponential backoff helps</strong>: Gives
-            services time to recover</li>
-            <li><strong>Jitter prevents thundering herd</strong>: Random
-            variation spreads out retries</li>
-            <li><strong>Choose appropriate semantics</strong>:
-            At-least-once is easier, exactly-once is harder</li>
-            </ol>
-            <hr />
-            <h2 id="related-topics">Related Topics</h2>
-            <ul>
-            <li><a
-            href="../02-distributed-systems/time-ordering-causality.html">Time,
-            Ordering, Causality</a> - Understanding time in distributed
-            systems</li>
-            <li><a
-            href="../02-distributed-systems/overload-backpressure.html">Overload
-            &amp; Backpressure</a> - How retries can cause overload</li>
-            <li><a
-            href="../05-llD-patterns/idempotency-patterns.html">Idempotency
-            Patterns</a> - Implementation patterns</li>
-            <li><a href="../05-llD-patterns/circuit-breakers.html">Circuit
-            Breakers</a> - When to stop retrying</li>
-            </ul>
+        <div class="card">
+            <div class="card-content">
+                <h1 id="further-reading-idempotency-retry-semantics">Further Reading:
+Idempotency &amp; Retry Semantics</h1>
+<p><a href="../02-distributed-systems/idempotency-retries.html">Back to
+Idempotency &amp; Retry Semantics</a></p>
+<hr />
+<h2 id="designing-data-intensive-applications-kleppmann">Designing
+Data-Intensive Applications (Kleppmann)</h2>
+<p><strong>Book</strong>: <a
+href="https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/">Designing
+Data-Intensive Applications</a></p>
+<p><strong>Why it matters</strong>: Comprehensive guide to building
+reliable distributed systems, with detailed coverage of idempotency and
+retry semantics.</p>
+<h3 id="key-concepts">Key Concepts</h3>
+<p><strong>Idempotency</strong>: - What makes an operation idempotent -
+How to make operations idempotent - Why idempotency matters for
+retries</p>
+<p><strong>Retry Semantics</strong>: - At-least-once delivery -
+At-most-once delivery - Exactly-once delivery</p>
+<p><strong>Relevance</strong>: Provides the theoretical foundation and
+practical techniques for implementing idempotency and retries.</p>
+<h3 id="recommended-chapters">Recommended Chapters</h3>
+<ul>
+<li><strong>Chapter 8: The Trouble with Distributed Systems</strong>:
+Failures and retries</li>
+<li><strong>Chapter 9: Consistency and Consensus</strong>: Consistency
+models and idempotency</li>
+<li><strong>Chapter 11: Stream Processing</strong>: Exactly-once
+semantics</li>
+</ul>
+<h3 id="key-excerpts">Key Excerpts</h3>
+<p><strong>On idempotency</strong>:</p>
+<blockquote>
+<p>“An idempotent operation is one that can be performed multiple times
+without changing the result beyond the initial application. This is
+crucial for retries, as retries may execute operations multiple
+times.”</p>
+</blockquote>
+<p><strong>Key insight</strong>: Idempotency allows safe retries.
+Without idempotency, retries can cause duplicate operations or
+inconsistent state.</p>
+<p><strong>On retry semantics</strong>:</p>
+<blockquote>
+<p>“At-least-once delivery is easier to implement than exactly-once, but
+requires idempotency. Exactly-once is harder but provides stronger
+guarantees.”</p>
+</blockquote>
+<p><strong>Relevance</strong>: Explains the tradeoffs between different
+retry semantics and when to use each.</p>
+<hr />
+<h2 id="time-clocks-and-the-ordering-of-events-lamport-1978">Time,
+Clocks, and the Ordering of Events (Lamport, 1978)</h2>
+<p><strong>Paper</strong>: <a
+href="https://lamport.azurewebsites.net/pubs/time-clocks.pdf">Time,
+Clocks, and the Ordering of Events in a Distributed System</a></p>
+<p><strong>Why it matters</strong>: Foundational paper on time and
+ordering in distributed systems, which is crucial for understanding
+idempotency.</p>
+<h3 id="key-concepts-1">Key Concepts</h3>
+<p><strong>Logical Clocks</strong>: - How to order events without
+synchronized clocks - Happens-before relationships - Vector clocks</p>
+<p><strong>Relevance</strong>: Understanding time and ordering helps
+implement idempotency correctly, especially when dealing with concurrent
+operations.</p>
+<h3 id="key-excerpts-1">Key Excerpts</h3>
+<p><strong>On ordering</strong>:</p>
+<blockquote>
+<p>“The concept of ‘happening before’ is an invariant of the system. We
+can use this to define a consistent ordering of events.”</p>
+</blockquote>
+<p><strong>Key insight</strong>: Even without synchronized clocks, we
+can define a consistent ordering of events, which is useful for
+idempotency (detecting duplicate operations).</p>
+<hr />
+<h2 id="idempotency-patterns">Idempotency Patterns</h2>
+<h3 id="paypals-idempotency-implementation">PayPal’s Idempotency
+Implementation</h3>
+<p><strong>Article</strong>: <a
+href="https://developer.paypal.com/docs/api/overview/#idempotency">Idempotency
+Keys</a></p>
+<p><strong>Why it matters</strong>: Real-world example of idempotency
+implementation in a payment system.</p>
+<h3 id="key-concepts-2">Key Concepts</h3>
+<p><strong>Idempotency Keys</strong>: - Client generates unique key -
+Server uses key to detect duplicates - Returns same response for
+duplicate requests</p>
+<p><strong>Implementation</strong>: - Store idempotency keys with
+responses - Check keys before processing - Return cached response for
+duplicates</p>
+<p><strong>Relevance</strong>: Provides a concrete example of how to
+implement idempotency keys, which we discussed in the main topic.</p>
+<h3 id="stripes-idempotency-implementation">Stripe’s Idempotency
+Implementation</h3>
+<p><strong>Documentation</strong>: <a
+href="https://stripe.com/docs/api/idempotent_requests">Stripe
+Idempotency</a></p>
+<p><strong>Why it matters</strong>: Another real-world example with
+slightly different approach.</p>
+<p><strong>Key differences</strong>: - Stripe uses idempotency keys in
+request headers - Keys are scoped to specific endpoints - Keys expire
+after 24 hours</p>
+<p><strong>Relevance</strong>: Shows variations in idempotency
+implementation approaches.</p>
+<hr />
+<h2 id="retry-strategies">Retry Strategies</h2>
+<h3 id="exponential-backoff-and-jitter">Exponential Backoff and
+Jitter</h3>
+<p><strong>Article</strong>: <a
+href="https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/">Exponential
+Backoff</a></p>
+<p><strong>Why it matters</strong>: Explains why exponential backoff and
+jitter are important for retries.</p>
+<h3 id="key-concepts-3">Key Concepts</h3>
+<p><strong>Exponential Backoff</strong>: - Wait time increases
+exponentially: 2^attempt - Gives service time to recover - Reduces load
+on failing service</p>
+<p><strong>Jitter</strong>: - Random variation in wait time - Prevents
+thundering herd - Spreads out retries from multiple clients</p>
+<p><strong>Relevance</strong>: Provides the mathematical foundation for
+retry strategies we discussed.</p>
+<h3 id="example-implementation">Example Implementation</h3>
+<p><strong>Without jitter</strong>: - All clients retry at same time -
+Creates thundering herd - Overwhelms recovering service</p>
+<p><strong>With jitter</strong>: - Retries spread out over time -
+Reduces thundering herd - Allows service to recover gradually</p>
+<hr />
+<h2 id="additional-resources">Additional Resources</h2>
+<h3 id="papers">Papers</h3>
+<p><strong>“Exactly-Once Semantics in a Distributed Messaging
+System”</strong> (Kreps, 2013) - How to achieve exactly-once delivery -
+<a
+href="https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/">Link</a></p>
+<p><strong>“Idempotence is not a Medical Condition”</strong> (Pat
+Helland, 2014) - Philosophical and practical discussion of idempotency -
+<a href="https://queue.acm.org/detail.cfm?id=2187821">Link</a></p>
+<h3 id="books">Books</h3>
+<p><strong>“Release It!”</strong> by Michael Nygard - Chapter on circuit
+breakers and retries - Real-world examples</p>
+<p><strong>“Building Microservices”</strong> by Sam Newman - Chapter on
+reliability patterns - Idempotency and retries in microservices</p>
+<h3 id="online-resources">Online Resources</h3>
+<p><strong>Google Cloud Documentation</strong>: <a
+href="https://cloud.google.com/apis/design/idempotency">Idempotency</a>
+- GCP’s approach to idempotency - Best practices</p>
+<p><strong>AWS Documentation</strong>: <a
+href="https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Run_Instance_Idempotency.html">Idempotency</a>
+- AWS’s approach to idempotency - Implementation examples</p>
+<hr />
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ol type="1">
+<li><strong>Idempotency enables safe retries</strong>: Operations must
+be idempotent to retry safely</li>
+<li><strong>Idempotency keys work</strong>: Client-generated keys are
+effective for detecting duplicates</li>
+<li><strong>Exponential backoff helps</strong>: Gives services time to
+recover</li>
+<li><strong>Jitter prevents thundering herd</strong>: Random variation
+spreads out retries</li>
+<li><strong>Choose appropriate semantics</strong>: At-least-once is
+easier, exactly-once is harder</li>
+</ol>
+<hr />
+<h2 id="related-topics">Related Topics</h2>
+<ul>
+<li><a href="../02-distributed-systems/time-ordering-causality.html">Time,
+Ordering, Causality</a> - Understanding time in distributed systems</li>
+<li><a
+href="../02-distributed-systems/overload-backpressure.html">Overload &amp;
+Backpressure</a> - How retries can cause overload</li>
+<li><a href="../05-llD-patterns/idempotency-patterns.html">Idempotency
+Patterns</a> - Implementation patterns</li>
+<li><a href="../05-llD-patterns/circuit-breakers.html">Circuit
+Breakers</a> - When to stop retrying</li>
+</ul>
+            </div>
         </div>
     </main>
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
       mermaid.initialize({ startOnLoad: true });

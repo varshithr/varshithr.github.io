@@ -8,39 +8,38 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
-jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
-    <link rel="stylesheet" href="../learn/css/learn.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uudjLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/learn.css">
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../index.html" class="flex items-center hover:text-gray-600">
+                <a href="/index.html" class="flex items-center hover:text-gray-600">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     <span>Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="/learn/index.html" class="hover:text-indigo-600 font-semibold">Back to Learn Topics</a></li>
+                <li><a href="/aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="main-content">
-            <h1
-            id="production-readiness-review-prr-checklist">Production
-            Readiness Review (PRR) Checklist</h1>
-            <p><strong>One-line summary</strong>: What staff engineers
-            and SREs actually look for in production readiness
-            reviews.</p>
-            <p><strong>Prerequisites</strong>: <a
-            href="sli-slo-error-budget.html">SLIs/SLOs</a>, understanding
-            of production systems.</p>
-            <hr />
-            <h2 id="mental-model">Mental Model</h2>
-            <h3 id="prr-purpose">PRR Purpose</h3>
-            <pre class="mermaid"><code>flowchart TD
+        <div class="card">
+            <div class="card-content">
+                <h1 id="production-readiness-review-prr-checklist">Production Readiness
+Review (PRR) Checklist</h1>
+<p><strong>One-line summary</strong>: What staff engineers and SREs
+actually look for in production readiness reviews.</p>
+<p><strong>Prerequisites</strong>: <a
+href="sli-slo-error-budget.html">SLIs/SLOs</a>, understanding of
+production systems.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="prr-purpose">PRR Purpose</h3>
+<pre class="mermaid"><code>flowchart TD
     Design[System Design] --&gt; PRR[PRR Review]
     PRR --&gt; Approved{Approved?}
     Approved --&gt;|Yes| Production[Production]
@@ -49,454 +48,373 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
 
     style PRR fill:#ffcc99
     style Approved fill:#99ff99</code></pre>
-            <p><strong>Key insight</strong>: PRR ensures systems are
-            ready for production. It’s not about perfection—it’s about
-            identifying and mitigating risks.</p>
-            <h3 id="prr-scope">PRR Scope</h3>
-            <p><strong>What PRR covers</strong>: - Reliability
-            (SLIs/SLOs, error budgets) - Observability (monitoring,
-            logging, tracing) - Security (authentication, authorization,
-            encryption) - Operations (runbooks, on-call, incidents) -
-            Capacity (scaling, load testing)</p>
-            <p><strong>What PRR doesn’t cover</strong>: - Feature
-            completeness (that’s product review) - Code quality (that’s
-            code review) - Performance optimization (that’s performance
-            review)</p>
-            <hr />
-            <h2 id="staff-level-prr-checklist">Staff-Level PRR
-            Checklist</h2>
-            <h3 id="slis-slos-error-budgets">1. SLIs, SLOs &amp; Error
-            Budgets</h3>
-            <h4 id="slis-defined">SLIs Defined</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>User-facing
-            SLIs</strong>: SLIs measure what users
-            experience</label></li>
-            <li><label><input
-            type="checkbox" /><strong>Measurable</strong>: SLIs can be
-            measured accurately</label></li>
-            <li><label><input
-            type="checkbox" /><strong>Actionable</strong>: SLIs change
-            when system behavior changes</label></li>
-            <li><label><input
-            type="checkbox" /><strong>Documented</strong>: SLIs are
-            documented and understood</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - Using internal
-            metrics (CPU, memory) as SLIs - SLIs that don’t reflect user
-            experience - SLIs that can’t be measured reliably</p>
-            <h4 id="slos-set">SLOs Set</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Realistic
-            targets</strong>: SLOs are achievable based on
-            baseline</label></li>
-            <li><label><input type="checkbox" /><strong>Appropriate for
-            criticality</strong>: P0 services have tighter
-            SLOs</label></li>
-            <li><label><input
-            type="checkbox" /><strong>Documented</strong>: SLOs are
-            documented and communicated</label></li>
-            <li><label><input
-            type="checkbox" /><strong>Monitored</strong>: SLO compliance
-            is tracked</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - SLOs set without
-            baseline measurement - SLOs too aggressive (constant
-            violations) - SLOs too lax (poor user experience)</p>
-            <h4 id="error-budgets">Error Budgets</h4>
-            <ul class="task-list">
-            <li><label><input
-            type="checkbox" /><strong>Calculated</strong>: Error budgets
-            are calculated from SLOs</label></li>
-            <li><label><input type="checkbox" /><strong>Policy
-            defined</strong>: Error budget policy is
-            defined</label></li>
-            <li><label><input
-            type="checkbox" /><strong>Tracked</strong>: Error budget
-            consumption is tracked</label></li>
-            <li><label><input type="checkbox" /><strong>Alerts
-            configured</strong>: Alerts for budget
-            thresholds</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - No error budget
-            policy - Error budget not tracked - No alerts for budget
-            exhaustion</p>
-            <h3 id="observability">2. Observability</h3>
-            <h4 id="metrics">Metrics</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Latency
-            metrics</strong>: P50, P95, P99 tracked</label></li>
-            <li><label><input type="checkbox" /><strong>Throughput
-            metrics</strong>: QPS, requests/sec tracked</label></li>
-            <li><label><input type="checkbox" /><strong>Error
-            metrics</strong>: Error rates, error types
-            tracked</label></li>
-            <li><label><input type="checkbox" /><strong>Resource
-            metrics</strong>: CPU, memory, I/O tracked</label></li>
-            <li><label><input type="checkbox" /><strong>Business
-            metrics</strong>: User-facing metrics tracked</label></li>
-            <li><label><input type="checkbox" /><strong>Exported
-            correctly</strong>: Metrics exported to monitoring
-            system</label></li>
-            <li><label><input type="checkbox" /><strong>Retention
-            configured</strong>: Metric retention is
-            appropriate</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - Missing critical
-            metrics (latency, errors) - Metrics not exported correctly -
-            No business metrics</p>
-            <h4 id="logging">Logging</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Critical events
-            logged</strong>: Important events are logged</label></li>
-            <li><label><input type="checkbox" /><strong>Appropriate
-            levels</strong>: INFO, WARN, ERROR used
-            correctly</label></li>
-            <li><label><input type="checkbox" /><strong>Structured
-            logs</strong>: Logs are structured (JSON)</label></li>
-            <li><label><input type="checkbox" /><strong>Request
-            IDs</strong>: Logs include request IDs for
-            correlation</label></li>
-            <li><label><input type="checkbox" /><strong>Retention
-            configured</strong>: Log retention is
-            appropriate</label></li>
-            <li><label><input
-            type="checkbox" /><strong>Searchable</strong>: Logs are
-            searchable and queryable</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - Too much logging
-            (noise) - Too little logging (can’t debug) - Unstructured
-            logs (hard to query) - No request IDs (can’t correlate)</p>
-            <h4 id="tracing">Tracing</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Critical paths
-            traced</strong>: Important operations are
-            traced</label></li>
-            <li><label><input type="checkbox" /><strong>Spans
-            well-defined</strong>: Spans have clear
-            boundaries</label></li>
-            <li><label><input type="checkbox" /><strong>Sampling
-            configured</strong>: Trace sampling is
-            appropriate</label></li>
-            <li><label><input type="checkbox" /><strong>Cross-service
-            correlation</strong>: Traces work across
-            services</label></li>
-            <li><label><input
-            type="checkbox" /><strong>Queryable</strong>: Traces are
-            queryable</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - No tracing - Tracing
-            too expensive (100% sampling) - Can’t correlate across
-            services</p>
-            <h4 id="dashboards">Dashboards</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Service
-            dashboard</strong>: Shows key metrics, health
-            status</label></li>
-            <li><label><input type="checkbox" /><strong>SLO
-            dashboard</strong>: Shows SLO compliance, error
-            budgets</label></li>
-            <li><label><input type="checkbox" /><strong>Capacity
-            dashboard</strong>: Shows resource usage,
-            scaling</label></li>
-            <li><label><input type="checkbox" /><strong>Business
-            dashboard</strong>: Shows user-facing metrics</label></li>
-            <li><label><input
-            type="checkbox" /><strong>Accessible</strong>: Dashboards
-            accessible to on-call</label></li>
-            <li><label><input type="checkbox" /><strong>Fast
-            loading</strong>: Dashboards load quickly</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - No dashboards -
-            Dashboards too complex (hard to understand) - Dashboards
-            don’t load (too many metrics)</p>
-            <h4 id="alerting">Alerting</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Critical
-            alerts</strong>: P0 incidents page on-call</label></li>
-            <li><label><input type="checkbox" /><strong>Warning
-            alerts</strong>: P1 incidents notify, don’t
-            page</label></li>
-            <li><label><input type="checkbox" /><strong>Info
-            alerts</strong>: P2 incidents log only</label></li>
-            <li><label><input
-            type="checkbox" /><strong>Actionable</strong>: Alerts are
-            actionable (clear what to do)</label></li>
-            <li><label><input type="checkbox" /><strong>Not too
-            many</strong>: Alert fatigue avoided</label></li>
-            <li><label><input type="checkbox" /><strong>Thresholds
-            tuned</strong>: Alerts not too
-            sensitive/insensitive</label></li>
-            <li><label><input type="checkbox" /><strong>Runbooks
-            exist</strong>: Alert runbooks exist</label></li>
-            <li><label><input type="checkbox" /><strong>Escalation
-            paths</strong>: Escalation paths defined</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - Too many alerts
-            (alert fatigue) - Alerts not actionable (don’t know what to
-            do) - No runbooks (don’t know how to respond) - Alerts too
-            sensitive (false positives)</p>
-            <h3 id="incident-response">3. Incident Response</h3>
-            <h4 id="on-call">On-Call</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Rotation
-            established</strong>: On-call rotation exists</label></li>
-            <li><label><input type="checkbox" /><strong>Engineers
-            trained</strong>: On-call engineers are trained</label></li>
-            <li><label><input type="checkbox" /><strong>Procedures
-            documented</strong>: On-call procedures
-            documented</label></li>
-            <li><label><input type="checkbox" /><strong>Tools
-            available</strong>: On-call tools are available</label></li>
-            <li><label><input type="checkbox" /><strong>Escalation
-            paths</strong>: Escalation paths are clear</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - No on-call rotation -
-            On-call engineers not trained - No escalation paths</p>
-            <h4 id="runbooks">Runbooks</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Common
-            incidents</strong>: Runbooks for common issues</label></li>
-            <li><label><input type="checkbox" /><strong>Critical
-            failures</strong>: Runbooks for critical
-            failures</label></li>
-            <li><label><input type="checkbox" /><strong>Recovery
-            procedures</strong>: Runbooks include recovery
-            steps</label></li>
-            <li><label><input type="checkbox" /><strong>Rollback
-            procedures</strong>: Runbooks include rollback
-            steps</label></li>
-            <li><label><input type="checkbox" /><strong>Tested</strong>:
-            Runbooks are tested</label></li>
-            <li><label><input
-            type="checkbox" /><strong>Accessible</strong>: Runbooks
-            accessible during incidents</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - No runbooks -
-            Runbooks outdated (don’t match reality) - Runbooks not
-            tested (don’t work)</p>
-            <h4 id="incident-management">Incident Management</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Process
-            defined</strong>: Incident response process
-            defined</label></li>
-            <li><label><input type="checkbox" /><strong>Communication
-            channels</strong>: Communication channels
-            established</label></li>
-            <li><label><input type="checkbox" /><strong>Postmortem
-            process</strong>: Postmortem process defined</label></li>
-            <li><label><input type="checkbox" /><strong>Tracking
-            system</strong>: Incident tracking system used</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - No incident process -
-            No communication channels - No postmortems</p>
-            <h3 id="capacity-scaling">4. Capacity &amp; Scaling</h3>
-            <h4 id="capacity-planning">Capacity Planning</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Current capacity
-            known</strong>: Current load and capacity known</label></li>
-            <li><label><input type="checkbox" /><strong>Target
-            capacity</strong>: Capacity for launch is
-            provisioned</label></li>
-            <li><label><input type="checkbox" /><strong>Growth
-            forecast</strong>: Capacity for growth is
-            planned</label></li>
-            <li><label><input type="checkbox" /><strong>Scaling
-            limits</strong>: Maximum scale is understood</label></li>
-            <li><label><input type="checkbox" /><strong>Capacity
-            alerts</strong>: Alerts for capacity thresholds</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - Don’t know current
-            capacity - No growth forecast - No capacity alerts</p>
-            <h4 id="auto-scaling">Auto-Scaling</h4>
-            <ul class="task-list">
-            <li><label><input
-            type="checkbox" /><strong>Configured</strong>: Auto-scaling
-            is configured (if applicable)</label></li>
-            <li><label><input type="checkbox" /><strong>Policies
-            tuned</strong>: Scaling policies are tuned</label></li>
-            <li><label><input type="checkbox" /><strong>Limits
-            set</strong>: Scaling limits are set (min/max)</label></li>
-            <li><label><input type="checkbox" /><strong>Metrics
-            appropriate</strong>: Scaling metrics are
-            appropriate</label></li>
-            <li><label><input type="checkbox" /><strong>Behavior
-            tested</strong>: Scaling behavior is tested</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - Auto-scaling not
-            configured - Scaling policies not tuned (too
-            aggressive/conservative) - Scaling limits not set (unbounded
-            scaling)</p>
-            <h4 id="load-testing">Load Testing</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Tests
-            run</strong>: Load tests have been run</label></li>
-            <li><label><input type="checkbox" /><strong>Expected
-            load</strong>: System handles expected load</label></li>
-            <li><label><input type="checkbox" /><strong>2×
-            load</strong>: System handles 2× expected load</label></li>
-            <li><label><input type="checkbox" /><strong>Graceful
-            degradation</strong>: System degrades gracefully under
-            overload</label></li>
-            <li><label><input type="checkbox" /><strong>Bottlenecks
-            identified</strong>: Bottlenecks are identified and
-            addressed</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - No load testing -
-            Load testing doesn’t match production - System doesn’t
-            degrade gracefully</p>
-            <h3 id="security">5. Security</h3>
-            <h4 id="authentication">Authentication</h4>
-            <ul class="task-list">
-            <li><label><input
-            type="checkbox" /><strong>Required</strong>: Authentication
-            is required for all access</label></li>
-            <li><label><input type="checkbox" /><strong>Appropriate
-            mechanism</strong>: Authentication mechanism is
-            appropriate</label></li>
-            <li><label><input type="checkbox" /><strong>Tested</strong>:
-            Authentication is tested</label></li>
-            <li><label><input type="checkbox" /><strong>Failures
-            logged</strong>: Authentication failures are
-            logged</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - No authentication -
-            Weak authentication - Authentication not tested</p>
-            <h4 id="authorization">Authorization</h4>
-            <ul class="task-list">
-            <li><label><input
-            type="checkbox" /><strong>Checked</strong>: Authorization is
-            checked for all operations</label></li>
-            <li><label><input type="checkbox" /><strong>Least
-            privilege</strong>: Principle of least privilege is
-            followed</label></li>
-            <li><label><input
-            type="checkbox" /><strong>Documented</strong>: Permissions
-            are documented</label></li>
-            <li><label><input
-            type="checkbox" /><strong>Audited</strong>: Access is
-            audited</label></li>
-            <li><label><input type="checkbox" /><strong>Failures
-            logged</strong>: Authorization failures are
-            logged</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - No authorization
-            checks - Overly permissive permissions - No audit logs</p>
-            <h4 id="data-protection">Data Protection</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Encryption at
-            rest</strong>: Data is encrypted at rest</label></li>
-            <li><label><input type="checkbox" /><strong>Encryption in
-            transit</strong>: Data is encrypted in transit
-            (TLS)</label></li>
-            <li><label><input type="checkbox" /><strong>Key
-            management</strong>: Keys are managed securely</label></li>
-            <li><label><input type="checkbox" /><strong>Data
-            classification</strong>: Data is classified
-            appropriately</label></li>
-            <li><label><input type="checkbox" /><strong>Retention
-            policies</strong>: Data retention policies are
-            defined</label></li>
-            <li><label><input type="checkbox" /><strong>Deletion
-            procedures</strong>: Data deletion procedures
-            exist</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - No encryption - Keys
-            stored in code - No data retention policies</p>
-            <h3 id="change-management">6. Change Management</h3>
-            <h4 id="deployment">Deployment</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Process
-            documented</strong>: Deployment process is
-            documented</label></li>
-            <li><label><input
-            type="checkbox" /><strong>Automated</strong>: Deployments
-            are automated</label></li>
-            <li><label><input type="checkbox" /><strong>Rollback
-            tested</strong>: Rollback procedure is tested</label></li>
-            <li><label><input type="checkbox" /><strong>Windows
-            defined</strong>: Deployment windows are
-            defined</label></li>
-            <li><label><input type="checkbox" /><strong>Approvals
-            defined</strong>: Approval process is defined</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - Manual deployments -
-            No rollback procedure - No deployment windows</p>
-            <h4 id="feature-flags">Feature Flags</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Used for risky
-            changes</strong>: Feature flags used for risky
-            changes</label></li>
-            <li><label><input type="checkbox" /><strong>Kill
-            switches</strong>: Kill switches are
-            implemented</label></li>
-            <li><label><input type="checkbox" /><strong>Management
-            documented</strong>: Flag management is
-            documented</label></li>
-            <li><label><input type="checkbox" /><strong>Tested</strong>:
-            Flags are tested</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - No feature flags - No
-            kill switches - Flags not tested</p>
-            <h4 id="testing">Testing</h4>
-            <ul class="task-list">
-            <li><label><input type="checkbox" /><strong>Unit
-            tests</strong>: Unit test coverage is adequate</label></li>
-            <li><label><input type="checkbox" /><strong>Integration
-            tests</strong>: Integration tests exist</label></li>
-            <li><label><input type="checkbox" /><strong>Load
-            tests</strong>: Load tests are run regularly</label></li>
-            <li><label><input type="checkbox" /><strong>Chaos
-            tests</strong>: Chaos tests are considered</label></li>
-            <li><label><input type="checkbox" /><strong>Smoke
-            tests</strong>: Smoke tests run after
-            deployment</label></li>
-            </ul>
-            <p><strong>Common failures</strong>: - No tests - Tests
-            don’t catch production issues - No load testing</p>
-            <hr />
-            <h2 id="what-staff-engineers-actually-look-for">What Staff
-            Engineers Actually Look For</h2>
-            <h3 id="red-flags-must-fix">Red Flags (Must Fix)</h3>
-            <ol type="1">
-            <li><strong>No SLIs/SLOs</strong>: Can’t measure
-            reliability</li>
-            <li><strong>No monitoring</strong>: Can’t detect
-            problems</li>
-            <li><strong>No on-call</strong>: Can’t respond to
-            incidents</li>
-            <li><strong>No rollback</strong>: Can’t recover from bad
-            deployments</li>
-            <li><strong>No security</strong>: Vulnerable to attacks</li>
-            </ol>
-            <h3 id="yellow-flags-should-fix">Yellow Flags (Should
-            Fix)</h3>
-            <ol type="1">
-            <li><strong>Weak SLIs</strong>: SLIs don’t reflect user
-            experience</li>
-            <li><strong>Alert fatigue</strong>: Too many alerts</li>
-            <li><strong>No runbooks</strong>: Don’t know how to
-            respond</li>
-            <li><strong>No load testing</strong>: Don’t know
-            capacity</li>
-            <li><strong>Weak security</strong>: Security gaps</li>
-            </ol>
-            <h3 id="green-flags-good-practices">Green Flags (Good
-            Practices)</h3>
-            <ol type="1">
-            <li><strong>Clear SLIs/SLOs</strong>: Well-defined and
-            measured</li>
-            <li><strong>Comprehensive monitoring</strong>: Metrics,
-            logs, traces</li>
-            <li><strong>Tested runbooks</strong>: Know how to
-            respond</li>
-            <li><strong>Load tested</strong>: Know capacity limits</li>
-            <li><strong>Secure</strong>: Authentication, authorization,
-            encryption</li>
-            </ol>
-            <hr />
-            <h2 id="prr-decision-matrix">PRR Decision Matrix</h2>
-            <pre class="mermaid"><code>graph TD
+<p><strong>Key insight</strong>: PRR ensures systems are ready for
+production. It’s not about perfection—it’s about identifying and
+mitigating risks.</p>
+<h3 id="prr-scope">PRR Scope</h3>
+<p><strong>What PRR covers</strong>: - Reliability (SLIs/SLOs, error
+budgets) - Observability (monitoring, logging, tracing) - Security
+(authentication, authorization, encryption) - Operations (runbooks,
+on-call, incidents) - Capacity (scaling, load testing)</p>
+<p><strong>What PRR doesn’t cover</strong>: - Feature completeness
+(that’s product review) - Code quality (that’s code review) -
+Performance optimization (that’s performance review)</p>
+<hr />
+<h2 id="staff-level-prr-checklist">Staff-Level PRR Checklist</h2>
+<h3 id="slis-slos-error-budgets">1. SLIs, SLOs &amp; Error Budgets</h3>
+<h4 id="slis-defined">SLIs Defined</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>User-facing SLIs</strong>:
+SLIs measure what users experience</label></li>
+<li><label><input type="checkbox" /><strong>Measurable</strong>: SLIs
+can be measured accurately</label></li>
+<li><label><input type="checkbox" /><strong>Actionable</strong>: SLIs
+change when system behavior changes</label></li>
+<li><label><input type="checkbox" /><strong>Documented</strong>: SLIs
+are documented and understood</label></li>
+</ul>
+<p><strong>Common failures</strong>: - Using internal metrics (CPU,
+memory) as SLIs - SLIs that don’t reflect user experience - SLIs that
+can’t be measured reliably</p>
+<h4 id="slos-set">SLOs Set</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Realistic targets</strong>:
+SLOs are achievable based on baseline</label></li>
+<li><label><input type="checkbox" /><strong>Appropriate for
+criticality</strong>: P0 services have tighter SLOs</label></li>
+<li><label><input type="checkbox" /><strong>Documented</strong>: SLOs
+are documented and communicated</label></li>
+<li><label><input type="checkbox" /><strong>Monitored</strong>: SLO
+compliance is tracked</label></li>
+</ul>
+<p><strong>Common failures</strong>: - SLOs set without baseline
+measurement - SLOs too aggressive (constant violations) - SLOs too lax
+(poor user experience)</p>
+<h4 id="error-budgets">Error Budgets</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Calculated</strong>: Error
+budgets are calculated from SLOs</label></li>
+<li><label><input type="checkbox" /><strong>Policy defined</strong>:
+Error budget policy is defined</label></li>
+<li><label><input type="checkbox" /><strong>Tracked</strong>: Error
+budget consumption is tracked</label></li>
+<li><label><input type="checkbox" /><strong>Alerts configured</strong>:
+Alerts for budget thresholds</label></li>
+</ul>
+<p><strong>Common failures</strong>: - No error budget policy - Error
+budget not tracked - No alerts for budget exhaustion</p>
+<h3 id="observability">2. Observability</h3>
+<h4 id="metrics">Metrics</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Latency metrics</strong>:
+P50, P95, P99 tracked</label></li>
+<li><label><input type="checkbox" /><strong>Throughput metrics</strong>:
+QPS, requests/sec tracked</label></li>
+<li><label><input type="checkbox" /><strong>Error metrics</strong>:
+Error rates, error types tracked</label></li>
+<li><label><input type="checkbox" /><strong>Resource metrics</strong>:
+CPU, memory, I/O tracked</label></li>
+<li><label><input type="checkbox" /><strong>Business metrics</strong>:
+User-facing metrics tracked</label></li>
+<li><label><input type="checkbox" /><strong>Exported correctly</strong>:
+Metrics exported to monitoring system</label></li>
+<li><label><input type="checkbox" /><strong>Retention
+configured</strong>: Metric retention is appropriate</label></li>
+</ul>
+<p><strong>Common failures</strong>: - Missing critical metrics
+(latency, errors) - Metrics not exported correctly - No business
+metrics</p>
+<h4 id="logging">Logging</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Critical events
+logged</strong>: Important events are logged</label></li>
+<li><label><input type="checkbox" /><strong>Appropriate levels</strong>:
+INFO, WARN, ERROR used correctly</label></li>
+<li><label><input type="checkbox" /><strong>Structured logs</strong>:
+Logs are structured (JSON)</label></li>
+<li><label><input type="checkbox" /><strong>Request IDs</strong>: Logs
+include request IDs for correlation</label></li>
+<li><label><input type="checkbox" /><strong>Retention
+configured</strong>: Log retention is appropriate</label></li>
+<li><label><input type="checkbox" /><strong>Searchable</strong>: Logs
+are searchable and queryable</label></li>
+</ul>
+<p><strong>Common failures</strong>: - Too much logging (noise) - Too
+little logging (can’t debug) - Unstructured logs (hard to query) - No
+request IDs (can’t correlate)</p>
+<h4 id="tracing">Tracing</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Critical paths
+traced</strong>: Important operations are traced</label></li>
+<li><label><input type="checkbox" /><strong>Spans well-defined</strong>:
+Spans have clear boundaries</label></li>
+<li><label><input type="checkbox" /><strong>Sampling
+configured</strong>: Trace sampling is appropriate</label></li>
+<li><label><input type="checkbox" /><strong>Cross-service
+correlation</strong>: Traces work across services</label></li>
+<li><label><input type="checkbox" /><strong>Queryable</strong>: Traces
+are queryable</label></li>
+</ul>
+<p><strong>Common failures</strong>: - No tracing - Tracing too
+expensive (100% sampling) - Can’t correlate across services</p>
+<h4 id="dashboards">Dashboards</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Service dashboard</strong>:
+Shows key metrics, health status</label></li>
+<li><label><input type="checkbox" /><strong>SLO dashboard</strong>:
+Shows SLO compliance, error budgets</label></li>
+<li><label><input type="checkbox" /><strong>Capacity dashboard</strong>:
+Shows resource usage, scaling</label></li>
+<li><label><input type="checkbox" /><strong>Business dashboard</strong>:
+Shows user-facing metrics</label></li>
+<li><label><input type="checkbox" /><strong>Accessible</strong>:
+Dashboards accessible to on-call</label></li>
+<li><label><input type="checkbox" /><strong>Fast loading</strong>:
+Dashboards load quickly</label></li>
+</ul>
+<p><strong>Common failures</strong>: - No dashboards - Dashboards too
+complex (hard to understand) - Dashboards don’t load (too many
+metrics)</p>
+<h4 id="alerting">Alerting</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Critical alerts</strong>: P0
+incidents page on-call</label></li>
+<li><label><input type="checkbox" /><strong>Warning alerts</strong>: P1
+incidents notify, don’t page</label></li>
+<li><label><input type="checkbox" /><strong>Info alerts</strong>: P2
+incidents log only</label></li>
+<li><label><input type="checkbox" /><strong>Actionable</strong>: Alerts
+are actionable (clear what to do)</label></li>
+<li><label><input type="checkbox" /><strong>Not too many</strong>: Alert
+fatigue avoided</label></li>
+<li><label><input type="checkbox" /><strong>Thresholds tuned</strong>:
+Alerts not too sensitive/insensitive</label></li>
+<li><label><input type="checkbox" /><strong>Runbooks exist</strong>:
+Alert runbooks exist</label></li>
+<li><label><input type="checkbox" /><strong>Escalation paths</strong>:
+Escalation paths defined</label></li>
+</ul>
+<p><strong>Common failures</strong>: - Too many alerts (alert fatigue) -
+Alerts not actionable (don’t know what to do) - No runbooks (don’t know
+how to respond) - Alerts too sensitive (false positives)</p>
+<h3 id="incident-response">3. Incident Response</h3>
+<h4 id="on-call">On-Call</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Rotation
+established</strong>: On-call rotation exists</label></li>
+<li><label><input type="checkbox" /><strong>Engineers trained</strong>:
+On-call engineers are trained</label></li>
+<li><label><input type="checkbox" /><strong>Procedures
+documented</strong>: On-call procedures documented</label></li>
+<li><label><input type="checkbox" /><strong>Tools available</strong>:
+On-call tools are available</label></li>
+<li><label><input type="checkbox" /><strong>Escalation paths</strong>:
+Escalation paths are clear</label></li>
+</ul>
+<p><strong>Common failures</strong>: - No on-call rotation - On-call
+engineers not trained - No escalation paths</p>
+<h4 id="runbooks">Runbooks</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Common incidents</strong>:
+Runbooks for common issues</label></li>
+<li><label><input type="checkbox" /><strong>Critical failures</strong>:
+Runbooks for critical failures</label></li>
+<li><label><input type="checkbox" /><strong>Recovery
+procedures</strong>: Runbooks include recovery steps</label></li>
+<li><label><input type="checkbox" /><strong>Rollback
+procedures</strong>: Runbooks include rollback steps</label></li>
+<li><label><input type="checkbox" /><strong>Tested</strong>: Runbooks
+are tested</label></li>
+<li><label><input type="checkbox" /><strong>Accessible</strong>:
+Runbooks accessible during incidents</label></li>
+</ul>
+<p><strong>Common failures</strong>: - No runbooks - Runbooks outdated
+(don’t match reality) - Runbooks not tested (don’t work)</p>
+<h4 id="incident-management">Incident Management</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Process defined</strong>:
+Incident response process defined</label></li>
+<li><label><input type="checkbox" /><strong>Communication
+channels</strong>: Communication channels established</label></li>
+<li><label><input type="checkbox" /><strong>Postmortem process</strong>:
+Postmortem process defined</label></li>
+<li><label><input type="checkbox" /><strong>Tracking system</strong>:
+Incident tracking system used</label></li>
+</ul>
+<p><strong>Common failures</strong>: - No incident process - No
+communication channels - No postmortems</p>
+<h3 id="capacity-scaling">4. Capacity &amp; Scaling</h3>
+<h4 id="capacity-planning">Capacity Planning</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Current capacity
+known</strong>: Current load and capacity known</label></li>
+<li><label><input type="checkbox" /><strong>Target capacity</strong>:
+Capacity for launch is provisioned</label></li>
+<li><label><input type="checkbox" /><strong>Growth forecast</strong>:
+Capacity for growth is planned</label></li>
+<li><label><input type="checkbox" /><strong>Scaling limits</strong>:
+Maximum scale is understood</label></li>
+<li><label><input type="checkbox" /><strong>Capacity alerts</strong>:
+Alerts for capacity thresholds</label></li>
+</ul>
+<p><strong>Common failures</strong>: - Don’t know current capacity - No
+growth forecast - No capacity alerts</p>
+<h4 id="auto-scaling">Auto-Scaling</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Configured</strong>:
+Auto-scaling is configured (if applicable)</label></li>
+<li><label><input type="checkbox" /><strong>Policies tuned</strong>:
+Scaling policies are tuned</label></li>
+<li><label><input type="checkbox" /><strong>Limits set</strong>: Scaling
+limits are set (min/max)</label></li>
+<li><label><input type="checkbox" /><strong>Metrics
+appropriate</strong>: Scaling metrics are appropriate</label></li>
+<li><label><input type="checkbox" /><strong>Behavior tested</strong>:
+Scaling behavior is tested</label></li>
+</ul>
+<p><strong>Common failures</strong>: - Auto-scaling not configured -
+Scaling policies not tuned (too aggressive/conservative) - Scaling
+limits not set (unbounded scaling)</p>
+<h4 id="load-testing">Load Testing</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Tests run</strong>: Load
+tests have been run</label></li>
+<li><label><input type="checkbox" /><strong>Expected load</strong>:
+System handles expected load</label></li>
+<li><label><input type="checkbox" /><strong>2× load</strong>: System
+handles 2× expected load</label></li>
+<li><label><input type="checkbox" /><strong>Graceful
+degradation</strong>: System degrades gracefully under
+overload</label></li>
+<li><label><input type="checkbox" /><strong>Bottlenecks
+identified</strong>: Bottlenecks are identified and
+addressed</label></li>
+</ul>
+<p><strong>Common failures</strong>: - No load testing - Load testing
+doesn’t match production - System doesn’t degrade gracefully</p>
+<h3 id="security">5. Security</h3>
+<h4 id="authentication">Authentication</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Required</strong>:
+Authentication is required for all access</label></li>
+<li><label><input type="checkbox" /><strong>Appropriate
+mechanism</strong>: Authentication mechanism is appropriate</label></li>
+<li><label><input type="checkbox" /><strong>Tested</strong>:
+Authentication is tested</label></li>
+<li><label><input type="checkbox" /><strong>Failures logged</strong>:
+Authentication failures are logged</label></li>
+</ul>
+<p><strong>Common failures</strong>: - No authentication - Weak
+authentication - Authentication not tested</p>
+<h4 id="authorization">Authorization</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Checked</strong>:
+Authorization is checked for all operations</label></li>
+<li><label><input type="checkbox" /><strong>Least privilege</strong>:
+Principle of least privilege is followed</label></li>
+<li><label><input type="checkbox" /><strong>Documented</strong>:
+Permissions are documented</label></li>
+<li><label><input type="checkbox" /><strong>Audited</strong>: Access is
+audited</label></li>
+<li><label><input type="checkbox" /><strong>Failures logged</strong>:
+Authorization failures are logged</label></li>
+</ul>
+<p><strong>Common failures</strong>: - No authorization checks - Overly
+permissive permissions - No audit logs</p>
+<h4 id="data-protection">Data Protection</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Encryption at rest</strong>:
+Data is encrypted at rest</label></li>
+<li><label><input type="checkbox" /><strong>Encryption in
+transit</strong>: Data is encrypted in transit (TLS)</label></li>
+<li><label><input type="checkbox" /><strong>Key management</strong>:
+Keys are managed securely</label></li>
+<li><label><input type="checkbox" /><strong>Data
+classification</strong>: Data is classified appropriately</label></li>
+<li><label><input type="checkbox" /><strong>Retention policies</strong>:
+Data retention policies are defined</label></li>
+<li><label><input type="checkbox" /><strong>Deletion
+procedures</strong>: Data deletion procedures exist</label></li>
+</ul>
+<p><strong>Common failures</strong>: - No encryption - Keys stored in
+code - No data retention policies</p>
+<h3 id="change-management">6. Change Management</h3>
+<h4 id="deployment">Deployment</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Process documented</strong>:
+Deployment process is documented</label></li>
+<li><label><input type="checkbox" /><strong>Automated</strong>:
+Deployments are automated</label></li>
+<li><label><input type="checkbox" /><strong>Rollback tested</strong>:
+Rollback procedure is tested</label></li>
+<li><label><input type="checkbox" /><strong>Windows defined</strong>:
+Deployment windows are defined</label></li>
+<li><label><input type="checkbox" /><strong>Approvals defined</strong>:
+Approval process is defined</label></li>
+</ul>
+<p><strong>Common failures</strong>: - Manual deployments - No rollback
+procedure - No deployment windows</p>
+<h4 id="feature-flags">Feature Flags</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Used for risky
+changes</strong>: Feature flags used for risky changes</label></li>
+<li><label><input type="checkbox" /><strong>Kill switches</strong>: Kill
+switches are implemented</label></li>
+<li><label><input type="checkbox" /><strong>Management
+documented</strong>: Flag management is documented</label></li>
+<li><label><input type="checkbox" /><strong>Tested</strong>: Flags are
+tested</label></li>
+</ul>
+<p><strong>Common failures</strong>: - No feature flags - No kill
+switches - Flags not tested</p>
+<h4 id="testing">Testing</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>Unit tests</strong>: Unit
+test coverage is adequate</label></li>
+<li><label><input type="checkbox" /><strong>Integration tests</strong>:
+Integration tests exist</label></li>
+<li><label><input type="checkbox" /><strong>Load tests</strong>: Load
+tests are run regularly</label></li>
+<li><label><input type="checkbox" /><strong>Chaos tests</strong>: Chaos
+tests are considered</label></li>
+<li><label><input type="checkbox" /><strong>Smoke tests</strong>: Smoke
+tests run after deployment</label></li>
+</ul>
+<p><strong>Common failures</strong>: - No tests - Tests don’t catch
+production issues - No load testing</p>
+<hr />
+<h2 id="what-staff-engineers-actually-look-for">What Staff Engineers
+Actually Look For</h2>
+<h3 id="red-flags-must-fix">Red Flags (Must Fix)</h3>
+<ol type="1">
+<li><strong>No SLIs/SLOs</strong>: Can’t measure reliability</li>
+<li><strong>No monitoring</strong>: Can’t detect problems</li>
+<li><strong>No on-call</strong>: Can’t respond to incidents</li>
+<li><strong>No rollback</strong>: Can’t recover from bad
+deployments</li>
+<li><strong>No security</strong>: Vulnerable to attacks</li>
+</ol>
+<h3 id="yellow-flags-should-fix">Yellow Flags (Should Fix)</h3>
+<ol type="1">
+<li><strong>Weak SLIs</strong>: SLIs don’t reflect user experience</li>
+<li><strong>Alert fatigue</strong>: Too many alerts</li>
+<li><strong>No runbooks</strong>: Don’t know how to respond</li>
+<li><strong>No load testing</strong>: Don’t know capacity</li>
+<li><strong>Weak security</strong>: Security gaps</li>
+</ol>
+<h3 id="green-flags-good-practices">Green Flags (Good Practices)</h3>
+<ol type="1">
+<li><strong>Clear SLIs/SLOs</strong>: Well-defined and measured</li>
+<li><strong>Comprehensive monitoring</strong>: Metrics, logs,
+traces</li>
+<li><strong>Tested runbooks</strong>: Know how to respond</li>
+<li><strong>Load tested</strong>: Know capacity limits</li>
+<li><strong>Secure</strong>: Authentication, authorization,
+encryption</li>
+</ol>
+<hr />
+<h2 id="prr-decision-matrix">PRR Decision Matrix</h2>
+<pre class="mermaid"><code>graph TD
     PRR[PRR Review] --&gt; RedFlags{Red Flags?}
     RedFlags --&gt;|Yes| Reject[Reject: Must Fix]
     RedFlags --&gt;|No| YellowFlags{Yellow Flags?}
@@ -506,36 +424,35 @@ jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
     style Reject fill:#ff9999
     style Conditional fill:#ffcc99
     style Approve fill:#99ff99</code></pre>
-            <hr />
-            <h2 id="further-reading">Further Reading</h2>
-            <p><strong>Comprehensive Guide</strong>: <a
-            href="../further-reading/prr-checklist.html">Further Reading:
-            PRR Checklist</a></p>
-            <p><strong>Quick Links</strong>: - “Site Reliability
-            Engineering” (SRE Book) - Production readiness - “The Site
-            Reliability Workbook” - Practical PRR implementation - <a
-            href="../00-meta/prr_template.html">PRR Template</a> - <a
-            href="sli-slo-error-budget.html">SLIs/SLOs</a> - <a
-            href="README.html">Back to Reliability &amp; SRE</a></p>
-            <hr />
-            <h2 id="exercises">Exercises</h2>
-            <ol type="1">
-            <li><p><strong>Run a PRR</strong>: Review a system design
-            using this checklist. What issues do you find?</p></li>
-            <li><p><strong>Fix PRR issues</strong>: A system fails PRR.
-            What are the top 3 issues to fix?</p></li>
-            <li><p><strong>Design for PRR</strong>: Design a system that
-            passes PRR. What do you include?</p></li>
-            </ol>
-            <p><strong>Answer Key</strong>: <a
-            href="../../exercises/answers/prr-checklist-answers.html">View
-            Answers</a></p>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a
+href="../further-reading/prr-checklist.html">Further Reading: PRR
+Checklist</a></p>
+<p><strong>Quick Links</strong>: - “Site Reliability Engineering” (SRE
+Book) - Production readiness - “The Site Reliability Workbook” -
+Practical PRR implementation - <a href="../00-meta/prr_template.html">PRR
+Template</a> - <a href="sli-slo-error-budget.html">SLIs/SLOs</a> - <a
+href="README.html">Back to Reliability &amp; SRE</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol type="1">
+<li><p><strong>Run a PRR</strong>: Review a system design using this
+checklist. What issues do you find?</p></li>
+<li><p><strong>Fix PRR issues</strong>: A system fails PRR. What are the
+top 3 issues to fix?</p></li>
+<li><p><strong>Design for PRR</strong>: Design a system that passes PRR.
+What do you include?</p></li>
+</ol>
+<p><strong>Answer Key</strong>: <a
+href="../../exercises/answers/prr-checklist-answers.html">View
+Answers</a></p>
+            </div>
         </div>
     </main>
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
       mermaid.initialize({ startOnLoad: true });

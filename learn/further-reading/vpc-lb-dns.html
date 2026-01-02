@@ -3,182 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Further Reading: VPC, Load Balancing &amp; DNS</title>
+    <title>Further Reading: VPC, Load Balancing & DNS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
-jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
-    <link rel="stylesheet" href="../learn/css/learn.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uudjLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/learn.css">
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../index.html" class="flex items-center hover:text-gray-600">
+                <a href="/index.html" class="flex items-center hover:text-gray-600">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     <span>Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="/learn/index.html" class="hover:text-indigo-600 font-semibold">Back to Learn Topics</a></li>
+                <li><a href="/aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="main-content">
-            <h1 id="further-reading-vpc-load-balancing-dns">Further
-            Reading: VPC, Load Balancing &amp; DNS</h1>
-            <p><a
-            href="../03-gcp-core-building-blocks/vpc-lb-dns.html">Back to
-            VPC, Load Balancing &amp; DNS</a></p>
-            <hr />
-            <h2 id="gcp-vpc-documentation">GCP VPC Documentation</h2>
-            <p><strong>Official Documentation</strong>: <a
-            href="https://cloud.google.com/vpc/docs">Google Cloud VPC
-            Documentation</a></p>
-            <p><strong>Why it matters</strong>: Comprehensive official
-            documentation on GCP VPC architecture, features, and best
-            practices.</p>
-            <h3 id="key-concepts">Key Concepts</h3>
-            <p><strong>VPC Architecture</strong>: - How VPCs work in GCP
-            - Subnet design and routing - Firewall rules and
-            security</p>
-            <p><strong>Networking</strong>: - Private vs public IPs -
-            VPC peering - Cloud NAT</p>
-            <p><strong>Relevance</strong>: Provides the authoritative
-            reference for GCP VPC implementation details.</p>
-            <h3 id="recommended-sections">Recommended Sections</h3>
-            <ul>
-            <li><strong>VPC Overview</strong>: Understanding VPC
-            concepts</li>
-            <li><strong>Subnets</strong>: Subnet design and
-            configuration</li>
-            <li><strong>Firewall Rules</strong>: Security and access
-            control</li>
-            <li><strong>VPC Peering</strong>: Connecting VPCs</li>
-            <li><strong>Cloud NAT</strong>: Outbound internet
-            access</li>
-            </ul>
-            <hr />
-            <h2 id="gcp-load-balancing-documentation">GCP Load Balancing
-            Documentation</h2>
-            <p><strong>Official Documentation</strong>: <a
-            href="https://cloud.google.com/load-balancing/docs">Google
-            Cloud Load Balancing</a></p>
-            <p><strong>Why it matters</strong>: Detailed documentation
-            on GCP load balancer types, features, and use cases.</p>
-            <h3 id="key-concepts-1">Key Concepts</h3>
-            <p><strong>Load Balancer Types</strong>: - HTTP(S) Load
-            Balancer: Application-level load balancing - Network Load
-            Balancer: TCP/UDP load balancing - Internal Load Balancer:
-            Regional internal load balancing</p>
-            <p><strong>Features</strong>: - SSL termination - Health
-            checks - Session affinity - Geographic routing</p>
-            <p><strong>Relevance</strong>: Provides implementation
-            details and best practices for choosing and configuring load
-            balancers.</p>
-            <h3 id="recommended-sections-1">Recommended Sections</h3>
-            <ul>
-            <li><strong>Load Balancer Types</strong>: Choosing the right
-            load balancer</li>
-            <li><strong>HTTP(S) Load Balancing</strong>:
-            Application-level load balancing</li>
-            <li><strong>Network Load Balancing</strong>: TCP/UDP load
-            balancing</li>
-            <li><strong>Health Checks</strong>: Configuring health
-            checks</li>
-            <li><strong>SSL Certificates</strong>: Managing SSL
-            certificates</li>
-            </ul>
-            <hr />
-            <h2 id="gcp-cloud-dns-documentation">GCP Cloud DNS
-            Documentation</h2>
-            <p><strong>Official Documentation</strong>: <a
-            href="https://cloud.google.com/dns/docs">Google Cloud
-            DNS</a></p>
-            <p><strong>Why it matters</strong>: Documentation on DNS
-            management, performance, and best practices in GCP.</p>
-            <h3 id="key-concepts-2">Key Concepts</h3>
-            <p><strong>DNS Zones</strong>: - Public zones:
-            Internet-facing DNS - Private zones: Internal DNS</p>
-            <p><strong>DNS Policies</strong>: - Geographic routing -
-            Weighted routing - Failover routing</p>
-            <p><strong>Performance</strong>: - DNS caching - TTL
-            configuration - Query performance</p>
-            <p><strong>Relevance</strong>: Provides details on DNS
-            configuration and optimization.</p>
-            <hr />
-            <h2 id="google-cloud-architecture-center">Google Cloud
-            Architecture Center</h2>
-            <p><strong>Resource</strong>: <a
-            href="https://cloud.google.com/architecture">Google Cloud
-            Architecture Center</a></p>
-            <p><strong>Why it matters</strong>: Reference architectures
-            and best practices for common patterns on GCP.</p>
-            <h3 id="key-resources">Key Resources</h3>
-            <p><strong>Networking Patterns</strong>: - Multi-region
-            networking - VPC design patterns - Load balancing
-            patterns</p>
-            <p><strong>Security Patterns</strong>: - Network security -
-            Firewall rules - Private connectivity</p>
-            <p><strong>Relevance</strong>: Provides real-world
-            architecture examples and best practices.</p>
-            <hr />
-            <h2 id="additional-resources">Additional Resources</h2>
-            <h3 id="papers">Papers</h3>
-            <p><strong>“The Datacenter as a Computer”</strong> (Barroso
-            &amp; Hölzle, 2018) - Chapter on datacenter networking - <a
-            href="https://research.google/pubs/pub35290/">Link</a></p>
-            <h3 id="books">Books</h3>
-            <p><strong>“Google Cloud Platform in Action”</strong> by JJ
-            Geewax - Chapter on networking - VPC and load balancing
-            examples</p>
-            <p><strong>“Site Reliability Engineering”</strong> (Google
-            SRE Book) - Chapter on networking - Real-world networking
-            challenges</p>
-            <h3 id="online-resources">Online Resources</h3>
-            <p><strong>Google Cloud Blog</strong>: <a
-            href="https://cloud.google.com/blog/products/networking">Networking
-            Articles</a> - Latest networking features - Best practices
-            and case studies</p>
-            <p><strong>GCP Well-Architected Framework</strong>: <a
-            href="https://cloud.google.com/architecture/framework/networking">Networking</a>
-            - Networking best practices - Design principles</p>
-            <hr />
-            <h2 id="key-takeaways">Key Takeaways</h2>
-            <ol type="1">
-            <li><strong>VPC provides isolation</strong>: Logical network
-            isolation in the cloud</li>
-            <li><strong>Choose right load balancer</strong>: Different
-            types for different use cases</li>
-            <li><strong>DNS affects performance</strong>: TTL and
-            caching impact user experience</li>
-            <li><strong>Security is critical</strong>: Firewall rules
-            and network security are essential</li>
-            <li><strong>Plan for scale</strong>: Design networks for
-            growth and multi-region</li>
-            </ol>
-            <hr />
-            <h2 id="related-topics">Related Topics</h2>
-            <ul>
-            <li><a
-            href="../03-gcp-core-building-blocks/iam-evaluation.html">IAM
-            Evaluation</a> - Network security and IAM</li>
-            <li><a
-            href="../03-gcp-core-building-blocks/gke-internals.html">GKE
-            Internals</a> - Kubernetes networking</li>
-            <li><a
-            href="../06-case-studies/multi-region-api.html">Multi-Region
-            API</a> - Multi-region networking example</li>
-            </ul>
+        <div class="card">
+            <div class="card-content">
+                <h1 id="further-reading-vpc-load-balancing-dns">Further Reading: VPC,
+Load Balancing &amp; DNS</h1>
+<p><a href="../03-gcp-core-building-blocks/vpc-lb-dns.html">Back to VPC,
+Load Balancing &amp; DNS</a></p>
+<hr />
+<h2 id="gcp-vpc-documentation">GCP VPC Documentation</h2>
+<p><strong>Official Documentation</strong>: <a
+href="https://cloud.google.com/vpc/docs">Google Cloud VPC
+Documentation</a></p>
+<p><strong>Why it matters</strong>: Comprehensive official documentation
+on GCP VPC architecture, features, and best practices.</p>
+<h3 id="key-concepts">Key Concepts</h3>
+<p><strong>VPC Architecture</strong>: - How VPCs work in GCP - Subnet
+design and routing - Firewall rules and security</p>
+<p><strong>Networking</strong>: - Private vs public IPs - VPC peering -
+Cloud NAT</p>
+<p><strong>Relevance</strong>: Provides the authoritative reference for
+GCP VPC implementation details.</p>
+<h3 id="recommended-sections">Recommended Sections</h3>
+<ul>
+<li><strong>VPC Overview</strong>: Understanding VPC concepts</li>
+<li><strong>Subnets</strong>: Subnet design and configuration</li>
+<li><strong>Firewall Rules</strong>: Security and access control</li>
+<li><strong>VPC Peering</strong>: Connecting VPCs</li>
+<li><strong>Cloud NAT</strong>: Outbound internet access</li>
+</ul>
+<hr />
+<h2 id="gcp-load-balancing-documentation">GCP Load Balancing
+Documentation</h2>
+<p><strong>Official Documentation</strong>: <a
+href="https://cloud.google.com/load-balancing/docs">Google Cloud Load
+Balancing</a></p>
+<p><strong>Why it matters</strong>: Detailed documentation on GCP load
+balancer types, features, and use cases.</p>
+<h3 id="key-concepts-1">Key Concepts</h3>
+<p><strong>Load Balancer Types</strong>: - HTTP(S) Load Balancer:
+Application-level load balancing - Network Load Balancer: TCP/UDP load
+balancing - Internal Load Balancer: Regional internal load balancing</p>
+<p><strong>Features</strong>: - SSL termination - Health checks -
+Session affinity - Geographic routing</p>
+<p><strong>Relevance</strong>: Provides implementation details and best
+practices for choosing and configuring load balancers.</p>
+<h3 id="recommended-sections-1">Recommended Sections</h3>
+<ul>
+<li><strong>Load Balancer Types</strong>: Choosing the right load
+balancer</li>
+<li><strong>HTTP(S) Load Balancing</strong>: Application-level load
+balancing</li>
+<li><strong>Network Load Balancing</strong>: TCP/UDP load balancing</li>
+<li><strong>Health Checks</strong>: Configuring health checks</li>
+<li><strong>SSL Certificates</strong>: Managing SSL certificates</li>
+</ul>
+<hr />
+<h2 id="gcp-cloud-dns-documentation">GCP Cloud DNS Documentation</h2>
+<p><strong>Official Documentation</strong>: <a
+href="https://cloud.google.com/dns/docs">Google Cloud DNS</a></p>
+<p><strong>Why it matters</strong>: Documentation on DNS management,
+performance, and best practices in GCP.</p>
+<h3 id="key-concepts-2">Key Concepts</h3>
+<p><strong>DNS Zones</strong>: - Public zones: Internet-facing DNS -
+Private zones: Internal DNS</p>
+<p><strong>DNS Policies</strong>: - Geographic routing - Weighted
+routing - Failover routing</p>
+<p><strong>Performance</strong>: - DNS caching - TTL configuration -
+Query performance</p>
+<p><strong>Relevance</strong>: Provides details on DNS configuration and
+optimization.</p>
+<hr />
+<h2 id="google-cloud-architecture-center">Google Cloud Architecture
+Center</h2>
+<p><strong>Resource</strong>: <a
+href="https://cloud.google.com/architecture">Google Cloud Architecture
+Center</a></p>
+<p><strong>Why it matters</strong>: Reference architectures and best
+practices for common patterns on GCP.</p>
+<h3 id="key-resources">Key Resources</h3>
+<p><strong>Networking Patterns</strong>: - Multi-region networking - VPC
+design patterns - Load balancing patterns</p>
+<p><strong>Security Patterns</strong>: - Network security - Firewall
+rules - Private connectivity</p>
+<p><strong>Relevance</strong>: Provides real-world architecture examples
+and best practices.</p>
+<hr />
+<h2 id="additional-resources">Additional Resources</h2>
+<h3 id="papers">Papers</h3>
+<p><strong>“The Datacenter as a Computer”</strong> (Barroso &amp;
+Hölzle, 2018) - Chapter on datacenter networking - <a
+href="https://research.google/pubs/pub35290/">Link</a></p>
+<h3 id="books">Books</h3>
+<p><strong>“Google Cloud Platform in Action”</strong> by JJ Geewax -
+Chapter on networking - VPC and load balancing examples</p>
+<p><strong>“Site Reliability Engineering”</strong> (Google SRE Book) -
+Chapter on networking - Real-world networking challenges</p>
+<h3 id="online-resources">Online Resources</h3>
+<p><strong>Google Cloud Blog</strong>: <a
+href="https://cloud.google.com/blog/products/networking">Networking
+Articles</a> - Latest networking features - Best practices and case
+studies</p>
+<p><strong>GCP Well-Architected Framework</strong>: <a
+href="https://cloud.google.com/architecture/framework/networking">Networking</a>
+- Networking best practices - Design principles</p>
+<hr />
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ol type="1">
+<li><strong>VPC provides isolation</strong>: Logical network isolation
+in the cloud</li>
+<li><strong>Choose right load balancer</strong>: Different types for
+different use cases</li>
+<li><strong>DNS affects performance</strong>: TTL and caching impact
+user experience</li>
+<li><strong>Security is critical</strong>: Firewall rules and network
+security are essential</li>
+<li><strong>Plan for scale</strong>: Design networks for growth and
+multi-region</li>
+</ol>
+<hr />
+<h2 id="related-topics">Related Topics</h2>
+<ul>
+<li><a href="../03-gcp-core-building-blocks/iam-evaluation.html">IAM
+Evaluation</a> - Network security and IAM</li>
+<li><a href="../03-gcp-core-building-blocks/gke-internals.html">GKE
+Internals</a> - Kubernetes networking</li>
+<li><a href="../06-case-studies/multi-region-api.html">Multi-Region
+API</a> - Multi-region networking example</li>
+</ul>
+            </div>
         </div>
     </main>
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script>
       mermaid.initialize({ startOnLoad: true });
