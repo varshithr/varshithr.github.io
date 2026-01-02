@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Low-Level Design Patterns</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
+jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="../learn/css/learn.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../index.html" class="flex items-center hover:text-gray-600">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span>Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="main-content">
+            <h1 id="low-level-design-patterns">Low-Level Design
+            Patterns</h1>
+            <p>Implementation patterns for building robust distributed
+            systems: rate limiting, circuit breakers, concurrency, and
+            more.</p>
+            <h2 id="overview">Overview</h2>
+            <p>This chapter covers common patterns used in low-level
+            system design: - <strong>Rate limiting</strong>: Controlling
+            request rates - <strong>Circuit breakers</strong>:
+            Preventing cascading failures -
+            <strong>Concurrency</strong>: Safe concurrent programming -
+            <strong>Idempotency</strong>: Making operations safe to
+            retry</p>
+            <h2 id="topics">Topics</h2>
+            <ol type="1">
+            <li><a href="rate-limiting.html">Rate Limiter
+            Implementations</a>
+            <ul>
+            <li>Token bucket algorithm</li>
+            <li>Sliding window log</li>
+            <li>Distributed rate limiting</li>
+            <li>Correctness properties</li>
+            </ul></li>
+            <li><a href="circuit-breakers.html">Circuit Breaker
+            Pattern</a>
+            <ul>
+            <li>Three states: closed, open, half-open</li>
+            <li>Implementation strategies</li>
+            <li>Integration with retries</li>
+            </ul></li>
+            <li><a href="concurrency.html">Concurrency Primitives</a>
+            <ul>
+            <li>Locks, semaphores, barriers</li>
+            <li>Lock-free data structures</li>
+            <li>Deadlock prevention</li>
+            </ul></li>
+            <li><a href="idempotency-patterns.html">Idempotency
+            Patterns</a>
+            <ul>
+            <li>Idempotency keys</li>
+            <li>Deduplication strategies</li>
+            <li>Idempotent APIs</li>
+            </ul></li>
+            </ol>
+            <h2 id="learning-objectives">Learning Objectives</h2>
+            <p>After completing this chapter, you should be able to: -
+            Implement rate limiters correctly - Use circuit breakers to
+            prevent failures - Write safe concurrent code - Design
+            idempotent APIs</p>
+            <h2 id="prerequisites">Prerequisites</h2>
+            <ul>
+            <li><a href="../02-distributed-systems/README.html">Phase 1:
+            Distributed Systems</a></li>
+            <li>Programming experience in at least one language</li>
+            </ul>
+            <h2 id="next-steps">Next Steps</h2>
+            <ul>
+            <li><a href="../06-case-studies/README.html">Phase 4: Case
+            Studies</a></li>
+            <li><a href="../INDEX.html">Back to Index</a></li>
+            </ul>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>

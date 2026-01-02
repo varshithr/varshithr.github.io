@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Answer Key: Rate Limiter Implementations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
+jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../learn/css/learn.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../index.html" class="flex items-center hover:text-gray-600">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span>Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="main-content">
+            <h1 id="answer-key-rate-limiter-implementations">Answer Key:
+            Rate Limiter Implementations</h1>
+            <p><a
+            href="../../05-llD-patterns/rate-limiting.md#exercises">Back
+            to Exercises</a></p>
+            <hr />
+            <h2 id="exercise-1-implement-token-bucket">Exercise 1:
+            Implement Token Bucket</h2>
+            <p><strong>Question</strong>: Implement a token bucket rate
+            limiter. What are the edge cases?</p>
+            <h3 id="answer">Answer</h3>
+            <p><strong>Goal</strong>: Implement token bucket rate
+            limiter with edge case handling</p>
+            <h3 id="implementation">Implementation</h3>
+            <p><strong>Python Implementation</strong>:</p>
+            <div class="sourceCode" id="cb1"><pre
+            class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TokenBucket:</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, capacity, rate):</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">        capacity: Maximum tokens (burst size)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">        rate: Tokens added per second (sustained rate)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.capacity <span class="op">=</span> capacity</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.rate <span class="op">=</span> rate</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.tokens <span class="op">=</span> capacity</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.last_update <span class="op">=</span> time.time()</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.lock <span class="op">=</span> threading.Lock()</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> allow_request(<span class="va">self</span>, tokens_needed<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">        Check if request is allowed.</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">        Returns True if allowed, False otherwise.</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="va">self</span>.lock:</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Add tokens based on time elapsed</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            now <span class="op">=</span> time.time()</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>            time_elapsed <span class="op">=</span> now <span class="op">-</span> <span class="va">self</span>.last_update</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>            tokens_to_add <span class="op">=</span> time_elapsed <span class="op">*</span> <span class="va">self</span>.rate</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.tokens <span class="op">=</span> <span class="bu">min</span>(<span class="va">self</span>.capacity, <span class="va">self</span>.tokens <span class="op">+</span> tokens_to_add)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.last_update <span class="op">=</span> now</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Check if enough tokens</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="va">self</span>.tokens <span class="op">&gt;=</span> tokens_needed:</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>                <span class="va">self</span>.tokens <span class="op">-=</span> tokens_needed</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> <span class="va">False</span></span></code></pre></div>
+            <h3 id="edge-cases">Edge Cases</h3>
+            <p><strong>1. Concurrent Access</strong></p>
+            <p><strong>Issue</strong>: Multiple threads accessing bucket
+            simultaneously</p>
+            <p><strong>Solution</strong>: Use locks (threading.Lock) to
+            ensure thread safety</p>
+            <p><strong>2. Clock Skew</strong></p>
+            <p><strong>Issue</strong>: System clock changes (NTP
+            updates, time adjustments)</p>
+            <p><strong>Problem</strong>: Time calculations become
+            incorrect</p>
+            <p><strong>Solution</strong>: - Use monotonic clock
+            (<code>time.monotonic()</code>) instead of wall clock - Or
+            handle clock jumps gracefully</p>
+            <p><strong>3. First Request</strong></p>
+            <p><strong>Issue</strong>: First request after
+            initialization</p>
+            <p><strong>Solution</strong>: Initialize
+            <code>last_update</code> to current time, start with full
+            tokens</p>
+            <p><strong>4. Long Idle Period</strong></p>
+            <p><strong>Issue</strong>: No requests for long time, tokens
+            accumulate</p>
+            <p><strong>Problem</strong>: May allow burst larger than
+            intended</p>
+            <p><strong>Solution</strong>: Already handled (tokens capped
+            at capacity)</p>
+            <p><strong>5. Very High Rate</strong></p>
+            <p><strong>Issue</strong>: Rate higher than capacity</p>
+            <p><strong>Problem</strong>: Tokens added faster than
+            capacity</p>
+            <p><strong>Solution</strong>: Already handled (tokens capped
+            at capacity)</p>
+            <p><strong>6. Zero or Negative Values</strong></p>
+            <p><strong>Issue</strong>: Invalid capacity or rate
+            values</p>
+            <p><strong>Solution</strong>: Validate inputs, raise errors
+            for invalid values</p>
+            <p><strong>7. Precision Issues</strong></p>
+            <p><strong>Issue</strong>: Floating point precision in time
+            calculations</p>
+            <p><strong>Problem</strong>: Small errors accumulate</p>
+            <p><strong>Solution</strong>: Use high-precision time, or
+            use integer-based calculations</p>
+            <h3 id="improved-implementation">Improved
+            Implementation</h3>
+            <div class="sourceCode" id="cb2"><pre
+            class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> threading</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TokenBucket:</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, capacity, rate):</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> capacity <span class="op">&lt;=</span> <span class="dv">0</span> <span class="kw">or</span> rate <span class="op">&lt;=</span> <span class="dv">0</span>:</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">&quot;Capacity and rate must be positive&quot;</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.capacity <span class="op">=</span> <span class="bu">float</span>(capacity)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.rate <span class="op">=</span> <span class="bu">float</span>(rate)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.tokens <span class="op">=</span> <span class="bu">float</span>(capacity)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.last_update <span class="op">=</span> time.monotonic()  <span class="co"># Use monotonic clock</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.lock <span class="op">=</span> threading.Lock()</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> allow_request(<span class="va">self</span>, tokens_needed<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="va">self</span>.lock:</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Add tokens based on time elapsed</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>            now <span class="op">=</span> time.monotonic()</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>            time_elapsed <span class="op">=</span> now <span class="op">-</span> <span class="va">self</span>.last_update</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Handle clock jumps (shouldn&#39;t happen with monotonic, but be safe)</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> time_elapsed <span class="op">&lt;</span> <span class="dv">0</span>:</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                time_elapsed <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>            tokens_to_add <span class="op">=</span> time_elapsed <span class="op">*</span> <span class="va">self</span>.rate</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.tokens <span class="op">=</span> <span class="bu">min</span>(<span class="va">self</span>.capacity, <span class="va">self</span>.tokens <span class="op">+</span> tokens_to_add)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.last_update <span class="op">=</span> now</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Check if enough tokens</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="va">self</span>.tokens <span class="op">&gt;=</span> tokens_needed:</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>                <span class="va">self</span>.tokens <span class="op">-=</span> tokens_needed</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> get_tokens_available(<span class="va">self</span>):</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Get current number of tokens available&quot;&quot;&quot;</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="va">self</span>.lock:</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>            now <span class="op">=</span> time.monotonic()</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>            time_elapsed <span class="op">=</span> now <span class="op">-</span> <span class="va">self</span>.last_update</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> time_elapsed <span class="op">&lt;</span> <span class="dv">0</span>:</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>                time_elapsed <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>            tokens_to_add <span class="op">=</span> time_elapsed <span class="op">*</span> <span class="va">self</span>.rate</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>            current_tokens <span class="op">=</span> <span class="bu">min</span>(<span class="va">self</span>.capacity, <span class="va">self</span>.tokens <span class="op">+</span> tokens_to_add)</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> current_tokens</span></code></pre></div>
+            <h3 id="answer-1">Answer</h3>
+            <p><strong>Token Bucket Implementation</strong>:</p>
+            <p><strong>Key components</strong>: - Capacity (burst size)
+            - Rate (tokens per second) - Tokens (current count) - Last
+            update time - Lock (for thread safety)</p>
+            <p><strong>Edge cases</strong>: 1. <strong>Concurrent
+            access</strong>: Use locks for thread safety 2.
+            <strong>Clock skew</strong>: Use monotonic clock 3.
+            <strong>First request</strong>: Initialize last_update to
+            current time 4. <strong>Long idle</strong>: Tokens capped at
+            capacity 5. <strong>High rate</strong>: Tokens capped at
+            capacity 6. <strong>Invalid inputs</strong>: Validate
+            capacity and rate 7. <strong>Precision</strong>: Use float
+            or high-precision calculations</p>
+            <p><strong>Key principles</strong>: - <strong>Thread
+            safety</strong>: Use locks - <strong>Clock
+            handling</strong>: Use monotonic clock - <strong>Input
+            validation</strong>: Validate inputs -
+            <strong>Precision</strong>: Handle floating point
+            precision</p>
+            <hr />
+            <h2 id="exercise-2-compare-algorithms">Exercise 2: Compare
+            Algorithms</h2>
+            <p><strong>Question</strong>: Compare token bucket vs
+            sliding window log. When would you use each?</p>
+            <h3 id="answer-2">Answer</h3>
+            <p><strong>Goal</strong>: Understand tradeoffs between token
+            bucket and sliding window log</p>
+            <h3 id="comparison">Comparison</h3>
+            <table>
+            <thead>
+            <tr class="header">
+            <th>Aspect</th>
+            <th>Token Bucket</th>
+            <th>Sliding Window Log</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="odd">
+            <td><strong>Accuracy</strong></td>
+            <td>Medium (approximate)</td>
+            <td>High (precise)</td>
+            </tr>
+            <tr class="even">
+            <td><strong>Memory</strong></td>
+            <td>O(1)</td>
+            <td>O(n) where n = requests in window</td>
+            </tr>
+            <tr class="odd">
+            <td><strong>CPU</strong></td>
+            <td>O(1)</td>
+            <td>O(n) to clean old entries</td>
+            </tr>
+            <tr class="even">
+            <td><strong>Burst Handling</strong></td>
+            <td>Yes (allows bursts)</td>
+            <td>No (strict limit)</td>
+            </tr>
+            <tr class="odd">
+            <td><strong>Complexity</strong></td>
+            <td>Simple</td>
+            <td>More complex</td>
+            </tr>
+            <tr class="even">
+            <td><strong>Distributed</strong></td>
+            <td>Easy (Redis counters)</td>
+            <td>Hard (need to sync logs)</td>
+            </tr>
+            </tbody>
+            </table>
+            <h3 id="when-to-use-token-bucket">When to Use Token
+            Bucket</h3>
+            <p><strong>Use token bucket when</strong>: - <strong>Burst
+            handling needed</strong>: Need to allow bursts up to
+            capacity - <strong>Memory constrained</strong>: Limited
+            memory available - <strong>High throughput</strong>: Need to
+            handle many requests - <strong>Simple
+            implementation</strong>: Want simple, efficient solution -
+            <strong>Distributed</strong>: Need distributed rate
+            limiting</p>
+            <p><strong>Examples</strong>: - API rate limiting (allow
+            bursts) - Network traffic shaping - Resource allocation</p>
+            <h3 id="when-to-use-sliding-window-log">When to Use Sliding
+            Window Log</h3>
+            <p><strong>Use sliding window log when</strong>: -
+            <strong>Accuracy critical</strong>: Need precise limit
+            enforcement - <strong>Memory available</strong>: Have memory
+            for request logs - <strong>Low throughput</strong>: Fewer
+            requests (memory manageable) - <strong>Strict
+            limits</strong>: Need strict limit (no bursts) -
+            <strong>Single server</strong>: Not distributed</p>
+            <p><strong>Examples</strong>: - Payment processing (strict
+            limits) - Critical operations (precise control) - Low-volume
+            APIs</p>
+            <h3 id="hybrid-approach">Hybrid Approach</h3>
+            <p><strong>Best of both worlds</strong>: - Use token bucket
+            for high-volume, burst-tolerant scenarios - Use sliding
+            window log for low-volume, accuracy-critical scenarios - Or
+            use sliding window counter (compromise)</p>
+            <h3 id="answer-3">Answer</h3>
+            <p><strong>Token Bucket</strong>: - <strong>Use
+            when</strong>: Burst handling needed, memory constrained,
+            high throughput, distributed - <strong>Pros</strong>:
+            Simple, efficient, allows bursts, low memory -
+            <strong>Cons</strong>: Less accurate, approximate</p>
+            <p><strong>Sliding Window Log</strong>: - <strong>Use
+            when</strong>: Accuracy critical, memory available, low
+            throughput, strict limits - <strong>Pros</strong>: Precise,
+            accurate limit enforcement - <strong>Cons</strong>: High
+            memory, high CPU, complex, hard to distribute</p>
+            <p><strong>Recommendation</strong>: - <strong>Most
+            cases</strong>: Use token bucket (simpler, more efficient) -
+            <strong>Critical cases</strong>: Use sliding window log
+            (more accurate) - <strong>Compromise</strong>: Use sliding
+            window counter (balance)</p>
+            <hr />
+            <h2 id="exercise-3-distributed-rate-limiting">Exercise 3:
+            Distributed Rate Limiting</h2>
+            <p><strong>Question</strong>: Design a distributed rate
+            limiter. How do you ensure consistency?</p>
+            <h3 id="answer-4">Answer</h3>
+            <p><strong>Goal</strong>: Rate limiting across multiple
+            servers with consistency</p>
+            <h3 id="challenge">Challenge</h3>
+            <p><strong>Problem</strong>: Multiple servers need to share
+            rate limit state</p>
+            <p><strong>Requirements</strong>: - Consistent limits across
+            servers - Low latency - High availability - Accurate</p>
+            <h3 id="solution-options">Solution Options</h3>
+            <p><strong>1. Centralized Store (Redis)</strong></p>
+            <p><strong>Architecture</strong>: - All servers check Redis
+            for rate limits - Redis stores counters/tokens - Atomic
+            operations ensure consistency</p>
+            <p><strong>Implementation</strong>:</p>
+            <div class="sourceCode" id="cb3"><pre
+            class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> redis</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DistributedTokenBucket:</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, redis_client, key_prefix, capacity, rate):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.redis <span class="op">=</span> redis_client</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.key_prefix <span class="op">=</span> key_prefix</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.capacity <span class="op">=</span> capacity</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.rate <span class="op">=</span> rate</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> allow_request(<span class="va">self</span>, client_id, tokens_needed<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        key <span class="op">=</span> <span class="ss">f&quot;</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>key_prefix<span class="sc">}</span><span class="ss">:</span><span class="sc">{</span>client_id<span class="sc">}</span><span class="ss">&quot;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        now <span class="op">=</span> time.time()</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Use Redis Lua script for atomicity</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        lua_script <span class="op">=</span> <span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="st">        local key = KEYS[1]</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="st">        local capacity = tonumber(ARGV[1])</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="st">        local rate = tonumber(ARGV[2])</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="st">        local tokens_needed = tonumber(ARGV[3])</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="st">        local now = tonumber(ARGV[4])</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="st">        local bucket = redis.call(&#39;HMGET&#39;, key, &#39;tokens&#39;, &#39;last_update&#39;)</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="st">        local tokens = tonumber(bucket[1]) or capacity</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="st">        local last_update = tonumber(bucket[2]) or now</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="st">        local time_elapsed = now - last_update</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="st">        local tokens_to_add = time_elapsed * rate</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="st">        tokens = math.min(capacity, tokens + tokens_to_add)</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="st">        if tokens &gt;= tokens_needed then</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="st">            tokens = tokens - tokens_needed</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="st">            redis.call(&#39;HMSET&#39;, key, &#39;tokens&#39;, tokens, &#39;last_update&#39;, now)</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="st">            redis.call(&#39;EXPIRE&#39;, key, 3600)  -- TTL</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="st">            return 1</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="st">        else</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="st">            redis.call(&#39;HMSET&#39;, key, &#39;tokens&#39;, tokens, &#39;last_update&#39;, now)</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="st">            redis.call(&#39;EXPIRE&#39;, key, 3600)</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="st">            return 0</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="st">        end</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="st">        &quot;&quot;&quot;</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> <span class="va">self</span>.redis.<span class="bu">eval</span>(lua_script, <span class="dv">1</span>, key, </span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>                                 <span class="va">self</span>.capacity, <span class="va">self</span>.rate, </span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>                                 tokens_needed, now)</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> result <span class="op">==</span> <span class="dv">1</span></span></code></pre></div>
+            <p><strong>Pros</strong>: - Consistent (single source of
+            truth) - Accurate - Atomic operations</p>
+            <p><strong>Cons</strong>: - Redis is single point of failure
+            - Network latency - Redis capacity</p>
+            <p><strong>2. Distributed Counters</strong></p>
+            <p><strong>Architecture</strong>: - Each server maintains
+            local counter - Periodically sync counters - Use consensus
+            algorithm</p>
+            <p><strong>Implementation</strong>: - Use Raft or Paxos for
+            consensus - More complex, eventual consistency</p>
+            <p><strong>Pros</strong>: - No single point of failure -
+            Lower latency (local checks)</p>
+            <p><strong>Cons</strong>: - Less accurate (eventual
+            consistency) - More complex - Higher overhead</p>
+            <p><strong>3. Client-Side Enforcement</strong></p>
+            <p><strong>Architecture</strong>: - Client enforces rate
+            limit - Server validates - Use tokens or quotas</p>
+            <p><strong>Pros</strong>: - Reduces server load - Lower
+            latency</p>
+            <p><strong>Cons</strong>: - Not secure (client can bypass) -
+            Less accurate</p>
+            <h3 id="recommended-solution">Recommended Solution</h3>
+            <p><strong>Use Centralized Store (Redis) with</strong>: -
+            <strong>Redis Cluster</strong>: For high availability -
+            <strong>Lua scripts</strong>: For atomicity -
+            <strong>TTL</strong>: For cleanup - <strong>Connection
+            pooling</strong>: For performance</p>
+            <h3 id="consistency-guarantees">Consistency Guarantees</h3>
+            <p><strong>Strong Consistency</strong>: - Use Redis with Lua
+            scripts (atomic operations) - Single Redis instance or Redis
+            Cluster with strong consistency</p>
+            <p><strong>Eventual Consistency</strong>: - Use distributed
+            counters - Accept some inconsistency for better
+            performance</p>
+            <h3 id="answer-5">Answer</h3>
+            <p><strong>Distributed Rate Limiter Design</strong>:</p>
+            <p><strong>Architecture</strong>: <strong>Centralized Store
+            (Redis)</strong></p>
+            <p><strong>Components</strong>: 1. <strong>Redis</strong>:
+            Stores rate limit state (counters/tokens) 2. <strong>Lua
+            scripts</strong>: Atomic operations for consistency 3.
+            <strong>Key structure</strong>:
+            <code>rate_limit:{client_id}</code> or
+            <code>rate_limit:{user_id}</code> 4. <strong>TTL</strong>:
+            Expire keys after window (cleanup)</p>
+            <p><strong>Consistency</strong>: - <strong>Atomic
+            operations</strong>: Lua scripts ensure atomicity -
+            <strong>Single source of truth</strong>: Redis is
+            authoritative - <strong>Strong consistency</strong>: All
+            servers see same state</p>
+            <p><strong>High Availability</strong>: - <strong>Redis
+            Cluster</strong>: Multiple Redis nodes -
+            <strong>Failover</strong>: Automatic failover -
+            <strong>Replication</strong>: Data replicated</p>
+            <p><strong>Performance</strong>: - <strong>Connection
+            pooling</strong>: Reuse connections -
+            <strong>Pipeline</strong>: Batch operations - <strong>Local
+            caching</strong>: Cache recent decisions (with TTL)</p>
+            <p><strong>Tradeoffs</strong>: - <strong>Consistency vs
+            Performance</strong>: Strong consistency has higher latency
+            - <strong>Accuracy vs Complexity</strong>: Centralized is
+            simpler but has single point of failure</p>
+            <p><strong>Best practice</strong>: Use Redis Cluster with
+            Lua scripts for strong consistency and high
+            availability.</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observability Basics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
+jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="../learn/css/learn.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../index.html" class="flex items-center hover:text-gray-600">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span>Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="main-content">
+            <h1 id="observability-basics">Observability Basics</h1>
+            <p><strong>One-line summary</strong>: What to measure, why
+            it matters, and how to build an observability contract for
+            production systems.</p>
+            <p><strong>Prerequisites</strong>: Basic understanding of
+            monitoring and logging.</p>
+            <hr />
+            <h2 id="mental-model">Mental Model</h2>
+            <h3 id="the-three-pillars-of-observability">The Three
+            Pillars of Observability</h3>
+            <pre class="mermaid"><code>graph TD
+    Observability[Observability] --&gt; Metrics[Metrics]
+    Observability --&gt; Logs[Logs]
+    Observability --&gt; Traces[Traces]
+
+    Metrics --&gt; Questions[What?&lt;br/&gt;How many?]
+    Logs --&gt; Events[What happened?&lt;br/&gt;When?]
+    Traces --&gt; Flow[How?&lt;br/&gt;Where?]
+
+    style Observability fill:#99ccff
+    style Metrics fill:#ffcc99
+    style Logs fill:#99ff99
+    style Traces fill:#ff9999</code></pre>
+            <p><strong>Key insight</strong>: Metrics tell you
+            <strong>what</strong> is happening, logs tell you
+            <strong>what happened</strong>, traces tell you
+            <strong>how</strong> it happened.</p>
+            <h3 id="observability-vs-monitoring">Observability vs
+            Monitoring</h3>
+            <p><strong>Monitoring</strong>: Pre-defined metrics and
+            alerts (you know what to look for)</p>
+            <p><strong>Observability</strong>: Ability to ask new
+            questions and explore (you don’t know what to look for)</p>
+            <p><strong>Both are needed</strong>: Monitoring for known
+            issues, observability for unknown issues.</p>
+            <hr />
+            <h2 id="metrics">Metrics</h2>
+            <h3 id="what-are-metrics">What Are Metrics?</h3>
+            <p><strong>Metrics</strong>: Numerical measurements over
+            time.</p>
+            <p><strong>Types</strong>: - <strong>Counters</strong>:
+            Incrementing values (requests, errors) -
+            <strong>Gauges</strong>: Current values (queue depth, memory
+            usage) - <strong>Histograms</strong>: Distribution of values
+            (latency, request size)</p>
+            <h3 id="what-to-measure">What to Measure</h3>
+            <h4 id="service-metrics">Service Metrics</h4>
+            <pre class="mermaid"><code>graph LR
+    Service[Service] --&gt; Latency[Latency&lt;br/&gt;P50/P95/P99]
+    Service --&gt; Throughput[Throughput&lt;br/&gt;QPS]
+    Service --&gt; Errors[Errors&lt;br/&gt;Rate &amp; Types]
+    Service --&gt; Availability[Availability&lt;br/&gt;Success Rate]
+
+    style Service fill:#99ccff
+    style Latency fill:#ffcc99
+    style Errors fill:#ff9999</code></pre>
+            <p><strong>Latency</strong>: - <strong>P50
+            (median)</strong>: Typical user experience -
+            <strong>P95</strong>: 95% of users experience this or better
+            - <strong>P99</strong>: 99% of users experience this or
+            better - <strong>Why</strong>: Tail latency matters more
+            than average</p>
+            <p><strong>Throughput</strong>: - <strong>QPS</strong>:
+            Queries per second - <strong>Requests/sec</strong>: Requests
+            per second - <strong>Why</strong>: Understand system
+            capacity</p>
+            <p><strong>Errors</strong>: - <strong>Error rate</strong>:
+            Errors per second - <strong>Error types</strong>: Breakdown
+            by error type - <strong>Why</strong>: Understand failure
+            modes</p>
+            <p><strong>Availability</strong>: - <strong>Success
+            rate</strong>: Successful requests / total requests -
+            <strong>Uptime</strong>: Fraction of time service is up -
+            <strong>Why</strong>: Measure reliability</p>
+            <h4 id="resource-metrics">Resource Metrics</h4>
+            <p><strong>CPU</strong>: Utilization, load average
+            <strong>Memory</strong>: Usage, available
+            <strong>Disk</strong>: Usage, I/O operations, latency
+            <strong>Network</strong>: Bandwidth, packets, errors</p>
+            <p><strong>Why</strong>: Understand resource constraints and
+            bottlenecks.</p>
+            <h4 id="business-metrics">Business Metrics</h4>
+            <p><strong>User-facing metrics</strong>: Active users,
+            feature usage, conversions</p>
+            <p><strong>Why</strong>: Connect technical metrics to
+            business outcomes.</p>
+            <h3 id="metric-cardinality">Metric Cardinality</h3>
+            <p><strong>Cardinality</strong>: Number of unique metric
+            combinations.</p>
+            <p><strong>Low cardinality</strong>:
+            <code>http_requests_total{method="GET",status="200"}</code>
+            (good)</p>
+            <p><strong>High cardinality</strong>:
+            <code>http_requests_total{method="GET",status="200",user_id="12345"}</code>
+            (bad)</p>
+            <p><strong>Why</strong>: High cardinality metrics explode
+            storage and query costs.</p>
+            <p><strong>Best practice</strong>: Use low-cardinality
+            labels, use logs/traces for high-cardinality data.</p>
+            <hr />
+            <h2 id="logs">Logs</h2>
+            <h3 id="what-are-logs">What Are Logs?</h3>
+            <p><strong>Logs</strong>: Timestamped events with
+            context.</p>
+            <p><strong>Structure</strong>: - <strong>Timestamp</strong>:
+            When it happened - <strong>Level</strong>: INFO, WARN, ERROR
+            - <strong>Message</strong>: What happened -
+            <strong>Context</strong>: Additional data (request ID, user
+            ID, etc.)</p>
+            <h3 id="what-to-log">What to Log</h3>
+            <h4 id="critical-events">Critical Events</h4>
+            <pre class="mermaid"><code>graph TD
+    Request[Request] --&gt; Start[Request Started]
+    Request --&gt; Process[Processing]
+    Process --&gt; Success{Success?}
+    Success --&gt;|Yes| Complete[Request Completed]
+    Success --&gt;|No| Error[Error Occurred]
+
+    Start --&gt; Log[Log with Request ID]
+    Complete --&gt; Log
+    Error --&gt; Log
+
+    style Log fill:#ffcc99
+    style Error fill:#ff9999</code></pre>
+            <p><strong>Request lifecycle</strong>: - Request started
+            (with request ID) - Request completed (with latency, status)
+            - Errors (with stack trace, context)</p>
+            <p><strong>Why</strong>: Can trace request through system,
+            debug issues.</p>
+            <h4 id="structured-logging">Structured Logging</h4>
+            <p><strong>Structured logs</strong>: JSON format with
+            fields.</p>
+            <p><strong>Example</strong>:</p>
+            <div class="sourceCode" id="cb4"><pre
+            class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2024-01-01T12:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;level&quot;</span><span class="fu">:</span> <span class="st">&quot;INFO&quot;</span><span class="fu">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Request completed&quot;</span><span class="fu">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;request_id&quot;</span><span class="fu">:</span> <span class="st">&quot;abc123&quot;</span><span class="fu">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;method&quot;</span><span class="fu">:</span> <span class="st">&quot;GET&quot;</span><span class="fu">,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;path&quot;</span><span class="fu">:</span> <span class="st">&quot;/users/123&quot;</span><span class="fu">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="dv">200</span><span class="fu">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;latency_ms&quot;</span><span class="fu">:</span> <span class="dv">45</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+            <p><strong>Why</strong>: Easy to query, filter,
+            aggregate.</p>
+            <h3 id="log-levels">Log Levels</h3>
+            <p><strong>DEBUG</strong>: Detailed information for
+            debugging (not in production)</p>
+            <p><strong>INFO</strong>: General information about normal
+            operation</p>
+            <p><strong>WARN</strong>: Warning messages (something
+            unexpected but handled)</p>
+            <p><strong>ERROR</strong>: Error messages (something failed
+            but system continues)</p>
+            <p><strong>FATAL</strong>: Critical errors (system may
+            stop)</p>
+            <p><strong>Best practice</strong>: Use appropriate levels,
+            avoid log spam.</p>
+            <hr />
+            <h2 id="traces">Traces</h2>
+            <h3 id="what-are-traces">What Are Traces?</h3>
+            <p><strong>Traces</strong>: End-to-end request flow through
+            distributed system.</p>
+            <p><strong>Components</strong>: - <strong>Trace</strong>:
+            Entire request flow - <strong>Span</strong>: Single
+            operation in trace - <strong>Parent-child
+            relationships</strong>: Spans form a tree</p>
+            <h3 id="trace-structure">Trace Structure</h3>
+            <pre class="mermaid"><code>graph TD
+    Trace[Trace: User Request] --&gt; Span1[Span: Load Balancer]
+    Span1 --&gt; Span2[Span: API Server]
+    Span2 --&gt; Span3[Span: Database Query]
+    Span2 --&gt; Span4[Span: Cache Lookup]
+    Span4 --&gt; Span5[Span: Cache Miss]
+    Span5 --&gt; Span3
+
+    style Trace fill:#99ccff
+    style Span2 fill:#ffcc99
+    style Span3 fill:#ff9999</code></pre>
+            <p><strong>Spans contain</strong>: - <strong>Name</strong>:
+            Operation name - <strong>Start time</strong>: When operation
+            started - <strong>Duration</strong>: How long it took -
+            <strong>Tags</strong>: Key-value pairs (method, status,
+            etc.) - <strong>Logs</strong>: Events during span</p>
+            <h3 id="what-to-trace">What to Trace</h3>
+            <p><strong>Critical paths</strong>: User-facing requests,
+            important operations</p>
+            <p><strong>Why</strong>: Understand latency breakdown,
+            identify bottlenecks</p>
+            <p><strong>Sampling</strong>: Don’t trace everything (too
+            expensive), sample intelligently.</p>
+            <hr />
+            <h2 id="observability-contract">Observability Contract</h2>
+            <h3 id="definition">Definition</h3>
+            <p><strong>Observability contract</strong>: Agreement on
+            what metrics, logs, and traces are provided.</p>
+            <p><strong>Components</strong>: 1. <strong>Metrics</strong>:
+            What metrics are exported, what they mean 2.
+            <strong>Logs</strong>: What events are logged, log format 3.
+            <strong>Traces</strong>: What operations are traced, trace
+            format 4. <strong>SLIs</strong>: Service level indicators
+            (what to measure for SLOs)</p>
+            <h3 id="building-the-contract">Building the Contract</h3>
+            <pre class="mermaid"><code>flowchart TD
+    Requirements[System Requirements] --&gt; SLIs[Define SLIs]
+    SLIs --&gt; Metrics[Choose Metrics]
+    Metrics --&gt; Logs[Define Logs]
+    Logs --&gt; Traces[Define Traces]
+
+    Metrics --&gt; Dashboard[Dashboards]
+    Logs --&gt; Queries[Log Queries]
+    Traces --&gt; Analysis[Trace Analysis]
+
+    style SLIs fill:#99ccff
+    style Dashboard fill:#ffcc99</code></pre>
+            <p><strong>Process</strong>: 1. <strong>Define
+            SLIs</strong>: What to measure for SLOs 2. <strong>Choose
+            metrics</strong>: Metrics needed to measure SLIs 3.
+            <strong>Define logs</strong>: Events needed for debugging 4.
+            <strong>Define traces</strong>: Operations needed for
+            performance analysis</p>
+            <h3 id="example-contract">Example Contract</h3>
+            <p><strong>Metrics</strong>: -
+            <code>http_requests_total{method,status}</code>: Request
+            count -
+            <code>http_request_duration_seconds{method,quantile}</code>:
+            Request latency -
+            <code>http_errors_total{method,error_type}</code>: Error
+            count</p>
+            <p><strong>Logs</strong>: - Request started:
+            <code>{request_id, method, path}</code> - Request completed:
+            <code>{request_id, status, latency_ms}</code> - Errors:
+            <code>{request_id, error, stack_trace}</code></p>
+            <p><strong>Traces</strong>: - Trace all HTTP requests -
+            Spans for: load balancer, API server, database, cache -
+            Sample rate: 1% (or 100% for errors)</p>
+            <hr />
+            <h2 id="failure-modes-blast-radius">Failure Modes &amp;
+            Blast Radius</h2>
+            <h3 id="observability-failures">Observability Failures</h3>
+            <h4 id="scenario-1-missing-metrics">Scenario 1: Missing
+            Metrics</h4>
+            <ul>
+            <li><strong>Impact</strong>: Can’t detect problems, can’t
+            measure SLOs</li>
+            <li><strong>Blast radius</strong>: All monitoring and
+            alerting</li>
+            <li><strong>Detection</strong>: Dashboards empty, alerts not
+            firing</li>
+            <li><strong>Recovery</strong>: Add missing metrics, verify
+            collection</li>
+            </ul>
+            <h4 id="scenario-2-high-cardinality-metrics">Scenario 2:
+            High Cardinality Metrics</h4>
+            <ul>
+            <li><strong>Impact</strong>: Metric storage explodes,
+            queries slow</li>
+            <li><strong>Blast radius</strong>: Monitoring system
+            performance</li>
+            <li><strong>Detection</strong>: High storage costs, slow
+            queries</li>
+            <li><strong>Recovery</strong>: Reduce cardinality, use logs
+            instead</li>
+            </ul>
+            <h4 id="scenario-3-log-spam">Scenario 3: Log Spam</h4>
+            <ul>
+            <li><strong>Impact</strong>: Can’t find important logs, high
+            costs</li>
+            <li><strong>Blast radius</strong>: Logging system, debugging
+            ability</li>
+            <li><strong>Detection</strong>: High log volume, high
+            costs</li>
+            <li><strong>Recovery</strong>: Fix log levels, reduce
+            verbosity</li>
+            </ul>
+            <h4 id="scenario-4-no-traces">Scenario 4: No Traces</h4>
+            <ul>
+            <li><strong>Impact</strong>: Can’t debug performance
+            issues</li>
+            <li><strong>Blast radius</strong>: Performance
+            debugging</li>
+            <li><strong>Detection</strong>: Can’t identify
+            bottlenecks</li>
+            <li><strong>Recovery</strong>: Add tracing, instrument
+            critical paths</li>
+            </ul>
+            <hr />
+            <h2 id="observability-best-practices">Observability Best
+            Practices</h2>
+            <h3 id="metrics-best-practices">Metrics Best Practices</h3>
+            <ol type="1">
+            <li><strong>Measure SLIs</strong>: Metrics should support
+            SLO measurement</li>
+            <li><strong>Low cardinality</strong>: Avoid high-cardinality
+            labels</li>
+            <li><strong>Appropriate granularity</strong>: Not too fine,
+            not too coarse</li>
+            <li><strong>Documentation</strong>: Document what metrics
+            mean</li>
+            </ol>
+            <h3 id="logging-best-practices">Logging Best Practices</h3>
+            <ol type="1">
+            <li><strong>Structured logging</strong>: Use JSON, include
+            context</li>
+            <li><strong>Request IDs</strong>: Include request IDs for
+            correlation</li>
+            <li><strong>Appropriate levels</strong>: Use correct log
+            levels</li>
+            <li><strong>Don’t log sensitive data</strong>: No passwords,
+            tokens, PII</li>
+            </ol>
+            <h3 id="tracing-best-practices">Tracing Best Practices</h3>
+            <ol type="1">
+            <li><strong>Trace critical paths</strong>: User-facing
+            requests, important operations</li>
+            <li><strong>Sample intelligently</strong>: Don’t trace
+            everything</li>
+            <li><strong>Include context</strong>: Tags, logs in
+            spans</li>
+            <li><strong>Keep traces short</strong>: Don’t trace
+            long-running operations</li>
+            </ol>
+            <hr />
+            <h2 id="further-reading">Further Reading</h2>
+            <p><strong>Comprehensive Guide</strong>: <a
+            href="../further-reading/observability-basics.html">Further
+            Reading: Observability Basics</a></p>
+            <p><strong>Quick Links</strong>: - “Observability
+            Engineering” by Charity Majors et al. - OpenTelemetry
+            documentation - Prometheus documentation - <a
+            href="queueing-tail-latency.html">Queueing Theory &amp; Tail
+            Latency</a> - <a
+            href="../04-reliability-sre/sli-slo-error-budget.html">SLIs/SLOs</a>
+            - <a href="README.html">Back to Foundations</a></p>
+            <hr />
+            <h2 id="exercises">Exercises</h2>
+            <ol type="1">
+            <li><p><strong>Define observability contract</strong>:
+            Define metrics, logs, and traces for an API service. What do
+            you measure?</p></li>
+            <li><p><strong>Debug with observability</strong>: A service
+            has high latency. How do you use metrics, logs, and traces
+            to debug?</p></li>
+            <li><p><strong>Reduce cardinality</strong>: You have a
+            metric with user_id as a label (high cardinality). How do
+            you fix it?</p></li>
+            </ol>
+            <p><strong>Answer Key</strong>: <a
+            href="../exercises/answers/observability-basics-answers.html">View
+            Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>

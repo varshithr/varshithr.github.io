@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postmortem Template</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
+jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="../learn/css/learn.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../index.html" class="flex items-center hover:text-gray-600">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span>Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="main-content">
+            <h1 id="postmortem-template">Postmortem Template</h1>
+            <p>Use this template for writing postmortems after
+            incidents. Focus on learning, not blame.</p>
+            <h2 id="incident-summary">Incident Summary</h2>
+            <p><strong>Incident Title</strong>: [Brief description]</p>
+            <p><strong>Date</strong>: [Date and time]</p>
+            <p><strong>Duration</strong>: [How long did it last?]</p>
+            <p><strong>Severity</strong>: [P0/P1/P2]</p>
+            <p><strong>Impact</strong>: [What was affected? How many
+            users?]</p>
+            <p><strong>Status</strong>: [Resolved/Mitigated/Ongoing]</p>
+            <hr />
+            <h2 id="timeline">Timeline</h2>
+            <h3 id="discovery">Discovery</h3>
+            <ul>
+            <li><strong>Time</strong>: [Timestamp]</li>
+            <li><strong>Event</strong>: [How was the incident
+            discovered?]</li>
+            <li><strong>Who</strong>: [Who discovered it?]</li>
+            </ul>
+            <h3 id="response">Response</h3>
+            <ul>
+            <li><strong>Time</strong>: [Timestamp]</li>
+            <li><strong>Event</strong>: [What happened next?]</li>
+            <li><strong>Who</strong>: [Who responded?]</li>
+            </ul>
+            <h3 id="resolution">Resolution</h3>
+            <ul>
+            <li><strong>Time</strong>: [Timestamp]</li>
+            <li><strong>Event</strong>: [How was it resolved?]</li>
+            <li><strong>Who</strong>: [Who resolved it?]</li>
+            </ul>
+            <h3 id="recovery">Recovery</h3>
+            <ul>
+            <li><strong>Time</strong>: [Timestamp]</li>
+            <li><strong>Event</strong>: [When was full recovery?]</li>
+            <li><strong>Who</strong>: [Who verified recovery?]</li>
+            </ul>
+            <hr />
+            <h2 id="impact-assessment">Impact Assessment</h2>
+            <h3 id="user-impact">User Impact</h3>
+            <ul>
+            <li><strong>Users Affected</strong>: [Number or
+            percentage]</li>
+            <li><strong>Geographic Impact</strong>: [Which
+            regions?]</li>
+            <li><strong>Feature Impact</strong>: [Which features?]</li>
+            <li><strong>Data Impact</strong>: [Any data loss?]</li>
+            </ul>
+            <h3 id="business-impact">Business Impact</h3>
+            <ul>
+            <li><strong>Revenue Impact</strong>: [If applicable]</li>
+            <li><strong>SLO Impact</strong>: [Error budget
+            consumed?]</li>
+            <li><strong>Reputation Impact</strong>: [Any public
+            impact?]</li>
+            </ul>
+            <h3 id="technical-impact">Technical Impact</h3>
+            <ul>
+            <li><strong>Services Affected</strong>: [Which
+            services?]</li>
+            <li><strong>Infrastructure Impact</strong>: [What
+            broke?]</li>
+            <li><strong>Data Impact</strong>: [Any data
+            corruption?]</li>
+            </ul>
+            <hr />
+            <h2 id="root-cause-analysis">Root Cause Analysis</h2>
+            <h3 id="what-happened">What Happened?</h3>
+            <p>[Detailed description of what actually happened]</p>
+            <h3 id="why-did-it-happen">Why Did It Happen?</h3>
+            <p>[Root cause analysis - dig deep, ask “why” 5 times]</p>
+            <h3 id="contributing-factors">Contributing Factors</h3>
+            <ul>
+            <li>[Factor 1]</li>
+            <li>[Factor 2]</li>
+            <li>[Factor 3]</li>
+            </ul>
+            <h3 id="why-wasnt-it-detected-earlier">Why Wasn’t It
+            Detected Earlier?</h3>
+            <ul>
+            <li>[Detection gap 1]</li>
+            <li>[Detection gap 2]</li>
+            </ul>
+            <h3 id="why-wasnt-it-prevented">Why Wasn’t It
+            Prevented?</h3>
+            <ul>
+            <li>[Prevention gap 1]</li>
+            <li>[Prevention gap 2]</li>
+            </ul>
+            <hr />
+            <h2 id="detection-response">Detection &amp; Response</h2>
+            <h3 id="how-was-it-detected">How Was It Detected?</h3>
+            <ul>
+            <li>[Detection method 1]</li>
+            <li>[Detection method 2]</li>
+            </ul>
+            <h3 id="detection-gaps">Detection Gaps</h3>
+            <ul>
+            <li>[What should have detected it but didn’t?]</li>
+            <li>[What alerts should have fired?]</li>
+            <li>[What monitoring was missing?]</li>
+            </ul>
+            <h3 id="response-effectiveness">Response Effectiveness</h3>
+            <ul>
+            <li><strong>Time to Detection</strong>: [How long to
+            detect?]</li>
+            <li><strong>Time to Response</strong>: [How long to
+            respond?]</li>
+            <li><strong>Time to Resolution</strong>: [How long to
+            resolve?]</li>
+            <li><strong>What Went Well</strong>: [What worked
+            well?]</li>
+            <li><strong>What Went Poorly</strong>: [What didn’t work
+            well?]</li>
+            </ul>
+            <h3 id="communication">Communication</h3>
+            <ul>
+            <li><strong>Internal Communication</strong>: [How was the
+            team notified?]</li>
+            <li><strong>External Communication</strong>: [How were users
+            notified?]</li>
+            <li><strong>Communication Gaps</strong>: [What communication
+            was missing?]</li>
+            </ul>
+            <hr />
+            <h2 id="recovery-1">Recovery</h2>
+            <h3 id="recovery-steps">Recovery Steps</h3>
+            <ol type="1">
+            <li>[Step 1]</li>
+            <li>[Step 2]</li>
+            <li>[Step 3]</li>
+            </ol>
+            <h3 id="recovery-time">Recovery Time</h3>
+            <ul>
+            <li><strong>Time to Mitigation</strong>: [How long to
+            mitigate?]</li>
+            <li><strong>Time to Resolution</strong>: [How long to fully
+            resolve?]</li>
+            <li><strong>Time to Recovery</strong>: [How long to full
+            recovery?]</li>
+            </ul>
+            <h3 id="recovery-effectiveness">Recovery Effectiveness</h3>
+            <ul>
+            <li><strong>What Worked</strong>: [What recovery steps
+            worked?]</li>
+            <li><strong>What Didn’t Work</strong>: [What recovery steps
+            failed?]</li>
+            <li><strong>What Slowed Recovery</strong>: [What made
+            recovery slower?]</li>
+            </ul>
+            <hr />
+            <h2 id="action-items">Action Items</h2>
+            <h3 id="immediate-actions-fix-now">Immediate Actions (Fix
+            Now)</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" /><strong>Action</strong>:
+            [What to do]</label>
+            <ul>
+            <li><strong>Owner</strong>: [Who owns this?]</li>
+            <li><strong>Due Date</strong>: [When?]</li>
+            <li><strong>Priority</strong>: [P0/P1/P2]</li>
+            </ul></li>
+            <li><label><input type="checkbox" /><strong>Action</strong>:
+            [What to do]</label>
+            <ul>
+            <li><strong>Owner</strong>: [Who owns this?]</li>
+            <li><strong>Due Date</strong>: [When?]</li>
+            <li><strong>Priority</strong>: [P0/P1/P2]</li>
+            </ul></li>
+            </ul>
+            <h3 id="short-term-actions-fix-soon">Short-Term Actions (Fix
+            Soon)</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" /><strong>Action</strong>:
+            [What to do]</label>
+            <ul>
+            <li><strong>Owner</strong>: [Who owns this?]</li>
+            <li><strong>Due Date</strong>: [When?]</li>
+            <li><strong>Priority</strong>: [P0/P1/P2]</li>
+            </ul></li>
+            <li><label><input type="checkbox" /><strong>Action</strong>:
+            [What to do]</label>
+            <ul>
+            <li><strong>Owner</strong>: [Who owns this?]</li>
+            <li><strong>Due Date</strong>: [When?]</li>
+            <li><strong>Priority</strong>: [P0/P1/P2]</li>
+            </ul></li>
+            </ul>
+            <h3 id="long-term-actions-fix-eventually">Long-Term Actions
+            (Fix Eventually)</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" /><strong>Action</strong>:
+            [What to do]</label>
+            <ul>
+            <li><strong>Owner</strong>: [Who owns this?]</li>
+            <li><strong>Due Date</strong>: [When?]</li>
+            <li><strong>Priority</strong>: [P0/P1/P2]</li>
+            </ul></li>
+            <li><label><input type="checkbox" /><strong>Action</strong>:
+            [What to do]</label>
+            <ul>
+            <li><strong>Owner</strong>: [Who owns this?]</li>
+            <li><strong>Due Date</strong>: [When?]</li>
+            <li><strong>Priority</strong>: [P0/P1/P2]</li>
+            </ul></li>
+            </ul>
+            <hr />
+            <h2 id="lessons-learned">Lessons Learned</h2>
+            <h3 id="what-we-learned">What We Learned</h3>
+            <ul>
+            <li>[Lesson 1]</li>
+            <li>[Lesson 2]</li>
+            <li>[Lesson 3]</li>
+            </ul>
+            <h3 id="what-well-do-differently">What We’ll Do
+            Differently</h3>
+            <ul>
+            <li>[Change 1]</li>
+            <li>[Change 2]</li>
+            <li>[Change 3]</li>
+            </ul>
+            <h3 id="what-well-keep-doing">What We’ll Keep Doing</h3>
+            <ul>
+            <li>[Good practice 1]</li>
+            <li>[Good practice 2]</li>
+            <li>[Good practice 3]</li>
+            </ul>
+            <hr />
+            <h2 id="prevention">Prevention</h2>
+            <h3 id="how-do-we-prevent-this">How Do We Prevent This?</h3>
+            <ul>
+            <li>[Prevention measure 1]</li>
+            <li>[Prevention measure 2]</li>
+            <li>[Prevention measure 3]</li>
+            </ul>
+            <h3 id="how-do-we-detect-this-earlier">How Do We Detect This
+            Earlier?</h3>
+            <ul>
+            <li>[Detection improvement 1]</li>
+            <li>[Detection improvement 2]</li>
+            <li>[Detection improvement 3]</li>
+            </ul>
+            <h3 id="how-do-we-respond-better">How Do We Respond
+            Better?</h3>
+            <ul>
+            <li>[Response improvement 1]</li>
+            <li>[Response improvement 2]</li>
+            <li>[Response improvement 3]</li>
+            </ul>
+            <hr />
+            <h2 id="follow-up">Follow-Up</h2>
+            <h3 id="review-date">Review Date</h3>
+            <ul>
+            <li><strong>Postmortem Review</strong>: [When will we review
+            action items?]</li>
+            <li><strong>Follow-Up Review</strong>: [When will we check
+            progress?]</li>
+            </ul>
+            <h3 id="tracking">Tracking</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Action items are tracked
+            in issue tracker</label></li>
+            <li><label><input type="checkbox" />Action items have owners
+            and due dates</label></li>
+            <li><label><input type="checkbox" />Progress is reviewed
+            regularly</label></li>
+            </ul>
+            <hr />
+            <h2 id="appendix">Appendix</h2>
+            <h3 id="logs-metrics">Logs &amp; Metrics</h3>
+            <ul>
+            <li>[Links to relevant logs]</li>
+            <li>[Links to relevant metrics]</li>
+            <li>[Screenshots of dashboards]</li>
+            </ul>
+            <h3 id="related-incidents">Related Incidents</h3>
+            <ul>
+            <li>[Link to similar incidents]</li>
+            <li>[Link to related postmortems]</li>
+            </ul>
+            <h3 id="references">References</h3>
+            <ul>
+            <li>[Links to documentation]</li>
+            <li>[Links to runbooks]</li>
+            <li>[Links to design docs]</li>
+            </ul>
+            <hr />
+            <h2 id="sign-off">Sign-Off</h2>
+            <p><strong>Postmortem Author</strong>: [Name]</p>
+            <p><strong>Date</strong>: [Date]</p>
+            <p><strong>Reviewed By</strong>: [Names]</p>
+            <p><strong>Approved By</strong>: [Name]</p>
+            <hr />
+            <h2 id="notes">Notes</h2>
+            <p>[Additional notes or context]</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>
