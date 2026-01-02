@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Answer Key: Multi-Region API on GCP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
+jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../learn/css/learn.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../index.html" class="flex items-center hover:text-gray-600">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span>Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="main-content">
+            <h1 id="answer-key-multi-region-api-on-gcp">Answer Key:
+            Multi-Region API on GCP</h1>
+            <p><a
+            href="../../06-case-studies/multi-region-api.md#exercises">Back
+            to Exercises</a></p>
+            <hr />
+            <h2 id="exercise-1-design-improvements">Exercise 1: Design
+            Improvements</h2>
+            <p><strong>Question</strong>: How would you improve this
+            design? What tradeoffs?</p>
+            <h3 id="answer">Answer</h3>
+            <p><strong>Current Design</strong>: Multi-region API with
+            Global Load Balancer, GKE, Spanner, Redis cache</p>
+            <h3 id="potential-improvements">Potential Improvements</h3>
+            <p><strong>1. Add CDN for Static Content</strong></p>
+            <p><strong>Improvement</strong>: Use Cloud CDN for static
+            assets (images, CSS, JS)</p>
+            <p><strong>Benefits</strong>: - Lower latency for static
+            content - Reduced origin load - Lower bandwidth costs</p>
+            <p><strong>Tradeoffs</strong>: - Additional complexity -
+            Cache invalidation needed - Additional cost</p>
+            <p><strong>2. Add Read Replicas</strong></p>
+            <p><strong>Improvement</strong>: Use Spanner read replicas
+            for read-heavy workloads</p>
+            <p><strong>Benefits</strong>: - Lower read latency (closer
+            to users) - Reduced load on primary database - Better read
+            scalability</p>
+            <p><strong>Tradeoffs</strong>: - Eventual consistency (reads
+            may be stale) - Additional cost - More complex
+            architecture</p>
+            <p><strong>3. Add Message Queue</strong></p>
+            <p><strong>Improvement</strong>: Use Pub/Sub for async
+            processing (already mentioned, but expand)</p>
+            <p><strong>Benefits</strong>: - Decouple components - Better
+            resilience - Scalable processing</p>
+            <p><strong>Tradeoffs</strong>: - Eventual consistency - More
+            complex error handling - Additional cost</p>
+            <p><strong>4. Add Circuit Breakers</strong></p>
+            <p><strong>Improvement</strong>: Add circuit breakers for
+            downstream services</p>
+            <p><strong>Benefits</strong>: - Prevent cascading failures -
+            Fail fast - Better resilience</p>
+            <p><strong>Tradeoffs</strong>: - Additional complexity -
+            Need to handle circuit states - May delay recovery</p>
+            <p><strong>5. Add Rate Limiting</strong></p>
+            <p><strong>Improvement</strong>: Add rate limiting at load
+            balancer or API gateway</p>
+            <p><strong>Benefits</strong>: - Prevent abuse - Fair
+            resource usage - DDoS protection</p>
+            <p><strong>Tradeoffs</strong>: - May reject legitimate
+            requests - Additional complexity - Need to tune limits</p>
+            <p><strong>6. Add Caching Layer</strong></p>
+            <p><strong>Improvement</strong>: Expand caching strategy
+            (already has Redis, but optimize)</p>
+            <p><strong>Benefits</strong>: - Lower latency - Reduced
+            database load - Better scalability</p>
+            <p><strong>Tradeoffs</strong>: - Cache invalidation
+            complexity - Memory costs - Stale data risk</p>
+            <p><strong>7. Add Monitoring and Observability</strong></p>
+            <p><strong>Improvement</strong>: Enhanced monitoring
+            (already mentioned, but expand)</p>
+            <p><strong>Benefits</strong>: - Better visibility - Faster
+            debugging - Proactive issue detection</p>
+            <p><strong>Tradeoffs</strong>: - Additional cost - More data
+            to manage - Alert fatigue risk</p>
+            <h3 id="top-3-improvements">Top 3 Improvements</h3>
+            <p><strong>1. Add CDN</strong> (High Impact, Low Complexity)
+            - Significant latency improvement for static content -
+            Relatively simple to implement - Clear cost/benefit</p>
+            <p><strong>2. Add Read Replicas</strong> (High Impact,
+            Medium Complexity) - Significant read performance
+            improvement - Moderate complexity - Good for read-heavy
+            workloads</p>
+            <p><strong>3. Add Circuit Breakers</strong> (Medium Impact,
+            Low Complexity) - Better resilience - Relatively simple to
+            implement - Prevents cascading failures</p>
+            <h3 id="answer-1">Answer</h3>
+            <p><strong>Design Improvements</strong>:</p>
+            <p><strong>1. Add CDN</strong>: Lower latency for static
+            content, reduced origin load <strong>2. Add Read
+            Replicas</strong>: Better read performance, reduced database
+            load <strong>3. Add Circuit Breakers</strong>: Better
+            resilience, prevent cascading failures <strong>4. Enhance
+            Rate Limiting</strong>: Better abuse prevention, DDoS
+            protection <strong>5. Optimize Caching</strong>: Better
+            cache hit rates, reduced latency</p>
+            <p><strong>Top 3</strong>: 1. <strong>CDN</strong> (high
+            impact, low complexity) 2. <strong>Read Replicas</strong>
+            (high impact, medium complexity) 3. <strong>Circuit
+            Breakers</strong> (medium impact, low complexity)</p>
+            <p><strong>Tradeoffs</strong>: - <strong>CDN</strong>:
+            Additional complexity, cache invalidation - <strong>Read
+            Replicas</strong>: Eventual consistency, additional cost -
+            <strong>Circuit Breakers</strong>: Additional complexity,
+            circuit state management</p>
+            <hr />
+            <h2 id="exercise-2-handle-new-requirement">Exercise 2:
+            Handle New Requirement</h2>
+            <p><strong>Question</strong>: Add support for real-time
+            notifications. How does this change the architecture?</p>
+            <h3 id="answer-2">Answer</h3>
+            <p><strong>Requirement</strong>: Real-time notifications to
+            users</p>
+            <h3 id="architecture-changes">Architecture Changes</h3>
+            <p><strong>1. Add WebSocket Support</strong></p>
+            <p><strong>New Component</strong>: WebSocket server for
+            real-time connections</p>
+            <p><strong>Options</strong>: - <strong>Option A</strong>:
+            Separate WebSocket service - <strong>Option B</strong>: Add
+            WebSocket support to existing API</p>
+            <p><strong>Recommendation</strong>: Separate WebSocket
+            service (better separation of concerns)</p>
+            <p><strong>2. Add Message Queue</strong></p>
+            <p><strong>New Component</strong>: Pub/Sub for notification
+            delivery</p>
+            <p><strong>Flow</strong>: 1. Event occurs → Publish to
+            Pub/Sub 2. WebSocket service subscribes to Pub/Sub 3.
+            WebSocket service sends to connected clients</p>
+            <p><strong>3. Add Connection Management</strong></p>
+            <p><strong>New Component</strong>: Connection manager for
+            WebSocket connections</p>
+            <p><strong>Requirements</strong>: - Track connected users -
+            Handle reconnections - Manage connection lifecycle</p>
+            <p><strong>4. Add Notification Service</strong></p>
+            <p><strong>New Component</strong>: Notification service for
+            sending notifications</p>
+            <p><strong>Responsibilities</strong>: - Receive events from
+            Pub/Sub - Look up connected users - Send notifications via
+            WebSocket</p>
+            <h3 id="updated-architecture">Updated Architecture</h3>
+            <pre class="mermaid"><code>graph TB
+    API[API Servers] --&gt; PubSub[Pub/Sub&lt;br/&gt;Events]
+    PubSub --&gt; NotifService[Notification Service]
+    NotifService --&gt; WS[WebSocket Service]
+    WS --&gt; Users[Connected Users]
+
+    Users --&gt; WS
+    WS --&gt; ConnMgr[Connection Manager]
+    ConnMgr --&gt; Redis2[Redis&lt;br/&gt;Connection State]
+
+    style PubSub fill:#99ff99
+    style WS fill:#ffcc99
+    style NotifService fill:#99ccff</code></pre>
+            <h3 id="implementation-details">Implementation Details</h3>
+            <p><strong>1. WebSocket Service</strong></p>
+            <p><strong>Deployment</strong>: Separate GKE service</p>
+            <p><strong>Scaling</strong>: Horizontal scaling based on
+            connections</p>
+            <p><strong>Load Balancing</strong>: Use Network Load
+            Balancer (WebSocket support)</p>
+            <p><strong>2. Connection Manager</strong></p>
+            <p><strong>Storage</strong>: Redis for connection state</p>
+            <p><strong>Data Structure</strong>: -
+            <code>user:{user_id}</code> →
+            <code>{connection_id, region, timestamp}</code> -
+            <code>connection:{connection_id}</code> →
+            <code>{user_id, region, timestamp}</code></p>
+            <p><strong>3. Notification Flow</strong></p>
+            <p><strong>Process</strong>: 1. Event occurs in API 2. API
+            publishes to Pub/Sub topic <code>user-notifications</code>
+            3. Notification service subscribes to topic 4. Notification
+            service looks up user connections in Redis 5. Notification
+            service sends to WebSocket service 6. WebSocket service
+            delivers to user</p>
+            <p><strong>4. Multi-Region Considerations</strong></p>
+            <p><strong>Challenge</strong>: User connected in one region,
+            event in another</p>
+            <p><strong>Solution</strong>: - <strong>Option A</strong>:
+            Global Pub/Sub, regional WebSocket services - <strong>Option
+            B</strong>: Regional Pub/Sub, cross-region notification
+            routing</p>
+            <p><strong>Recommendation</strong>: Global Pub/Sub, regional
+            WebSocket services</p>
+            <h3 id="answer-3">Answer</h3>
+            <p><strong>Architecture Changes</strong>:</p>
+            <p><strong>New Components</strong>: 1. <strong>WebSocket
+            Service</strong>: Handles real-time connections 2.
+            <strong>Notification Service</strong>: Processes
+            notifications from Pub/Sub 3. <strong>Connection
+            Manager</strong>: Tracks user connections (Redis) 4.
+            <strong>Pub/Sub Topic</strong>:
+            <code>user-notifications</code> for event delivery</p>
+            <p><strong>Flow</strong>: 1. Event → Pub/Sub → Notification
+            Service → WebSocket Service → User 2. Connection state
+            stored in Redis 3. Multi-region: Global Pub/Sub, regional
+            WebSocket services</p>
+            <p><strong>Changes to Existing</strong>: -
+            <strong>API</strong>: Publish events to Pub/Sub -
+            <strong>Load Balancer</strong>: Add WebSocket support
+            (Network LB) - <strong>Redis</strong>: Store connection
+            state</p>
+            <p><strong>Key Considerations</strong>: -
+            <strong>Scaling</strong>: WebSocket service scales with
+            connections - <strong>Multi-region</strong>: Handle
+            cross-region notifications - <strong>Reconnection</strong>:
+            Handle connection failures gracefully - <strong>Delivery
+            guarantees</strong>: At-least-once delivery</p>
+            <hr />
+            <h2 id="exercise-3-cost-optimization">Exercise 3: Cost
+            Optimization</h2>
+            <p><strong>Question</strong>: How would you reduce costs by
+            30%? What tradeoffs?</p>
+            <h3 id="answer-4">Answer</h3>
+            <p><strong>Current Cost</strong>: ~$18,000/month
+            <strong>Target</strong>: ~$12,600/month (30% reduction)</p>
+            <h3 id="cost-optimization-strategies">Cost Optimization
+            Strategies</h3>
+            <p><strong>1. Right-Size Instances</strong> (Savings:
+            ~20%)</p>
+            <p><strong>Current</strong>: May be over-provisioned</p>
+            <p><strong>Optimization</strong>: - Analyze actual resource
+            usage - Use smaller instance types where possible - Use
+            committed use discounts (1-year or 3-year)</p>
+            <p><strong>Savings</strong>: ~$3,600/month</p>
+            <p><strong>Tradeoffs</strong>: - Less headroom for spikes -
+            Need to monitor capacity closely - May need to scale more
+            frequently</p>
+            <p><strong>2. Optimize Spanner</strong> (Savings: ~15%)</p>
+            <p><strong>Current</strong>: Multi-region Spanner
+            (expensive)</p>
+            <p><strong>Optimization</strong>: - Use regional Spanner (if
+            multi-region not needed) - Optimize queries (reduce reads) -
+            Use read replicas instead of multi-region - Archive old data
+            to cheaper storage</p>
+            <p><strong>Savings</strong>: ~$1,500/month</p>
+            <p><strong>Tradeoffs</strong>: - Regional Spanner: Less
+            resilience - Read replicas: Eventual consistency - Archive:
+            Slower access to old data</p>
+            <p><strong>3. Optimize Caching</strong> (Savings: ~10%)</p>
+            <p><strong>Current</strong>: Redis cache per region</p>
+            <p><strong>Optimization</strong>: - Increase cache hit rate
+            (reduce cache misses) - Use smaller cache instances - Use
+            Cloud Memorystore standard tier (not premium)</p>
+            <p><strong>Savings</strong>: ~$200/month</p>
+            <p><strong>Tradeoffs</strong>: - Lower cache hit rate: More
+            database load - Smaller cache: More evictions - Standard
+            tier: Lower performance</p>
+            <p><strong>4. Optimize Load Balancer</strong> (Savings:
+            ~5%)</p>
+            <p><strong>Current</strong>: Global HTTP(S) Load
+            Balancer</p>
+            <p><strong>Optimization</strong>: - Use regional load
+            balancer (if global not needed) - Optimize SSL certificate
+            management - Reduce unnecessary routing rules</p>
+            <p><strong>Savings</strong>: ~$100/month</p>
+            <p><strong>Tradeoffs</strong>: - Regional LB: Less global
+            distribution - May increase latency for some users</p>
+            <p><strong>5. Optimize GKE</strong> (Savings: ~10%)</p>
+            <p><strong>Current</strong>: GKE with auto-scaling</p>
+            <p><strong>Optimization</strong>: - Use preemptible
+            instances (for non-critical workloads) - Optimize pod
+            resource requests - Use node auto-provisioning - Right-size
+            node pools</p>
+            <p><strong>Savings</strong>: ~$500/month</p>
+            <p><strong>Tradeoffs</strong>: - Preemptible: Less reliable
+            (may be terminated) - Need to handle interruptions
+            gracefully</p>
+            <p><strong>6. Optimize Storage</strong> (Savings: ~5%)</p>
+            <p><strong>Current</strong>: Standard storage classes</p>
+            <p><strong>Optimization</strong>: - Use Nearline/Coldline
+            for less accessed data - Lifecycle policies to move old data
+            - Compress data</p>
+            <p><strong>Savings</strong>: ~$100/month</p>
+            <p><strong>Tradeoffs</strong>: - Nearline/Coldline: Higher
+            access costs - Slower access to archived data</p>
+            <h3 id="combined-savings">Combined Savings</h3>
+            <p><strong>Total</strong>: ~$6,000/month (33% reduction)</p>
+            <p><strong>Breakdown</strong>: - Right-sizing: $3,600 -
+            Spanner optimization: $1,500 - GKE optimization: $500 -
+            Caching optimization: $200 - Load balancer: $100 - Storage:
+            $100</p>
+            <h3 id="answer-5">Answer</h3>
+            <p><strong>Cost Optimization Strategies</strong> (30%
+            reduction):</p>
+            <p><strong>1. Right-Size Instances</strong> (20% savings): -
+            Analyze usage, use smaller instances, committed use
+            discounts - Tradeoff: Less headroom, need closer
+            monitoring</p>
+            <p><strong>2. Optimize Spanner</strong> (15% savings): - Use
+            regional Spanner, optimize queries, archive old data -
+            Tradeoff: Less resilience, eventual consistency</p>
+            <p><strong>3. Optimize GKE</strong> (10% savings): - Use
+            preemptible instances, optimize resource requests -
+            Tradeoff: Less reliable, need interruption handling</p>
+            <p><strong>4. Optimize Caching</strong> (10% savings): -
+            Increase hit rate, use smaller instances - Tradeoff: More
+            database load</p>
+            <p><strong>5. Optimize Load Balancer</strong> (5% savings):
+            - Use regional LB if global not needed - Tradeoff: Less
+            global distribution</p>
+            <p><strong>Total Savings</strong>: ~33% ($6,000/month)</p>
+            <p><strong>Key Tradeoffs</strong>: -
+            <strong>Reliability</strong>: Some optimizations reduce
+            resilience - <strong>Performance</strong>: Some
+            optimizations reduce performance -
+            <strong>Complexity</strong>: Some optimizations add
+            complexity</p>
+            <p><strong>Recommendation</strong>: Focus on right-sizing
+            and Spanner optimization first (biggest savings, manageable
+            tradeoffs).</p>
+            <hr />
+            <h2 id="exercise-4-disaster-recovery">Exercise 4: Disaster
+            Recovery</h2>
+            <p><strong>Question</strong>: Design a disaster recovery
+            plan. What’s the RTO? RPO?</p>
+            <h3 id="answer-6">Answer</h3>
+            <p><strong>Goal</strong>: Recover from disasters with
+            minimal data loss and downtime</p>
+            <h3 id="disaster-scenarios">Disaster Scenarios</h3>
+            <p><strong>1. Single Region Failure</strong></p>
+            <p><strong>Scenario</strong>: One region (e.g., us-central1)
+            completely fails</p>
+            <p><strong>Impact</strong>: 33% of users affected</p>
+            <p><strong>Recovery</strong>: - Load balancer routes to
+            other regions - Auto-scaling scales up other regions -
+            <strong>RTO</strong>: &lt; 5 minutes (automatic) -
+            <strong>RPO</strong>: 0 (no data loss, Spanner
+            multi-region)</p>
+            <p><strong>2. Database Failure</strong></p>
+            <p><strong>Scenario</strong>: Spanner becomes
+            unavailable</p>
+            <p><strong>Impact</strong>: All regions, all users</p>
+            <p><strong>Recovery</strong>: - Spanner has automatic
+            failover (multi-region) - Failover takes ~30 seconds -
+            <strong>RTO</strong>: &lt; 1 minute (automatic) -
+            <strong>RPO</strong>: 0 (no data loss, synchronous
+            replication)</p>
+            <p><strong>3. Complete GCP Failure</strong></p>
+            <p><strong>Scenario</strong>: Entire GCP region fails
+            (unlikely but possible)</p>
+            <p><strong>Impact</strong>: All services in region</p>
+            <p><strong>Recovery</strong>: - Failover to other regions -
+            Restore from backups if needed - <strong>RTO</strong>: &lt;
+            15 minutes (manual intervention) - <strong>RPO</strong>:
+            &lt; 5 minutes (depends on backup frequency)</p>
+            <p><strong>4. Data Corruption</strong></p>
+            <p><strong>Scenario</strong>: Data corrupted (bug, malicious
+            attack)</p>
+            <p><strong>Impact</strong>: Data integrity compromised</p>
+            <p><strong>Recovery</strong>: - Restore from backups -
+            Point-in-time recovery - <strong>RTO</strong>: &lt; 1 hour
+            (restore time) - <strong>RPO</strong>: &lt; 15 minutes
+            (backup frequency)</p>
+            <h3 id="disaster-recovery-plan">Disaster Recovery Plan</h3>
+            <p><strong>1. Backup Strategy</strong></p>
+            <p><strong>Spanner Backups</strong>: -
+            <strong>Frequency</strong>: Every 6 hours -
+            <strong>Retention</strong>: 30 days -
+            <strong>Location</strong>: Multi-region (backup in different
+            region) - <strong>Type</strong>: Point-in-time recovery</p>
+            <p><strong>Application Backups</strong>: -
+            <strong>Configuration</strong>: Version controlled (Git) -
+            <strong>Secrets</strong>: Stored in Secret Manager -
+            <strong>Infrastructure</strong>: Infrastructure as Code
+            (Terraform)</p>
+            <p><strong>2. Failover Procedures</strong></p>
+            <p><strong>Automatic Failover</strong>: - <strong>Load
+            Balancer</strong>: Automatic (health checks) -
+            <strong>Spanner</strong>: Automatic (multi-region) -
+            <strong>GKE</strong>: Automatic (multi-region
+            deployment)</p>
+            <p><strong>Manual Failover</strong>: - <strong>Complete
+            region failure</strong>: Manual DNS update, scale other
+            regions - <strong>Data corruption</strong>: Manual restore
+            from backups</p>
+            <p><strong>3. Recovery Procedures</strong></p>
+            <p><strong>Single Region Failure</strong>: 1. Load balancer
+            automatically routes away 2. Scale up other regions 3.
+            Monitor recovery 4. Investigate root cause</p>
+            <p><strong>Database Failure</strong>: 1. Spanner
+            automatically fails over 2. Verify data consistency 3.
+            Monitor performance 4. Investigate root cause</p>
+            <p><strong>Complete Failure</strong>: 1. Activate disaster
+            recovery runbook 2. Failover DNS to backup region 3. Scale
+            up backup region 4. Restore from backups if needed 5. Verify
+            functionality 6. Postmortem</p>
+            <p><strong>4. Testing</strong></p>
+            <p><strong>Disaster Recovery Testing</strong>: -
+            <strong>Frequency</strong>: Quarterly -
+            <strong>Scenarios</strong>: Single region failure, database
+            failure - <strong>Process</strong>: Simulate failures,
+            verify recovery - <strong>Documentation</strong>: Update
+            runbooks based on tests</p>
+            <h3 id="rto-and-rpo">RTO and RPO</h3>
+            <p><strong>RTO (Recovery Time Objective)</strong>:</p>
+            <table>
+            <thead>
+            <tr class="header">
+            <th>Scenario</th>
+            <th>RTO</th>
+            <th>Method</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="odd">
+            <td>Single region failure</td>
+            <td>&lt; 5 minutes</td>
+            <td>Automatic (load balancer)</td>
+            </tr>
+            <tr class="even">
+            <td>Database failure</td>
+            <td>&lt; 1 minute</td>
+            <td>Automatic (Spanner failover)</td>
+            </tr>
+            <tr class="odd">
+            <td>Complete failure</td>
+            <td>&lt; 15 minutes</td>
+            <td>Manual (DNS, scaling)</td>
+            </tr>
+            <tr class="even">
+            <td>Data corruption</td>
+            <td>&lt; 1 hour</td>
+            <td>Manual (restore from backup)</td>
+            </tr>
+            </tbody>
+            </table>
+            <p><strong>RPO (Recovery Point Objective)</strong>:</p>
+            <table>
+            <thead>
+            <tr class="header">
+            <th>Scenario</th>
+            <th>RPO</th>
+            <th>Method</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="odd">
+            <td>Single region failure</td>
+            <td>0</td>
+            <td>Multi-region Spanner</td>
+            </tr>
+            <tr class="even">
+            <td>Database failure</td>
+            <td>0</td>
+            <td>Synchronous replication</td>
+            </tr>
+            <tr class="odd">
+            <td>Complete failure</td>
+            <td>&lt; 5 minutes</td>
+            <td>Backup frequency</td>
+            </tr>
+            <tr class="even">
+            <td>Data corruption</td>
+            <td>&lt; 15 minutes</td>
+            <td>Point-in-time recovery</td>
+            </tr>
+            </tbody>
+            </table>
+            <h3 id="answer-7">Answer</h3>
+            <p><strong>Disaster Recovery Plan</strong>:</p>
+            <p><strong>Backup Strategy</strong>: - Spanner: Every 6
+            hours, 30-day retention, multi-region - Application: Version
+            controlled, Infrastructure as Code</p>
+            <p><strong>Failover Procedures</strong>: -
+            <strong>Automatic</strong>: Load balancer, Spanner, GKE -
+            <strong>Manual</strong>: Complete region failure, data
+            corruption</p>
+            <p><strong>Recovery Procedures</strong>: - Single region:
+            Automatic failover, scale other regions - Database:
+            Automatic Spanner failover - Complete failure: Manual DNS
+            update, restore from backups</p>
+            <p><strong>RTO (Recovery Time Objective)</strong>: - Single
+            region: &lt; 5 minutes (automatic) - Database: &lt; 1 minute
+            (automatic) - Complete failure: &lt; 15 minutes (manual) -
+            Data corruption: &lt; 1 hour (manual restore)</p>
+            <p><strong>RPO (Recovery Point Objective)</strong>: - Single
+            region: 0 (multi-region Spanner) - Database: 0 (synchronous
+            replication) - Complete failure: &lt; 5 minutes (backup
+            frequency) - Data corruption: &lt; 15 minutes (point-in-time
+            recovery)</p>
+            <p><strong>Testing</strong>: Quarterly disaster recovery
+            tests</p>
+            <p><strong>Key Principles</strong>: - <strong>Automate where
+            possible</strong>: Automatic failover for common scenarios -
+            <strong>Test regularly</strong>: Quarterly DR tests -
+            <strong>Document procedures</strong>: Clear runbooks for
+            manual procedures - <strong>Monitor recovery</strong>: Track
+            RTO and RPO metrics</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>

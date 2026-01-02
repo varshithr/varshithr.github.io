@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Review Template</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMmgEkDaBLEqcMW5uud
+jLPMdWTocqpoLBTRPtcDGECroCvEOZE" crossorigin="anonymous">
+    <link rel="stylesheet" href="../learn/css/learn.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../index.html" class="flex items-center hover:text-gray-600">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span>Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="main-content">
+            <h1 id="design-review-template">Design Review Template</h1>
+            <p>Use this template when reviewing system designs at staff
+            level.</p>
+            <h2 id="design-overview">Design Overview</h2>
+            <p><strong>System Name</strong>: [Name]</p>
+            <p><strong>Purpose</strong>: [What problem does this
+            solve?]</p>
+            <p><strong>Designer</strong>: [Who designed this?]</p>
+            <p><strong>Reviewer</strong>: [Who is reviewing?]</p>
+            <p><strong>Date</strong>: [Date]</p>
+            <hr />
+            <h2 id="requirements-constraints">Requirements &amp;
+            Constraints</h2>
+            <h3 id="functional-requirements">Functional
+            Requirements</h3>
+            <ul>
+            <li>[Requirement 1]</li>
+            <li>[Requirement 2]</li>
+            </ul>
+            <h3 id="non-functional-requirements">Non-Functional
+            Requirements</h3>
+            <ul>
+            <li><strong>Latency</strong>: [Target latency, e.g., P95
+            &lt; 100ms]</li>
+            <li><strong>Throughput</strong>: [Target QPS]</li>
+            <li><strong>Availability</strong>: [Target uptime, e.g.,
+            99.9%]</li>
+            <li><strong>Consistency</strong>: [Consistency model]</li>
+            <li><strong>Durability</strong>: [Data durability
+            requirements]</li>
+            </ul>
+            <h3 id="constraints">Constraints</h3>
+            <ul>
+            <li><strong>Budget</strong>: [Cost constraints]</li>
+            <li><strong>Timeline</strong>: [Deadlines]</li>
+            <li><strong>Dependencies</strong>: [External
+            dependencies]</li>
+            <li><strong>Compliance</strong>: [Regulatory
+            requirements]</li>
+            </ul>
+            <hr />
+            <h2 id="architecture-review">Architecture Review</h2>
+            <h3 id="high-level-design">High-Level Design</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Architecture diagram is
+            clear and accurate</label></li>
+            <li><label><input type="checkbox" />Components and
+            responsibilities are well-defined</label></li>
+            <li><label><input type="checkbox" />Data flow is
+            documented</label></li>
+            <li><label><input type="checkbox" />Critical paths are
+            identified</label></li>
+            </ul>
+            <h3 id="component-design">Component Design</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Each component has a
+            clear purpose</label></li>
+            <li><label><input type="checkbox" />Component boundaries are
+            well-defined</label></li>
+            <li><label><input type="checkbox" />Interfaces are
+            documented</label></li>
+            <li><label><input type="checkbox" />Dependencies are
+            explicit</label></li>
+            </ul>
+            <h3 id="data-model">Data Model</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Data model is
+            appropriate for use case</label></li>
+            <li><label><input type="checkbox" />Schema is
+            documented</label></li>
+            <li><label><input type="checkbox" />Data lifecycle is
+            considered</label></li>
+            <li><label><input type="checkbox" />Data retention policies
+            are defined</label></li>
+            </ul>
+            <hr />
+            <h2 id="failure-modes-reliability">Failure Modes &amp;
+            Reliability</h2>
+            <h3 id="failure-domains">Failure Domains</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Failure domains are
+            identified</label></li>
+            <li><label><input type="checkbox" />Blast radius is
+            limited</label></li>
+            <li><label><input type="checkbox" />Failures are
+            isolated</label></li>
+            <li><label><input type="checkbox" />Single points of failure
+            are eliminated</label></li>
+            </ul>
+            <h3 id="failure-scenarios">Failure Scenarios</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Common failure scenarios
+            are documented</label></li>
+            <li><label><input type="checkbox" />Failure detection is
+            planned</label></li>
+            <li><label><input type="checkbox" />Recovery procedures are
+            defined</label></li>
+            <li><label><input type="checkbox" />Cascading failures are
+            prevented</label></li>
+            </ul>
+            <h3 id="overload-behavior">Overload Behavior</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Behavior at 10× load is
+            understood</label></li>
+            <li><label><input type="checkbox" />Behavior at 100× load is
+            considered</label></li>
+            <li><label><input type="checkbox" />Load shedding is
+            implemented</label></li>
+            <li><label><input type="checkbox" />Graceful degradation is
+            planned</label></li>
+            </ul>
+            <h3 id="slis-slos-error-budgets">SLIs, SLOs &amp; Error
+            Budgets</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />SLIs are defined and
+            measurable</label></li>
+            <li><label><input type="checkbox" />SLOs are set
+            appropriately</label></li>
+            <li><label><input type="checkbox" />Error budgets are
+            calculated</label></li>
+            <li><label><input type="checkbox" />Alerting thresholds are
+            set</label></li>
+            </ul>
+            <hr />
+            <h2 id="observability">Observability</h2>
+            <h3 id="metrics">Metrics</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Key metrics are
+            identified</label></li>
+            <li><label><input type="checkbox" />Latency metrics
+            (P50/P95/P99) are tracked</label></li>
+            <li><label><input type="checkbox" />Throughput metrics are
+            tracked</label></li>
+            <li><label><input type="checkbox" />Error rates are
+            tracked</label></li>
+            <li><label><input type="checkbox" />Resource usage is
+            monitored</label></li>
+            </ul>
+            <h3 id="logging">Logging</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Critical events are
+            logged</label></li>
+            <li><label><input type="checkbox" />Log levels are
+            appropriate</label></li>
+            <li><label><input type="checkbox" />Logs are
+            structured</label></li>
+            <li><label><input type="checkbox" />Log retention is
+            defined</label></li>
+            </ul>
+            <h3 id="tracing">Tracing</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Critical paths are
+            traced</label></li>
+            <li><label><input type="checkbox" />Spans are
+            well-defined</label></li>
+            <li><label><input type="checkbox" />Trace sampling strategy
+            is defined</label></li>
+            <li><label><input type="checkbox" />Cross-service
+            correlation works</label></li>
+            </ul>
+            <h3 id="alerting">Alerting</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Alerts are
+            actionable</label></li>
+            <li><label><input type="checkbox" />Alert fatigue is
+            avoided</label></li>
+            <li><label><input type="checkbox" />On-call procedures are
+            defined</label></li>
+            <li><label><input type="checkbox" />Escalation paths are
+            clear</label></li>
+            </ul>
+            <hr />
+            <h2 id="change-safety">Change Safety</h2>
+            <h3 id="deployment-strategy">Deployment Strategy</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Rollout strategy is
+            defined</label></li>
+            <li><label><input type="checkbox" />Canary deployment is
+            planned</label></li>
+            <li><label><input type="checkbox" />Rollback procedure is
+            documented</label></li>
+            <li><label><input type="checkbox" />Feature flags are used
+            appropriately</label></li>
+            </ul>
+            <h3 id="testing">Testing</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Unit tests are
+            planned</label></li>
+            <li><label><input type="checkbox" />Integration tests are
+            planned</label></li>
+            <li><label><input type="checkbox" />Load tests are
+            planned</label></li>
+            <li><label><input type="checkbox" />Chaos tests are
+            considered</label></li>
+            </ul>
+            <h3 id="feature-flags">Feature Flags</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Feature flags are used
+            for risky changes</label></li>
+            <li><label><input type="checkbox" />Kill switches are
+            implemented</label></li>
+            <li><label><input type="checkbox" />Flag management is
+            documented</label></li>
+            </ul>
+            <hr />
+            <h2 id="security">Security</h2>
+            <h3 id="identity-authentication">Identity &amp;
+            Authentication</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Authentication is
+            required</label></li>
+            <li><label><input type="checkbox" />Authentication mechanism
+            is appropriate</label></li>
+            <li><label><input type="checkbox" />Identity is verified
+            correctly</label></li>
+            </ul>
+            <h3 id="authorization">Authorization</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Authorization is
+            checked</label></li>
+            <li><label><input type="checkbox" />Principle of least
+            privilege is followed</label></li>
+            <li><label><input type="checkbox" />Permissions are
+            well-defined</label></li>
+            <li><label><input type="checkbox" />Access is
+            audited</label></li>
+            </ul>
+            <h3 id="data-protection">Data Protection</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Data is encrypted at
+            rest</label></li>
+            <li><label><input type="checkbox" />Data is encrypted in
+            transit</label></li>
+            <li><label><input type="checkbox" />Key management is
+            secure</label></li>
+            <li><label><input type="checkbox" />Data exfiltration is
+            prevented</label></li>
+            </ul>
+            <h3 id="attack-surfaces">Attack Surfaces</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Attack vectors are
+            identified</label></li>
+            <li><label><input type="checkbox" />Mitigations are in
+            place</label></li>
+            <li><label><input type="checkbox" />Security monitoring is
+            planned</label></li>
+            </ul>
+            <hr />
+            <h2 id="capacity-performance">Capacity &amp;
+            Performance</h2>
+            <h3 id="capacity-planning">Capacity Planning</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Capacity requirements
+            are calculated</label></li>
+            <li><label><input type="checkbox" />Scaling strategy is
+            defined</label></li>
+            <li><label><input type="checkbox" />Scaling limits are
+            understood</label></li>
+            <li><label><input type="checkbox" />Capacity forecasting is
+            planned</label></li>
+            </ul>
+            <h3 id="performance">Performance</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Performance targets are
+            met</label></li>
+            <li><label><input type="checkbox" />Bottlenecks are
+            identified</label></li>
+            <li><label><input type="checkbox" />Optimization
+            opportunities are considered</label></li>
+            <li><label><input type="checkbox" />Tail latency is
+            addressed</label></li>
+            </ul>
+            <h3 id="cost">Cost</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Cost model is
+            understood</label></li>
+            <li><label><input type="checkbox" />Cost optimization is
+            considered</label></li>
+            <li><label><input type="checkbox" />Cost monitoring is
+            planned</label></li>
+            </ul>
+            <hr />
+            <h2 id="operational-readiness">Operational Readiness</h2>
+            <h3 id="documentation">Documentation</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Architecture is
+            documented</label></li>
+            <li><label><input type="checkbox" />Runbooks are
+            written</label></li>
+            <li><label><input type="checkbox" />Onboarding docs
+            exist</label></li>
+            <li><label><input type="checkbox" />Troubleshooting guides
+            exist</label></li>
+            </ul>
+            <h3 id="on-call">On-Call</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />On-call rotation is
+            defined</label></li>
+            <li><label><input type="checkbox" />Escalation paths are
+            clear</label></li>
+            <li><label><input type="checkbox" />Incident response is
+            planned</label></li>
+            <li><label><input type="checkbox" />Postmortem process is
+            defined</label></li>
+            </ul>
+            <h3 id="monitoring">Monitoring</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Dashboards are
+            created</label></li>
+            <li><label><input type="checkbox" />Alerts are
+            configured</label></li>
+            <li><label><input type="checkbox" />Monitoring is
+            tested</label></li>
+            <li><label><input type="checkbox" />Debugging tools are
+            available</label></li>
+            </ul>
+            <hr />
+            <h2 id="staff-level-questions">Staff-Level Questions</h2>
+            <h3 id="design-questions">Design Questions</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />What’s the failure
+            domain?</label></li>
+            <li><label><input type="checkbox" />How do we detect
+            failures?</label></li>
+            <li><label><input type="checkbox" />What’s the blast
+            radius?</label></li>
+            <li><label><input type="checkbox" />How do we roll
+            back?</label></li>
+            <li><label><input type="checkbox" />What’s the observability
+            contract?</label></li>
+            </ul>
+            <h3 id="scale-questions">Scale Questions</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />What happens at 10×
+            load?</label></li>
+            <li><label><input type="checkbox" />What are the
+            bottlenecks?</label></li>
+            <li><label><input type="checkbox" />How does it
+            degrade?</label></li>
+            </ul>
+            <h3 id="security-questions">Security Questions</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />Who can access
+            this?</label></li>
+            <li><label><input type="checkbox" />How is data
+            protected?</label></li>
+            <li><label><input type="checkbox" />What’s the attack
+            surface?</label></li>
+            </ul>
+            <h3 id="operational-questions">Operational Questions</h3>
+            <ul class="task-list">
+            <li><label><input type="checkbox" />How do we monitor
+            this?</label></li>
+            <li><label><input type="checkbox" />What’s the
+            runbook?</label></li>
+            <li><label><input type="checkbox" />How do we debug
+            issues?</label></li>
+            </ul>
+            <hr />
+            <h2 id="review-feedback">Review Feedback</h2>
+            <h3 id="critical-issues-must-fix">Critical Issues (Must
+            Fix)</h3>
+            <ol type="1">
+            <li>[Issue 1]</li>
+            <li>[Issue 2]</li>
+            </ol>
+            <h3 id="important-issues-should-fix">Important Issues
+            (Should Fix)</h3>
+            <ol type="1">
+            <li>[Issue 1]</li>
+            <li>[Issue 2]</li>
+            </ol>
+            <h3 id="nice-to-have-consider">Nice-to-Have (Consider)</h3>
+            <ol type="1">
+            <li>[Issue 1]</li>
+            <li>[Issue 2]</li>
+            </ol>
+            <h3 id="questions">Questions</h3>
+            <ol type="1">
+            <li>[Question 1]</li>
+            <li>[Question 2]</li>
+            </ol>
+            <hr />
+            <h2 id="approval">Approval</h2>
+            <ul class="task-list">
+            <li><label><input
+            type="checkbox" /><strong>Approved</strong> - Design is
+            ready for implementation</label></li>
+            <li><label><input type="checkbox" /><strong>Approved with
+            Changes</strong> - Design is approved pending
+            fixes</label></li>
+            <li><label><input type="checkbox" /><strong>Needs
+            Revision</strong> - Design needs significant
+            changes</label></li>
+            <li><label><input
+            type="checkbox" /><strong>Rejected</strong> - Design is not
+            viable</label></li>
+            </ul>
+            <p><strong>Reviewer Signature</strong>: [Name]</p>
+            <p><strong>Date</strong>: [Date]</p>
+            <p><strong>Next Steps</strong>: [What happens next?]</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>
