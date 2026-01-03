@@ -134,6 +134,115 @@
             padding: 1rem;
             border-radius: 0.5rem;
         }
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: calc(100vh - 80px);
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid #E5E7EB;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 40;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 50;
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .sidebar-toggle:hover {
+            background-color: #F3F4F6;
+        }
+        .sidebar-content {
+            padding: 1.5rem;
+        }
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #4B5563;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        .sidebar-nav a:hover {
+            background-color: #F3F4F6;
+            color: #58508d;
+        }
+        .sidebar-nav a.active {
+            background-color: #EEF2FF;
+            color: #58508d;
+            font-weight: 600;
+        }
+        .sidebar-nav .level-1 {
+            padding-left: 0.75rem;
+            font-weight: 600;
+            color: #1E293B;
+        }
+        .sidebar-nav .level-2 {
+            padding-left: 1.5rem;
+            color: #4B5563;
+        }
+        .sidebar-nav .level-3 {
+            padding-left: 2.25rem;
+            color: #6B7280;
+            font-size: 0.8125rem;
+        }
+        .sidebar-nav .level-4 {
+            padding-left: 3rem;
+            color: #9CA3AF;
+            font-size: 0.75rem;
+        }
+        .main-content {
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }
+        .main-content.no-sidebar {
+            margin-left: 0;
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.expanded {
+                transform: translateX(0);
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -151,7 +260,57 @@
             </ul>
         </nav>
     </header>
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+        <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-title">Table of Contents</div>
+            <ul class="sidebar-nav">
+                <li><a href="#production-readiness-review-prr-checklist" class="level-1">Production Readiness Review (PRR) Checklist</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#prr-purpose" class="level-3">PRR Purpose</a></li>
+                <li><a href="#prr-scope" class="level-3">PRR Scope</a></li>
+                <li><a href="#staff-level-prr-checklist" class="level-2">Staff-Level PRR Checklist</a></li>
+                <li><a href="#1-slis-slos-error-budgets" class="level-3">1. SLIs, SLOs &amp; Error Budgets</a></li>
+                <li><a href="#slis-defined" class="level-4">SLIs Defined</a></li>
+                <li><a href="#slos-set" class="level-4">SLOs Set</a></li>
+                <li><a href="#error-budgets" class="level-4">Error Budgets</a></li>
+                <li><a href="#2-observability" class="level-3">2. Observability</a></li>
+                <li><a href="#metrics" class="level-4">Metrics</a></li>
+                <li><a href="#logging" class="level-4">Logging</a></li>
+                <li><a href="#tracing" class="level-4">Tracing</a></li>
+                <li><a href="#dashboards" class="level-4">Dashboards</a></li>
+                <li><a href="#alerting" class="level-4">Alerting</a></li>
+                <li><a href="#3-incident-response" class="level-3">3. Incident Response</a></li>
+                <li><a href="#on-call" class="level-4">On-Call</a></li>
+                <li><a href="#runbooks" class="level-4">Runbooks</a></li>
+                <li><a href="#incident-management" class="level-4">Incident Management</a></li>
+                <li><a href="#4-capacity-scaling" class="level-3">4. Capacity &amp; Scaling</a></li>
+                <li><a href="#capacity-planning" class="level-4">Capacity Planning</a></li>
+                <li><a href="#auto-scaling" class="level-4">Auto-Scaling</a></li>
+                <li><a href="#load-testing" class="level-4">Load Testing</a></li>
+                <li><a href="#5-security" class="level-3">5. Security</a></li>
+                <li><a href="#authentication" class="level-4">Authentication</a></li>
+                <li><a href="#authorization" class="level-4">Authorization</a></li>
+                <li><a href="#data-protection" class="level-4">Data Protection</a></li>
+                <li><a href="#6-change-management" class="level-3">6. Change Management</a></li>
+                <li><a href="#deployment" class="level-4">Deployment</a></li>
+                <li><a href="#feature-flags" class="level-4">Feature Flags</a></li>
+                <li><a href="#testing" class="level-4">Testing</a></li>
+                <li><a href="#what-staff-engineers-actually-look-for" class="level-2">What Staff Engineers Actually Look For</a></li>
+                <li><a href="#red-flags-must-fix" class="level-3">Red Flags (Must Fix)</a></li>
+                <li><a href="#yellow-flags-should-fix" class="level-3">Yellow Flags (Should Fix)</a></li>
+                <li><a href="#green-flags-good-practices" class="level-3">Green Flags (Good Practices)</a></li>
+                <li><a href="#prr-decision-matrix" class="level-2">PRR Decision Matrix</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="content">
 <h1 id="production-readiness-review-prr-checklist">Production Readiness Review (PRR) Checklist</h1>
 <p><strong>One-line summary</strong>: What staff engineers and SREs actually look for in production readiness reviews.</p>
@@ -503,6 +662,79 @@ style Approve fill:#99ff99
     </footer>
     <script>
         mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const mainContent = document.querySelector('.main-content');
+            
+            // Toggle sidebar
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('expanded');
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 1024) {
+                    if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                        sidebar.classList.remove('expanded');
+                    }
+                }
+            });
+            
+            // Update active link on scroll
+            const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            function updateActiveLink() {
+                let current = '';
+                headings.forEach(heading => {
+                    const rect = heading.getBoundingClientRect();
+                    if (rect.top <= 100) {
+                        current = heading.id;
+                    }
+                });
+                
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+            
+            // Smooth scroll for sidebar links
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            const headerOffset = 80;
+                            const elementPosition = target.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                            
+                            // Close sidebar on mobile after click
+                            if (window.innerWidth <= 1024) {
+                                sidebar.classList.remove('expanded');
+                            }
+                        }
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>

@@ -134,6 +134,115 @@
             padding: 1rem;
             border-radius: 0.5rem;
         }
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: calc(100vh - 80px);
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid #E5E7EB;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 40;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 50;
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .sidebar-toggle:hover {
+            background-color: #F3F4F6;
+        }
+        .sidebar-content {
+            padding: 1.5rem;
+        }
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #4B5563;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        .sidebar-nav a:hover {
+            background-color: #F3F4F6;
+            color: #58508d;
+        }
+        .sidebar-nav a.active {
+            background-color: #EEF2FF;
+            color: #58508d;
+            font-weight: 600;
+        }
+        .sidebar-nav .level-1 {
+            padding-left: 0.75rem;
+            font-weight: 600;
+            color: #1E293B;
+        }
+        .sidebar-nav .level-2 {
+            padding-left: 1.5rem;
+            color: #4B5563;
+        }
+        .sidebar-nav .level-3 {
+            padding-left: 2.25rem;
+            color: #6B7280;
+            font-size: 0.8125rem;
+        }
+        .sidebar-nav .level-4 {
+            padding-left: 3rem;
+            color: #9CA3AF;
+            font-size: 0.75rem;
+        }
+        .main-content {
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }
+        .main-content.no-sidebar {
+            margin-left: 0;
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.expanded {
+                transform: translateX(0);
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -151,7 +260,77 @@
             </ul>
         </nav>
     </header>
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+        <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-title">Table of Contents</div>
+            <ul class="sidebar-nav">
+                <li><a href="#overload-backpressure" class="level-1">Overload &amp; Backpressure</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#what-is-overload" class="level-3">What is Overload?</a></li>
+                <li><a href="#the-cascade" class="level-3">The Cascade</a></li>
+                <li><a href="#backpressure" class="level-3">Backpressure</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#overload-detection" class="level-3">Overload Detection</a></li>
+                <li><a href="#queue-depth" class="level-4">Queue Depth</a></li>
+                <li><a href="#latency" class="level-4">Latency</a></li>
+                <li><a href="#error-rate" class="level-4">Error Rate</a></li>
+                <li><a href="#resource-utilization" class="level-4">Resource Utilization</a></li>
+                <li><a href="#backpressure-mechanisms" class="level-3">Backpressure Mechanisms</a></li>
+                <li><a href="#1-explicit-backpressure" class="level-4">1. Explicit Backpressure</a></li>
+                <li><a href="#2-implicit-backpressure" class="level-4">2. Implicit Backpressure</a></li>
+                <li><a href="#load-shedding-strategies" class="level-3">Load Shedding Strategies</a></li>
+                <li><a href="#1-random-drop" class="level-4">1. Random Drop</a></li>
+                <li><a href="#2-priority-based" class="level-4">2. Priority-Based</a></li>
+                <li><a href="#3-client-based" class="level-4">3. Client-Based</a></li>
+                <li><a href="#4-request-type-based" class="level-4">4. Request Type-Based</a></li>
+                <li><a href="#5-adaptive" class="level-4">5. Adaptive</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#overload-scenarios" class="level-3">Overload Scenarios</a></li>
+                <li><a href="#10-normal-load" class="level-4">10× Normal Load</a></li>
+                <li><a href="#100-normal-load" class="level-4">100× Normal Load</a></li>
+                <li><a href="#1000-normal-load-ddos" class="level-4">1000× Normal Load (DDoS)</a></li>
+                <li><a href="#cascading-failures" class="level-3">Cascading Failures</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics-to-track" class="level-3">Metrics to Track</a></li>
+                <li><a href="#load-metrics" class="level-4">Load Metrics</a></li>
+                <li><a href="#latency-metrics" class="level-4">Latency Metrics</a></li>
+                <li><a href="#error-metrics" class="level-4">Error Metrics</a></li>
+                <li><a href="#resource-metrics" class="level-4">Resource Metrics</a></li>
+                <li><a href="#logs" class="level-3">Logs</a></li>
+                <li><a href="#traces" class="level-3">Traces</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#implementing-backpressure" class="level-3">Implementing Backpressure</a></li>
+                <li><a href="#1-add-queue-limits" class="level-4">1. Add Queue Limits</a></li>
+                <li><a href="#2-implement-load-shedding" class="level-4">2. Implement Load Shedding</a></li>
+                <li><a href="#3-add-circuit-breakers" class="level-4">3. Add Circuit Breakers</a></li>
+                <li><a href="#4-set-appropriate-timeouts" class="level-4">4. Set Appropriate Timeouts</a></li>
+                <li><a href="#testing-strategy" class="level-3">Testing Strategy</a></li>
+                <li><a href="#security-boundaries" class="level-2">Security Boundaries</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#what-we-gain-with-backpressure" class="level-3">What We Gain with Backpressure</a></li>
+                <li><a href="#what-we-lose" class="level-3">What We Lose</a></li>
+                <li><a href="#when-to-use-backpressure" class="level-3">When to Use Backpressure</a></li>
+                <li><a href="#alternatives" class="level-3">Alternatives</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#capacity-planning" class="level-3">Capacity Planning</a></li>
+                <li><a href="#monitoring-debugging" class="level-3">Monitoring &amp; Debugging</a></li>
+                <li><a href="#incident-response" class="level-3">Incident Response</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#design-questions" class="level-3">Design Questions</a></li>
+                <li><a href="#scale-questions" class="level-3">Scale Questions</a></li>
+                <li><a href="#operational-questions" class="level-3">Operational Questions</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="content">
 <h1 id="overload-backpressure">Overload &amp; Backpressure</h1>
 <p><strong>One-line summary</strong>: How systems handle more load than capacity, and mechanisms to prevent cascading failures.</p>
@@ -495,6 +674,79 @@ style Latency fill:#ff9999
     </footer>
     <script>
         mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const mainContent = document.querySelector('.main-content');
+            
+            // Toggle sidebar
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('expanded');
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 1024) {
+                    if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                        sidebar.classList.remove('expanded');
+                    }
+                }
+            });
+            
+            // Update active link on scroll
+            const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            function updateActiveLink() {
+                let current = '';
+                headings.forEach(heading => {
+                    const rect = heading.getBoundingClientRect();
+                    if (rect.top <= 100) {
+                        current = heading.id;
+                    }
+                });
+                
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+            
+            // Smooth scroll for sidebar links
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            const headerOffset = 80;
+                            const elementPosition = target.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                            
+                            // Close sidebar on mobile after click
+                            if (window.innerWidth <= 1024) {
+                                sidebar.classList.remove('expanded');
+                            }
+                        }
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>

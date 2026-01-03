@@ -134,6 +134,115 @@
             padding: 1rem;
             border-radius: 0.5rem;
         }
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: calc(100vh - 80px);
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid #E5E7EB;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 40;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 50;
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .sidebar-toggle:hover {
+            background-color: #F3F4F6;
+        }
+        .sidebar-content {
+            padding: 1.5rem;
+        }
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #4B5563;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        .sidebar-nav a:hover {
+            background-color: #F3F4F6;
+            color: #58508d;
+        }
+        .sidebar-nav a.active {
+            background-color: #EEF2FF;
+            color: #58508d;
+            font-weight: 600;
+        }
+        .sidebar-nav .level-1 {
+            padding-left: 0.75rem;
+            font-weight: 600;
+            color: #1E293B;
+        }
+        .sidebar-nav .level-2 {
+            padding-left: 1.5rem;
+            color: #4B5563;
+        }
+        .sidebar-nav .level-3 {
+            padding-left: 2.25rem;
+            color: #6B7280;
+            font-size: 0.8125rem;
+        }
+        .sidebar-nav .level-4 {
+            padding-left: 3rem;
+            color: #9CA3AF;
+            font-size: 0.75rem;
+        }
+        .main-content {
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }
+        .main-content.no-sidebar {
+            margin-left: 0;
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.expanded {
+                transform: translateX(0);
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -151,7 +260,66 @@
             </ul>
         </nav>
     </header>
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+        <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-title">Table of Contents</div>
+            <ul class="sidebar-nav">
+                <li><a href="#postmortem-template" class="level-1">Postmortem Template</a></li>
+                <li><a href="#incident-summary" class="level-2">Incident Summary</a></li>
+                <li><a href="#timeline" class="level-2">Timeline</a></li>
+                <li><a href="#discovery" class="level-3">Discovery</a></li>
+                <li><a href="#response" class="level-3">Response</a></li>
+                <li><a href="#resolution" class="level-3">Resolution</a></li>
+                <li><a href="#recovery" class="level-3">Recovery</a></li>
+                <li><a href="#impact-assessment" class="level-2">Impact Assessment</a></li>
+                <li><a href="#user-impact" class="level-3">User Impact</a></li>
+                <li><a href="#business-impact" class="level-3">Business Impact</a></li>
+                <li><a href="#technical-impact" class="level-3">Technical Impact</a></li>
+                <li><a href="#root-cause-analysis" class="level-2">Root Cause Analysis</a></li>
+                <li><a href="#what-happened" class="level-3">What Happened?</a></li>
+                <li><a href="#why-did-it-happen" class="level-3">Why Did It Happen?</a></li>
+                <li><a href="#contributing-factors" class="level-3">Contributing Factors</a></li>
+                <li><a href="#why-wasnt-it-detected-earlier" class="level-3">Why Wasn&#x27;t It Detected Earlier?</a></li>
+                <li><a href="#why-wasnt-it-prevented" class="level-3">Why Wasn&#x27;t It Prevented?</a></li>
+                <li><a href="#detection-response" class="level-2">Detection &amp; Response</a></li>
+                <li><a href="#how-was-it-detected" class="level-3">How Was It Detected?</a></li>
+                <li><a href="#detection-gaps" class="level-3">Detection Gaps</a></li>
+                <li><a href="#response-effectiveness" class="level-3">Response Effectiveness</a></li>
+                <li><a href="#communication" class="level-3">Communication</a></li>
+                <li><a href="#recovery_1" class="level-2">Recovery</a></li>
+                <li><a href="#recovery-steps" class="level-3">Recovery Steps</a></li>
+                <li><a href="#recovery-time" class="level-3">Recovery Time</a></li>
+                <li><a href="#recovery-effectiveness" class="level-3">Recovery Effectiveness</a></li>
+                <li><a href="#action-items" class="level-2">Action Items</a></li>
+                <li><a href="#immediate-actions-fix-now" class="level-3">Immediate Actions (Fix Now)</a></li>
+                <li><a href="#short-term-actions-fix-soon" class="level-3">Short-Term Actions (Fix Soon)</a></li>
+                <li><a href="#long-term-actions-fix-eventually" class="level-3">Long-Term Actions (Fix Eventually)</a></li>
+                <li><a href="#lessons-learned" class="level-2">Lessons Learned</a></li>
+                <li><a href="#what-we-learned" class="level-3">What We Learned</a></li>
+                <li><a href="#what-well-do-differently" class="level-3">What We&#x27;ll Do Differently</a></li>
+                <li><a href="#what-well-keep-doing" class="level-3">What We&#x27;ll Keep Doing</a></li>
+                <li><a href="#prevention" class="level-2">Prevention</a></li>
+                <li><a href="#how-do-we-prevent-this" class="level-3">How Do We Prevent This?</a></li>
+                <li><a href="#how-do-we-detect-this-earlier" class="level-3">How Do We Detect This Earlier?</a></li>
+                <li><a href="#how-do-we-respond-better" class="level-3">How Do We Respond Better?</a></li>
+                <li><a href="#follow-up" class="level-2">Follow-Up</a></li>
+                <li><a href="#review-date" class="level-3">Review Date</a></li>
+                <li><a href="#tracking" class="level-3">Tracking</a></li>
+                <li><a href="#appendix" class="level-2">Appendix</a></li>
+                <li><a href="#logs-metrics" class="level-3">Logs &amp; Metrics</a></li>
+                <li><a href="#related-incidents" class="level-3">Related Incidents</a></li>
+                <li><a href="#references" class="level-3">References</a></li>
+                <li><a href="#sign-off" class="level-2">Sign-Off</a></li>
+                <li><a href="#notes" class="level-2">Notes</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="content">
 <h1 id="postmortem-template">Postmortem Template</h1>
 <p>Use this template for writing postmortems after incidents. Focus on learning, not blame.</p>
@@ -413,6 +581,79 @@
     </footer>
     <script>
         mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const mainContent = document.querySelector('.main-content');
+            
+            // Toggle sidebar
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('expanded');
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 1024) {
+                    if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                        sidebar.classList.remove('expanded');
+                    }
+                }
+            });
+            
+            // Update active link on scroll
+            const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            function updateActiveLink() {
+                let current = '';
+                headings.forEach(heading => {
+                    const rect = heading.getBoundingClientRect();
+                    if (rect.top <= 100) {
+                        current = heading.id;
+                    }
+                });
+                
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+            
+            // Smooth scroll for sidebar links
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            const headerOffset = 80;
+                            const elementPosition = target.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                            
+                            // Close sidebar on mobile after click
+                            if (window.innerWidth <= 1024) {
+                                sidebar.classList.remove('expanded');
+                            }
+                        }
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>

@@ -134,6 +134,115 @@
             padding: 1rem;
             border-radius: 0.5rem;
         }
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: calc(100vh - 80px);
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid #E5E7EB;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 40;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 50;
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .sidebar-toggle:hover {
+            background-color: #F3F4F6;
+        }
+        .sidebar-content {
+            padding: 1.5rem;
+        }
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #4B5563;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        .sidebar-nav a:hover {
+            background-color: #F3F4F6;
+            color: #58508d;
+        }
+        .sidebar-nav a.active {
+            background-color: #EEF2FF;
+            color: #58508d;
+            font-weight: 600;
+        }
+        .sidebar-nav .level-1 {
+            padding-left: 0.75rem;
+            font-weight: 600;
+            color: #1E293B;
+        }
+        .sidebar-nav .level-2 {
+            padding-left: 1.5rem;
+            color: #4B5563;
+        }
+        .sidebar-nav .level-3 {
+            padding-left: 2.25rem;
+            color: #6B7280;
+            font-size: 0.8125rem;
+        }
+        .sidebar-nav .level-4 {
+            padding-left: 3rem;
+            color: #9CA3AF;
+            font-size: 0.75rem;
+        }
+        .main-content {
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }
+        .main-content.no-sidebar {
+            margin-left: 0;
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.expanded {
+                transform: translateX(0);
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -151,7 +260,51 @@
             </ul>
         </nav>
     </header>
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+        <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-title">Table of Contents</div>
+            <ul class="sidebar-nav">
+                <li><a href="#capacity-math-cheat-sheet" class="level-1">Capacity Math Cheat Sheet</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#capacity-planning-process" class="level-3">Capacity Planning Process</a></li>
+                <li><a href="#key-formula" class="level-3">Key Formula</a></li>
+                <li><a href="#resource-calculation-flow" class="level-3">Resource Calculation Flow</a></li>
+                <li><a href="#cpu-capacity" class="level-2">CPU Capacity</a></li>
+                <li><a href="#calculating-cpu-needs" class="level-3">Calculating CPU Needs</a></li>
+                <li><a href="#cpu-considerations" class="level-3">CPU Considerations</a></li>
+                <li><a href="#cpu-scaling" class="level-3">CPU Scaling</a></li>
+                <li><a href="#memory-capacity" class="level-2">Memory Capacity</a></li>
+                <li><a href="#calculating-memory-needs" class="level-3">Calculating Memory Needs</a></li>
+                <li><a href="#memory-considerations" class="level-3">Memory Considerations</a></li>
+                <li><a href="#memory-scaling" class="level-3">Memory Scaling</a></li>
+                <li><a href="#disk-capacity" class="level-2">Disk Capacity</a></li>
+                <li><a href="#calculating-disk-needs" class="level-3">Calculating Disk Needs</a></li>
+                <li><a href="#disk-io-capacity" class="level-3">Disk I/O Capacity</a></li>
+                <li><a href="#disk-scaling" class="level-3">Disk Scaling</a></li>
+                <li><a href="#network-capacity" class="level-2">Network Capacity</a></li>
+                <li><a href="#calculating-network-needs" class="level-3">Calculating Network Needs</a></li>
+                <li><a href="#network-considerations" class="level-3">Network Considerations</a></li>
+                <li><a href="#network-scaling" class="level-3">Network Scaling</a></li>
+                <li><a href="#capacity-forecasting" class="level-2">Capacity Forecasting</a></li>
+                <li><a href="#growth-projections" class="level-3">Growth Projections</a></li>
+                <li><a href="#safety-margins" class="level-3">Safety Margins</a></li>
+                <li><a href="#capacity-planning-example" class="level-2">Capacity Planning Example</a></li>
+                <li><a href="#scenario-api-service" class="level-3">Scenario: API Service</a></li>
+                <li><a href="#what-staff-engineers-ask" class="level-2">What Staff Engineers Ask</a></li>
+                <li><a href="#design-questions" class="level-3">Design Questions</a></li>
+                <li><a href="#scale-questions" class="level-3">Scale Questions</a></li>
+                <li><a href="#operational-questions" class="level-3">Operational Questions</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="content">
 <h1 id="capacity-math-cheat-sheet">Capacity Math Cheat Sheet</h1>
 <p><strong>One-line summary</strong>: How to calculate CPU, memory, disk, and network capacity needs from requirements.</p>
@@ -412,6 +565,79 @@ style Instances fill:#99ff99
     </footer>
     <script>
         mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const mainContent = document.querySelector('.main-content');
+            
+            // Toggle sidebar
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('expanded');
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 1024) {
+                    if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                        sidebar.classList.remove('expanded');
+                    }
+                }
+            });
+            
+            // Update active link on scroll
+            const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            function updateActiveLink() {
+                let current = '';
+                headings.forEach(heading => {
+                    const rect = heading.getBoundingClientRect();
+                    if (rect.top <= 100) {
+                        current = heading.id;
+                    }
+                });
+                
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+            
+            // Smooth scroll for sidebar links
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            const headerOffset = 80;
+                            const elementPosition = target.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                            
+                            // Close sidebar on mobile after click
+                            if (window.innerWidth <= 1024) {
+                                sidebar.classList.remove('expanded');
+                            }
+                        }
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>

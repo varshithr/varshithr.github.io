@@ -9,7 +9,8 @@ import re
 import html
 import markdown
 from pathlib import Path
-from typing import Dict, Tuple
+from typing import Dict, Tuple, List
+from html.parser import HTMLParser
 
 # Base directory for the project
 BASE_DIR = Path(__file__).parent
@@ -153,6 +154,115 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             padding: 1rem;
             border-radius: 0.5rem;
         }}
+        .sidebar {{
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: calc(100vh - 80px);
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid #E5E7EB;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 40;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+        }}
+        .sidebar.collapsed {{
+            transform: translateX(-100%);
+        }}
+        .sidebar-toggle {{
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 50;
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+        }}
+        .sidebar-toggle:hover {{
+            background-color: #F3F4F6;
+        }}
+        .sidebar-content {{
+            padding: 1.5rem;
+        }}
+        .sidebar-title {{
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E5E7EB;
+        }}
+        .sidebar-nav {{
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }}
+        .sidebar-nav li {{
+            margin-bottom: 0.5rem;
+        }}
+        .sidebar-nav a {{
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #4B5563;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }}
+        .sidebar-nav a:hover {{
+            background-color: #F3F4F6;
+            color: #58508d;
+        }}
+        .sidebar-nav a.active {{
+            background-color: #EEF2FF;
+            color: #58508d;
+            font-weight: 600;
+        }}
+        .sidebar-nav .level-1 {{
+            padding-left: 0.75rem;
+            font-weight: 600;
+            color: #1E293B;
+        }}
+        .sidebar-nav .level-2 {{
+            padding-left: 1.5rem;
+            color: #4B5563;
+        }}
+        .sidebar-nav .level-3 {{
+            padding-left: 2.25rem;
+            color: #6B7280;
+            font-size: 0.8125rem;
+        }}
+        .sidebar-nav .level-4 {{
+            padding-left: 3rem;
+            color: #9CA3AF;
+            font-size: 0.75rem;
+        }}
+        .main-content {{
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }}
+        .main-content.no-sidebar {{
+            margin-left: 0;
+        }}
+        @media (max-width: 1024px) {{
+            .sidebar {{
+                transform: translateX(-100%);
+            }}
+            .sidebar.expanded {{
+                transform: translateX(0);
+            }}
+            .sidebar-toggle {{
+                display: block;
+            }}
+            .main-content {{
+                margin-left: 0;
+            }}
+        }}
     </style>
 </head>
 <body class="antialiased">
@@ -170,7 +280,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             </ul>
         </nav>
     </header>
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    {sidebar_toggle}
+    {sidebar}
+    <main class="main-content{main_content_class}container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="content">
 {content}
         </div>
@@ -180,6 +292,79 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </footer>
     <script>
         mermaid.initialize({{ startOnLoad: true, theme: 'default' }});
+        
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {{
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const mainContent = document.querySelector('.main-content');
+            
+            // Toggle sidebar
+            if (sidebarToggle) {{
+                sidebarToggle.addEventListener('click', function() {{
+                    sidebar.classList.toggle('expanded');
+                }});
+            }}
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {{
+                if (window.innerWidth <= 1024) {{
+                    if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {{
+                        sidebar.classList.remove('expanded');
+                    }}
+                }}
+            }});
+            
+            // Update active link on scroll
+            const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            function updateActiveLink() {{
+                let current = '';
+                headings.forEach(heading => {{
+                    const rect = heading.getBoundingClientRect();
+                    if (rect.top <= 100) {{
+                        current = heading.id;
+                    }}
+                }});
+                
+                sidebarLinks.forEach(link => {{
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {{
+                        link.classList.add('active');
+                    }}
+                }});
+            }}
+            
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+            
+            // Smooth scroll for sidebar links
+            sidebarLinks.forEach(link => {{
+                link.addEventListener('click', function(e) {{
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {{
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {{
+                            const headerOffset = 80;
+                            const elementPosition = target.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            
+                            window.scrollTo({{
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            }});
+                            
+                            // Close sidebar on mobile after click
+                            if (window.innerWidth <= 1024) {{
+                                sidebar.classList.remove('expanded');
+                            }}
+                        }}
+                    }}
+                }});
+            }});
+        }});
     </script>
 </body>
 </html>
@@ -264,6 +449,81 @@ def convert_markdown_links(content: str, current_file: Path, all_md_files: Dict[
     content = re.sub(r'href="([^"]+\.md)">', r'href="\1.html">', content)
     
     return content
+
+
+class HeadingExtractor(HTMLParser):
+    """Extract headings from HTML content."""
+    def __init__(self):
+        super().__init__()
+        self.headings = []
+        self.current_tag = None
+        self.current_text = []
+        self.current_id = None
+    
+    def handle_starttag(self, tag, attrs):
+        if tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+            self.current_tag = tag
+            self.current_text = []
+            # Extract id attribute
+            self.current_id = None
+            for attr, value in attrs:
+                if attr == 'id':
+                    self.current_id = value
+                    break
+    
+    def handle_endtag(self, tag):
+        if tag == self.current_tag:
+            text = ' '.join(self.current_text).strip()
+            if text and self.current_id:
+                level = int(tag[1])  # Extract number from h1, h2, etc.
+                self.headings.append({
+                    'level': level,
+                    'text': text,
+                    'id': self.current_id
+                })
+            self.current_tag = None
+            self.current_text = []
+    
+    def handle_data(self, data):
+        if self.current_tag:
+            self.current_text.append(data)
+
+
+def generate_sidebar_nav(html_content: str) -> Tuple[str, str, str]:
+    """Generate sidebar navigation from headings in HTML content.
+    Returns: (sidebar_html, sidebar_toggle_html, main_content_class)
+    """
+    parser = HeadingExtractor()
+    parser.feed(html_content)
+    headings = parser.headings
+    
+    if not headings:
+        return ('', '', 'no-sidebar')
+    
+    nav_items = []
+    for heading in headings:
+        level = heading['level']
+        text = html.escape(heading['text'])
+        heading_id = heading['id']
+        level_class = f'level-{level}'
+        nav_items.append(f'                <li><a href="#{heading_id}" class="{level_class}">{text}</a></li>')
+    
+    sidebar_html = f'''    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-title">Table of Contents</div>
+            <ul class="sidebar-nav">
+{chr(10).join(nav_items)}
+            </ul>
+        </div>
+    </aside>'''
+    
+    sidebar_toggle_html = '''    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>'''
+    
+    return (sidebar_html, sidebar_toggle_html, ' ')
 
 
 def convert_markdown_to_html(md_file: Path, all_md_files: Dict[str, Path]) -> str:
@@ -368,6 +628,9 @@ def convert_markdown_to_html(md_file: Path, all_md_files: Dict[str, Path]) -> st
     else:
         title = md_file.stem.replace('-', ' ').title()
     
+    # Generate sidebar navigation
+    sidebar_html, sidebar_toggle_html, main_content_class = generate_sidebar_nav(html_content)
+    
     # Get navigation links
     nav_links = get_navigation_links(md_file.with_suffix('.html'))
     
@@ -375,6 +638,9 @@ def convert_markdown_to_html(md_file: Path, all_md_files: Dict[str, Path]) -> st
     final_html = HTML_TEMPLATE.format(
         title=title,
         content=html_content,
+        sidebar=sidebar_html,
+        sidebar_toggle=sidebar_toggle_html,
+        main_content_class=main_content_class,
         **nav_links
     )
     

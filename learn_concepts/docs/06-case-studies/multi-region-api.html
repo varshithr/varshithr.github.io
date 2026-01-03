@@ -134,6 +134,115 @@
             padding: 1rem;
             border-radius: 0.5rem;
         }
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: calc(100vh - 80px);
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid #E5E7EB;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 40;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 50;
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .sidebar-toggle:hover {
+            background-color: #F3F4F6;
+        }
+        .sidebar-content {
+            padding: 1.5rem;
+        }
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #4B5563;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        .sidebar-nav a:hover {
+            background-color: #F3F4F6;
+            color: #58508d;
+        }
+        .sidebar-nav a.active {
+            background-color: #EEF2FF;
+            color: #58508d;
+            font-weight: 600;
+        }
+        .sidebar-nav .level-1 {
+            padding-left: 0.75rem;
+            font-weight: 600;
+            color: #1E293B;
+        }
+        .sidebar-nav .level-2 {
+            padding-left: 1.5rem;
+            color: #4B5563;
+        }
+        .sidebar-nav .level-3 {
+            padding-left: 2.25rem;
+            color: #6B7280;
+            font-size: 0.8125rem;
+        }
+        .sidebar-nav .level-4 {
+            padding-left: 3rem;
+            color: #9CA3AF;
+            font-size: 0.75rem;
+        }
+        .main-content {
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }
+        .main-content.no-sidebar {
+            margin-left: 0;
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.expanded {
+                transform: translateX(0);
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -151,7 +260,85 @@
             </ul>
         </nav>
     </header>
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+        <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-title">Table of Contents</div>
+            <ul class="sidebar-nav">
+                <li><a href="#multi-region-api-on-gcp" class="level-1">Multi-Region API on GCP</a></li>
+                <li><a href="#system-overview" class="level-2">System Overview</a></li>
+                <li><a href="#requirements" class="level-3">Requirements</a></li>
+                <li><a href="#architecture" class="level-2">Architecture</a></li>
+                <li><a href="#high-level-architecture" class="level-3">High-Level Architecture</a></li>
+                <li><a href="#component-details" class="level-3">Component Details</a></li>
+                <li><a href="#1-global-load-balancer" class="level-4">1. Global Load Balancer</a></li>
+                <li><a href="#2-api-servers" class="level-4">2. API Servers</a></li>
+                <li><a href="#3-database" class="level-4">3. Database</a></li>
+                <li><a href="#4-cache" class="level-4">4. Cache</a></li>
+                <li><a href="#5-event-streaming" class="level-4">5. Event Streaming</a></li>
+                <li><a href="#data-flow" class="level-2">Data Flow</a></li>
+                <li><a href="#read-request-flow" class="level-3">Read Request Flow</a></li>
+                <li><a href="#write-request-flow" class="level-3">Write Request Flow</a></li>
+                <li><a href="#slis-slos-error-budgets" class="level-2">SLIs, SLOs &amp; Error Budgets</a></li>
+                <li><a href="#slis-service-level-indicators" class="level-3">SLIs (Service Level Indicators)</a></li>
+                <li><a href="#1-availability-sli" class="level-4">1. Availability SLI</a></li>
+                <li><a href="#2-latency-sli" class="level-4">2. Latency SLI</a></li>
+                <li><a href="#3-error-rate-sli" class="level-4">3. Error Rate SLI</a></li>
+                <li><a href="#slos-service-level-objectives" class="level-3">SLOs (Service Level Objectives)</a></li>
+                <li><a href="#error-budget-policy" class="level-3">Error Budget Policy</a></li>
+                <li><a href="#capacity-planning" class="level-2">Capacity Planning</a></li>
+                <li><a href="#current-capacity" class="level-3">Current Capacity</a></li>
+                <li><a href="#scaling-strategy" class="level-3">Scaling Strategy</a></li>
+                <li><a href="#capacity-forecasting" class="level-3">Capacity Forecasting</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#failure-scenarios" class="level-3">Failure Scenarios</a></li>
+                <li><a href="#scenario-1-single-region-failure" class="level-4">Scenario 1: Single Region Failure</a></li>
+                <li><a href="#scenario-2-database-failure" class="level-4">Scenario 2: Database Failure</a></li>
+                <li><a href="#scenario-3-cache-failure" class="level-4">Scenario 3: Cache Failure</a></li>
+                <li><a href="#scenario-4-load-balancer-failure" class="level-4">Scenario 4: Load Balancer Failure</a></li>
+                <li><a href="#overload-scenarios" class="level-3">Overload Scenarios</a></li>
+                <li><a href="#10-normal-load-300k-qps" class="level-4">10× Normal Load (300K QPS)</a></li>
+                <li><a href="#100-normal-load-3m-qps-ddos" class="level-4">100× Normal Load (3M QPS) - DDoS</a></li>
+                <li><a href="#observability" class="level-2">Observability</a></li>
+                <li><a href="#metrics" class="level-3">Metrics</a></li>
+                <li><a href="#service-metrics" class="level-4">Service Metrics</a></li>
+                <li><a href="#resource-metrics" class="level-4">Resource Metrics</a></li>
+                <li><a href="#business-metrics" class="level-4">Business Metrics</a></li>
+                <li><a href="#dashboards" class="level-3">Dashboards</a></li>
+                <li><a href="#logs" class="level-3">Logs</a></li>
+                <li><a href="#traces" class="level-3">Traces</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#deployment-rollout-strategy" class="level-2">Deployment &amp; Rollout Strategy</a></li>
+                <li><a href="#deployment-architecture" class="level-3">Deployment Architecture</a></li>
+                <li><a href="#rollout-process" class="level-3">Rollout Process</a></li>
+                <li><a href="#phase-1-canary-5-traffic" class="level-4">Phase 1: Canary (5% traffic)</a></li>
+                <li><a href="#phase-2-gradual-rollout-25-50-100" class="level-4">Phase 2: Gradual Rollout (25%, 50%, 100%)</a></li>
+                <li><a href="#rollback-strategy" class="level-3">Rollback Strategy</a></li>
+                <li><a href="#feature-flags" class="level-3">Feature Flags</a></li>
+                <li><a href="#security" class="level-2">Security</a></li>
+                <li><a href="#authentication-authorization" class="level-3">Authentication &amp; Authorization</a></li>
+                <li><a href="#data-protection" class="level-3">Data Protection</a></li>
+                <li><a href="#network-security" class="level-3">Network Security</a></li>
+                <li><a href="#incident-response-playbook" class="level-2">Incident Response Playbook</a></li>
+                <li><a href="#incident-severity" class="level-3">Incident Severity</a></li>
+                <li><a href="#common-incidents" class="level-3">Common Incidents</a></li>
+                <li><a href="#incident-1-high-error-rate" class="level-4">Incident 1: High Error Rate</a></li>
+                <li><a href="#incident-2-high-latency" class="level-4">Incident 2: High Latency</a></li>
+                <li><a href="#incident-3-database-failure" class="level-4">Incident 3: Database Failure</a></li>
+                <li><a href="#on-call-rotation" class="level-3">On-Call Rotation</a></li>
+                <li><a href="#cost-optimization" class="level-2">Cost Optimization</a></li>
+                <li><a href="#cost-breakdown" class="level-3">Cost Breakdown</a></li>
+                <li><a href="#optimization-strategies" class="level-3">Optimization Strategies</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="content">
 <h1 id="multi-region-api-on-gcp">Multi-Region API on GCP</h1>
 <p><strong>One-line summary</strong>: End-to-end design of a globally distributed API on GCP with SLOs, rollout strategy, and incident playbooks.</p>
@@ -790,6 +977,79 @@ style Rollback fill:#ff9999
     </footer>
     <script>
         mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const mainContent = document.querySelector('.main-content');
+            
+            // Toggle sidebar
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('expanded');
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 1024) {
+                    if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                        sidebar.classList.remove('expanded');
+                    }
+                }
+            });
+            
+            // Update active link on scroll
+            const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            function updateActiveLink() {
+                let current = '';
+                headings.forEach(heading => {
+                    const rect = heading.getBoundingClientRect();
+                    if (rect.top <= 100) {
+                        current = heading.id;
+                    }
+                });
+                
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+            
+            // Smooth scroll for sidebar links
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            const headerOffset = 80;
+                            const elementPosition = target.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                            
+                            // Close sidebar on mobile after click
+                            if (window.innerWidth <= 1024) {
+                                sidebar.classList.remove('expanded');
+                            }
+                        }
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>

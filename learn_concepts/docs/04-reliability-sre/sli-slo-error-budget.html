@@ -134,6 +134,115 @@
             padding: 1rem;
             border-radius: 0.5rem;
         }
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: calc(100vh - 80px);
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid #E5E7EB;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 40;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 50;
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .sidebar-toggle:hover {
+            background-color: #F3F4F6;
+        }
+        .sidebar-content {
+            padding: 1.5rem;
+        }
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #4B5563;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        .sidebar-nav a:hover {
+            background-color: #F3F4F6;
+            color: #58508d;
+        }
+        .sidebar-nav a.active {
+            background-color: #EEF2FF;
+            color: #58508d;
+            font-weight: 600;
+        }
+        .sidebar-nav .level-1 {
+            padding-left: 0.75rem;
+            font-weight: 600;
+            color: #1E293B;
+        }
+        .sidebar-nav .level-2 {
+            padding-left: 1.5rem;
+            color: #4B5563;
+        }
+        .sidebar-nav .level-3 {
+            padding-left: 2.25rem;
+            color: #6B7280;
+            font-size: 0.8125rem;
+        }
+        .sidebar-nav .level-4 {
+            padding-left: 3rem;
+            color: #9CA3AF;
+            font-size: 0.75rem;
+        }
+        .main-content {
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }
+        .main-content.no-sidebar {
+            margin-left: 0;
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.expanded {
+                transform: translateX(0);
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -151,7 +260,72 @@
             </ul>
         </nav>
     </header>
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+        <aside class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-title">Table of Contents</div>
+            <ul class="sidebar-nav">
+                <li><a href="#slis-slos-error-budgets" class="level-1">SLIs, SLOs &amp; Error Budgets</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#the-slo-hierarchy" class="level-3">The SLO Hierarchy</a></li>
+                <li><a href="#the-error-budget-concept" class="level-3">The Error Budget Concept</a></li>
+                <li><a href="#error-budget-consumption" class="level-3">Error Budget Consumption</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#sli-service-level-indicator" class="level-3">SLI (Service Level Indicator)</a></li>
+                <li><a href="#good-slis" class="level-4">Good SLIs</a></li>
+                <li><a href="#bad-slis" class="level-4">Bad SLIs</a></li>
+                <li><a href="#slo-service-level-objective" class="level-3">SLO (Service Level Objective)</a></li>
+                <li><a href="#setting-slos" class="level-4">Setting SLOs</a></li>
+                <li><a href="#slo-tiers" class="level-4">SLO Tiers</a></li>
+                <li><a href="#error-budget" class="level-3">Error Budget</a></li>
+                <li><a href="#calculating-error-budget" class="level-4">Calculating Error Budget</a></li>
+                <li><a href="#error-budget-policy" class="level-4">Error Budget Policy</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#slo-violations" class="level-3">SLO Violations</a></li>
+                <li><a href="#scenario-1-slo-too-aggressive" class="level-4">Scenario 1: SLO Too Aggressive</a></li>
+                <li><a href="#scenario-2-slo-too-lax" class="level-4">Scenario 2: SLO Too Lax</a></li>
+                <li><a href="#scenario-3-sli-misconfigured" class="level-4">Scenario 3: SLI Misconfigured</a></li>
+                <li><a href="#error-budget-exhaustion" class="level-3">Error Budget Exhaustion</a></li>
+                <li><a href="#scenario-1-budget-exhausted-early" class="level-4">Scenario 1: Budget Exhausted Early</a></li>
+                <li><a href="#scenario-2-budget-never-used" class="level-4">Scenario 2: Budget Never Used</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics-to-track" class="level-3">Metrics to Track</a></li>
+                <li><a href="#sli-metrics" class="level-4">SLI Metrics</a></li>
+                <li><a href="#slo-compliance" class="level-4">SLO Compliance</a></li>
+                <li><a href="#alerting" class="level-4">Alerting</a></li>
+                <li><a href="#dashboards" class="level-3">Dashboards</a></li>
+                <li><a href="#logs" class="level-3">Logs</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#implementing-slisslos" class="level-3">Implementing SLIs/SLOs</a></li>
+                <li><a href="#1-define-slis" class="level-4">1. Define SLIs</a></li>
+                <li><a href="#2-set-slos" class="level-4">2. Set SLOs</a></li>
+                <li><a href="#3-implement-error-budgets" class="level-4">3. Implement Error Budgets</a></li>
+                <li><a href="#4-review-and-adjust" class="level-4">4. Review and Adjust</a></li>
+                <li><a href="#testing-strategy" class="level-3">Testing Strategy</a></li>
+                <li><a href="#security-boundaries" class="level-2">Security Boundaries</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#what-we-gain-with-slisslos" class="level-3">What We Gain with SLIs/SLOs</a></li>
+                <li><a href="#what-we-lose" class="level-3">What We Lose</a></li>
+                <li><a href="#when-to-use-slisslos" class="level-3">When to Use SLIs/SLOs</a></li>
+                <li><a href="#alternatives" class="level-3">Alternatives</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#capacity-planning" class="level-3">Capacity Planning</a></li>
+                <li><a href="#monitoring-debugging" class="level-3">Monitoring &amp; Debugging</a></li>
+                <li><a href="#incident-response" class="level-3">Incident Response</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#design-questions" class="level-3">Design Questions</a></li>
+                <li><a href="#scale-questions" class="level-3">Scale Questions</a></li>
+                <li><a href="#operational-questions" class="level-3">Operational Questions</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="content">
 <h1 id="slis-slos-error-budgets">SLIs, SLOs &amp; Error Budgets</h1>
 <p><strong>One-line summary</strong>: How to define meaningful SLIs, set appropriate SLOs, and use error budgets to balance reliability and feature velocity.</p>
@@ -468,6 +642,79 @@ Remaining Budget    :1800, 2590200
     </footer>
     <script>
         mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const mainContent = document.querySelector('.main-content');
+            
+            // Toggle sidebar
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('expanded');
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 1024) {
+                    if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                        sidebar.classList.remove('expanded');
+                    }
+                }
+            });
+            
+            // Update active link on scroll
+            const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            function updateActiveLink() {
+                let current = '';
+                headings.forEach(heading => {
+                    const rect = heading.getBoundingClientRect();
+                    if (rect.top <= 100) {
+                        current = heading.id;
+                    }
+                });
+                
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+            
+            // Smooth scroll for sidebar links
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            const headerOffset = 80;
+                            const elementPosition = target.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                            
+                            // Close sidebar on mobile after click
+                            if (window.innerWidth <= 1024) {
+                                sidebar.classList.remove('expanded');
+                            }
+                        }
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
