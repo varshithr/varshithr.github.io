@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="learning-index-staff-level-gcp-system-design-sre">Learning Index: Staff-Level GCP System Design &amp; SRE</h1>
+<h2 id="navigation">Navigation</h2>
+<ul>
+<li><a href="#learning-path-curriculum">Learning Path</a> - Follow this for structured learning</li>
+<li><a href="#reference-map">Reference Map</a> - Jump to specific topics</li>
+<li><a href="PROGRESS.html">Progress Tracker</a> - Track your completion</li>
+</ul>
+<hr />
+<h2 id="learning-path-curriculum">Learning Path (Curriculum)</h2>
+<p>Follow these phases in order. Each phase builds on the previous one.</p>
+<h3 id="phase-0-foundations-quantitative-reasoning">Phase 0: Foundations &amp; Quantitative Reasoning</h3>
+<p><strong>Goal</strong>: Build mental models for capacity, latency, and system behavior.</p>
+<p><strong>Topics</strong>:
+- <a href="01-foundations/queueing-tail-latency.html">Queueing Theory &amp; Tail Latency</a>
+- <a href="01-foundations/capacity-math.html">Capacity Math Cheat Sheet</a>
+- <a href="01-foundations/observability-basics.html">Observability Basics</a></p>
+<p><strong>Milestone</strong>: You can reason about P50/P95/P99 latency, calculate capacity needs, and understand what metrics matter.</p>
+<p><strong>Suggested pacing</strong>: 1-2 weeks</p>
+<hr />
+<h3 id="phase-1-distributed-systems-building-blocks">Phase 1: Distributed Systems Building Blocks</h3>
+<p><strong>Goal</strong>: Understand the primitives that make distributed systems work.</p>
+<p><strong>Topics</strong>:
+- <a href="02-distributed-systems/time-ordering-causality.md">Time, Ordering, and Causality</a>
+- <a href="02-distributed-systems/consensus-leases.md">Consensus &amp; Leases</a>
+- <a href="02-distributed-systems/replication.md">Replication Strategies</a>
+- <a href="02-distributed-systems/sharding-partitioning.md">Sharding &amp; Partitioning</a>
+- <a href="02-distributed-systems/overload-backpressure.html">Overload &amp; Backpressure</a>
+- <a href="02-distributed-systems/idempotency-retries.html">Idempotency &amp; Retry Semantics</a>
+- <a href="02-distributed-systems/queues-streams.md">Queues &amp; Streams</a></p>
+<p><strong>Milestone</strong>: You understand when to use consensus vs leases, how to handle overload gracefully, and the tradeoffs in replication strategies.</p>
+<p><strong>Suggested pacing</strong>: 3-4 weeks</p>
+<hr />
+<h3 id="phase-2-gcp-core-building-blocks">Phase 2: GCP Core Building Blocks</h3>
+<p><strong>Goal</strong>: Deep understanding of GCP primitives: how they work, fail, and scale.</p>
+<p><strong>Topics</strong>:
+- <a href="03-gcp-core-building-blocks/vpc-lb-dns.html">VPC, Load Balancing &amp; DNS</a>
+- <a href="03-gcp-core-building-blocks/gke-internals.md">GKE Control Plane &amp; Data Plane</a>
+- <a href="03-gcp-core-building-blocks/iam-evaluation.html">IAM Evaluation Model</a>
+- <a href="03-gcp-core-building-blocks/cloud-storage.md">Cloud Storage Deep Dive</a>
+- <a href="03-gcp-core-building-blocks/spanner.md">Spanner: Consistency &amp; Performance</a>
+- <a href="03-gcp-core-building-blocks/bigtable.md">Bigtable: Design &amp; Tradeoffs</a>
+- <a href="03-gcp-core-building-blocks/bigquery.md">BigQuery Architecture</a>
+- <a href="03-gcp-core-building-blocks/pubsub.md">Pub/Sub: Delivery Guarantees</a>
+- <a href="03-gcp-core-building-blocks/kms-secrets.md">Cloud KMS &amp; Secret Management</a></p>
+<p><strong>Milestone</strong>: You can design systems using GCP primitives, understand their failure modes, and make informed tradeoffs.</p>
+<p><strong>Suggested pacing</strong>: 4-6 weeks</p>
+<hr />
+<h3 id="phase-3-reliability-engineering-sre">Phase 3: Reliability Engineering &amp; SRE</h3>
+<p><strong>Goal</strong>: Build and operate reliable systems at scale.</p>
+<p><strong>Topics</strong>:
+- <a href="04-reliability-sre/sli-slo-error-budget.html">SLIs, SLOs &amp; Error Budgets</a>
+- <a href="04-reliability-sre/prr-checklist.html">Production Readiness Reviews (PRR)</a>
+- <a href="04-reliability-sre/incident-response.md">Incident Response &amp; Postmortems</a>
+- <a href="04-reliability-sre/capacity-planning.md">Capacity Planning &amp; Forecasting</a>
+- <a href="04-reliability-sre/load-shedding.md">Load Shedding &amp; Circuit Breakers</a>
+- <a href="04-reliability-sre/canary-rollouts.md">Canary Deployments &amp; Rollouts</a>
+- <a href="04-reliability-sre/testing-for-failure.md">Testing for Failure</a></p>
+<p><strong>Milestone</strong>: You can define SLIs/SLOs, run PRRs, respond to incidents, and plan capacity.</p>
+<p><strong>Suggested pacing</strong>: 3-4 weeks</p>
+<hr />
+<h3 id="phase-4-case-studies-end-to-end-design">Phase 4: Case Studies &amp; End-to-End Design</h3>
+<p><strong>Goal</strong>: Apply everything to real-world scenarios.</p>
+<p><strong>Topics</strong>:
+- <a href="06-case-studies/multi-region-api.html">Multi-Region API on GCP</a>
+- <a href="06-case-studies/data-pipeline.md">High-Throughput Data Pipeline</a> (coming soon)
+- <a href="06-case-studies/cdn-system.md">Global Content Delivery System</a> (coming soon)</p>
+<p><strong>Milestone</strong>: You can design, implement, and operate production systems with clear SLOs and operational playbooks.</p>
+<p><strong>Suggested pacing</strong>: 2-3 weeks per case study</p>
+<hr />
+<h2 id="reference-map">Reference Map</h2>
+<p>Browse by topic area. Each entry links to deep dives and notes prerequisites.</p>
+<h3 id="distributed-systems">Distributed Systems</h3>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Deep Dive</th>
+<th>Prerequisites</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Time &amp; Ordering</strong></td>
+<td><a href="02-distributed-systems/time-ordering-causality.md">Time, Ordering, Causality</a></td>
+<td>Phase 0</td>
+</tr>
+<tr>
+<td><strong>Consensus</strong></td>
+<td><a href="02-distributed-systems/consensus-leases.md">Consensus &amp; Leases</a></td>
+<td>Time &amp; Ordering</td>
+</tr>
+<tr>
+<td><strong>Replication</strong></td>
+<td><a href="02-distributed-systems/replication.md">Replication Strategies</a></td>
+<td>Consensus</td>
+</tr>
+<tr>
+<td><strong>Sharding</strong></td>
+<td><a href="02-distributed-systems/sharding-partitioning.md">Sharding &amp; Partitioning</a></td>
+<td>Replication</td>
+</tr>
+<tr>
+<td><strong>Overload</strong></td>
+<td><a href="02-distributed-systems/overload-backpressure.html">Overload &amp; Backpressure</a></td>
+<td>Queueing Theory</td>
+</tr>
+<tr>
+<td><strong>Idempotency</strong></td>
+<td><a href="02-distributed-systems/idempotency-retries.html">Idempotency &amp; Retries</a></td>
+<td>Time &amp; Ordering</td>
+</tr>
+<tr>
+<td><strong>Queues</strong></td>
+<td><a href="02-distributed-systems/queues-streams.md">Queues &amp; Streams</a></td>
+<td>Overload</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gcp-infrastructure">GCP Infrastructure</h3>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Deep Dive</th>
+<th>Prerequisites</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Networking</strong></td>
+<td><a href="03-gcp-core-building-blocks/vpc-lb-dns.html">VPC, LB &amp; DNS</a></td>
+<td>Phase 0</td>
+</tr>
+<tr>
+<td><strong>Kubernetes</strong></td>
+<td><a href="03-gcp-core-building-blocks/gke-internals.md">GKE Internals</a></td>
+<td>Networking</td>
+</tr>
+<tr>
+<td><strong>Identity</strong></td>
+<td><a href="03-gcp-core-building-blocks/iam-evaluation.html">IAM Evaluation</a></td>
+<td>Phase 0</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td><a href="03-gcp-core-building-blocks/cloud-storage.md">Cloud Storage</a></td>
+<td>Networking</td>
+</tr>
+<tr>
+<td><strong>Spanner</strong></td>
+<td><a href="03-gcp-core-building-blocks/spanner.md">Spanner Deep Dive</a></td>
+<td>Consensus, Replication</td>
+</tr>
+<tr>
+<td><strong>Bigtable</strong></td>
+<td><a href="03-gcp-core-building-blocks/bigtable.md">Bigtable Design</a></td>
+<td>Sharding</td>
+</tr>
+<tr>
+<td><strong>BigQuery</strong></td>
+<td><a href="03-gcp-core-building-blocks/bigquery.md">BigQuery Architecture</a></td>
+<td>Storage, Sharding</td>
+</tr>
+<tr>
+<td><strong>Pub/Sub</strong></td>
+<td><a href="03-gcp-core-building-blocks/pubsub.md">Pub/Sub Guarantees</a></td>
+<td>Queues, Idempotency</td>
+</tr>
+<tr>
+<td><strong>Secrets</strong></td>
+<td><a href="03-gcp-core-building-blocks/kms-secrets.md">KMS &amp; Secrets</a></td>
+<td>IAM</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reliability-sre">Reliability &amp; SRE</h3>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Deep Dive</th>
+<th>Prerequisites</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SLIs/SLOs</strong></td>
+<td><a href="04-reliability-sre/sli-slo-error-budget.html">SLIs, SLOs &amp; Error Budgets</a></td>
+<td>Phase 0</td>
+</tr>
+<tr>
+<td><strong>PRR</strong></td>
+<td><a href="04-reliability-sre/prr-checklist.html">PRR Checklist</a></td>
+<td>SLIs/SLOs</td>
+</tr>
+<tr>
+<td><strong>Incidents</strong></td>
+<td><a href="04-reliability-sre/incident-response.md">Incident Response</a></td>
+<td>SLIs/SLOs</td>
+</tr>
+<tr>
+<td><strong>Capacity</strong></td>
+<td><a href="04-reliability-sre/capacity-planning.md">Capacity Planning</a></td>
+<td>Capacity Math</td>
+</tr>
+<tr>
+<td><strong>Load Shedding</strong></td>
+<td><a href="04-reliability-sre/load-shedding.md">Load Shedding</a></td>
+<td>Overload</td>
+</tr>
+<tr>
+<td><strong>Rollouts</strong></td>
+<td><a href="04-reliability-sre/canary-rollouts.md">Canary &amp; Rollouts</a></td>
+<td>Testing for Failure</td>
+</tr>
+<tr>
+<td><strong>Testing</strong></td>
+<td><a href="04-reliability-sre/testing-for-failure.md">Testing for Failure</a></td>
+<td>Phase 1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="low-level-design-patterns">Low-Level Design Patterns</h3>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Deep Dive</th>
+<th>Prerequisites</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Rate Limiting</strong></td>
+<td><a href="05-llD-patterns/rate-limiting.html">Rate Limiter Implementations</a></td>
+<td>Queueing Theory</td>
+</tr>
+<tr>
+<td><strong>Circuit Breakers</strong></td>
+<td><a href="05-llD-patterns/circuit-breakers.md">Circuit Breaker Pattern</a></td>
+<td>Load Shedding</td>
+</tr>
+<tr>
+<td><strong>Concurrency</strong></td>
+<td><a href="05-llD-patterns/concurrency.md">Concurrency Primitives</a></td>
+<td>Phase 1</td>
+</tr>
+<tr>
+<td><strong>Idempotency</strong></td>
+<td><a href="05-llD-patterns/idempotency-patterns.md">Idempotency Patterns</a></td>
+<td>Idempotency &amp; Retries</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cross-cutting-concerns">Cross-Cutting Concerns</h2>
+<p>These topics appear across multiple chapters:</p>
+<ul>
+<li><strong>Failure Domains</strong>: How to isolate failures and limit blast radius</li>
+<li><strong>Overload Behavior</strong>: What happens at 10×, 100× normal load</li>
+<li><strong>Observability Contract</strong>: What metrics/logs/traces are needed</li>
+<li><strong>Change Safety</strong>: Rollout strategies, canaries, reversibility</li>
+<li><strong>Security Boundaries</strong>: Identity, authorization, data exfiltration controls</li>
+</ul>
+<hr />
+<h2 id="learning-dependencies">Learning Dependencies</h2>
+<div class="mermaid">
+flowchart TD
+Phase0[Phase 0: Foundations] --> Phase1[Phase 1: Distributed Systems]
+Phase1 --> Phase2[Phase 2: GCP Building Blocks]
+Phase2 --> Phase3[Phase 3: Reliability & SRE]
+Phase3 --> Phase4[Phase 4: Case Studies]
+Phase1 --> LLD[LLD Patterns]
+LLD --> Phase4
+</div>
+<hr />
+<h2 id="next-steps">Next Steps</h2>
+<ol>
+<li><strong>Start with Phase 0</strong> if you're new to quantitative reasoning</li>
+<li><strong>Jump to a topic</strong> in the Reference Map if you have specific questions</li>
+<li><strong>Track progress</strong> in <a href="PROGRESS.html">PROGRESS.md</a></li>
+<li><strong>Use templates</strong> in <code>00-meta/</code> for your own deep dives</li>
+</ol>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+</html>

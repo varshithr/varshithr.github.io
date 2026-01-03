@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observability Basics Answers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="answer-key-observability-basics">Answer Key: Observability Basics</h1>
+<p><a href="../../01-foundations/observability-basics.html">Back to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-define-observability-contract">Exercise 1: Define Observability Contract</h2>
+<p><strong>Question</strong>: Define metrics, logs, and traces for an API service. What do you measure?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Service</strong>: REST API for user data management</p>
+<h3 id="metrics">Metrics</h3>
+<p><strong>1. Service Metrics</strong></p>
+<p><strong>Latency Metrics</strong>:
+- <code>http_request_duration_seconds{method, endpoint, status}</code>: Request latency (histogram)
+  - P50, P95, P99 percentiles
+  - Labels: method (GET, POST, etc.), endpoint, status code</p>
+<p><strong>Throughput Metrics</strong>:
+- <code>http_requests_total{method, endpoint, status}</code>: Request count (counter)
+  - Labels: method, endpoint, status code</p>
+<p><strong>Error Metrics</strong>:
+- <code>http_errors_total{method, endpoint, error_type}</code>: Error count (counter)
+  - Labels: method, endpoint, error_type (4xx, 5xx, timeout)</p>
+<p><strong>Availability Metrics</strong>:
+- <code>http_request_success_rate{method, endpoint}</code>: Success rate (gauge)
+  - Calculated: successful_requests / total_requests</p>
+<p><strong>2. Resource Metrics</strong></p>
+<p><strong>CPU</strong>: <code>cpu_usage_percent</code>: CPU utilization
+<strong>Memory</strong>: <code>memory_usage_bytes</code>: Memory usage
+<strong>Disk</strong>: <code>disk_usage_bytes</code>, <code>disk_io_operations_total</code>: Disk usage and I/O
+<strong>Network</strong>: <code>network_bytes_total</code>: Network traffic</p>
+<p><strong>3. Business Metrics</strong></p>
+<p><strong>User Metrics</strong>:
+- <code>active_users_total</code>: Active users
+- <code>api_calls_per_user</code>: API calls per user</p>
+<p><strong>Feature Metrics</strong>:
+- <code>feature_usage_total{feature}</code>: Feature usage
+- <code>feature_adoption_rate{feature}</code>: Feature adoption rate</p>
+<h3 id="logs">Logs</h3>
+<p><strong>1. Request Logs</strong></p>
+<p><strong>Format</strong>: Structured JSON</p>
+<p><strong>Fields</strong>:
+- <code>timestamp</code>: Request timestamp
+- <code>request_id</code>: Unique request ID
+- <code>method</code>: HTTP method
+- <code>path</code>: Request path
+- <code>status</code>: Response status code
+- <code>latency_ms</code>: Request latency
+- <code>user_id</code>: User ID (if authenticated)
+- <code>ip_address</code>: Client IP address</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-json">{
+  &quot;timestamp&quot;: &quot;2024-01-01T12:00:00Z&quot;,
+  &quot;level&quot;: &quot;INFO&quot;,
+  &quot;request_id&quot;: &quot;req_123&quot;,
+  &quot;method&quot;: &quot;GET&quot;,
+  &quot;path&quot;: &quot;/users/123&quot;,
+  &quot;status&quot;: 200,
+  &quot;latency_ms&quot;: 45,
+  &quot;user_id&quot;: &quot;user_456&quot;
+}
+</code></pre>
+<p><strong>2. Error Logs</strong></p>
+<p><strong>Format</strong>: Structured JSON</p>
+<p><strong>Fields</strong>:
+- <code>timestamp</code>: Error timestamp
+- <code>request_id</code>: Request ID
+- <code>level</code>: ERROR
+- <code>error</code>: Error message
+- <code>stack_trace</code>: Stack trace (if applicable)
+- <code>context</code>: Additional context</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-json">{
+  &quot;timestamp&quot;: &quot;2024-01-01T12:00:00Z&quot;,
+  &quot;level&quot;: &quot;ERROR&quot;,
+  &quot;request_id&quot;: &quot;req_123&quot;,
+  &quot;error&quot;: &quot;Database connection failed&quot;,
+  &quot;stack_trace&quot;: &quot;...&quot;,
+  &quot;context&quot;: {
+    &quot;database&quot;: &quot;users_db&quot;,
+    &quot;operation&quot;: &quot;read&quot;
+  }
+}
+</code></pre>
+<p><strong>3. Audit Logs</strong></p>
+<p><strong>Format</strong>: Structured JSON</p>
+<p><strong>Fields</strong>:
+- <code>timestamp</code>: Event timestamp
+- <code>user_id</code>: User ID
+- <code>action</code>: Action performed
+- <code>resource</code>: Resource accessed
+- <code>result</code>: Success or failure</p>
+<h3 id="traces">Traces</h3>
+<p><strong>1. Trace Structure</strong></p>
+<p><strong>Trace</strong>: Entire request flow</p>
+<p><strong>Spans</strong>:
+- <strong>Load balancer span</strong>: Request received, routing decision
+- <strong>API server span</strong>: Request processing
+- <strong>Database span</strong>: Database query
+- <strong>Cache span</strong>: Cache lookup
+- <strong>External API span</strong>: External API call</p>
+<p><strong>2. Span Attributes</strong></p>
+<p><strong>Common attributes</strong>:
+- <code>http.method</code>: HTTP method
+- <code>http.status_code</code>: Response status code
+- <code>http.url</code>: Request URL
+- <code>db.query</code>: Database query (if applicable)
+- <code>cache.hit</code>: Cache hit or miss</p>
+<p><strong>3. Sampling Strategy</strong></p>
+<p><strong>Sampling rate</strong>: 1% (or 100% for errors)</p>
+<p><strong>Why</strong>: Traces are expensive, sample most requests but trace all errors</p>
+<h3 id="complete-observability-contract">Complete Observability Contract</h3>
+<p><strong>Metrics</strong>:
+- Latency: <code>http_request_duration_seconds</code> (P50, P95, P99)
+- Throughput: <code>http_requests_total</code>
+- Errors: <code>http_errors_total</code>
+- Availability: <code>http_request_success_rate</code>
+- Resources: CPU, memory, disk, network</p>
+<p><strong>Logs</strong>:
+- Request logs: All requests (structured JSON)
+- Error logs: All errors (with stack traces)
+- Audit logs: Security-relevant events</p>
+<p><strong>Traces</strong>:
+- Trace all HTTP requests (1% sampling, 100% for errors)
+- Spans for: load balancer, API server, database, cache, external APIs</p>
+<p><strong>Answer</strong>: <strong>Complete observability contract</strong>:</p>
+<p><strong>Metrics</strong>:
+- <strong>Latency</strong>: <code>http_request_duration_seconds</code> with P50/P95/P99
+- <strong>Throughput</strong>: <code>http_requests_total</code> by method/endpoint/status
+- <strong>Errors</strong>: <code>http_errors_total</code> by error type
+- <strong>Availability</strong>: <code>http_request_success_rate</code>
+- <strong>Resources</strong>: CPU, memory, disk, network</p>
+<p><strong>Logs</strong>:
+- <strong>Request logs</strong>: All requests with request_id, method, path, status, latency
+- <strong>Error logs</strong>: All errors with stack traces and context
+- <strong>Audit logs</strong>: Security-relevant events</p>
+<p><strong>Traces</strong>:
+- <strong>Trace all requests</strong>: 1% sampling (100% for errors)
+- <strong>Spans</strong>: Load balancer, API server, database, cache, external APIs</p>
+<p><strong>Key principles</strong>:
+- <strong>User-facing</strong>: Metrics measure what users experience
+- <strong>Structured</strong>: Logs are structured JSON
+- <strong>Correlation</strong>: Request IDs link metrics, logs, traces
+- <strong>Sampling</strong>: Trace sampling balances cost and coverage</p>
+<hr />
+<h2 id="exercise-2-debug-with-observability">Exercise 2: Debug with Observability</h2>
+<p><strong>Question</strong>: A service has high latency. How do you use metrics, logs, and traces to debug?</p>
+<h3 id="answer_1">Answer</h3>
+<p><strong>Problem</strong>: Service has high latency (P95 &gt; 100ms, target &lt; 100ms)</p>
+<h3 id="debugging-process">Debugging Process</h3>
+<p><strong>1. Check Metrics</strong></p>
+<p><strong>Latency metrics</strong>:
+- Which endpoints are slow?
+- Which methods are slow?
+- Which regions are slow?
+- When did latency increase?</p>
+<p><strong>Resource metrics</strong>:
+- CPU utilization: Is CPU saturated?
+- Memory usage: Is memory high?
+- Disk I/O: Is disk I/O high?
+- Network: Is network bandwidth saturated?</p>
+<p><strong>Error metrics</strong>:
+- Are errors increasing?
+- What types of errors?
+- Are errors correlated with latency?</p>
+<p><strong>2. Check Logs</strong></p>
+<p><strong>Request logs</strong>:
+- Filter by slow requests (latency &gt; threshold)
+- Look for patterns: specific endpoints, users, times
+- Check for errors in slow requests</p>
+<p><strong>Error logs</strong>:
+- Are there errors in slow requests?
+- What types of errors?
+- Are errors causing retries (increasing latency)?</p>
+<p><strong>3. Check Traces</strong></p>
+<p><strong>Slow traces</strong>:
+- Find traces with high latency
+- Identify slow spans: Which operations are slow?
+- Check span attributes: What's happening in slow spans?</p>
+<p><strong>Span analysis</strong>:
+- <strong>Database spans</strong>: Are database queries slow?
+- <strong>Cache spans</strong>: Are cache lookups slow?
+- <strong>External API spans</strong>: Are external APIs slow?
+- <strong>Processing spans</strong>: Is application logic slow?</p>
+<p><strong>4. Correlate Data</strong></p>
+<p><strong>Correlation</strong>:
+- Use request_id to correlate metrics, logs, traces
+- Identify patterns: slow requests have common characteristics
+- Root cause: What's causing slowness?</p>
+<h3 id="debugging-workflow">Debugging Workflow</h3>
+<div class="mermaid">
+flowchart TD
+HighLatency[High Latency] --> Metrics[Check Metrics]
+Metrics --> Logs[Check Logs]
+Logs --> Traces[Check Traces]
+Traces --> Correlate[Correlate Data]
+Correlate --> RootCause[Identify Root Cause]
+RootCause --> Fix[Fix Issue]
+style HighLatency fill:#ff9999
+style RootCause fill:#ffcc99
+style Fix fill:#99ff99
+</div>
+<h3 id="common-root-causes">Common Root Causes</h3>
+<p><strong>1. Database Slow Queries</strong></p>
+<p><strong>Symptoms</strong>:
+- Database spans are slow in traces
+- High database latency in metrics
+- Database CPU/memory high</p>
+<p><strong>Fix</strong>: Optimize queries, add indexes, scale database</p>
+<p><strong>2. Cache Misses</strong></p>
+<p><strong>Symptoms</strong>:
+- Cache hit rate low in metrics
+- Cache spans show misses in traces
+- Database queries increasing</p>
+<p><strong>Fix</strong>: Improve cache hit rate, increase cache size</p>
+<p><strong>3. Downstream Service Latency</strong></p>
+<p><strong>Symptoms</strong>:
+- External API spans slow in traces
+- Downstream service latency high
+- Errors from downstream services</p>
+<p><strong>Fix</strong>: Optimize downstream calls, add caching, use circuit breakers</p>
+<p><strong>4. Resource Contention</strong></p>
+<p><strong>Symptoms</strong>:
+- CPU/memory/disk utilization high
+- All requests slow (not just specific endpoints)
+- Resource metrics correlate with latency</p>
+<p><strong>Fix</strong>: Scale up resources, optimize resource usage</p>
+<p><strong>5. Code Issues</strong></p>
+<p><strong>Symptoms</strong>:
+- Processing spans slow in traces
+- No obvious resource or dependency issues
+- Specific endpoints slow</p>
+<p><strong>Fix</strong>: Profile code, optimize algorithms, fix bugs</p>
+<h3 id="answer_2">Answer</h3>
+<p><strong>Debugging workflow</strong>:</p>
+<ol>
+<li><strong>Check metrics</strong>: Which endpoints/methods/regions are slow? Resource utilization?</li>
+<li><strong>Check logs</strong>: Filter slow requests, look for patterns, check for errors</li>
+<li><strong>Check traces</strong>: Find slow traces, identify slow spans, check span attributes</li>
+<li><strong>Correlate</strong>: Use request_id to correlate metrics, logs, traces</li>
+<li><strong>Root cause</strong>: Identify what's causing slowness</li>
+</ol>
+<p><strong>Key checks</strong>:
+- <strong>Metrics</strong>: Latency by endpoint/method, resource utilization, errors
+- <strong>Logs</strong>: Slow requests, error patterns, request characteristics
+- <strong>Traces</strong>: Slow spans, database queries, cache hits, external APIs</p>
+<p><strong>Common causes</strong>:
+- Database slow queries
+- Cache misses
+- Downstream service latency
+- Resource contention
+- Code issues</p>
+<p><strong>Tools</strong>:
+- <strong>Metrics</strong>: Prometheus, Cloud Monitoring
+- <strong>Logs</strong>: Cloud Logging, ELK stack
+- <strong>Traces</strong>: Cloud Trace, Jaeger, Zipkin</p>
+<hr />
+<h2 id="exercise-3-reduce-cardinality">Exercise 3: Reduce Cardinality</h2>
+<p><strong>Question</strong>: You have a metric with user_id as a label (high cardinality). How do you fix it?</p>
+<h3 id="answer_3">Answer</h3>
+<p><strong>Problem</strong>: Metric with <code>user_id</code> label has high cardinality (millions of unique values)</p>
+<p><strong>Impact</strong>: 
+- Explodes metric storage
+- Slows down queries
+- Increases costs</p>
+<h3 id="solutions">Solutions</h3>
+<p><strong>1. Remove user_id Label</strong></p>
+<p><strong>Change</strong>:
+- <strong>Before</strong>: <code>api_requests_total{user_id="123", endpoint="/users"}</code>
+- <strong>After</strong>: <code>api_requests_total{endpoint="/users"}</code></p>
+<p><strong>When to use</strong>: When user-level metrics aren't needed</p>
+<p><strong>Tradeoff</strong>: Lose user-level visibility</p>
+<p><strong>2. Use Logs Instead</strong></p>
+<p><strong>Change</strong>:
+- <strong>Metrics</strong>: <code>api_requests_total{endpoint="/users"}</code> (no user_id)
+- <strong>Logs</strong>: Include user_id in log entries</p>
+<p><strong>When to use</strong>: When user-level data is needed for debugging</p>
+<p><strong>Tradeoff</strong>: Need to query logs instead of metrics</p>
+<p><strong>3. Aggregate user_id</strong></p>
+<p><strong>Change</strong>:
+- <strong>Before</strong>: <code>api_requests_total{user_id="123"}</code>
+- <strong>After</strong>: <code>api_requests_total{user_tier="premium"}</code> or <code>api_requests_total{user_segment="enterprise"}</code></p>
+<p><strong>When to use</strong>: When user segmentation is sufficient</p>
+<p><strong>Tradeoff</strong>: Lose individual user visibility</p>
+<p><strong>4. Use Sampling</strong></p>
+<p><strong>Change</strong>:
+- Sample user_ids (e.g., track 1% of users)
+- Use hash of user_id to determine if sampled</p>
+<p><strong>When to use</strong>: When need some user-level visibility</p>
+<p><strong>Tradeoff</strong>: Lose visibility for most users</p>
+<p><strong>5. Use Histogram Instead</strong></p>
+<p><strong>Change</strong>:
+- <strong>Before</strong>: <code>api_requests_total{user_id="123"}</code>
+- <strong>After</strong>: <code>api_request_duration_seconds{endpoint="/users"}</code> (histogram)</p>
+<p><strong>When to use</strong>: When measuring distribution, not individual users</p>
+<p><strong>Tradeoff</strong>: Different metric type</p>
+<h3 id="recommended-solution">Recommended Solution</h3>
+<p><strong>Best practice</strong>: <strong>Remove user_id from metrics, use logs instead</strong></p>
+<p><strong>Metrics</strong> (low cardinality):</p>
+<pre><code>api_requests_total{method, endpoint, status}
+api_request_duration_seconds{method, endpoint}
+</code></pre>
+<p><strong>Logs</strong> (high cardinality):</p>
+<pre><code class="language-json">{
+  &quot;request_id&quot;: &quot;req_123&quot;,
+  &quot;user_id&quot;: &quot;user_456&quot;,
+  &quot;endpoint&quot;: &quot;/users&quot;,
+  &quot;status&quot;: 200,
+  &quot;latency_ms&quot;: 45
+}
+</code></pre>
+<p><strong>Why</strong>:
+- Metrics: Fast queries, low storage, aggregate data
+- Logs: Detailed data, can query by user_id when needed</p>
+<h3 id="answer_4">Answer</h3>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Remove user_id label</strong>: If user-level metrics aren't needed</li>
+<li><strong>Use logs instead</strong>: Include user_id in logs, not metrics</li>
+<li><strong>Aggregate user_id</strong>: Use user_tier or user_segment instead</li>
+<li><strong>Use sampling</strong>: Sample 1% of users</li>
+<li><strong>Use histogram</strong>: Measure distribution, not individual users</li>
+</ol>
+<p><strong>Recommended</strong>: <strong>Remove user_id from metrics, use logs instead</strong></p>
+<p><strong>Metrics</strong> (low cardinality):
+- <code>api_requests_total{method, endpoint, status}</code>
+- <code>api_request_duration_seconds{method, endpoint}</code></p>
+<p><strong>Logs</strong> (high cardinality):
+- Include user_id in log entries
+- Query logs when user-level data needed</p>
+<p><strong>Key principles</strong>:
+- <strong>Metrics</strong>: Low cardinality, aggregate data
+- <strong>Logs</strong>: High cardinality, detailed data
+- <strong>Traces</strong>: Can include user_id in span attributes (sampled)</p>
+<p><strong>Why this works</strong>:
+- Metrics stay fast and cheap
+- Logs provide detailed user-level data when needed
+- Best of both worlds</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+</html>

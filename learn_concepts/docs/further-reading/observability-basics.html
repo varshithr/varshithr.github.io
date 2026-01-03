@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observability Basics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="further-reading-observability-basics">Further Reading: Observability Basics</h1>
+<p><a href="../01-foundations/observability-basics.html">Back to Observability Basics</a></p>
+<hr />
+<h2 id="observability-engineering">Observability Engineering</h2>
+<p><strong>Book</strong>: <a href="https://www.oreilly.com/library/view/observability-engineering/9781492076438/">Observability Engineering</a></p>
+<p><strong>Why it matters</strong>: Comprehensive guide to observability, covering metrics, logs, and traces in depth.</p>
+<h3 id="key-concepts">Key Concepts</h3>
+<p><strong>Three Pillars</strong>:
+- Metrics: What is happening
+- Logs: What happened
+- Traces: How it happened</p>
+<p><strong>Observability vs Monitoring</strong>:
+- Monitoring: Pre-defined metrics (you know what to look for)
+- Observability: Ability to ask new questions (you don't know what to look for)</p>
+<p><strong>Relevance</strong>: Provides the theoretical foundation and practical techniques for observability.</p>
+<h3 id="recommended-chapters">Recommended Chapters</h3>
+<ul>
+<li><strong>Chapter 1: Introduction</strong>: What is observability</li>
+<li><strong>Chapter 2: Metrics</strong>: Metrics best practices</li>
+<li><strong>Chapter 3: Logs</strong>: Logging best practices</li>
+<li><strong>Chapter 4: Traces</strong>: Distributed tracing</li>
+</ul>
+<hr />
+<h2 id="distributed-tracing">Distributed Tracing</h2>
+<h3 id="opentelemetry">OpenTelemetry</h3>
+<p><strong>Documentation</strong>: <a href="https://opentelemetry.io/">OpenTelemetry</a></p>
+<p><strong>Why it matters</strong>: Industry standard for observability, including distributed tracing.</p>
+<h3 id="key-concepts_1">Key Concepts</h3>
+<p><strong>Tracing</strong>:
+- Spans and traces
+- Context propagation
+- Sampling strategies</p>
+<p><strong>Instrumentation</strong>:
+- Automatic instrumentation
+- Manual instrumentation
+- Best practices</p>
+<p><strong>Relevance</strong>: Provides the standard approach to distributed tracing.</p>
+<hr />
+<h2 id="prometheus-monitoring">Prometheus Monitoring</h2>
+<p><strong>Documentation</strong>: <a href="https://prometheus.io/docs/">Prometheus</a></p>
+<p><strong>Why it matters</strong>: Popular open-source monitoring system, widely used for metrics.</p>
+<h3 id="key-concepts_2">Key Concepts</h3>
+<p><strong>Metrics</strong>:
+- Counters, gauges, histograms
+- PromQL query language
+- Alerting rules</p>
+<p><strong>Best Practices</strong>:
+- Metric naming conventions
+- Label cardinality
+- Recording rules</p>
+<p><strong>Relevance</strong>: Provides practical guidance for metrics collection and querying.</p>
+<hr />
+<h2 id="structured-logging">Structured Logging</h2>
+<h3 id="the-twelve-factor-app">The Twelve-Factor App</h3>
+<p><strong>Article</strong>: <a href="https://12factor.net/logs">The Twelve-Factor App: Logs</a></p>
+<p><strong>Why it matters</strong>: Best practices for logging in modern applications.</p>
+<h3 id="key-concepts_3">Key Concepts</h3>
+<p><strong>Structured Logging</strong>:
+- Logs as event streams
+- Structured format (JSON)
+- Context and correlation</p>
+<p><strong>Relevance</strong>: Provides the philosophy and best practices for logging.</p>
+<hr />
+<h2 id="additional-resources">Additional Resources</h2>
+<h3 id="books">Books</h3>
+<p><strong>"Observability Engineering"</strong> by Charity Majors et al.
+- Comprehensive observability guide
+- Practical examples</p>
+<p><strong>"Systems Performance"</strong> by Brendan Gregg
+- Performance analysis
+- Tools and techniques</p>
+<h3 id="online-resources">Online Resources</h3>
+<p><strong>Google Cloud Operations Suite</strong>: <a href="https://cloud.google.com/products/operations">Documentation</a>
+- GCP observability tools
+- Best practices</p>
+<p><strong>Datadog</strong>: <a href="https://www.datadoghq.com/knowledge-center/observability/">Observability Guide</a>
+- Observability concepts
+- Best practices</p>
+<hr />
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ol>
+<li><strong>Three pillars</strong>: Metrics, logs, and traces work together</li>
+<li><strong>User-facing metrics</strong>: Measure what users experience</li>
+<li><strong>Structured logs</strong>: JSON format with context</li>
+<li><strong>Distributed tracing</strong>: Understand request flow</li>
+<li><strong>Observability contract</strong>: Define what to measure</li>
+</ol>
+<hr />
+<h2 id="related-topics">Related Topics</h2>
+<ul>
+<li><a href="../04-reliability-sre/sli-slo-error-budget.html">SLIs/SLOs</a> - What to measure for SLOs</li>
+<li><a href="../01-foundations/queueing-tail-latency.html">Queueing Theory</a> - Latency metrics</li>
+<li><a href="../01-foundations/capacity-math.html">Capacity Math</a> - Resource metrics</li>
+</ul>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+</html>

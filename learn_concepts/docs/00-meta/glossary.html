@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glossary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="glossary">Glossary</h1>
+<p>Definitions of terms used throughout this repository.</p>
+<h2 id="a">A</h2>
+<p><strong>API Gateway</strong>: A service that acts as a single entry point for API requests, handling routing, authentication, rate limiting, and other cross-cutting concerns.</p>
+<p><strong>Availability</strong>: The fraction of time a system is operational and able to serve requests. Usually expressed as a percentage (e.g., 99.9%).</p>
+<h2 id="b">B</h2>
+<p><strong>Backpressure</strong>: A mechanism where a system signals upstream components to slow down when it's overloaded, preventing cascading failures.</p>
+<p><strong>Bigtable</strong>: Google's distributed NoSQL database, designed for low-latency, high-throughput workloads. Used by many Google services internally.</p>
+<p><strong>Blast Radius</strong>: The scope of impact when a component fails. A small blast radius means failures are isolated.</p>
+<h2 id="c">C</h2>
+<p><strong>Canary Deployment</strong>: A deployment strategy where a new version is deployed to a small subset of instances first, monitored, and then gradually rolled out.</p>
+<p><strong>CAP Theorem</strong>: States that a distributed system can guarantee at most two of: Consistency, Availability, Partition tolerance.</p>
+<p><strong>Circuit Breaker</strong>: A pattern that prevents calls to a failing service, allowing it to recover and preventing cascading failures.</p>
+<p><strong>Consensus</strong>: Agreement among distributed nodes on a value or state. Algorithms like Raft and Paxos solve consensus.</p>
+<p><strong>Consistency</strong>: In distributed systems, refers to whether all nodes see the same data at the same time. Can be strong (linearizable) or weak (eventual).</p>
+<h2 id="d">D</h2>
+<p><strong>Distributed System</strong>: A system where components are located on different networked computers and coordinate to achieve a common goal.</p>
+<p><strong>Durability</strong>: The guarantee that once data is written, it will persist even if the system fails.</p>
+<h2 id="e">E</h2>
+<p><strong>Error Budget</strong>: The amount of unreliability a service can tolerate while still meeting its SLO. Calculated as 1 - SLO.</p>
+<p><strong>Eventual Consistency</strong>: A consistency model where, after updates stop, all nodes will eventually converge to the same state, but may temporarily have different values.</p>
+<h2 id="f">F</h2>
+<p><strong>Failure Domain</strong>: A set of components that fail together. Good design minimizes failure domains and limits blast radius.</p>
+<h2 id="g">G</h2>
+<p><strong>GKE (Google Kubernetes Engine)</strong>: Google's managed Kubernetes service, running on GCP.</p>
+<h2 id="i">I</h2>
+<p><strong>IAM (Identity and Access Management)</strong>: System for managing who can access what resources. In GCP, controls authentication and authorization.</p>
+<p><strong>Idempotency</strong>: Property where performing an operation multiple times has the same effect as performing it once. Critical for retries.</p>
+<h2 id="l">L</h2>
+<p><strong>Latency</strong>: Time taken for a request to complete. Usually measured as P50 (median), P95, P99 (percentiles).</p>
+<p><strong>Lease</strong>: A time-limited lock that grants exclusive access to a resource. Expires automatically, preventing deadlocks.</p>
+<p><strong>Linearizability</strong>: Strongest consistency model. All operations appear to occur atomically at some point in time.</p>
+<p><strong>Load Shedding</strong>: Dropping requests when a system is overloaded to prevent total failure. Better to serve some requests than none.</p>
+<h2 id="m">M</h2>
+<p><strong>Mental Model</strong>: A simplified representation of how a system works, used for reasoning about behavior and failures.</p>
+<h2 id="o">O</h2>
+<p><strong>Observability</strong>: The ability to understand a system's internal state from its external outputs (metrics, logs, traces).</p>
+<p><strong>Overload</strong>: When a system receives more load than it can handle, leading to degradation or failure.</p>
+<h2 id="p">P</h2>
+<p><strong>Partition Tolerance</strong>: The ability of a distributed system to continue operating despite network partitions (nodes can't communicate).</p>
+<p><strong>Paxos</strong>: A consensus algorithm for distributed systems. Complex but proven correct.</p>
+<p><strong>Percentile (P50, P95, P99)</strong>: A measure of latency distribution. P95 means 95% of requests complete in this time or less.</p>
+<p><strong>PRR (Production Readiness Review)</strong>: A review process to ensure a system is ready for production, covering reliability, security, operations.</p>
+<p><strong>Pub/Sub</strong>: Publish-subscribe messaging system. Publishers send messages to topics, subscribers receive messages from subscriptions.</p>
+<h2 id="q">Q</h2>
+<p><strong>QPS (Queries Per Second)</strong>: A measure of throughput, the number of requests a system handles per second.</p>
+<p><strong>Queueing Theory</strong>: Mathematical study of waiting lines. Explains tail latency and helps with capacity planning.</p>
+<h2 id="r">R</h2>
+<p><strong>Raft</strong>: A consensus algorithm simpler than Paxos, commonly used in distributed systems.</p>
+<p><strong>Rate Limiting</strong>: Controlling the rate of requests to prevent overload and ensure fair resource usage.</p>
+<p><strong>Replication</strong>: Storing copies of data on multiple nodes for availability and performance.</p>
+<p><strong>Retry</strong>: Attempting an operation again after it fails. Requires idempotency to be safe.</p>
+<h2 id="s">S</h2>
+<p><strong>Sharding</strong>: Partitioning data across multiple nodes. Each shard contains a subset of data.</p>
+<p><strong>SLI (Service Level Indicator)</strong>: A quantitative measure of service quality (e.g., latency, availability, error rate).</p>
+<p><strong>SLO (Service Level Objective)</strong>: A target value for an SLI (e.g., "P95 latency &lt; 100ms", "availability &gt; 99.9%").</p>
+<p><strong>Spanner</strong>: Google's globally distributed SQL database with strong consistency guarantees, using TrueTime for external consistency.</p>
+<h2 id="t">T</h2>
+<p><strong>Tail Latency</strong>: High percentiles of latency (P95, P99). Often much higher than median due to queueing and resource contention.</p>
+<p><strong>Throughput</strong>: The rate at which a system processes requests, usually measured in QPS or requests per second.</p>
+<p><strong>TrueTime</strong>: Google's clock synchronization service used by Spanner to provide external consistency guarantees.</p>
+<h2 id="v">V</h2>
+<p><strong>VPC (Virtual Private Cloud)</strong>: A logically isolated network in GCP where you can launch resources with private IP addresses.</p>
+<h2 id="w">W</h2>
+<p><strong>Write-Ahead Log (WAL)</strong>: A log where writes are recorded before being applied to the database, enabling durability and recovery.</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+</html>

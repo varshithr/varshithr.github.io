@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading_List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="reading-list">Reading List</h1>
+<p>Essential books, papers, and articles for staff-level understanding of distributed systems, GCP, and SRE.</p>
+<h2 id="books">Books</h2>
+<h3 id="distributed-systems">Distributed Systems</h3>
+<ul>
+<li><strong>Designing Data-Intensive Applications</strong> by Martin Kleppmann</li>
+<li>Comprehensive guide to distributed systems, databases, and data processing</li>
+<li>
+<p>Covers consistency, replication, partitioning, transactions</p>
+</li>
+<li>
+<p><strong>Distributed Systems: Concepts and Design</strong> by George Coulouris et al.</p>
+</li>
+<li>Academic textbook on distributed systems fundamentals</li>
+<li>Covers time, ordering, consensus, fault tolerance</li>
+</ul>
+<h3 id="google-sre">Google SRE</h3>
+<ul>
+<li><strong>Site Reliability Engineering</strong> (SRE Book)</li>
+<li>Google's SRE practices and principles</li>
+<li>
+<p>SLIs, SLOs, error budgets, incident response</p>
+</li>
+<li>
+<p><strong>The Site Reliability Workbook</strong></p>
+</li>
+<li>Practical SRE implementation guide</li>
+<li>Case studies and real-world examples</li>
+</ul>
+<h3 id="system-design">System Design</h3>
+<ul>
+<li><strong>System Design Interview</strong> by Alex Xu</li>
+<li>Practical system design patterns</li>
+<li>
+<p>Good for interview prep and design thinking</p>
+</li>
+<li>
+<p><strong>Building Microservices</strong> by Sam Newman</p>
+</li>
+<li>Microservices architecture patterns</li>
+<li>Service boundaries, data management, deployment</li>
+</ul>
+<h3 id="performance-capacity">Performance &amp; Capacity</h3>
+<ul>
+<li><strong>Systems Performance</strong> by Brendan Gregg</li>
+<li>Deep dive into system performance analysis</li>
+<li>Tools, methodologies, case studies</li>
+</ul>
+<h2 id="papers">Papers</h2>
+<h3 id="consensus-consistency">Consensus &amp; Consistency</h3>
+<ul>
+<li><strong>The Part-Time Parliament</strong> (Lamport, 1998)</li>
+<li>Original Paxos paper</li>
+<li>
+<p>Foundation of consensus algorithms</p>
+</li>
+<li>
+<p><strong>In Search of an Understandable Consensus Algorithm</strong> (Ongaro &amp; Ousterhout, 2014)</p>
+</li>
+<li>Raft consensus algorithm</li>
+<li>
+<p>More understandable than Paxos</p>
+</li>
+<li>
+<p><strong>Spanner: Google's Globally-Distributed Database</strong> (Corbett et al., 2012)</p>
+</li>
+<li>How Spanner provides external consistency</li>
+<li>
+<p>TrueTime and distributed transactions</p>
+</li>
+<li>
+<p><strong>The Google File System</strong> (Ghemawat et al., 2003)</p>
+</li>
+<li>Design of GFS</li>
+<li>Foundation for distributed storage</li>
+</ul>
+<h3 id="distributed-systems_1">Distributed Systems</h3>
+<ul>
+<li><strong>Time, Clocks, and the Ordering of Events in a Distributed System</strong> (Lamport, 1978)</li>
+<li>Logical clocks and causality</li>
+<li>
+<p>Fundamental paper on time in distributed systems</p>
+</li>
+<li>
+<p><strong>Dynamo: Amazon's Highly Available Key-value Store</strong> (DeCandia et al., 2007)</p>
+</li>
+<li>Eventually consistent distributed storage</li>
+<li>
+<p>Tradeoffs in availability vs consistency</p>
+</li>
+<li>
+<p><strong>The Chubby Lock Service for Loosely-Coupled Distributed Systems</strong> (Burrows, 2006)</p>
+</li>
+<li>Google's distributed lock service</li>
+<li>Consensus and leases in practice</li>
+</ul>
+<h3 id="performance-latency">Performance &amp; Latency</h3>
+<ul>
+<li><strong>The Tail at Scale</strong> (Dean &amp; Barroso, 2013)</li>
+<li>Why tail latency matters</li>
+<li>
+<p>Techniques for reducing tail latency</p>
+</li>
+<li>
+<p><strong>The Datacenter as a Computer</strong> (Barroso &amp; Hölzle, 2018)</p>
+</li>
+<li>Datacenter design principles</li>
+<li>Efficiency and performance at scale</li>
+</ul>
+<h3 id="reliability">Reliability</h3>
+<ul>
+<li><strong>Why Do Internet Services Fail, and What Can Be Done About It?</strong> (Oppenheimer et al., 2003)</li>
+<li>Analysis of internet service failures</li>
+<li>Common failure modes and prevention</li>
+</ul>
+<h2 id="google-specific">Google-Specific</h2>
+<h3 id="gcp-documentation">GCP Documentation</h3>
+<ul>
+<li><strong>GCP Architecture Center</strong></li>
+<li>Best practices and reference architectures</li>
+<li>
+<p>Real-world case studies</p>
+</li>
+<li>
+<p><strong>GCP Well-Architected Framework</strong></p>
+</li>
+<li>Design principles for GCP</li>
+<li>Security, reliability, performance, cost</li>
+</ul>
+<h3 id="google-research-papers">Google Research Papers</h3>
+<ul>
+<li><strong>MapReduce: Simplified Data Processing on Large Clusters</strong> (Dean &amp; Ghemawat, 2004)</li>
+<li><strong>Bigtable: A Distributed Storage System for Structured Data</strong> (Chang et al., 2006)</li>
+<li><strong>The Dataflow Model</strong> (Akidau et al., 2015)</li>
+<li><strong>MillWheel: Fault-Tolerant Stream Processing at Internet Scale</strong> (Akidau et al., 2013)</li>
+</ul>
+<h2 id="blogs-articles">Blogs &amp; Articles</h2>
+<h3 id="google-cloud-blog">Google Cloud Blog</h3>
+<ul>
+<li>GCP product deep dives</li>
+<li>Architecture best practices</li>
+<li>Case studies</li>
+</ul>
+<h3 id="high-scalability">High Scalability</h3>
+<ul>
+<li>Real-world system architectures</li>
+<li>Lessons learned from scale</li>
+</ul>
+<h3 id="aws-architecture-blog">AWS Architecture Blog</h3>
+<ul>
+<li>System design patterns (applicable to GCP)</li>
+<li>Best practices</li>
+</ul>
+<h3 id="google-sre-blog">Google SRE Blog</h3>
+<ul>
+<li>SRE practices and principles</li>
+<li>Incident postmortems</li>
+<li>Reliability engineering</li>
+</ul>
+<h2 id="online-courses">Online Courses</h2>
+<h3 id="distributed-systems_2">Distributed Systems</h3>
+<ul>
+<li><strong>MIT 6.824: Distributed Systems</strong></li>
+<li>Course materials available online</li>
+<li>Labs implement Raft, MapReduce, etc.</li>
+</ul>
+<h3 id="cloud-architecture">Cloud Architecture</h3>
+<ul>
+<li><strong>GCP Professional Cloud Architect Certification</strong></li>
+<li>Official GCP certification prep</li>
+<li>Covers architecture best practices</li>
+</ul>
+<h2 id="conferences">Conferences</h2>
+<h3 id="srecon">SREcon</h3>
+<ul>
+<li>Site Reliability Engineering conference</li>
+<li>Talks on reliability, incidents, operations</li>
+</ul>
+<h3 id="usenix">USENIX</h3>
+<ul>
+<li>Systems and networking conferences</li>
+<li>Research papers and practical talks</li>
+</ul>
+<h3 id="qcon">QCon</h3>
+<ul>
+<li>Software architecture conference</li>
+<li>System design talks and case studies</li>
+</ul>
+<h2 id="how-to-use-this-list">How to Use This List</h2>
+<ol>
+<li><strong>Start with fundamentals</strong>: Read "Designing Data-Intensive Applications" and SRE Book</li>
+<li><strong>Deep dive into topics</strong>: Read papers on specific topics you're studying</li>
+<li><strong>Apply to practice</strong>: Use GCP documentation and case studies</li>
+<li><strong>Stay current</strong>: Follow blogs and conferences for latest practices</li>
+</ol>
+<h2 id="reading-order-recommendation">Reading Order Recommendation</h2>
+<h3 id="phase-0-foundations">Phase 0: Foundations</h3>
+<ol>
+<li>"Designing Data-Intensive Applications" (chapters 1-3)</li>
+<li>SRE Book (chapters 1-5)</li>
+</ol>
+<h3 id="phase-1-distributed-systems">Phase 1: Distributed Systems</h3>
+<ol>
+<li>"Time, Clocks, and the Ordering of Events"</li>
+<li>"In Search of an Understandable Consensus Algorithm"</li>
+<li>"Designing Data-Intensive Applications" (chapters 5-9)</li>
+</ol>
+<h3 id="phase-2-gcp-deep-dive">Phase 2: GCP Deep Dive</h3>
+<ol>
+<li>GCP Architecture Center</li>
+<li>"Spanner: Google's Globally-Distributed Database"</li>
+<li>"Bigtable: A Distributed Storage System"</li>
+</ol>
+<h3 id="phase-3-reliability-sre">Phase 3: Reliability &amp; SRE</h3>
+<ol>
+<li>SRE Book (chapters 6-10)</li>
+<li>"The Tail at Scale"</li>
+<li>"Why Do Internet Services Fail?"</li>
+</ol>
+<h3 id="phase-4-case-studies">Phase 4: Case Studies</h3>
+<ol>
+<li>High Scalability blog posts</li>
+<li>GCP case studies</li>
+<li>Real-world postmortems</li>
+</ol>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+</html>

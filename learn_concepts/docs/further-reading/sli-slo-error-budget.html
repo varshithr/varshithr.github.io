@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sli Slo Error Budget</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="further-reading-slis-slos-error-budgets">Further Reading: SLIs, SLOs &amp; Error Budgets</h1>
+<p><a href="../04-reliability-sre/sli-slo-error-budget.html">Back to SLIs/SLOs</a></p>
+<hr />
+<h2 id="site-reliability-engineering-google-sre-book">Site Reliability Engineering (Google SRE Book)</h2>
+<p><strong>Book</strong>: <a href="https://sre.google/books/">Site Reliability Engineering: How Google Runs Production Systems</a></p>
+<p><strong>Why it matters</strong>: The definitive guide to SRE practices, including the original explanation of SLIs, SLOs, and error budgets.</p>
+<h3 id="key-concepts">Key Concepts</h3>
+<p><strong>SLIs (Service Level Indicators)</strong>:
+- What to measure
+- How to measure it
+- User-facing vs internal metrics</p>
+<p><strong>SLOs (Service Level Objectives)</strong>:
+- How to set targets
+- What targets are realistic
+- How to communicate SLOs</p>
+<p><strong>Error Budgets</strong>:
+- How to calculate error budgets
+- How to use error budgets
+- Error budget policies</p>
+<p><strong>Relevance</strong>: Provides the foundational concepts and real-world examples from Google.</p>
+<h3 id="recommended-chapters">Recommended Chapters</h3>
+<ul>
+<li><strong>Chapter 4: Service Level Objectives</strong>: Comprehensive SLO guide</li>
+<li><strong>Chapter 5: Eliminating Toil</strong>: Using error budgets to reduce toil</li>
+<li><strong>Chapter 6: Monitoring Distributed Systems</strong>: How to measure SLIs</li>
+</ul>
+<h3 id="key-excerpts">Key Excerpts</h3>
+<p><strong>On SLIs</strong>:</p>
+<blockquote>
+<p>"SLIs should measure what users care about, not what's easy to measure. Internal metrics like CPU utilization don't reflect user experience."</p>
+</blockquote>
+<p><strong>Key insight</strong>: SLIs must be user-facing. Internal metrics don't tell you if users are happy.</p>
+<p><strong>On SLOs</strong>:</p>
+<blockquote>
+<p>"SLOs should be achievable but not too easy. They should reflect user needs and business requirements, not just current performance."</p>
+</blockquote>
+<p><strong>Relevance</strong>: Explains how to set appropriate SLOs that balance user needs with feasibility.</p>
+<p><strong>On Error Budgets</strong>:</p>
+<blockquote>
+<p>"Error budgets balance reliability and velocity. When error budget is exhausted, stop feature work and focus on reliability."</p>
+</blockquote>
+<p><strong>Key insight</strong>: Error budgets provide a data-driven way to balance feature development and reliability work.</p>
+<hr />
+<h2 id="the-site-reliability-workbook">The Site Reliability Workbook</h2>
+<p><strong>Book</strong>: <a href="https://sre.google/workbook/">The Site Reliability Workbook: Practical Ways to Implement SRE</a></p>
+<p><strong>Why it matters</strong>: Practical guide to implementing SRE practices, including detailed SLI/SLO examples.</p>
+<h3 id="key-concepts_1">Key Concepts</h3>
+<p><strong>Implementing SLIs</strong>:
+- Step-by-step process
+- Common pitfalls
+- Real-world examples</p>
+<p><strong>Setting SLOs</strong>:
+- How to choose targets
+- How to validate targets
+- How to adjust SLOs</p>
+<p><strong>Using Error Budgets</strong>:
+- Error budget policies
+- How to track error budgets
+- How to respond to budget exhaustion</p>
+<p><strong>Relevance</strong>: Provides practical, actionable guidance for implementing SLIs/SLOs.</p>
+<h3 id="recommended-chapters_1">Recommended Chapters</h3>
+<ul>
+<li><strong>Chapter 2: Implementing SLOs</strong>: Practical implementation guide</li>
+<li><strong>Chapter 3: SLO Engineering Case Studies</strong>: Real-world examples</li>
+<li><strong>Chapter 4: Error Budgets</strong>: Error budget policies and practices</li>
+</ul>
+<hr />
+<h2 id="slislo-best-practices">SLI/SLO Best Practices</h2>
+<h3 id="google-cloud-documentation">Google Cloud Documentation</h3>
+<p><strong>Documentation</strong>: <a href="https://cloud.google.com/architecture/framework/reliability/service-level-objectives">SLI/SLO Best Practices</a></p>
+<p><strong>Why it matters</strong>: GCP's recommended practices for defining and using SLIs/SLOs.</p>
+<h3 id="key-practices">Key Practices</h3>
+<p><strong>1. Start Simple</strong>
+- Begin with availability and latency
+- Add more SLIs as needed
+- Don't over-engineer initially</p>
+<p><strong>2. Measure What Matters</strong>
+- User-facing metrics
+- Business-critical operations
+- Not internal implementation details</p>
+<p><strong>3. Set Realistic Targets</strong>
+- Based on baseline performance
+- Account for improvement over time
+- Balance user needs and feasibility</p>
+<p><strong>4. Use Error Budgets</strong>
+- Calculate error budgets from SLOs
+- Define error budget policies
+- Track and monitor error budgets</p>
+<p><strong>Relevance</strong>: Provides concrete best practices for implementing SLIs/SLOs.</p>
+<hr />
+<h2 id="error-budget-policies">Error Budget Policies</h2>
+<h3 id="example-policies">Example Policies</h3>
+<p><strong>Google's Approach</strong>:
+- <strong>&gt; 50% remaining</strong>: Normal operations
+- <strong>25-50% remaining</strong>: Reduce risky changes
+- <strong>&lt; 25% remaining</strong>: Stop feature work
+- <strong>0% remaining</strong>: Emergency reliability only</p>
+<p><strong>Why it works</strong>:
+- Gradual escalation
+- Clear thresholds
+- Data-driven decisions</p>
+<p><strong>Relevance</strong>: Provides a concrete example of error budget policy implementation.</p>
+<hr />
+<h2 id="additional-resources">Additional Resources</h2>
+<h3 id="papers">Papers</h3>
+<p><strong>"Site Reliability Engineering"</strong> (Google SRE Book)
+- Original SLO concepts
+- <a href="https://sre.google/books/">Link</a></p>
+<p><strong>"The Site Reliability Workbook"</strong> (Google SRE Workbook)
+- Practical implementation guide
+- <a href="https://sre.google/workbook/">Link</a></p>
+<h3 id="books">Books</h3>
+<p><strong>"Implementing Service Level Objectives"</strong> by Alex Hidalgo
+- Comprehensive SLO guide
+- Practical examples</p>
+<h3 id="online-resources">Online Resources</h3>
+<p><strong>Google Cloud Documentation</strong>: <a href="https://cloud.google.com/monitoring/api/v3/slo">SLO Documentation</a>
+- GCP SLO implementation
+- API and tools</p>
+<p><strong>SRE Book</strong>: <a href="https://sre.google/">sre.google</a>
+- Free online version
+- All chapters available</p>
+<hr />
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ol>
+<li><strong>SLIs measure user experience</strong>: User-facing metrics, not internal metrics</li>
+<li><strong>SLOs balance needs and feasibility</strong>: Realistic but not too easy</li>
+<li><strong>Error budgets enable velocity</strong>: Data-driven balance between features and reliability</li>
+<li><strong>Start simple</strong>: Begin with availability and latency, expand as needed</li>
+<li><strong>Monitor and adjust</strong>: SLOs should evolve with system and user needs</li>
+</ol>
+<hr />
+<h2 id="related-topics">Related Topics</h2>
+<ul>
+<li><a href="../04-reliability-sre/prr-checklist.html">PRR Checklist</a> - Using SLOs in production readiness</li>
+<li><a href="../01-foundations/observability-basics.html">Observability Basics</a> - How to measure SLIs</li>
+<li><a href="../04-reliability-sre/capacity-planning.md">Capacity Planning</a> - Capacity and SLOs</li>
+</ul>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+</html>

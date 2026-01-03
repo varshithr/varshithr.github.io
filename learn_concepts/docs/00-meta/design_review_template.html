@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design_Review_Template</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="design-review-template">Design Review Template</h1>
+<p>Use this template when reviewing system designs at staff level.</p>
+<h2 id="design-overview">Design Overview</h2>
+<p><strong>System Name</strong>: [Name]</p>
+<p><strong>Purpose</strong>: [What problem does this solve?]</p>
+<p><strong>Designer</strong>: [Who designed this?]</p>
+<p><strong>Reviewer</strong>: [Who is reviewing?]</p>
+<p><strong>Date</strong>: [Date]</p>
+<hr />
+<h2 id="requirements-constraints">Requirements &amp; Constraints</h2>
+<h3 id="functional-requirements">Functional Requirements</h3>
+<ul>
+<li>[Requirement 1]</li>
+<li>[Requirement 2]</li>
+</ul>
+<h3 id="non-functional-requirements">Non-Functional Requirements</h3>
+<ul>
+<li><strong>Latency</strong>: [Target latency, e.g., P95 &lt; 100ms]</li>
+<li><strong>Throughput</strong>: [Target QPS]</li>
+<li><strong>Availability</strong>: [Target uptime, e.g., 99.9%]</li>
+<li><strong>Consistency</strong>: [Consistency model]</li>
+<li><strong>Durability</strong>: [Data durability requirements]</li>
+</ul>
+<h3 id="constraints">Constraints</h3>
+<ul>
+<li><strong>Budget</strong>: [Cost constraints]</li>
+<li><strong>Timeline</strong>: [Deadlines]</li>
+<li><strong>Dependencies</strong>: [External dependencies]</li>
+<li><strong>Compliance</strong>: [Regulatory requirements]</li>
+</ul>
+<hr />
+<h2 id="architecture-review">Architecture Review</h2>
+<h3 id="high-level-design">High-Level Design</h3>
+<ul>
+<li>[ ] Architecture diagram is clear and accurate</li>
+<li>[ ] Components and responsibilities are well-defined</li>
+<li>[ ] Data flow is documented</li>
+<li>[ ] Critical paths are identified</li>
+</ul>
+<h3 id="component-design">Component Design</h3>
+<ul>
+<li>[ ] Each component has a clear purpose</li>
+<li>[ ] Component boundaries are well-defined</li>
+<li>[ ] Interfaces are documented</li>
+<li>[ ] Dependencies are explicit</li>
+</ul>
+<h3 id="data-model">Data Model</h3>
+<ul>
+<li>[ ] Data model is appropriate for use case</li>
+<li>[ ] Schema is documented</li>
+<li>[ ] Data lifecycle is considered</li>
+<li>[ ] Data retention policies are defined</li>
+</ul>
+<hr />
+<h2 id="failure-modes-reliability">Failure Modes &amp; Reliability</h2>
+<h3 id="failure-domains">Failure Domains</h3>
+<ul>
+<li>[ ] Failure domains are identified</li>
+<li>[ ] Blast radius is limited</li>
+<li>[ ] Failures are isolated</li>
+<li>[ ] Single points of failure are eliminated</li>
+</ul>
+<h3 id="failure-scenarios">Failure Scenarios</h3>
+<ul>
+<li>[ ] Common failure scenarios are documented</li>
+<li>[ ] Failure detection is planned</li>
+<li>[ ] Recovery procedures are defined</li>
+<li>[ ] Cascading failures are prevented</li>
+</ul>
+<h3 id="overload-behavior">Overload Behavior</h3>
+<ul>
+<li>[ ] Behavior at 10× load is understood</li>
+<li>[ ] Behavior at 100× load is considered</li>
+<li>[ ] Load shedding is implemented</li>
+<li>[ ] Graceful degradation is planned</li>
+</ul>
+<h3 id="slis-slos-error-budgets">SLIs, SLOs &amp; Error Budgets</h3>
+<ul>
+<li>[ ] SLIs are defined and measurable</li>
+<li>[ ] SLOs are set appropriately</li>
+<li>[ ] Error budgets are calculated</li>
+<li>[ ] Alerting thresholds are set</li>
+</ul>
+<hr />
+<h2 id="observability">Observability</h2>
+<h3 id="metrics">Metrics</h3>
+<ul>
+<li>[ ] Key metrics are identified</li>
+<li>[ ] Latency metrics (P50/P95/P99) are tracked</li>
+<li>[ ] Throughput metrics are tracked</li>
+<li>[ ] Error rates are tracked</li>
+<li>[ ] Resource usage is monitored</li>
+</ul>
+<h3 id="logging">Logging</h3>
+<ul>
+<li>[ ] Critical events are logged</li>
+<li>[ ] Log levels are appropriate</li>
+<li>[ ] Logs are structured</li>
+<li>[ ] Log retention is defined</li>
+</ul>
+<h3 id="tracing">Tracing</h3>
+<ul>
+<li>[ ] Critical paths are traced</li>
+<li>[ ] Spans are well-defined</li>
+<li>[ ] Trace sampling strategy is defined</li>
+<li>[ ] Cross-service correlation works</li>
+</ul>
+<h3 id="alerting">Alerting</h3>
+<ul>
+<li>[ ] Alerts are actionable</li>
+<li>[ ] Alert fatigue is avoided</li>
+<li>[ ] On-call procedures are defined</li>
+<li>[ ] Escalation paths are clear</li>
+</ul>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="deployment-strategy">Deployment Strategy</h3>
+<ul>
+<li>[ ] Rollout strategy is defined</li>
+<li>[ ] Canary deployment is planned</li>
+<li>[ ] Rollback procedure is documented</li>
+<li>[ ] Feature flags are used appropriately</li>
+</ul>
+<h3 id="testing">Testing</h3>
+<ul>
+<li>[ ] Unit tests are planned</li>
+<li>[ ] Integration tests are planned</li>
+<li>[ ] Load tests are planned</li>
+<li>[ ] Chaos tests are considered</li>
+</ul>
+<h3 id="feature-flags">Feature Flags</h3>
+<ul>
+<li>[ ] Feature flags are used for risky changes</li>
+<li>[ ] Kill switches are implemented</li>
+<li>[ ] Flag management is documented</li>
+</ul>
+<hr />
+<h2 id="security">Security</h2>
+<h3 id="identity-authentication">Identity &amp; Authentication</h3>
+<ul>
+<li>[ ] Authentication is required</li>
+<li>[ ] Authentication mechanism is appropriate</li>
+<li>[ ] Identity is verified correctly</li>
+</ul>
+<h3 id="authorization">Authorization</h3>
+<ul>
+<li>[ ] Authorization is checked</li>
+<li>[ ] Principle of least privilege is followed</li>
+<li>[ ] Permissions are well-defined</li>
+<li>[ ] Access is audited</li>
+</ul>
+<h3 id="data-protection">Data Protection</h3>
+<ul>
+<li>[ ] Data is encrypted at rest</li>
+<li>[ ] Data is encrypted in transit</li>
+<li>[ ] Key management is secure</li>
+<li>[ ] Data exfiltration is prevented</li>
+</ul>
+<h3 id="attack-surfaces">Attack Surfaces</h3>
+<ul>
+<li>[ ] Attack vectors are identified</li>
+<li>[ ] Mitigations are in place</li>
+<li>[ ] Security monitoring is planned</li>
+</ul>
+<hr />
+<h2 id="capacity-performance">Capacity &amp; Performance</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<ul>
+<li>[ ] Capacity requirements are calculated</li>
+<li>[ ] Scaling strategy is defined</li>
+<li>[ ] Scaling limits are understood</li>
+<li>[ ] Capacity forecasting is planned</li>
+</ul>
+<h3 id="performance">Performance</h3>
+<ul>
+<li>[ ] Performance targets are met</li>
+<li>[ ] Bottlenecks are identified</li>
+<li>[ ] Optimization opportunities are considered</li>
+<li>[ ] Tail latency is addressed</li>
+</ul>
+<h3 id="cost">Cost</h3>
+<ul>
+<li>[ ] Cost model is understood</li>
+<li>[ ] Cost optimization is considered</li>
+<li>[ ] Cost monitoring is planned</li>
+</ul>
+<hr />
+<h2 id="operational-readiness">Operational Readiness</h2>
+<h3 id="documentation">Documentation</h3>
+<ul>
+<li>[ ] Architecture is documented</li>
+<li>[ ] Runbooks are written</li>
+<li>[ ] Onboarding docs exist</li>
+<li>[ ] Troubleshooting guides exist</li>
+</ul>
+<h3 id="on-call">On-Call</h3>
+<ul>
+<li>[ ] On-call rotation is defined</li>
+<li>[ ] Escalation paths are clear</li>
+<li>[ ] Incident response is planned</li>
+<li>[ ] Postmortem process is defined</li>
+</ul>
+<h3 id="monitoring">Monitoring</h3>
+<ul>
+<li>[ ] Dashboards are created</li>
+<li>[ ] Alerts are configured</li>
+<li>[ ] Monitoring is tested</li>
+<li>[ ] Debugging tools are available</li>
+</ul>
+<hr />
+<h2 id="staff-level-questions">Staff-Level Questions</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>[ ] What's the failure domain?</li>
+<li>[ ] How do we detect failures?</li>
+<li>[ ] What's the blast radius?</li>
+<li>[ ] How do we roll back?</li>
+<li>[ ] What's the observability contract?</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>[ ] What happens at 10× load?</li>
+<li>[ ] What are the bottlenecks?</li>
+<li>[ ] How does it degrade?</li>
+</ul>
+<h3 id="security-questions">Security Questions</h3>
+<ul>
+<li>[ ] Who can access this?</li>
+<li>[ ] How is data protected?</li>
+<li>[ ] What's the attack surface?</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>[ ] How do we monitor this?</li>
+<li>[ ] What's the runbook?</li>
+<li>[ ] How do we debug issues?</li>
+</ul>
+<hr />
+<h2 id="review-feedback">Review Feedback</h2>
+<h3 id="critical-issues-must-fix">Critical Issues (Must Fix)</h3>
+<ol>
+<li>[Issue 1]</li>
+<li>[Issue 2]</li>
+</ol>
+<h3 id="important-issues-should-fix">Important Issues (Should Fix)</h3>
+<ol>
+<li>[Issue 1]</li>
+<li>[Issue 2]</li>
+</ol>
+<h3 id="nice-to-have-consider">Nice-to-Have (Consider)</h3>
+<ol>
+<li>[Issue 1]</li>
+<li>[Issue 2]</li>
+</ol>
+<h3 id="questions">Questions</h3>
+<ol>
+<li>[Question 1]</li>
+<li>[Question 2]</li>
+</ol>
+<hr />
+<h2 id="approval">Approval</h2>
+<ul>
+<li>[ ] <strong>Approved</strong> - Design is ready for implementation</li>
+<li>[ ] <strong>Approved with Changes</strong> - Design is approved pending fixes</li>
+<li>[ ] <strong>Needs Revision</strong> - Design needs significant changes</li>
+<li>[ ] <strong>Rejected</strong> - Design is not viable</li>
+</ul>
+<p><strong>Reviewer Signature</strong>: [Name]</p>
+<p><strong>Date</strong>: [Date]</p>
+<p><strong>Next Steps</strong>: [What happens next?]</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+</html>

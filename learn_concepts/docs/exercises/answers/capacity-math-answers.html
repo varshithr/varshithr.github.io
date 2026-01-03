@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capacity Math Answers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="answer-key-capacity-math-cheat-sheet">Answer Key: Capacity Math Cheat Sheet</h1>
+<p><a href="../../01-foundations/capacity-math.html">Back to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-calculate-capacity">Exercise 1: Calculate Capacity</h2>
+<p><strong>Question</strong>: API with 5,000 QPS, 20ms CPU time per request, 5MB memory per request. How many 8-core, 32GB instances do you need?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Given</strong>:
+- QPS = 5,000 requests/second
+- CPU time per request = 20ms = 0.02 seconds
+- Memory per request = 5MB (peak)
+- Instance specs: 8 cores, 32GB RAM</p>
+<h3 id="cpu-calculation">CPU Calculation</h3>
+<p><strong>CPU cores needed</strong>:
+- CPU cores = (QPS × CPU time per request) / Target utilization
+- CPU cores = (5,000 × 0.02) / 0.7 = 100 / 0.7 = <strong>142.9 cores</strong></p>
+<p><strong>Instances needed for CPU</strong>:
+- Instances = 142.9 / 8 = <strong>17.9 → 18 instances</strong></p>
+<h3 id="memory-calculation">Memory Calculation</h3>
+<p><strong>Concurrent requests</strong>:
+- Need to estimate concurrent requests
+- Concurrent requests ≈ QPS × average latency
+- Assuming average latency = 50ms (processing + queueing)
+- Concurrent requests = 5,000 × 0.05 = <strong>250 concurrent requests</strong></p>
+<p><strong>Memory needed</strong>:
+- Memory = (Concurrent requests × Memory per request) + Base memory + Cache
+- Memory = (250 × 5MB) + 2GB base + 10GB cache
+- Memory = 1.25GB + 2GB + 10GB = <strong>13.25GB</strong></p>
+<p><strong>Instances needed for memory</strong>:
+- Instances = 13.25GB / 32GB = <strong>0.41 → 1 instance</strong> (but need redundancy)</p>
+<p><strong>However</strong>: Memory per request is peak, not average. Need to account for:
+- Peak concurrent requests may be higher
+- Memory overhead per request
+- Safety margin</p>
+<p><strong>Revised memory calculation</strong>:
+- Peak concurrent requests = 5,000 × 0.1 = 500 (assuming 100ms peak latency)
+- Memory = (500 × 5MB) + 2GB + 10GB = 2.5GB + 2GB + 10GB = <strong>14.5GB</strong>
+- With 20% safety margin: 14.5GB × 1.2 = <strong>17.4GB</strong>
+- Instances = 17.4GB / 32GB = <strong>0.54 → 1 instance</strong> (but need redundancy)</p>
+<h3 id="final-answer">Final Answer</h3>
+<p><strong>CPU is the bottleneck</strong>: Need <strong>18 instances</strong> for CPU capacity</p>
+<p><strong>With redundancy</strong>: Need <strong>20 instances</strong> (18 for capacity + 2 for redundancy)</p>
+<p><strong>Per instance</strong>:
+- CPU utilization: (5,000 × 0.02) / (20 × 8) = 100 / 160 = <strong>62.5%</strong> (good headroom)
+- Memory utilization: 14.5GB / 32GB = <strong>45%</strong> (good headroom)</p>
+<p><strong>Answer</strong>: <strong>20 instances</strong> (18 for capacity, 2 for redundancy)</p>
+<p><strong>Key insights</strong>:
+- CPU is the bottleneck in this case
+- Memory is not the constraint
+- Need redundancy for high availability
+- Good headroom for spikes</p>
+<hr />
+<h2 id="exercise-2-forecast-growth">Exercise 2: Forecast Growth</h2>
+<p><strong>Question</strong>: Current capacity handles 1,000 QPS. Traffic grows 15% per month. What capacity do you need in 12 months?</p>
+<h3 id="answer_1">Answer</h3>
+<p><strong>Given</strong>:
+- Current capacity = 1,000 QPS
+- Growth rate = 15% per month
+- Time = 12 months</p>
+<h3 id="calculation">Calculation</h3>
+<p><strong>Exponential growth formula</strong>:
+- Future capacity = Current capacity × (1 + growth_rate)^time
+- Future capacity = 1,000 × (1.15)^12</p>
+<p><strong>Step-by-step</strong>:
+- Month 1: 1,000 × 1.15 = 1,150 QPS
+- Month 2: 1,150 × 1.15 = 1,322.5 QPS
+- Month 3: 1,322.5 × 1.15 = 1,520.9 QPS
+- ...
+- Month 12: 1,000 × (1.15)^12 = <strong>5,350 QPS</strong></p>
+<p><strong>Using calculator</strong>:
+- (1.15)^12 = 5.35
+- Future capacity = 1,000 × 5.35 = <strong>5,350 QPS</strong></p>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<p><strong>Current capacity</strong>: 1,000 QPS
+<strong>Future capacity</strong>: 5,350 QPS
+<strong>Growth factor</strong>: 5.35× (435% increase)</p>
+<p><strong>Capacity needed</strong>: <strong>5,350 QPS</strong> (or plan for 6,000 QPS with headroom)</p>
+<p><strong>Scaling strategy</strong>:
+- <strong>Immediate</strong>: Current capacity sufficient
+- <strong>6 months</strong>: Need ~2,300 QPS (2.3× current)
+- <strong>12 months</strong>: Need ~5,350 QPS (5.35× current)</p>
+<p><strong>Recommendations</strong>:
+- Plan for <strong>5× capacity</strong> in 12 months
+- Scale gradually (monthly or quarterly)
+- Monitor growth rate (may change)
+- Add capacity before needed (don't wait until month 12)</p>
+<p><strong>Answer</strong>: <strong>5,350 QPS</strong> in 12 months (5.35× current capacity)</p>
+<p><strong>Key insights</strong>:
+- Exponential growth compounds quickly
+- 15% monthly = ~435% annual growth
+- Need to plan capacity well in advance
+- Monitor actual growth vs forecast</p>
+<hr />
+<h2 id="exercise-3-identify-bottleneck">Exercise 3: Identify Bottleneck</h2>
+<p><strong>Question</strong>: System with 1,000 QPS, CPU at 50%, memory at 90%, disk I/O at 80%. What's the bottleneck?</p>
+<h3 id="answer_2">Answer</h3>
+<p><strong>Given</strong>:
+- QPS = 1,000 requests/second
+- CPU utilization = 50%
+- Memory utilization = 90%
+- Disk I/O utilization = 80%</p>
+<h3 id="analysis">Analysis</h3>
+<p><strong>Bottleneck identification</strong>:
+- <strong>CPU</strong>: 50% utilization (not bottleneck, has headroom)
+- <strong>Memory</strong>: 90% utilization (<strong>bottleneck</strong>, very high)
+- <strong>Disk I/O</strong>: 80% utilization (high, but not critical yet)</p>
+<h3 id="memory-is-the-bottleneck">Memory is the Bottleneck</h3>
+<p><strong>Why memory is the bottleneck</strong>:
+1. <strong>Highest utilization</strong>: 90% is highest among all resources
+2. <strong>Close to limit</strong>: Only 10% headroom remaining
+3. <strong>Risk of OOM</strong>: High risk of out-of-memory errors
+4. <strong>Performance impact</strong>: High memory usage can cause:
+   - Garbage collection pauses (in managed languages)
+   - Swap usage (if enabled, very slow)
+   - OOM kills (process killed by OS)</p>
+<p><strong>Why not CPU</strong>:
+- CPU at 50% has plenty of headroom
+- Can handle 2× load before saturation
+- Not the limiting factor</p>
+<p><strong>Why not disk I/O</strong>:
+- Disk I/O at 80% is high but not critical
+- Still has 20% headroom
+- May become bottleneck if memory issue is fixed</p>
+<h3 id="recommendations">Recommendations</h3>
+<p><strong>Immediate actions</strong>:
+1. <strong>Scale up memory</strong>: Add more memory to instances
+2. <strong>Scale out</strong>: Add more instances to distribute memory load
+3. <strong>Reduce memory usage</strong>: Optimize memory usage per request
+4. <strong>Enable swap</strong>: Temporary measure (not recommended for production)</p>
+<p><strong>Long-term actions</strong>:
+1. <strong>Memory optimization</strong>: Profile and optimize memory usage
+2. <strong>Cache optimization</strong>: Reduce cache size if possible
+3. <strong>Memory monitoring</strong>: Set up alerts for memory usage
+4. <strong>Capacity planning</strong>: Plan for memory growth</p>
+<p><strong>Answer</strong>: <strong>Memory is the bottleneck</strong> at 90% utilization</p>
+<p><strong>Reasoning</strong>:
+- Highest utilization (90% vs 50% CPU, 80% disk I/O)
+- Only 10% headroom remaining
+- High risk of OOM errors
+- Will limit system capacity before other resources</p>
+<p><strong>Actions</strong>:
+- Scale up memory or scale out instances
+- Optimize memory usage
+- Monitor memory closely</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+</html>

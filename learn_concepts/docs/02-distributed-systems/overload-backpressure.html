@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overload Backpressure</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="overload-backpressure">Overload &amp; Backpressure</h1>
+<p><strong>One-line summary</strong>: How systems handle more load than capacity, and mechanisms to prevent cascading failures.</p>
+<p><strong>Prerequisites</strong>: <a href="../01-foundations/queueing-tail-latency.html">Queueing Theory</a>, understanding of request/response model.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="what-is-overload">What is Overload?</h3>
+<p><strong>Overload</strong> occurs when a system receives more requests than it can process. Without proper handling, overload leads to:
+- Increased latency
+- Timeouts
+- Cascading failures
+- Complete system failure</p>
+<h3 id="the-cascade">The Cascade</h3>
+<div class="mermaid">
+flowchart TD
+Load[High Load] --> Queue[Queue Grows]
+Queue --> Latency[Latency Increases]
+Latency --> Timeout[Timeouts]
+Timeout --> Retry[Clients Retry]
+Retry --> Load
+style Load fill:#ff9999
+style Queue fill:#ff9999
+style Latency fill:#ff9999
+</div>
+<p><strong>Key insight</strong>: Without backpressure, overload creates a positive feedback loop that makes things worse.</p>
+<h3 id="backpressure">Backpressure</h3>
+<p><strong>Backpressure</strong> is a mechanism where a system signals upstream components to slow down when it's overloaded.</p>
+<p><strong>Principle</strong>: It's better to reject some requests gracefully than to accept all requests and fail catastrophically.</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="overload-detection">Overload Detection</h3>
+<h4 id="queue-depth">Queue Depth</h4>
+<ul>
+<li>Monitor queue length</li>
+<li>Alert when queue exceeds threshold</li>
+<li><strong>Threshold</strong>: Typically 2-3× normal queue depth</li>
+</ul>
+<h4 id="latency">Latency</h4>
+<ul>
+<li>Monitor P95/P99 latency</li>
+<li>Alert when latency exceeds threshold</li>
+<li><strong>Threshold</strong>: Typically 2× normal latency</li>
+</ul>
+<h4 id="error-rate">Error Rate</h4>
+<ul>
+<li>Monitor error rate</li>
+<li>Alert when errors spike</li>
+<li><strong>Threshold</strong>: Typically 2× normal error rate</li>
+</ul>
+<h4 id="resource-utilization">Resource Utilization</h4>
+<ul>
+<li>Monitor CPU, memory, I/O</li>
+<li>Alert when utilization exceeds threshold</li>
+<li><strong>Threshold</strong>: Typically 80% utilization</li>
+</ul>
+<h3 id="backpressure-mechanisms">Backpressure Mechanisms</h3>
+<h4 id="1-explicit-backpressure">1. Explicit Backpressure</h4>
+<p><strong>TCP Flow Control</strong>:
+- Receiver advertises window size
+- Sender limits data sent
+- <strong>Use case</strong>: Network-level backpressure</p>
+<p><strong>HTTP 429 (Too Many Requests)</strong>:
+- Server returns 429 status code
+- Client backs off and retries
+- <strong>Use case</strong>: Application-level backpressure</p>
+<p><strong>gRPC Flow Control</strong>:
+- gRPC uses HTTP/2 flow control
+- Limits in-flight requests
+- <strong>Use case</strong>: RPC-level backpressure</p>
+<h4 id="2-implicit-backpressure">2. Implicit Backpressure</h4>
+<p><strong>Blocking</strong>:
+- Server blocks when queue is full
+- Client waits (implicit backpressure)
+- <strong>Problem</strong>: Can cause cascading failures</p>
+<p><strong>Dropping Requests</strong>:
+- Server drops requests when overloaded
+- Client gets errors (implicit backpressure)
+- <strong>Problem</strong>: Poor user experience</p>
+<h3 id="load-shedding-strategies">Load Shedding Strategies</h3>
+<h4 id="1-random-drop">1. Random Drop</h4>
+<ul>
+<li>Drop random requests when overloaded</li>
+<li><strong>Pros</strong>: Simple</li>
+<li><strong>Cons</strong>: May drop important requests</li>
+</ul>
+<h4 id="2-priority-based">2. Priority-Based</h4>
+<ul>
+<li>Drop low-priority requests first</li>
+<li><strong>Pros</strong>: Preserves important requests</li>
+<li><strong>Cons</strong>: Requires priority classification</li>
+</ul>
+<h4 id="3-client-based">3. Client-Based</h4>
+<ul>
+<li>Drop requests from specific clients</li>
+<li><strong>Pros</strong>: Protects important clients</li>
+<li><strong>Cons</strong>: Requires client identification</li>
+</ul>
+<h4 id="4-request-type-based">4. Request Type-Based</h4>
+<ul>
+<li>Drop specific request types (e.g., read vs write)</li>
+<li><strong>Pros</strong>: Preserves critical operations</li>
+<li><strong>Cons</strong>: Requires request classification</li>
+</ul>
+<h4 id="5-adaptive">5. Adaptive</h4>
+<ul>
+<li>Dynamically adjust drop rate based on load</li>
+<li><strong>Pros</strong>: Optimal resource utilization</li>
+<li><strong>Cons</strong>: More complex</li>
+</ul>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="overload-scenarios">Overload Scenarios</h3>
+<h4 id="10-normal-load">10× Normal Load</h4>
+<ul>
+<li><strong>Symptoms</strong>: Increased latency, growing queues</li>
+<li><strong>Impact</strong>: Some requests timeout</li>
+<li><strong>Blast radius</strong>: Single service</li>
+<li><strong>Mitigation</strong>: Auto-scaling, load shedding</li>
+</ul>
+<h4 id="100-normal-load">100× Normal Load</h4>
+<ul>
+<li><strong>Symptoms</strong>: High latency, full queues, errors</li>
+<li><strong>Impact</strong>: Most requests fail or timeout</li>
+<li><strong>Blast radius</strong>: Service and dependent services</li>
+<li><strong>Mitigation</strong>: Aggressive load shedding, circuit breakers</li>
+</ul>
+<h4 id="1000-normal-load-ddos">1000× Normal Load (DDoS)</h4>
+<ul>
+<li><strong>Symptoms</strong>: System unresponsive</li>
+<li><strong>Impact</strong>: Complete failure</li>
+<li><strong>Blast radius</strong>: Entire system</li>
+<li><strong>Mitigation</strong>: DDoS protection, failover</li>
+</ul>
+<h3 id="cascading-failures">Cascading Failures</h3>
+<p><strong>Scenario</strong>: Service A calls Service B
+1. Service B becomes overloaded
+2. Service B's latency increases
+3. Service A times out waiting for B
+4. Service A retries, increasing load on B
+5. Service B fails completely
+6. Service A fails (no responses from B)
+7. Cascades to other services</p>
+<p><strong>Prevention</strong>:
+- <strong>Circuit breakers</strong>: Stop calling failing services
+- <strong>Timeouts</strong>: Fail fast instead of waiting
+- <strong>Retry limits</strong>: Limit retries
+- <strong>Exponential backoff</strong>: Space out retries
+- <strong>Load shedding</strong>: Drop requests before overload</p>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics-to-track">Metrics to Track</h3>
+<h4 id="load-metrics">Load Metrics</h4>
+<ul>
+<li><strong>Request rate</strong>: Requests per second</li>
+<li><strong>Queue depth</strong>: Current queue length</li>
+<li><strong>In-flight requests</strong>: Requests being processed</li>
+</ul>
+<h4 id="latency-metrics">Latency Metrics</h4>
+<ul>
+<li><strong>P50/P95/P99 latency</strong>: Request latency percentiles</li>
+<li><strong>Queue wait time</strong>: Time spent in queue</li>
+</ul>
+<h4 id="error-metrics">Error Metrics</h4>
+<ul>
+<li><strong>Error rate</strong>: Errors per second</li>
+<li><strong>Timeout rate</strong>: Timeouts per second</li>
+<li><strong>Rejection rate</strong>: Dropped requests per second</li>
+</ul>
+<h4 id="resource-metrics">Resource Metrics</h4>
+<ul>
+<li><strong>CPU utilization</strong>: CPU usage percentage</li>
+<li><strong>Memory utilization</strong>: Memory usage percentage</li>
+<li><strong>I/O utilization</strong>: Disk/network I/O</li>
+</ul>
+<h3 id="logs">Logs</h3>
+<p>Log events:
+- Requests dropped due to overload
+- Backpressure signals sent
+- Circuit breaker state changes
+- Load shedding decisions</p>
+<h3 id="traces">Traces</h3>
+<p>Trace:
+- End-to-end request latency
+- Time spent in queues
+- Backpressure delays
+- Retry attempts</p>
+<h3 id="alerts">Alerts</h3>
+<p><strong>Critical alerts</strong>:
+- Queue depth &gt; threshold
+- P99 latency &gt; threshold
+- Error rate &gt; threshold
+- Resource utilization &gt; 90%</p>
+<p><strong>Warning alerts</strong>:
+- Queue depth trending up
+- Latency trending up
+- Resource utilization &gt; 80%</p>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="implementing-backpressure">Implementing Backpressure</h3>
+<h4 id="1-add-queue-limits">1. Add Queue Limits</h4>
+<ul>
+<li>Limit queue size</li>
+<li>Reject requests when queue is full</li>
+<li>Return 429 (Too Many Requests)</li>
+</ul>
+<h4 id="2-implement-load-shedding">2. Implement Load Shedding</h4>
+<ul>
+<li>Monitor queue depth and latency</li>
+<li>Drop requests when overloaded</li>
+<li>Prefer dropping low-priority requests</li>
+</ul>
+<h4 id="3-add-circuit-breakers">3. Add Circuit Breakers</h4>
+<ul>
+<li>Stop calling failing downstream services</li>
+<li>Fail fast instead of waiting</li>
+<li>Allow recovery after cooldown</li>
+</ul>
+<h4 id="4-set-appropriate-timeouts">4. Set Appropriate Timeouts</h4>
+<ul>
+<li>Set timeouts shorter than client timeouts</li>
+<li>Fail fast instead of queueing indefinitely</li>
+<li>Return errors quickly</li>
+</ul>
+<h3 id="testing-strategy">Testing Strategy</h3>
+<ol>
+<li><strong>Load testing</strong>: Test behavior under various load levels</li>
+<li><strong>Stress testing</strong>: Push system beyond capacity</li>
+<li><strong>Chaos testing</strong>: Inject delays and failures</li>
+<li><strong>Backpressure testing</strong>: Verify backpressure works correctly</li>
+</ol>
+<hr />
+<h2 id="security-boundaries">Security Boundaries</h2>
+<p>Overload itself isn't a security issue, but:
+- <strong>DDoS attacks</strong>: Can cause overload
+- <strong>Resource exhaustion</strong>: Attackers can fill queues
+- <strong>Mitigation</strong>: Rate limiting, DDoS protection, authentication</p>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="what-we-gain-with-backpressure">What We Gain with Backpressure</h3>
+<ul>
+<li>Prevents cascading failures</li>
+<li>Graceful degradation</li>
+<li>Better resource utilization</li>
+<li>Predictable failure behavior</li>
+</ul>
+<h3 id="what-we-lose">What We Lose</h3>
+<ul>
+<li>Some requests are rejected (poor UX)</li>
+<li>More complex implementation</li>
+<li>Requires monitoring and tuning</li>
+</ul>
+<h3 id="when-to-use-backpressure">When to Use Backpressure</h3>
+<ul>
+<li><strong>Always</strong>: For production systems</li>
+<li><strong>Critical</strong>: For systems with SLOs</li>
+<li><strong>Important</strong>: For systems that call other services</li>
+</ul>
+<h3 id="alternatives">Alternatives</h3>
+<p>If backpressure is too complex:
+- <strong>Over-provision</strong>: Always have excess capacity (expensive)
+- <strong>Fail fast</strong>: Return errors immediately (poor UX)
+- <strong>Accept failures</strong>: Let system fail (unreliable)</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<p><strong>Calculate capacity needed</strong>:
+1. Determine expected peak load
+2. Add safety margin (2-3×)
+3. Plan for auto-scaling
+4. Plan for load shedding</p>
+<h3 id="monitoring-debugging">Monitoring &amp; Debugging</h3>
+<p><strong>Monitor</strong>:
+- Queue depth over time
+- Latency over time
+- Error rate over time
+- Resource utilization over time</p>
+<p><strong>Debug overload</strong>:
+1. Check queue depth: Is queue growing?
+2. Check latency: Is latency increasing?
+3. Check error rate: Are errors increasing?
+4. Check resource utilization: Are resources saturated?
+5. Check downstream services: Are they failing?</p>
+<h3 id="incident-response">Incident Response</h3>
+<p><strong>Common incidents</strong>:
+- Overload detected
+- Cascading failures
+- Circuit breaker trips</p>
+<p><strong>Response</strong>:
+1. Scale up (if possible)
+2. Load shed (drop low-priority requests)
+3. Circuit break (stop calling failing services)
+4. Investigate root cause</p>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>"How do we detect overload?"</li>
+<li>"What's our backpressure strategy?"</li>
+<li>"How do we prevent cascading failures?"</li>
+<li>"What's our load shedding strategy?"</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>"What happens at 10× load?"</li>
+<li>"How does the system degrade?"</li>
+<li>"What's the failure mode?"</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>"How do we monitor overload?"</li>
+<li>"What alerts do we have?"</li>
+<li>"How do we debug overload?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/overload-backpressure.html">Further Reading: Overload &amp; Backpressure</a></p>
+<p><strong>Quick Links</strong>:
+- "The Tail at Scale" (Dean &amp; Barroso, 2013)
+- "Site Reliability Engineering" (Google SRE Book)
+- "Why Do Internet Services Fail?" (Oppenheimer et al., 2003)
+- <a href="../04-reliability-sre/load-shedding.md">Load Shedding &amp; Circuit Breakers</a>
+- <a href="README.html">Back to Distributed Systems</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design backpressure</strong>: Design a system that handles 10× load gracefully. What mechanisms do you use?</p>
+</li>
+<li>
+<p><strong>Prevent cascades</strong>: Service A calls Service B. How do you prevent B's failure from cascading to A?</p>
+</li>
+<li>
+<p><strong>Load shedding strategy</strong>: Design a load shedding strategy for an API that handles both read and write requests. Which requests do you drop first?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/overload-backpressure-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+</html>

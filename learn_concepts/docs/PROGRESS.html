@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="progress-tracker">Progress Tracker</h1>
+<p>Track your learning progress through the staff-level GCP curriculum.</p>
+<h2 id="phase-0-foundations-quantitative-reasoning">Phase 0: Foundations &amp; Quantitative Reasoning</h2>
+<ul>
+<li>[ ] <a href="01-foundations/queueing-tail-latency.html">Queueing Theory &amp; Tail Latency</a></li>
+<li>[ ] <a href="01-foundations/capacity-math.html">Capacity Math Cheat Sheet</a></li>
+<li>[ ] <a href="01-foundations/observability-basics.html">Observability Basics</a></li>
+</ul>
+<p><strong>Milestone</strong>: Can reason about P50/P95/P99 latency and calculate capacity needs.</p>
+<hr />
+<h2 id="phase-1-distributed-systems-building-blocks">Phase 1: Distributed Systems Building Blocks</h2>
+<ul>
+<li>[ ] <a href="02-distributed-systems/time-ordering-causality.md">Time, Ordering, and Causality</a></li>
+<li>[ ] <a href="02-distributed-systems/consensus-leases.md">Consensus &amp; Leases</a></li>
+<li>[ ] <a href="02-distributed-systems/replication.md">Replication Strategies</a></li>
+<li>[ ] <a href="02-distributed-systems/sharding-partitioning.md">Sharding &amp; Partitioning</a></li>
+<li>[ ] <a href="02-distributed-systems/overload-backpressure.html">Overload &amp; Backpressure</a></li>
+<li>[ ] <a href="02-distributed-systems/idempotency-retries.html">Idempotency &amp; Retry Semantics</a></li>
+<li>[ ] <a href="02-distributed-systems/queues-streams.md">Queues &amp; Streams</a></li>
+</ul>
+<p><strong>Milestone</strong>: Understand consensus vs leases, handle overload gracefully, know replication tradeoffs.</p>
+<hr />
+<h2 id="phase-2-gcp-core-building-blocks">Phase 2: GCP Core Building Blocks</h2>
+<ul>
+<li>[ ] <a href="03-gcp-core-building-blocks/vpc-lb-dns.html">VPC, Load Balancing &amp; DNS</a></li>
+<li>[ ] <a href="03-gcp-core-building-blocks/gke-internals.md">GKE Control Plane &amp; Data Plane</a></li>
+<li>[ ] <a href="03-gcp-core-building-blocks/iam-evaluation.html">IAM Evaluation Model</a></li>
+<li>[ ] <a href="03-gcp-core-building-blocks/cloud-storage.md">Cloud Storage Deep Dive</a></li>
+<li>[ ] <a href="03-gcp-core-building-blocks/spanner.md">Spanner: Consistency &amp; Performance</a></li>
+<li>[ ] <a href="03-gcp-core-building-blocks/bigtable.md">Bigtable: Design &amp; Tradeoffs</a></li>
+<li>[ ] <a href="03-gcp-core-building-blocks/bigquery.md">BigQuery Architecture</a></li>
+<li>[ ] <a href="03-gcp-core-building-blocks/pubsub.md">Pub/Sub: Delivery Guarantees</a></li>
+<li>[ ] <a href="03-gcp-core-building-blocks/kms-secrets.md">Cloud KMS &amp; Secret Management</a></li>
+</ul>
+<p><strong>Milestone</strong>: Can design systems using GCP primitives, understand failure modes, make tradeoffs.</p>
+<hr />
+<h2 id="phase-3-reliability-engineering-sre">Phase 3: Reliability Engineering &amp; SRE</h2>
+<ul>
+<li>[ ] <a href="04-reliability-sre/sli-slo-error-budget.html">SLIs, SLOs &amp; Error Budgets</a></li>
+<li>[ ] <a href="04-reliability-sre/prr-checklist.html">Production Readiness Reviews (PRR)</a></li>
+<li>[ ] <a href="04-reliability-sre/incident-response.md">Incident Response &amp; Postmortems</a></li>
+<li>[ ] <a href="04-reliability-sre/capacity-planning.md">Capacity Planning &amp; Forecasting</a></li>
+<li>[ ] <a href="04-reliability-sre/load-shedding.md">Load Shedding &amp; Circuit Breakers</a></li>
+<li>[ ] <a href="04-reliability-sre/canary-rollouts.md">Canary Deployments &amp; Rollouts</a></li>
+<li>[ ] <a href="04-reliability-sre/testing-for-failure.md">Testing for Failure</a></li>
+</ul>
+<p><strong>Milestone</strong>: Can define SLIs/SLOs, run PRRs, respond to incidents, plan capacity.</p>
+<hr />
+<h2 id="phase-4-case-studies-end-to-end-design">Phase 4: Case Studies &amp; End-to-End Design</h2>
+<ul>
+<li>[ ] <a href="06-case-studies/multi-region-api.html">Multi-Region API on GCP</a></li>
+<li>[ ] <a href="06-case-studies/data-pipeline.md">High-Throughput Data Pipeline</a> (coming soon)</li>
+<li>[ ] <a href="06-case-studies/cdn-system.md">Global Content Delivery System</a> (coming soon)</li>
+</ul>
+<p><strong>Milestone</strong>: Can design, implement, and operate production systems with SLOs and playbooks.</p>
+<hr />
+<h2 id="notes">Notes</h2>
+<p>Use this section to track insights, questions, or areas to revisit:</p>
+<pre><code>Add your notes here as you progress...
+</code></pre>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+</html>

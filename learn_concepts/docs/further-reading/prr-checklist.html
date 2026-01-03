@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prr Checklist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="further-reading-prr-checklist">Further Reading: PRR Checklist</h1>
+<p><a href="../04-reliability-sre/prr-checklist.html">Back to PRR Checklist</a></p>
+<hr />
+<h2 id="site-reliability-engineering-google-sre-book">Site Reliability Engineering (Google SRE Book)</h2>
+<p><strong>Book</strong>: <a href="https://sre.google/books/">Site Reliability Engineering: How Google Runs Production Systems</a></p>
+<p><strong>Why it matters</strong>: Google's approach to production readiness, including what makes systems production-ready.</p>
+<h3 id="key-concepts">Key Concepts</h3>
+<p><strong>Production Readiness</strong>:
+- What makes a system production-ready
+- How to evaluate production readiness
+- Common production readiness failures</p>
+<p><strong>Checklists</strong>:
+- What to check before production
+- How to verify readiness
+- When to approve for production</p>
+<p><strong>Relevance</strong>: Provides the foundation for PRR practices and what Google considers production-ready.</p>
+<h3 id="recommended-chapters">Recommended Chapters</h3>
+<ul>
+<li><strong>Chapter 4: Service Level Objectives</strong>: SLOs and production readiness</li>
+<li><strong>Chapter 6: Monitoring Distributed Systems</strong>: Observability requirements</li>
+<li><strong>Chapter 10: Practical Alerting</strong>: Alerting best practices</li>
+<li><strong>Chapter 11: On-Call</strong>: On-call requirements</li>
+</ul>
+<hr />
+<h2 id="the-site-reliability-workbook">The Site Reliability Workbook</h2>
+<p><strong>Book</strong>: <a href="https://sre.google/workbook/">The Site Reliability Workbook: Practical Ways to Implement SRE</a></p>
+<p><strong>Why it matters</strong>: Practical guide to implementing PRR practices with detailed checklists and examples.</p>
+<h3 id="key-concepts_1">Key Concepts</h3>
+<p><strong>PRR Process</strong>:
+- How to run a PRR
+- What to check
+- How to document findings</p>
+<p><strong>Common Issues</strong>:
+- What typically fails PRR
+- How to fix common issues
+- How to prevent issues</p>
+<p><strong>Relevance</strong>: Provides practical, actionable guidance for running PRRs.</p>
+<h3 id="recommended-chapters_1">Recommended Chapters</h3>
+<ul>
+<li><strong>Chapter 2: Implementing SLOs</strong>: SLO requirements for PRR</li>
+<li><strong>Chapter 4: Error Budgets</strong>: Error budget requirements</li>
+<li><strong>Chapter 5: Alerting on SLOs</strong>: Alerting requirements</li>
+<li><strong>Chapter 6: On-Call</strong>: On-call requirements</li>
+</ul>
+<hr />
+<h2 id="google-cloud-production-readiness">Google Cloud Production Readiness</h2>
+<p><strong>Documentation</strong>: <a href="https://cloud.google.com/architecture/framework/reliability/production-readiness">Production Readiness Review</a></p>
+<p><strong>Why it matters</strong>: GCP's recommended practices for production readiness reviews.</p>
+<h3 id="key-areas">Key Areas</h3>
+<p><strong>1. Reliability</strong>
+- SLIs and SLOs defined
+- Error budgets calculated
+- Monitoring configured</p>
+<p><strong>2. Observability</strong>
+- Metrics, logs, traces
+- Dashboards created
+- Alerts configured</p>
+<p><strong>3. Security</strong>
+- Authentication and authorization
+- Encryption configured
+- Security monitoring</p>
+<p><strong>4. Operations</strong>
+- On-call rotation
+- Runbooks created
+- Incident response process</p>
+<p><strong>Relevance</strong>: Provides GCP-specific guidance for production readiness.</p>
+<hr />
+<h2 id="prr-best-practices">PRR Best Practices</h2>
+<h3 id="what-staff-engineers-look-for">What Staff Engineers Look For</h3>
+<p><strong>Critical (Must Fix)</strong>:
+1. No SLIs/SLOs defined
+2. No monitoring configured
+3. No on-call rotation
+4. No rollback plan
+5. No security (auth, encryption)</p>
+<p><strong>Important (Should Fix)</strong>:
+1. Weak SLIs (internal metrics)
+2. Alert fatigue
+3. No runbooks
+4. No load testing
+5. Weak security</p>
+<p><strong>Nice-to-Have</strong>:
+1. Distributed tracing
+2. Chaos testing
+3. Capacity planning</p>
+<p><strong>Relevance</strong>: Provides a prioritized checklist of what matters most.</p>
+<hr />
+<h2 id="additional-resources">Additional Resources</h2>
+<h3 id="books">Books</h3>
+<p><strong>"The Site Reliability Workbook"</strong> (Google SRE Workbook)
+- Practical PRR implementation
+- Real-world examples</p>
+<p><strong>"Release It!"</strong> by Michael Nygard
+- Production readiness patterns
+- Common production failures</p>
+<h3 id="online-resources">Online Resources</h3>
+<p><strong>Google Cloud Documentation</strong>: <a href="https://cloud.google.com/architecture/framework/reliability/production-readiness">Production Readiness</a>
+- GCP production readiness guide
+- Checklists and best practices</p>
+<p><strong>SRE Book</strong>: <a href="https://sre.google/">sre.google</a>
+- Free online version
+- PRR concepts and practices</p>
+<hr />
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ol>
+<li><strong>PRR ensures readiness</strong>: Don't skip production readiness reviews</li>
+<li><strong>Focus on critical issues</strong>: SLIs/SLOs, monitoring, on-call, rollback, security</li>
+<li><strong>Use checklists</strong>: Systematic approach to PRR</li>
+<li><strong>Document findings</strong>: Clear feedback and action items</li>
+<li><strong>Iterate</strong>: PRR is not one-time, systems evolve</li>
+</ol>
+<hr />
+<h2 id="related-topics">Related Topics</h2>
+<ul>
+<li><a href="../04-reliability-sre/sli-slo-error-budget.html">SLIs/SLOs</a> - Foundation for PRR</li>
+<li><a href="../01-foundations/observability-basics.html">Observability Basics</a> - Monitoring requirements</li>
+<li><a href="../04-reliability-sre/incident-response.md">Incident Response</a> - On-call and runbooks</li>
+</ul>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+</html>
