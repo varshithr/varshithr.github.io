@@ -170,6 +170,29 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .sidebar.collapsed {{
             transform: translateX(-100%);
         }}
+        .sidebar-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid #E5E7EB;
+        }}
+        .sidebar-close {{
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }}
+        .sidebar-close:hover {{
+            background-color: #F3F4F6;
+            color: #1E293B;
+        }}
         .sidebar-toggle {{
             position: fixed;
             top: 90px;
@@ -186,6 +209,16 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .sidebar-toggle:hover {{
             background-color: #F3F4F6;
         }}
+        .sidebar-toggle.desktop {{
+            display: block;
+            top: 90px;
+            left: 300px;
+        }}
+        @media (max-width: 1024px) {{
+            .sidebar-toggle.desktop {{
+                display: none;
+            }}
+        }}
         .sidebar-content {{
             padding: 1.5rem;
         }}
@@ -193,9 +226,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-size: 1.125rem;
             font-weight: 700;
             color: #1E293B;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #E5E7EB;
+            margin: 0;
         }}
         .sidebar-nav {{
             list-style: none;
@@ -243,11 +274,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-size: 0.75rem;
         }}
         .main-content {{
-            margin-left: 280px;
+            margin-left: 280px !important;
             transition: margin-left 0.3s ease;
         }}
-        .main-content.no-sidebar {{
-            margin-left: 0;
+        .main-content.no-sidebar,
+        .main-content.sidebar-collapsed {{
+            margin-left: 0 !important;
         }}
         @media (max-width: 1024px) {{
             .sidebar {{
@@ -256,7 +288,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             .sidebar.expanded {{
                 transform: translateX(0);
             }}
-            .sidebar-toggle {{
+            .sidebar-toggle.mobile {{
                 display: block;
             }}
             .main-content {{
@@ -296,21 +328,60 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         // Sidebar toggle functionality
         document.addEventListener('DOMContentLoaded', function() {{
             const sidebar = document.getElementById('sidebar');
-            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarToggleMobile = document.getElementById('sidebarToggleMobile');
+            const sidebarToggleDesktop = document.getElementById('sidebarToggleDesktop');
+            const sidebarClose = document.getElementById('sidebarClose');
             const mainContent = document.querySelector('.main-content');
             
-            // Toggle sidebar
-            if (sidebarToggle) {{
-                sidebarToggle.addEventListener('click', function() {{
+            function toggleSidebar() {{
+                sidebar.classList.toggle('collapsed');
+                if (mainContent) {{
+                    mainContent.classList.toggle('sidebar-collapsed');
+                }}
+            }}
+            
+            function expandSidebar() {{
+                sidebar.classList.add('expanded');
+            }}
+            
+            function collapseSidebar() {{
+                sidebar.classList.remove('expanded');
+                sidebar.classList.add('collapsed');
+                if (mainContent) {{
+                    mainContent.classList.add('sidebar-collapsed');
+                }}
+            }}
+            
+            // Mobile toggle
+            if (sidebarToggleMobile) {{
+                sidebarToggleMobile.addEventListener('click', function() {{
                     sidebar.classList.toggle('expanded');
+                }});
+            }}
+            
+            // Desktop toggle
+            if (sidebarToggleDesktop) {{
+                sidebarToggleDesktop.addEventListener('click', toggleSidebar);
+            }}
+            
+            // Close button in sidebar
+            if (sidebarClose) {{
+                sidebarClose.addEventListener('click', function() {{
+                    if (window.innerWidth <= 1024) {{
+                        collapseSidebar();
+                    }} else {{
+                        toggleSidebar();
+                    }}
                 }});
             }}
             
             // Close sidebar when clicking outside on mobile
             document.addEventListener('click', function(event) {{
                 if (window.innerWidth <= 1024) {{
-                    if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {{
-                        sidebar.classList.remove('expanded');
+                    const isClickInsideSidebar = sidebar && sidebar.contains(event.target);
+                    const isClickOnToggle = sidebarToggleMobile && sidebarToggleMobile.contains(event.target);
+                    if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains('expanded')) {{
+                        collapseSidebar();
                     }}
                 }}
             }});
@@ -509,15 +580,27 @@ def generate_sidebar_nav(html_content: str) -> Tuple[str, str, str]:
         nav_items.append(f'                <li><a href="#{heading_id}" class="{level_class}">{text}</a></li>')
     
     sidebar_html = f'''    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-content">
+        <div class="sidebar-header">
             <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
             <ul class="sidebar-nav">
 {chr(10).join(nav_items)}
             </ul>
         </div>
     </aside>'''
     
-    sidebar_toggle_html = '''    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+    sidebar_toggle_html = '''    <button class="sidebar-toggle mobile" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+    <button class="sidebar-toggle desktop" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
