@@ -482,5 +482,5 @@ Rate limiting is a security control:
 
 3. **Distributed rate limiting**: Design a distributed rate limiter. How do you ensure consistency?
 
-**Answer Key**: [View Answers](../../exercises/answers/rate-limiting-answers.md)
+**Answer Key**: [View Answers](../exercises/answers/rate-limiting-answers.md)
 

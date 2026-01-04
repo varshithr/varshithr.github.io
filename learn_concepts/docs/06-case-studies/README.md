@@ -18,12 +18,12 @@ This chapter contains real-world case studies that apply everything learned:
    - SLOs and error budgets
    - Rollout and incident playbooks
 
-2. [High-Throughput Data Pipeline](data-pipeline.md) (coming soon)
+2. [High-Throughput Data Pipeline](data-pipeline.md)
    - Real-time data processing
    - Pub/Sub, Dataflow, BigQuery
    - Handling backpressure and failures
 
-3. [Global Content Delivery System](cdn-system.md) (coming soon)
+3. [Global Content Delivery System](cdn-system.md)
    - CDN architecture on GCP
    - Edge caching strategies
    - Cache invalidation and consistency

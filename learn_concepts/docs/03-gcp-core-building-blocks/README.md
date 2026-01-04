@@ -59,6 +59,11 @@ This chapter covers GCP's core services at staff-level depth:
    - Secret Manager
    - Encryption at rest and in transit
 
+10. [AlloyDB: PostgreSQL-Compatible Database](alloydb.md)
+    - Compute-storage separation architecture
+    - PostgreSQL compatibility
+    - High availability and performance optimizations
+
 ## Learning Objectives
 
 After completing this chapter, you should be able to:

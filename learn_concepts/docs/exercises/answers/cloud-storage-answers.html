@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Storage Answers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        @media (max-width: 640px) {
+            .content {
+                padding: 1rem;
+                margin-top: 1rem;
+                border-radius: 0.5rem;
+            }
+            .content h1 {
+                font-size: 1.75rem;
+            }
+            .content h2 {
+                font-size: 1.5rem;
+            }
+            .content h3 {
+                font-size: 1.25rem;
+            }
+            .content pre {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+                overflow-x: auto;
+            }
+            .content table {
+                font-size: 0.875rem;
+            }
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            list-style: none;
+            display: flex;
+            align-items: flex-start;
+        }
+        .content ul li::before {
+            content: none;
+        }
+        .progress-checkbox {
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            accent-color: #58508d;
+        }
+        .progress-checkbox:checked {
+            accent-color: #58508d;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: calc(100vh - 80px);
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid #E5E7EB;
+            overflow-y: auto;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 40;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        @media (min-width: 1025px) {
+            .sidebar {
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+            }
+        }
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+        .sidebar-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+        .sidebar-close:hover {
+            background-color: #F3F4F6;
+            color: #1E293B;
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 50;
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+            transition: left 0.3s ease, background-color 0.2s ease;
+        }
+        .sidebar-toggle:hover {
+            background-color: #F3F4F6;
+        }
+        .sidebar-toggle.desktop {
+            display: none;
+        }
+        @media (min-width: 1025px) {
+            .sidebar-toggle.desktop {
+                display: block;
+                top: 90px;
+                left: 300px;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .sidebar-toggle.desktop.sidebar-collapsed {
+                left: 20px;
+            }
+        }
+        @media (max-width: 1024px) {
+            .sidebar-toggle.desktop {
+                display: none !important;
+            }
+            .sidebar-toggle.mobile {
+                top: 85px;
+                left: 15px;
+            }
+        }
+        .sidebar-content {
+            padding: 1.5rem;
+        }
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin: 0;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #4B5563;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        .sidebar-nav a:hover {
+            background-color: #F3F4F6;
+            color: #58508d;
+        }
+        .sidebar-nav a.active {
+            background-color: #EEF2FF;
+            color: #58508d;
+            font-weight: 600;
+        }
+        .sidebar-nav .level-1 {
+            padding-left: 0.75rem;
+            font-weight: 600;
+            color: #1E293B;
+        }
+        .sidebar-nav .level-2 {
+            padding-left: 1.5rem;
+            color: #4B5563;
+        }
+        .sidebar-nav .level-3 {
+            padding-left: 2.25rem;
+            color: #6B7280;
+            font-size: 0.8125rem;
+        }
+        .sidebar-nav .level-4 {
+            padding-left: 3rem;
+            color: #9CA3AF;
+            font-size: 0.75rem;
+        }
+        .main-content {
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-left: 0;
+        }
+        @media (min-width: 1025px) {
+            .main-content {
+                margin-left: 280px !important;
+                max-width: calc(100vw - 280px) !important;
+                width: calc(100% - 280px) !important;
+            }
+            .main-content.sidebar-collapsed {
+                margin-left: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .main-content.container {
+                max-width: calc(100vw - 280px) !important;
+            }
+            .main-content.sidebar-collapsed.container {
+                max-width: 100% !important;
+            }
+        }
+        .main-content.no-sidebar {
+            margin-left: 0 !important;
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+            }
+            .sidebar.expanded {
+                transform: translateX(0);
+            }
+            .sidebar-toggle.mobile {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 35;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+        @media (min-width: 1025px) {
+            .sidebar-overlay {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../../../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <button class="sidebar-toggle mobile" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+    <button class="sidebar-toggle desktop" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#answer-key-cloud-storage" class="level-1">Answer Key: Cloud Storage</a></li>
+                <li><a href="#exercise-1-design-storage-strategy" class="level-2">Exercise 1: Design Storage Strategy</a></li>
+                <li><a href="#answer" class="level-3">Answer</a></li>
+                <li><a href="#storage-strategy" class="level-3">Storage Strategy</a></li>
+                <li><a href="#lifecycle-policy" class="level-3">Lifecycle Policy</a></li>
+                <li><a href="#cost-optimization" class="level-3">Cost Optimization</a></li>
+                <li><a href="#answer_1" class="level-3">Answer</a></li>
+                <li><a href="#exercise-2-handle-consistency" class="level-2">Exercise 2: Handle Consistency</a></li>
+                <li><a href="#answer_2" class="level-3">Answer</a></li>
+                <li><a href="#consistency-model" class="level-3">Consistency Model</a></li>
+                <li><a href="#solutions" class="level-3">Solutions</a></li>
+                <li><a href="#best-practices" class="level-3">Best Practices</a></li>
+                <li><a href="#answer_3" class="level-3">Answer</a></li>
+                <li><a href="#exercise-3-optimize-costs" class="level-2">Exercise 3: Optimize Costs</a></li>
+                <li><a href="#answer_4" class="level-3">Answer</a></li>
+                <li><a href="#cost-optimization-strategies" class="level-3">Cost Optimization Strategies</a></li>
+                <li><a href="#cost-optimization-plan" class="level-3">Cost Optimization Plan</a></li>
+                <li><a href="#answer_5" class="level-3">Answer</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="answer-key-cloud-storage">Answer Key: Cloud Storage</h1>
+<p><a href="../../03-gcp-core-building-blocks/cloud-storage.html">Back to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-design-storage-strategy">Exercise 1: Design Storage Strategy</h2>
+<p><strong>Question</strong>: Design storage strategy for a media application. What storage classes? What lifecycle policies?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Goal</strong>: Design cost-effective storage strategy for media files with different access patterns.</p>
+<h3 id="storage-strategy">Storage Strategy</h3>
+<p><strong>1. Frequently Accessed Media (Recent Uploads)</strong></p>
+<p><strong>Storage Class</strong>: <strong>Standard Storage</strong></p>
+<p><strong>Use case</strong>: Recently uploaded media (last 30 days)</p>
+<p><strong>Characteristics</strong>:
+- High availability (99.99%)
+- Low latency (&lt; 100ms)
+- Frequently accessed</p>
+<p><strong>Lifecycle</strong>: No transition (stay in Standard)</p>
+<p><strong>2. Occasionally Accessed Media (Older Content)</strong></p>
+<p><strong>Storage Class</strong>: <strong>Nearline Storage</strong></p>
+<p><strong>Use case</strong>: Media older than 30 days, accessed monthly</p>
+<p><strong>Characteristics</strong>:
+- Lower cost (~50% cheaper)
+- Still low latency
+- Accessed less frequently</p>
+<p><strong>Lifecycle</strong>: Transition from Standard after 30 days</p>
+<p><strong>3. Rarely Accessed Media (Archive)</strong></p>
+<p><strong>Storage Class</strong>: <strong>Coldline Storage</strong></p>
+<p><strong>Use case</strong>: Media older than 90 days, accessed quarterly</p>
+<p><strong>Characteristics</strong>:
+- Lower cost (~70% cheaper)
+- Still low latency
+- Accessed rarely</p>
+<p><strong>Lifecycle</strong>: Transition from Nearline after 90 days</p>
+<p><strong>4. Long-Term Archive</strong></p>
+<p><strong>Storage Class</strong>: <strong>Archive Storage</strong></p>
+<p><strong>Use case</strong>: Media older than 365 days, accessed annually</p>
+<p><strong>Characteristics</strong>:
+- Lowest cost (~80% cheaper)
+- Higher latency (hours for retrieval)
+- Accessed very rarely</p>
+<p><strong>Lifecycle</strong>: Transition from Coldline after 365 days</p>
+<h3 id="lifecycle-policy">Lifecycle Policy</h3>
+<pre><code class="language-json">{
+  &quot;lifecycle&quot;: {
+    &quot;rule&quot;: [
+      {
+        &quot;action&quot;: {&quot;type&quot;: &quot;SetStorageClass&quot;, &quot;storageClass&quot;: &quot;NEARLINE&quot;},
+        &quot;condition&quot;: {&quot;age&quot;: 30}
+      },
+      {
+        &quot;action&quot;: {&quot;type&quot;: &quot;SetStorageClass&quot;, &quot;storageClass&quot;: &quot;COLDLINE&quot;},
+        &quot;condition&quot;: {&quot;age&quot;: 90}
+      },
+      {
+        &quot;action&quot;: {&quot;type&quot;: &quot;SetStorageClass&quot;, &quot;storageClass&quot;: &quot;ARCHIVE&quot;},
+        &quot;condition&quot;: {&quot;age&quot;: 365}
+      }
+    ]
+  }
+}
+</code></pre>
+<h3 id="cost-optimization">Cost Optimization</h3>
+<p><strong>Estimated Monthly Costs</strong> (for 1TB storage):</p>
+<ul>
+<li><strong>Standard</strong> (30 days): 100GB × $0.020 = $2.00</li>
+<li><strong>Nearline</strong> (60 days): 200GB × $0.010 = $2.00</li>
+<li><strong>Coldline</strong> (275 days): 500GB × $0.004 = $2.00</li>
+<li><strong>Archive</strong> (365+ days): 200GB × $0.0012 = $0.24</li>
+<li><strong>Total</strong>: ~$6.24/month (vs $20/month for all Standard)</li>
+</ul>
+<p><strong>Savings</strong>: ~70% cost reduction</p>
+<h3 id="answer_1">Answer</h3>
+<p><strong>Storage Classes</strong>:
+1. <strong>Standard</strong>: Recent media (0-30 days)
+2. <strong>Nearline</strong>: Older media (30-90 days)
+3. <strong>Coldline</strong>: Archive media (90-365 days)
+4. <strong>Archive</strong>: Long-term archive (365+ days)</p>
+<p><strong>Lifecycle Policy</strong>:
+- Transition to Nearline after 30 days
+- Transition to Coldline after 90 days
+- Transition to Archive after 365 days</p>
+<p><strong>Key principles</strong>:
+- <strong>Match access patterns</strong>: Use storage classes matching access frequency
+- <strong>Automatic transitions</strong>: Use lifecycle policies for automatic transitions
+- <strong>Cost optimization</strong>: Significant cost savings with lifecycle management
+- <strong>Performance</strong>: Maintain low latency for frequently accessed content</p>
+<hr />
+<h2 id="exercise-2-handle-consistency">Exercise 2: Handle Consistency</h2>
+<p><strong>Question</strong>: Your application needs strong consistency for reads. How do you achieve this with Cloud Storage?</p>
+<h3 id="answer_2">Answer</h3>
+<p><strong>Goal</strong>: Achieve strong consistency for Cloud Storage reads.</p>
+<h3 id="consistency-model">Consistency Model</h3>
+<p><strong>Cloud Storage Consistency</strong>:
+- <strong>Metadata</strong>: Strongly consistent (immediately visible)
+- <strong>Object data</strong>: Eventually consistent (may see stale data briefly)</p>
+<h3 id="solutions">Solutions</h3>
+<p><strong>1. Use Metadata for Consistency</strong></p>
+<p><strong>Strategy</strong>: Use object metadata to ensure consistency</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-python"># Write with metadata
+object.metadata = {'version': 'v2', 'timestamp': '2024-01-01T10:00:00Z'}
+object.upload_from_file(file)
+
+# Read with metadata check
+object.reload()
+if object.metadata['version'] == 'v2':
+    # Use this version
+    data = object.download_as_bytes()
+</code></pre>
+<p><strong>How it works</strong>:
+- Metadata is strongly consistent
+- Check metadata before reading
+- Ensures reading latest version</p>
+<p><strong>2. Use Object Versioning</strong></p>
+<p><strong>Strategy</strong>: Use object versioning for consistency</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-python"># Enable versioning on bucket
+bucket.versioning_enabled = True
+
+# Read specific version
+object = bucket.get_blob('file.txt', generation=1234567890)
+data = object.download_as_bytes()
+</code></pre>
+<p><strong>How it works</strong>:
+- Versioning creates new version on each update
+- Read specific version (strongly consistent)
+- Track versions in application</p>
+<p><strong>3. Use Generation Numbers</strong></p>
+<p><strong>Strategy</strong>: Use generation numbers for consistency</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-python"># Write and get generation
+object.upload_from_file(file)
+generation = object.generation
+
+# Read with generation check
+object.reload()
+if object.generation == generation:
+    # This is the latest version
+    data = object.download_as_bytes()
+</code></pre>
+<p><strong>How it works</strong>:
+- Generation number increments on each update
+- Check generation before reading
+- Ensures reading latest version</p>
+<p><strong>4. Use Conditional Reads</strong></p>
+<p><strong>Strategy</strong>: Use conditional reads with generation</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-python"># Read if generation matches
+try:
+    object = bucket.get_blob('file.txt', if_generation_match=generation)
+    data = object.download_as_bytes()
+except NotFound:
+    # Generation mismatch, retry
+    pass
+</code></pre>
+<p><strong>How it works</strong>:
+- Conditional read fails if generation doesn't match
+- Retry if generation mismatch
+- Ensures reading expected version</p>
+<p><strong>5. Use Cache Control</strong></p>
+<p><strong>Strategy</strong>: Use cache control headers</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-python"># Set cache control
+object.cache_control = 'no-cache, no-store, must-revalidate'
+object.upload_from_file(file)
+</code></pre>
+<p><strong>How it works</strong>:
+- Prevents caching at CDN/proxy
+- Forces fresh reads
+- Reduces stale data risk</p>
+<h3 id="best-practices">Best Practices</h3>
+<p><strong>1. Use Metadata for Version Tracking</strong>:
+- Store version in metadata
+- Check metadata before reading
+- Ensures consistency</p>
+<p><strong>2. Use Object Versioning for Critical Data</strong>:
+- Enable versioning for important objects
+- Read specific versions
+- Track versions in application</p>
+<p><strong>3. Implement Retry Logic</strong>:
+- Retry reads if generation mismatch
+- Exponential backoff
+- Handle eventual consistency</p>
+<p><strong>4. Use Conditional Reads</strong>:
+- Use <code>if_generation_match</code> for conditional reads
+- Fail fast if version mismatch
+- Retry with updated generation</p>
+<p><strong>5. Monitor Consistency</strong>:
+- Monitor read consistency
+- Track generation mismatches
+- Alert on consistency issues</p>
+<h3 id="answer_3">Answer</h3>
+<p><strong>Achieve Strong Consistency</strong>:</p>
+<ol>
+<li><strong>Use Object Versioning</strong>:</li>
+<li>Enable versioning on bucket</li>
+<li>Read specific versions (strongly consistent)</li>
+<li>
+<p>Track versions in application</p>
+</li>
+<li>
+<p><strong>Use Generation Numbers</strong>:</p>
+</li>
+<li>Check generation before reading</li>
+<li>Ensure reading latest version</li>
+<li>
+<p>Retry if generation mismatch</p>
+</li>
+<li>
+<p><strong>Use Conditional Reads</strong>:</p>
+</li>
+<li>Use <code>if_generation_match</code> for conditional reads</li>
+<li>Fail fast if version mismatch</li>
+<li>
+<p>Retry with updated generation</p>
+</li>
+<li>
+<p><strong>Use Metadata</strong>:</p>
+</li>
+<li>Store version in metadata (strongly consistent)</li>
+<li>Check metadata before reading</li>
+<li>Ensures reading latest version</li>
+</ol>
+<p><strong>Key principles</strong>:
+- <strong>Versioning</strong>: Use object versioning for critical data
+- <strong>Generation checks</strong>: Check generation before reading
+- <strong>Conditional reads</strong>: Use conditional reads for consistency
+- <strong>Retry logic</strong>: Implement retry logic for eventual consistency
+- <strong>Monitor</strong>: Monitor consistency and alert on issues</p>
+<hr />
+<h2 id="exercise-3-optimize-costs">Exercise 3: Optimize Costs</h2>
+<p><strong>Question</strong>: Your storage costs are high. How do you optimize costs while maintaining performance?</p>
+<h3 id="answer_4">Answer</h3>
+<p><strong>Goal</strong>: Reduce Cloud Storage costs while maintaining acceptable performance.</p>
+<h3 id="cost-optimization-strategies">Cost Optimization Strategies</h3>
+<p><strong>1. Use Lifecycle Management</strong></p>
+<p><strong>Strategy</strong>: Automatically transition objects to cheaper storage classes</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-json">{
+  &quot;lifecycle&quot;: {
+    &quot;rule&quot;: [
+      {
+        &quot;action&quot;: {&quot;type&quot;: &quot;SetStorageClass&quot;, &quot;storageClass&quot;: &quot;NEARLINE&quot;},
+        &quot;condition&quot;: {&quot;age&quot;: 30}
+      },
+      {
+        &quot;action&quot;: {&quot;type&quot;: &quot;SetStorageClass&quot;, &quot;storageClass&quot;: &quot;COLDLINE&quot;},
+        &quot;condition&quot;: {&quot;age&quot;: 90}
+      }
+    ]
+  }
+}
+</code></pre>
+<p><strong>Savings</strong>: 50-80% cost reduction for older objects</p>
+<p><strong>2. Optimize Storage Classes</strong></p>
+<p><strong>Strategy</strong>: Use appropriate storage classes for access patterns</p>
+<p><strong>Analysis</strong>:
+- <strong>Standard</strong>: Frequently accessed (last 30 days)
+- <strong>Nearline</strong>: Accessed monthly (30-90 days)
+- <strong>Coldline</strong>: Accessed quarterly (90-365 days)
+- <strong>Archive</strong>: Accessed annually (365+ days)</p>
+<p><strong>Savings</strong>: Match storage class to access pattern</p>
+<p><strong>3. Compress Objects</strong></p>
+<p><strong>Strategy</strong>: Compress objects before upload</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-python">import gzip
+
+# Compress before upload
+with gzip.open('file.txt.gz', 'wb') as f:
+    f.write(data)
+
+object.upload_from_filename('file.txt.gz')
+</code></pre>
+<p><strong>Savings</strong>: 50-90% storage reduction (depending on content)</p>
+<p><strong>4. Delete Unused Objects</strong></p>
+<p><strong>Strategy</strong>: Delete old or unused objects</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-json">{
+  &quot;lifecycle&quot;: {
+    &quot;rule&quot;: [
+      {
+        &quot;action&quot;: {&quot;type&quot;: &quot;Delete&quot;},
+        &quot;condition&quot;: {&quot;age&quot;: 2555}  # 7 years
+      }
+    ]
+  }
+}
+</code></pre>
+<p><strong>Savings</strong>: Eliminate storage costs for unused objects</p>
+<p><strong>5. Optimize Object Size</strong></p>
+<p><strong>Strategy</strong>: Optimize object size for efficiency</p>
+<p><strong>Best practices</strong>:
+- <strong>Large objects</strong>: Better for storage efficiency
+- <strong>Small objects</strong>: More overhead, higher cost
+- <strong>Optimal size</strong>: 1-10 MB per object</p>
+<p><strong>Savings</strong>: Reduce overhead costs</p>
+<p><strong>6. Use Regional Storage</strong></p>
+<p><strong>Strategy</strong>: Use regional storage instead of multi-region</p>
+<p><strong>Comparison</strong>:
+- <strong>Multi-region</strong>: Higher cost, higher availability
+- <strong>Regional</strong>: Lower cost, regional availability</p>
+<p><strong>Savings</strong>: 20-30% cost reduction</p>
+<p><strong>7. Monitor and Analyze</strong></p>
+<p><strong>Strategy</strong>: Monitor storage usage and costs</p>
+<p><strong>Tools</strong>:
+- Cloud Storage usage reports
+- Cost analysis tools
+- Storage class breakdown</p>
+<p><strong>Actions</strong>:
+- Identify high-cost buckets
+- Analyze access patterns
+- Optimize storage classes</p>
+<h3 id="cost-optimization-plan">Cost Optimization Plan</h3>
+<p><strong>Phase 1: Immediate (No Code Changes)</strong></p>
+<ol>
+<li><strong>Enable Lifecycle Management</strong>:</li>
+<li>Transition to Nearline after 30 days</li>
+<li>Transition to Coldline after 90 days</li>
+<li>
+<p>Delete after 7 years</p>
+</li>
+<li>
+<p><strong>Review Storage Classes</strong>:</p>
+</li>
+<li>Identify objects in wrong storage class</li>
+<li>
+<p>Manually transition if needed</p>
+</li>
+<li>
+<p><strong>Delete Unused Objects</strong>:</p>
+</li>
+<li>Identify unused objects</li>
+<li>Delete or archive</li>
+</ol>
+<p><strong>Phase 2: Short-term (Code Changes)</strong></p>
+<ol>
+<li><strong>Implement Compression</strong>:</li>
+<li>Compress objects before upload</li>
+<li>
+<p>Decompress on read</p>
+</li>
+<li>
+<p><strong>Optimize Object Size</strong>:</p>
+</li>
+<li>Combine small objects</li>
+<li>
+<p>Optimize upload patterns</p>
+</li>
+<li>
+<p><strong>Use Regional Storage</strong>:</p>
+</li>
+<li>Use regional storage where appropriate</li>
+<li>Multi-region only for critical data</li>
+</ol>
+<p><strong>Phase 3: Long-term (Architecture Changes)</strong></p>
+<ol>
+<li><strong>Implement Tiering</strong>:</li>
+<li>Automatic tiering based on access patterns</li>
+<li>
+<p>Monitor and adjust</p>
+</li>
+<li>
+<p><strong>Optimize Access Patterns</strong>:</p>
+</li>
+<li>Cache frequently accessed objects</li>
+<li>
+<p>Reduce unnecessary reads</p>
+</li>
+<li>
+<p><strong>Cost Monitoring</strong>:</p>
+</li>
+<li>Set up cost alerts</li>
+<li>Regular cost reviews</li>
+</ol>
+<h3 id="answer_5">Answer</h3>
+<p><strong>Optimize Costs</strong>:</p>
+<ol>
+<li><strong>Use Lifecycle Management</strong>:</li>
+<li>Automatically transition to cheaper storage classes</li>
+<li>Delete old objects</li>
+<li>
+<p>50-80% cost reduction</p>
+</li>
+<li>
+<p><strong>Optimize Storage Classes</strong>:</p>
+</li>
+<li>Match storage class to access pattern</li>
+<li>Use Nearline/Coldline/Archive for older data</li>
+<li>
+<p>Significant cost savings</p>
+</li>
+<li>
+<p><strong>Compress Objects</strong>:</p>
+</li>
+<li>Compress before upload</li>
+<li>
+<p>50-90% storage reduction</p>
+</li>
+<li>
+<p><strong>Delete Unused Objects</strong>:</p>
+</li>
+<li>Remove old or unused objects</li>
+<li>
+<p>Eliminate unnecessary storage costs</p>
+</li>
+<li>
+<p><strong>Use Regional Storage</strong>:</p>
+</li>
+<li>Use regional instead of multi-region where appropriate</li>
+<li>
+<p>20-30% cost reduction</p>
+</li>
+<li>
+<p><strong>Monitor and Analyze</strong>:</p>
+</li>
+<li>Track storage usage and costs</li>
+<li>Identify optimization opportunities</li>
+</ol>
+<p><strong>Key principles</strong>:
+- <strong>Lifecycle management</strong>: Automatically transition objects
+- <strong>Right storage class</strong>: Match storage class to access pattern
+- <strong>Compression</strong>: Reduce storage size
+- <strong>Cleanup</strong>: Delete unused objects
+- <strong>Monitor</strong>: Track costs and optimize continuously</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const sidebarToggleMobile = document.getElementById('sidebarToggleMobile');
+            const sidebarToggleDesktop = document.getElementById('sidebarToggleDesktop');
+            const sidebarClose = document.getElementById('sidebarClose');
+            const mainContent = document.querySelector('.main-content');
+            
+            function isMobile() {
+                return window.innerWidth <= 1024;
+            }
+            
+            function toggleSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.toggle('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.toggle('active');
+                    }
+                    // Prevent body scroll when sidebar is open
+                    if (sidebar.classList.contains('expanded')) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.toggle('sidebar-collapsed');
+                    }
+                    // Update desktop toggle button position
+                    if (sidebarToggleDesktop) {
+                        if (sidebar.classList.contains('collapsed')) {
+                            sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                        } else {
+                            sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                        }
+                    }
+                }
+            }
+            
+            function closeSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.remove('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.remove('active');
+                    }
+                    document.body.style.overflow = '';
+                } else {
+                    sidebar.classList.add('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.add('sidebar-collapsed');
+                    }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                    }
+                }
+            }
+            
+            function openSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.add('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.add('active');
+                    }
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    sidebar.classList.remove('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.remove('sidebar-collapsed');
+                    }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                    }
+                }
+            }
+            
+            // Mobile toggle
+            if (sidebarToggleMobile) {
+                sidebarToggleMobile.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+            
+            // Desktop toggle
+            if (sidebarToggleDesktop) {
+                sidebarToggleDesktop.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+            
+            // Close button in sidebar
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            
+            // Overlay click to close on mobile
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (!isMobile()) {
+                        // On desktop, ensure sidebar state is correct
+                        if (sidebarOverlay) {
+                            sidebarOverlay.classList.remove('active');
+                        }
+                        document.body.style.overflow = '';
+                        // Ensure toggle button position matches sidebar state
+                        if (sidebarToggleDesktop && sidebar) {
+                            if (sidebar.classList.contains('collapsed')) {
+                                sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                            } else {
+                                sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                            }
+                        }
+                    } else {
+                        // On mobile, close sidebar if open
+                        closeSidebar();
+                    }
+                }, 250);
+            });
+            
+            // Initialize desktop toggle button position on load
+            if (!isMobile() && sidebarToggleDesktop && sidebar) {
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                }
+            }
+            
+            // Update active link on scroll
+            const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            function updateActiveLink() {
+                let current = '';
+                headings.forEach(heading => {
+                    const rect = heading.getBoundingClientRect();
+                    if (rect.top <= 100) {
+                        current = heading.id;
+                    }
+                });
+                
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+            
+            // Smooth scroll for sidebar links
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            const headerOffset = 80;
+                            const elementPosition = target.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                            
+                            // Close sidebar on mobile after click
+                            if (isMobile()) {
+                                closeSidebar();
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

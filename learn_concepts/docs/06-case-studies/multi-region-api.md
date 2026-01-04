@@ -738,5 +738,5 @@ graph LR
 
 4. **Disaster recovery**: Design a disaster recovery plan. What's the RTO? RPO?
 
-**Answer Key**: [View Answers](../../exercises/answers/multi-region-api-answers.md)
+**Answer Key**: [View Answers](../exercises/answers/multi-region-api-answers.md)
 

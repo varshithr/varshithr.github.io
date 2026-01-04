@@ -367,5 +367,5 @@ If SLIs/SLOs are too complex:
 
 3. **Debug SLO violation**: An SLO is being violated. How do you debug? What do you check?
 
-**Answer Key**: [View Answers](../../exercises/answers/sli-slo-error-budget-answers.md)
+**Answer Key**: [View Answers](../exercises/answers/sli-slo-error-budget-answers.md)
 

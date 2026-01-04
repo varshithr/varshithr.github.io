@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Storage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        @media (max-width: 640px) {
+            .content {
+                padding: 1rem;
+                margin-top: 1rem;
+                border-radius: 0.5rem;
+            }
+            .content h1 {
+                font-size: 1.75rem;
+            }
+            .content h2 {
+                font-size: 1.5rem;
+            }
+            .content h3 {
+                font-size: 1.25rem;
+            }
+            .content pre {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+                overflow-x: auto;
+            }
+            .content table {
+                font-size: 0.875rem;
+            }
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            list-style: none;
+            display: flex;
+            align-items: flex-start;
+        }
+        .content ul li::before {
+            content: none;
+        }
+        .progress-checkbox {
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            accent-color: #58508d;
+        }
+        .progress-checkbox:checked {
+            accent-color: #58508d;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: calc(100vh - 80px);
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid #E5E7EB;
+            overflow-y: auto;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 40;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        @media (min-width: 1025px) {
+            .sidebar {
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+            }
+        }
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+        .sidebar-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+        .sidebar-close:hover {
+            background-color: #F3F4F6;
+            color: #1E293B;
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 50;
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+            transition: left 0.3s ease, background-color 0.2s ease;
+        }
+        .sidebar-toggle:hover {
+            background-color: #F3F4F6;
+        }
+        .sidebar-toggle.desktop {
+            display: none;
+        }
+        @media (min-width: 1025px) {
+            .sidebar-toggle.desktop {
+                display: block;
+                top: 90px;
+                left: 300px;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .sidebar-toggle.desktop.sidebar-collapsed {
+                left: 20px;
+            }
+        }
+        @media (max-width: 1024px) {
+            .sidebar-toggle.desktop {
+                display: none !important;
+            }
+            .sidebar-toggle.mobile {
+                top: 85px;
+                left: 15px;
+            }
+        }
+        .sidebar-content {
+            padding: 1.5rem;
+        }
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin: 0;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #4B5563;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        .sidebar-nav a:hover {
+            background-color: #F3F4F6;
+            color: #58508d;
+        }
+        .sidebar-nav a.active {
+            background-color: #EEF2FF;
+            color: #58508d;
+            font-weight: 600;
+        }
+        .sidebar-nav .level-1 {
+            padding-left: 0.75rem;
+            font-weight: 600;
+            color: #1E293B;
+        }
+        .sidebar-nav .level-2 {
+            padding-left: 1.5rem;
+            color: #4B5563;
+        }
+        .sidebar-nav .level-3 {
+            padding-left: 2.25rem;
+            color: #6B7280;
+            font-size: 0.8125rem;
+        }
+        .sidebar-nav .level-4 {
+            padding-left: 3rem;
+            color: #9CA3AF;
+            font-size: 0.75rem;
+        }
+        .main-content {
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-left: 0;
+        }
+        @media (min-width: 1025px) {
+            .main-content {
+                margin-left: 280px !important;
+                max-width: calc(100vw - 280px) !important;
+                width: calc(100% - 280px) !important;
+            }
+            .main-content.sidebar-collapsed {
+                margin-left: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .main-content.container {
+                max-width: calc(100vw - 280px) !important;
+            }
+            .main-content.sidebar-collapsed.container {
+                max-width: 100% !important;
+            }
+        }
+        .main-content.no-sidebar {
+            margin-left: 0 !important;
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+            }
+            .sidebar.expanded {
+                transform: translateX(0);
+            }
+            .sidebar-toggle.mobile {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 35;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+        @media (min-width: 1025px) {
+            .sidebar-overlay {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <button class="sidebar-toggle mobile" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+    <button class="sidebar-toggle desktop" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#cloud-storage-deep-dive" class="level-1">Cloud Storage Deep Dive</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#cloud-storage-architecture" class="level-3">Cloud Storage Architecture</a></li>
+                <li><a href="#storage-hierarchy" class="level-3">Storage Hierarchy</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#consistency-model" class="level-3">Consistency Model</a></li>
+                <li><a href="#strong-consistency-metadata" class="level-4">Strong Consistency (Metadata)</a></li>
+                <li><a href="#eventual-consistency-object-data" class="level-4">Eventual Consistency (Object Data)</a></li>
+                <li><a href="#storage-classes" class="level-3">Storage Classes</a></li>
+                <li><a href="#standard-storage" class="level-4">Standard Storage</a></li>
+                <li><a href="#nearline-storage" class="level-4">Nearline Storage</a></li>
+                <li><a href="#coldline-storage" class="level-4">Coldline Storage</a></li>
+                <li><a href="#archive-storage" class="level-4">Archive Storage</a></li>
+                <li><a href="#lifecycle-management" class="level-3">Lifecycle Management</a></li>
+                <li><a href="#performance-characteristics" class="level-3">Performance Characteristics</a></li>
+                <li><a href="#throughput" class="level-4">Throughput</a></li>
+                <li><a href="#latency" class="level-4">Latency</a></li>
+                <li><a href="#scalability" class="level-4">Scalability</a></li>
+                <li><a href="#object-versioning" class="level-3">Object Versioning</a></li>
+                <li><a href="#object-composition" class="level-3">Object Composition</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#storage-failures" class="level-3">Storage Failures</a></li>
+                <li><a href="#scenario-1-regional-outage" class="level-4">Scenario 1: Regional Outage</a></li>
+                <li><a href="#scenario-2-object-corruption" class="level-4">Scenario 2: Object Corruption</a></li>
+                <li><a href="#scenario-3-metadata-service-failure" class="level-4">Scenario 3: Metadata Service Failure</a></li>
+                <li><a href="#consistency-failures" class="level-3">Consistency Failures</a></li>
+                <li><a href="#scenario-1-stale-read" class="level-4">Scenario 1: Stale Read</a></li>
+                <li><a href="#scenario-2-list-inconsistency" class="level-4">Scenario 2: List Inconsistency</a></li>
+                <li><a href="#performance-failures" class="level-3">Performance Failures</a></li>
+                <li><a href="#scenario-1-throttling" class="level-4">Scenario 1: Throttling</a></li>
+                <li><a href="#scenario-2-slow-uploads" class="level-4">Scenario 2: Slow Uploads</a></li>
+                <li><a href="#overload-scenarios" class="level-3">Overload Scenarios</a></li>
+                <li><a href="#10-normal-load" class="level-4">10× Normal Load</a></li>
+                <li><a href="#100-normal-load" class="level-4">100× Normal Load</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics-to-track" class="level-3">Metrics to Track</a></li>
+                <li><a href="#storage-metrics" class="level-4">Storage Metrics</a></li>
+                <li><a href="#lifecycle-metrics" class="level-4">Lifecycle Metrics</a></li>
+                <li><a href="#performance-metrics" class="level-4">Performance Metrics</a></li>
+                <li><a href="#logs" class="level-3">Logs</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#bucket-changes" class="level-3">Bucket Changes</a></li>
+                <li><a href="#creating-buckets" class="level-4">Creating Buckets</a></li>
+                <li><a href="#changing-storage-class" class="level-4">Changing Storage Class</a></li>
+                <li><a href="#enabling-versioning" class="level-4">Enabling Versioning</a></li>
+                <li><a href="#object-changes" class="level-3">Object Changes</a></li>
+                <li><a href="#uploading-objects" class="level-4">Uploading Objects</a></li>
+                <li><a href="#updating-objects" class="level-4">Updating Objects</a></li>
+                <li><a href="#deleting-objects" class="level-4">Deleting Objects</a></li>
+                <li><a href="#lifecycle-policy-changes" class="level-3">Lifecycle Policy Changes</a></li>
+                <li><a href="#adding-lifecycle-policies" class="level-4">Adding Lifecycle Policies</a></li>
+                <li><a href="#updating-lifecycle-policies" class="level-4">Updating Lifecycle Policies</a></li>
+                <li><a href="#security-boundaries" class="level-2">Security Boundaries</a></li>
+                <li><a href="#access-control" class="level-3">Access Control</a></li>
+                <li><a href="#encryption" class="level-3">Encryption</a></li>
+                <li><a href="#data-protection" class="level-3">Data Protection</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#storage-class-standard-vs-nearlinecoldlinearchive" class="level-3">Storage Class: Standard vs Nearline/Coldline/Archive</a></li>
+                <li><a href="#location-multi-region-vs-regional" class="level-3">Location: Multi-Region vs Regional</a></li>
+                <li><a href="#consistency-strong-vs-eventual" class="level-3">Consistency: Strong vs Eventual</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#capacity-planning" class="level-3">Capacity Planning</a></li>
+                <li><a href="#monitoring-debugging" class="level-3">Monitoring &amp; Debugging</a></li>
+                <li><a href="#incident-response" class="level-3">Incident Response</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#design-questions" class="level-3">Design Questions</a></li>
+                <li><a href="#scale-questions" class="level-3">Scale Questions</a></li>
+                <li><a href="#security-questions" class="level-3">Security Questions</a></li>
+                <li><a href="#operational-questions" class="level-3">Operational Questions</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="cloud-storage-deep-dive">Cloud Storage Deep Dive</h1>
+<p><strong>One-line summary</strong>: Understanding Cloud Storage's consistency model, storage classes, performance characteristics, and how to design for scale and reliability.</p>
+<p><strong>Prerequisites</strong>: <a href="vpc-lb-dns.html">VPC, Load Balancing &amp; DNS</a>, Basic storage concepts (object storage, consistency).</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="cloud-storage-architecture">Cloud Storage Architecture</h3>
+<div class="mermaid">
+flowchart TB
+Client[Client] --> API[Cloud Storage API]
+API --> LB[Load Balancer]
+LB --> Metadata[Metadata Service]
+LB --> Storage[Storage Service]
+Metadata --> MetaDB[(Metadata Database)]
+Storage --> Buckets[Buckets]
+Buckets --> Objects[Objects]
+Objects --> Standard[Standard Storage]
+Objects --> Nearline[Nearline Storage]
+Objects --> Coldline[Coldline Storage]
+Objects --> Archive[Archive Storage]
+style API fill:#99ccff
+style Storage fill:#ffcc99
+style Metadata fill:#99ff99
+</div>
+<p><strong>Key insight</strong>: Cloud Storage separates metadata (fast, consistent) from object data (distributed, eventually consistent). Understanding this separation is critical for performance and consistency.</p>
+<h3 id="storage-hierarchy">Storage Hierarchy</h3>
+<p><strong>Bucket</strong>: Container for objects (globally unique name).
+- <strong>Location</strong>: Multi-region, region, dual-region
+- <strong>Storage class</strong>: Default storage class for objects
+- <strong>Lifecycle</strong>: Automatic lifecycle management</p>
+<p><strong>Object</strong>: File stored in bucket.
+- <strong>Name</strong>: Unique within bucket
+- <strong>Data</strong>: Object content (bytes)
+- <strong>Metadata</strong>: Name-value pairs (custom metadata)
+- <strong>Storage class</strong>: Storage class for object</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="consistency-model">Consistency Model</h3>
+<h4 id="strong-consistency-metadata">Strong Consistency (Metadata)</h4>
+<p><strong>Metadata operations</strong>: Strongly consistent.
+- <strong>Create</strong>: Immediately visible globally
+- <strong>Read</strong>: Always sees latest version
+- <strong>Update</strong>: Immediately visible globally
+- <strong>Delete</strong>: Immediately visible globally</p>
+<p><strong>Examples</strong>:
+- Creating an object → immediately visible
+- Listing objects → always sees latest objects
+- Updating metadata → immediately visible</p>
+<h4 id="eventual-consistency-object-data">Eventual Consistency (Object Data)</h4>
+<p><strong>Object data</strong>: Eventually consistent for reads.
+- <strong>Write</strong>: Strongly consistent (immediately readable)
+- <strong>Read</strong>: Eventually consistent (may see stale data briefly)
+- <strong>Update</strong>: Eventually consistent (may see old version briefly)</p>
+<p><strong>Consistency timeline</strong>:
+- <strong>Write</strong>: Immediately consistent globally
+- <strong>Read</strong>: Usually consistent within seconds, guaranteed within minutes</p>
+<p><strong>Why eventual consistency?</strong>
+- <strong>Performance</strong>: Better performance for reads
+- <strong>Scale</strong>: Handles high read throughput
+- <strong>Cost</strong>: Lower cost for high-throughput scenarios</p>
+<h3 id="storage-classes">Storage Classes</h3>
+<h4 id="standard-storage">Standard Storage</h4>
+<p><strong>Use case</strong>: Frequently accessed data.</p>
+<p><strong>Characteristics</strong>:
+- <strong>Availability</strong>: 99.99% (multi-region), 99.9% (regional)
+- <strong>Durability</strong>: 99.999999999% (11 nines)
+- <strong>Latency</strong>: Low latency (&lt; 100ms)
+- <strong>Cost</strong>: Highest cost</p>
+<p><strong>Best for</strong>:
+- Active data
+- Frequently accessed files
+- Low-latency requirements</p>
+<h4 id="nearline-storage">Nearline Storage</h4>
+<p><strong>Use case</strong>: Data accessed less than once per month.</p>
+<p><strong>Characteristics</strong>:
+- <strong>Availability</strong>: 99.95% (multi-region), 99.9% (regional)
+- <strong>Durability</strong>: 99.999999999% (11 nines)
+- <strong>Latency</strong>: Low latency (&lt; 100ms)
+- <strong>Cost</strong>: ~50% cheaper than Standard</p>
+<p><strong>Best for</strong>:
+- Backup data
+- Data accessed monthly
+- Cost optimization</p>
+<h4 id="coldline-storage">Coldline Storage</h4>
+<p><strong>Use case</strong>: Data accessed less than once per quarter.</p>
+<p><strong>Characteristics</strong>:
+- <strong>Availability</strong>: 99.95% (multi-region), 99.9% (regional)
+- <strong>Durability</strong>: 99.999999999% (11 nines)
+- <strong>Latency</strong>: Low latency (&lt; 100ms)
+- <strong>Cost</strong>: ~70% cheaper than Standard</p>
+<p><strong>Best for</strong>:
+- Archive data
+- Data accessed quarterly
+- Long-term storage</p>
+<h4 id="archive-storage">Archive Storage</h4>
+<p><strong>Use case</strong>: Data accessed less than once per year.</p>
+<p><strong>Characteristics</strong>:
+- <strong>Availability</strong>: 99.95% (multi-region), 99.9% (regional)
+- <strong>Durability</strong>: 99.999999999% (11 nines)
+- <strong>Latency</strong>: Higher latency (hours for retrieval)
+- <strong>Cost</strong>: ~80% cheaper than Standard</p>
+<p><strong>Best for</strong>:
+- Long-term archive
+- Compliance data
+- Rarely accessed data</p>
+<h3 id="lifecycle-management">Lifecycle Management</h3>
+<p><strong>Lifecycle policies</strong>: Automatically transition objects between storage classes.</p>
+<p><strong>Rules</strong>:
+- <strong>Age-based</strong>: Transition after N days
+- <strong>Version-based</strong>: Transition old versions
+- <strong>Delete</strong>: Delete old objects</p>
+<p><strong>Example</strong>:</p>
+<pre><code>Standard → Nearline (after 30 days)
+Nearline → Coldline (after 90 days)
+Coldline → Archive (after 365 days)
+Archive → Delete (after 2555 days)
+</code></pre>
+<h3 id="performance-characteristics">Performance Characteristics</h3>
+<h4 id="throughput">Throughput</h4>
+<p><strong>Read throughput</strong>:
+- <strong>Single object</strong>: Up to 2.5 GB/s per object
+- <strong>Multiple objects</strong>: Scales linearly with object count
+- <strong>Bottleneck</strong>: Usually network bandwidth</p>
+<p><strong>Write throughput</strong>:
+- <strong>Single object</strong>: Up to 2.5 GB/s per object
+- <strong>Multiple objects</strong>: Scales linearly with object count
+- <strong>Bottleneck</strong>: Usually network bandwidth</p>
+<h4 id="latency">Latency</h4>
+<p><strong>Read latency</strong>:
+- <strong>Standard/Nearline/Coldline</strong>: &lt; 100ms (P95)
+- <strong>Archive</strong>: Hours (retrieval time)</p>
+<p><strong>Write latency</strong>:
+- <strong>All classes</strong>: &lt; 100ms (P95)</p>
+<h4 id="scalability">Scalability</h4>
+<p><strong>Limits</strong>:
+- <strong>Buckets</strong>: Unlimited per project
+- <strong>Objects</strong>: Unlimited per bucket
+- <strong>Object size</strong>: Up to 5 TB per object
+- <strong>Request rate</strong>: Millions of requests per second</p>
+<h3 id="object-versioning">Object Versioning</h3>
+<p><strong>Versioning</strong>: Keep multiple versions of objects.</p>
+<p><strong>Use cases</strong>:
+- <strong>Recovery</strong>: Recover deleted or overwritten objects
+- <strong>Audit</strong>: Track object changes
+- <strong>Compliance</strong>: Meet retention requirements</p>
+<p><strong>How it works</strong>:
+- <strong>Enabled</strong>: Each update creates new version
+- <strong>Storage</strong>: All versions stored (costs apply)
+- <strong>Access</strong>: Access specific version via generation number</p>
+<h3 id="object-composition">Object Composition</h3>
+<p><strong>Compose</strong>: Combine multiple objects into one.</p>
+<p><strong>Use case</strong>: Upload large files in parts, compose into single object.</p>
+<p><strong>Process</strong>:
+1. Upload parts (parallel uploads)
+2. Compose parts into final object
+3. Delete parts</p>
+<p><strong>Benefits</strong>:
+- <strong>Performance</strong>: Parallel uploads faster
+- <strong>Reliability</strong>: Retry individual parts
+- <strong>Cost</strong>: Same cost as single upload</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="storage-failures">Storage Failures</h3>
+<h4 id="scenario-1-regional-outage">Scenario 1: Regional Outage</h4>
+<ul>
+<li><strong>Impact</strong>: Objects in affected region unavailable</li>
+<li><strong>Blast radius</strong>: Objects in affected region</li>
+<li><strong>Detection</strong>: Storage API errors, object access failures</li>
+<li><strong>Recovery</strong>: </li>
+<li>Multi-region buckets: Automatic failover to other regions</li>
+<li>Regional buckets: Wait for region recovery</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Use multi-region buckets for high availability</li>
+<li>Use dual-region buckets for regional redundancy</li>
+</ul>
+<h4 id="scenario-2-object-corruption">Scenario 2: Object Corruption</h4>
+<ul>
+<li><strong>Impact</strong>: Object data corrupted, cannot read</li>
+<li><strong>Blast radius</strong>: Affected object</li>
+<li><strong>Detection</strong>: Checksum validation failures, read errors</li>
+<li><strong>Recovery</strong>: </li>
+<li>Restore from backup</li>
+<li>Use object versioning to restore previous version</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Enable object versioning</li>
+<li>Regular backups</li>
+<li>Checksum validation</li>
+</ul>
+<h4 id="scenario-3-metadata-service-failure">Scenario 3: Metadata Service Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Cannot list objects, create objects, update metadata</li>
+<li><strong>Blast radius</strong>: All metadata operations</li>
+<li><strong>Detection</strong>: Metadata API errors, listing failures</li>
+<li><strong>Recovery</strong>: Metadata service automatically recovers</li>
+<li><strong>Mitigation</strong>: GCP manages metadata service (high availability)</li>
+</ul>
+<h3 id="consistency-failures">Consistency Failures</h3>
+<h4 id="scenario-1-stale-read">Scenario 1: Stale Read</h4>
+<ul>
+<li><strong>Impact</strong>: Read returns old version of object</li>
+<li><strong>Blast radius</strong>: Affected read operations</li>
+<li><strong>Detection</strong>: Application detects stale data</li>
+<li><strong>Recovery</strong>: Retry read, usually resolves within seconds</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Understand eventual consistency model</li>
+<li>Use strong consistency reads when needed (if available)</li>
+<li>Implement retry logic</li>
+</ul>
+<h4 id="scenario-2-list-inconsistency">Scenario 2: List Inconsistency</h4>
+<ul>
+<li><strong>Impact</strong>: List doesn't show recently created objects</li>
+<li><strong>Blast radius</strong>: Listing operations</li>
+<li><strong>Detection</strong>: Objects missing from list</li>
+<li><strong>Recovery</strong>: Retry list, usually resolves within seconds</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Understand eventual consistency model</li>
+<li>Use object existence checks if needed</li>
+<li>Implement retry logic</li>
+</ul>
+<h3 id="performance-failures">Performance Failures</h3>
+<h4 id="scenario-1-throttling">Scenario 1: Throttling</h4>
+<ul>
+<li><strong>Impact</strong>: Requests throttled, increased latency</li>
+<li><strong>Blast radius</strong>: High-throughput operations</li>
+<li><strong>Detection</strong>: 429 errors (Too Many Requests), increased latency</li>
+<li><strong>Recovery</strong>: Reduce request rate, implement exponential backoff</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Implement request rate limiting</li>
+<li>Use exponential backoff</li>
+<li>Distribute requests across time</li>
+</ul>
+<h4 id="scenario-2-slow-uploads">Scenario 2: Slow Uploads</h4>
+<ul>
+<li><strong>Impact</strong>: Uploads take longer than expected</li>
+<li><strong>Blast radius</strong>: Upload operations</li>
+<li><strong>Detection</strong>: Upload latency increases</li>
+<li><strong>Recovery</strong>: </li>
+<li>Check network connectivity</li>
+<li>Use parallel uploads (compose)</li>
+<li>Optimize object size</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Use parallel uploads for large files</li>
+<li>Optimize network path</li>
+<li>Use appropriate storage class</li>
+</ul>
+<h3 id="overload-scenarios">Overload Scenarios</h3>
+<h4 id="10-normal-load">10× Normal Load</h4>
+<ul>
+<li><strong>Throughput</strong>: Handles load, may see increased latency</li>
+<li><strong>Consistency</strong>: Eventual consistency delays may increase</li>
+<li><strong>Cost</strong>: Storage costs increase linearly</li>
+</ul>
+<h4 id="100-normal-load">100× Normal Load</h4>
+<ul>
+<li><strong>Throughput</strong>: May see throttling, need to distribute load</li>
+<li><strong>Consistency</strong>: Eventual consistency delays may be longer</li>
+<li><strong>Cost</strong>: Storage costs increase significantly</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics-to-track">Metrics to Track</h3>
+<h4 id="storage-metrics">Storage Metrics</h4>
+<ul>
+<li><strong>Object count</strong>: Objects per bucket, per storage class</li>
+<li><strong>Storage size</strong>: Total storage per bucket, per storage class</li>
+<li><strong>Request rate</strong>: Read/write requests per second</li>
+<li><strong>Request latency</strong>: P50/P95/P99 latency</li>
+<li><strong>Error rate</strong>: 4xx/5xx errors per second</li>
+</ul>
+<h4 id="lifecycle-metrics">Lifecycle Metrics</h4>
+<ul>
+<li><strong>Transitions</strong>: Objects transitioned between storage classes</li>
+<li><strong>Deletions</strong>: Objects deleted by lifecycle policies</li>
+<li><strong>Cost</strong>: Storage costs per storage class</li>
+</ul>
+<h4 id="performance-metrics">Performance Metrics</h4>
+<ul>
+<li><strong>Throughput</strong>: Read/write throughput (MB/s)</li>
+<li><strong>Latency</strong>: Read/write latency (ms)</li>
+<li><strong>Throttling</strong>: Throttled requests per second</li>
+</ul>
+<h3 id="logs">Logs</h3>
+<p><strong>Storage logs</strong>:
+- Object access logs (if enabled)
+- Admin activity logs (bucket creation, IAM changes)
+- Data access logs (object reads/writes, if enabled)</p>
+<h3 id="alerts">Alerts</h3>
+<p><strong>Critical alerts</strong>:
+- Storage unavailable
+- High error rate (&gt; 1%)
+- Storage quota exceeded</p>
+<p><strong>Warning alerts</strong>:
+- High latency (&gt; threshold)
+- Throttling detected
+- Storage costs increasing</p>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="bucket-changes">Bucket Changes</h3>
+<h4 id="creating-buckets">Creating Buckets</h4>
+<ul>
+<li><strong>Process</strong>: Create bucket, configure settings</li>
+<li><strong>Risk</strong>: Low (additive change)</li>
+<li><strong>Rollback</strong>: Delete bucket (if empty)</li>
+</ul>
+<h4 id="changing-storage-class">Changing Storage Class</h4>
+<ul>
+<li><strong>Process</strong>: Update bucket default storage class, update object storage classes</li>
+<li><strong>Risk</strong>: Medium (may affect costs, performance)</li>
+<li><strong>Rollback</strong>: Revert storage class</li>
+</ul>
+<h4 id="enabling-versioning">Enabling Versioning</h4>
+<ul>
+<li><strong>Process</strong>: Enable versioning on bucket</li>
+<li><strong>Risk</strong>: Low (additive change, increases storage costs)</li>
+<li><strong>Rollback</strong>: Disable versioning (doesn't delete versions)</li>
+</ul>
+<h3 id="object-changes">Object Changes</h3>
+<h4 id="uploading-objects">Uploading Objects</h4>
+<ul>
+<li><strong>Process</strong>: Upload object, verify upload</li>
+<li><strong>Risk</strong>: Low (additive change)</li>
+<li><strong>Rollback</strong>: Delete object</li>
+</ul>
+<h4 id="updating-objects">Updating Objects</h4>
+<ul>
+<li><strong>Process</strong>: Upload new version, verify update</li>
+<li><strong>Risk</strong>: Medium (may break applications expecting old version)</li>
+<li><strong>Rollback</strong>: Restore previous version (if versioning enabled)</li>
+</ul>
+<h4 id="deleting-objects">Deleting Objects</h4>
+<ul>
+<li><strong>Process</strong>: Delete object, verify deletion</li>
+<li><strong>Risk</strong>: High (data loss)</li>
+<li><strong>Rollback</strong>: Restore from version (if versioning enabled) or backup</li>
+</ul>
+<h3 id="lifecycle-policy-changes">Lifecycle Policy Changes</h3>
+<h4 id="adding-lifecycle-policies">Adding Lifecycle Policies</h4>
+<ul>
+<li><strong>Process</strong>: Add lifecycle policy, verify transitions</li>
+<li><strong>Risk</strong>: Medium (may transition objects unexpectedly)</li>
+<li><strong>Rollback</strong>: Remove lifecycle policy</li>
+</ul>
+<h4 id="updating-lifecycle-policies">Updating Lifecycle Policies</h4>
+<ul>
+<li><strong>Process</strong>: Update policy, verify transitions</li>
+<li><strong>Risk</strong>: Medium (may affect object transitions)</li>
+<li><strong>Rollback</strong>: Revert lifecycle policy</li>
+</ul>
+<hr />
+<h2 id="security-boundaries">Security Boundaries</h2>
+<h3 id="access-control">Access Control</h3>
+<ul>
+<li><strong>IAM</strong>: Bucket and object-level IAM policies</li>
+<li><strong>ACLs</strong>: Legacy access control lists (deprecated)</li>
+<li><strong>Signed URLs</strong>: Time-limited access URLs</li>
+<li><strong>VPC</strong>: VPC Service Controls for network isolation</li>
+</ul>
+<h3 id="encryption">Encryption</h3>
+<p><strong>At rest</strong>:
+- <strong>Google-managed keys</strong>: Default encryption
+- <strong>Customer-managed keys</strong>: Cloud KMS keys
+- <strong>Customer-supplied keys</strong>: User-provided keys</p>
+<p><strong>In transit</strong>:
+- <strong>TLS</strong>: All API calls use TLS
+- <strong>HTTPS</strong>: Required for all operations</p>
+<h3 id="data-protection">Data Protection</h3>
+<ul>
+<li><strong>Versioning</strong>: Protect against accidental deletion</li>
+<li><strong>Object holds</strong>: Prevent deletion (legal/compliance)</li>
+<li><strong>Retention policies</strong>: Enforce retention periods</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="storage-class-standard-vs-nearlinecoldlinearchive">Storage Class: Standard vs Nearline/Coldline/Archive</h3>
+<p><strong>Standard</strong>:
+- <strong>Pros</strong>: Lowest latency, highest availability
+- <strong>Cons</strong>: Highest cost</p>
+<p><strong>Nearline/Coldline/Archive</strong>:
+- <strong>Pros</strong>: Lower cost
+- <strong>Cons</strong>: Higher latency (Archive), lower availability</p>
+<h3 id="location-multi-region-vs-regional">Location: Multi-Region vs Regional</h3>
+<p><strong>Multi-Region</strong>:
+- <strong>Pros</strong>: Highest availability, automatic failover
+- <strong>Cons</strong>: Higher cost, eventual consistency delays</p>
+<p><strong>Regional</strong>:
+- <strong>Pros</strong>: Lower cost, lower latency
+- <strong>Cons</strong>: Single region failure affects availability</p>
+<h3 id="consistency-strong-vs-eventual">Consistency: Strong vs Eventual</h3>
+<p><strong>Strong consistency</strong> (metadata):
+- <strong>Pros</strong>: Always see latest data
+- <strong>Cons</strong>: Higher latency, lower throughput</p>
+<p><strong>Eventual consistency</strong> (object data):
+- <strong>Pros</strong>: Better performance, higher throughput
+- <strong>Cons</strong>: May see stale data briefly</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<p><strong>Storage</strong>:
+- <strong>Growth</strong>: Plan for storage growth
+- <strong>Lifecycle</strong>: Use lifecycle policies to manage costs
+- <strong>Quotas</strong>: Monitor storage quotas</p>
+<p><strong>Throughput</strong>:
+- <strong>Request rate</strong>: Plan for request rate limits
+- <strong>Bandwidth</strong>: Plan for network bandwidth
+- <strong>Scaling</strong>: Distribute load across buckets/objects</p>
+<h3 id="monitoring-debugging">Monitoring &amp; Debugging</h3>
+<p><strong>Monitor</strong>:
+- Storage usage and costs
+- Request rate and latency
+- Error rate
+- Lifecycle transitions</p>
+<p><strong>Debug issues</strong>:
+1. Check bucket configuration
+2. Check object metadata
+3. Check IAM policies
+4. Check network connectivity
+5. Check storage quotas
+6. Review logs</p>
+<h3 id="incident-response">Incident Response</h3>
+<p><strong>Common incidents</strong>:
+- Objects unavailable
+- High latency
+- Throttling
+- Storage quota exceeded</p>
+<p><strong>Response</strong>:
+1. Check storage status
+2. Check bucket configuration
+3. Check IAM policies
+4. Check network connectivity
+5. Scale if needed
+6. Contact support if persistent</p>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>"What storage classes are used?"</li>
+<li>"What's the lifecycle policy?"</li>
+<li>"How is consistency handled?"</li>
+<li>"What's the backup strategy?"</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>"What happens at 10× load?"</li>
+<li>"How does storage scale?"</li>
+<li>"What are the throughput limits?"</li>
+<li>"How do you handle consistency?"</li>
+</ul>
+<h3 id="security-questions">Security Questions</h3>
+<ul>
+<li>"How is access controlled?"</li>
+<li>"How is encryption configured?"</li>
+<li>"Are versioning and backups enabled?"</li>
+<li>"What's the data retention policy?"</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>"How do you monitor storage?"</li>
+<li>"What alerts do you have?"</li>
+<li>"How do you debug storage issues?"</li>
+<li>"What's the cost optimization strategy?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/cloud-storage.html">Further Reading: Cloud Storage</a></p>
+<p><strong>Quick Links</strong>:
+- <a href="https://cloud.google.com/storage/docs">Cloud Storage Documentation</a>
+- <a href="https://cloud.google.com/storage/docs/storage-classes">Storage Classes</a>
+- <a href="https://cloud.google.com/storage/docs/lifecycle">Lifecycle Management</a>
+- <a href="https://cloud.google.com/storage/docs/consistency">Consistency Model</a>
+- <a href="README.html">Back to GCP Core Building Blocks</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design storage strategy</strong>: Design storage strategy for a media application. What storage classes? What lifecycle policies?</p>
+</li>
+<li>
+<p><strong>Handle consistency</strong>: Your application needs strong consistency for reads. How do you achieve this with Cloud Storage?</p>
+</li>
+<li>
+<p><strong>Optimize costs</strong>: Your storage costs are high. How do you optimize costs while maintaining performance?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/cloud-storage-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const sidebarToggleMobile = document.getElementById('sidebarToggleMobile');
+            const sidebarToggleDesktop = document.getElementById('sidebarToggleDesktop');
+            const sidebarClose = document.getElementById('sidebarClose');
+            const mainContent = document.querySelector('.main-content');
+            
+            function isMobile() {
+                return window.innerWidth <= 1024;
+            }
+            
+            function toggleSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.toggle('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.toggle('active');
+                    }
+                    // Prevent body scroll when sidebar is open
+                    if (sidebar.classList.contains('expanded')) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.toggle('sidebar-collapsed');
+                    }
+                    // Update desktop toggle button position
+                    if (sidebarToggleDesktop) {
+                        if (sidebar.classList.contains('collapsed')) {
+                            sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                        } else {
+                            sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                        }
+                    }
+                }
+            }
+            
+            function closeSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.remove('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.remove('active');
+                    }
+                    document.body.style.overflow = '';
+                } else {
+                    sidebar.classList.add('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.add('sidebar-collapsed');
+                    }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                    }
+                }
+            }
+            
+            function openSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.add('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.add('active');
+                    }
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    sidebar.classList.remove('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.remove('sidebar-collapsed');
+                    }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                    }
+                }
+            }
+            
+            // Mobile toggle
+            if (sidebarToggleMobile) {
+                sidebarToggleMobile.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+            
+            // Desktop toggle
+            if (sidebarToggleDesktop) {
+                sidebarToggleDesktop.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+            
+            // Close button in sidebar
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            
+            // Overlay click to close on mobile
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (!isMobile()) {
+                        // On desktop, ensure sidebar state is correct
+                        if (sidebarOverlay) {
+                            sidebarOverlay.classList.remove('active');
+                        }
+                        document.body.style.overflow = '';
+                        // Ensure toggle button position matches sidebar state
+                        if (sidebarToggleDesktop && sidebar) {
+                            if (sidebar.classList.contains('collapsed')) {
+                                sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                            } else {
+                                sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                            }
+                        }
+                    } else {
+                        // On mobile, close sidebar if open
+                        closeSidebar();
+                    }
+                }, 250);
+            });
+            
+            // Initialize desktop toggle button position on load
+            if (!isMobile() && sidebarToggleDesktop && sidebar) {
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                }
+            }
+            
+            // Update active link on scroll
+            const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            function updateActiveLink() {
+                let current = '';
+                headings.forEach(heading => {
+                    const rect = heading.getBoundingClientRect();
+                    if (rect.top <= 100) {
+                        current = heading.id;
+                    }
+                });
+                
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+            
+            // Smooth scroll for sidebar links
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            const headerOffset = 80;
+                            const elementPosition = target.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                            
+                            // Close sidebar on mobile after click
+                            if (isMobile()) {
+                                closeSidebar();
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

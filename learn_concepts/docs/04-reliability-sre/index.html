@@ -185,12 +185,17 @@
             background-color: white;
             border-right: 1px solid #E5E7EB;
             overflow-y: auto;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 40;
             box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
         }
         .sidebar.collapsed {
             transform: translateX(-100%);
+        }
+        @media (min-width: 1025px) {
+            .sidebar {
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+            }
         }
         .sidebar-header {
             display: flex;
@@ -227,14 +232,24 @@
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: none;
+            transition: left 0.3s ease, background-color 0.2s ease;
         }
         .sidebar-toggle:hover {
             background-color: #F3F4F6;
         }
         .sidebar-toggle.desktop {
-            display: block;
-            top: 90px;
-            left: 300px;
+            display: none;
+        }
+        @media (min-width: 1025px) {
+            .sidebar-toggle.desktop {
+                display: block;
+                top: 90px;
+                left: 300px;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .sidebar-toggle.desktop.sidebar-collapsed {
+                left: 20px;
+            }
         }
         @media (max-width: 1024px) {
             .sidebar-toggle.desktop {
@@ -300,12 +315,29 @@
             font-size: 0.75rem;
         }
         .main-content {
-            margin-left: 280px;
-            transition: margin-left 0.3s ease;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-left: 0;
         }
-        .main-content.no-sidebar,
-        .main-content.sidebar-collapsed {
-            margin-left: 0;
+        @media (min-width: 1025px) {
+            .main-content {
+                margin-left: 280px !important;
+                max-width: calc(100vw - 280px) !important;
+                width: calc(100% - 280px) !important;
+            }
+            .main-content.sidebar-collapsed {
+                margin-left: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .main-content.container {
+                max-width: calc(100vw - 280px) !important;
+            }
+            .main-content.sidebar-collapsed.container {
+                max-width: 100% !important;
+            }
+        }
+        .main-content.no-sidebar {
+            margin-left: 0 !important;
         }
         @media (max-width: 1024px) {
             .sidebar {
@@ -423,7 +455,7 @@
 <p>Common PRR failures</p>
 </li>
 <li>
-<p><a href="incident-response.md">Incident Response &amp; Postmortems</a></p>
+<p><a href="incident-response.html">Incident Response &amp; Postmortems</a></p>
 </li>
 <li>Incident response process</li>
 <li>Writing effective postmortems</li>
@@ -431,7 +463,7 @@
 <p>Learning from incidents</p>
 </li>
 <li>
-<p><a href="capacity-planning.md">Capacity Planning &amp; Forecasting</a></p>
+<p><a href="capacity-planning.html">Capacity Planning &amp; Forecasting</a></p>
 </li>
 <li>Calculating capacity needs</li>
 <li>Forecasting growth</li>
@@ -439,7 +471,7 @@
 <p>Scaling strategies</p>
 </li>
 <li>
-<p><a href="load-shedding.md">Load Shedding &amp; Circuit Breakers</a></p>
+<p><a href="load-shedding.html">Load Shedding &amp; Circuit Breakers</a></p>
 </li>
 <li>When and how to shed load</li>
 <li>Circuit breaker patterns</li>
@@ -447,7 +479,7 @@
 <p>Graceful degradation</p>
 </li>
 <li>
-<p><a href="canary-rollouts.md">Canary Deployments &amp; Rollouts</a></p>
+<p><a href="canary-rollouts.html">Canary Deployments &amp; Rollouts</a></p>
 </li>
 <li>Canary deployment strategies</li>
 <li>Rollout automation</li>
@@ -455,7 +487,7 @@
 <p>Rollback procedures</p>
 </li>
 <li>
-<p><a href="testing-for-failure.md">Testing for Failure</a></p>
+<p><a href="testing-for-failure.html">Testing for Failure</a></p>
 </li>
 <li>Chaos engineering</li>
 <li>Failure injection</li>
@@ -517,6 +549,14 @@
                     if (mainContent) {
                         mainContent.classList.toggle('sidebar-collapsed');
                     }
+                    // Update desktop toggle button position
+                    if (sidebarToggleDesktop) {
+                        if (sidebar.classList.contains('collapsed')) {
+                            sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                        } else {
+                            sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                        }
+                    }
                 }
             }
             
@@ -532,6 +572,9 @@
                     if (mainContent) {
                         mainContent.classList.add('sidebar-collapsed');
                     }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                    }
                 }
             }
             
@@ -546,6 +589,9 @@
                     sidebar.classList.remove('collapsed');
                     if (mainContent) {
                         mainContent.classList.remove('sidebar-collapsed');
+                    }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.remove('sidebar-collapsed');
                     }
                 }
             }
@@ -593,12 +639,27 @@
                             sidebarOverlay.classList.remove('active');
                         }
                         document.body.style.overflow = '';
+                        // Ensure toggle button position matches sidebar state
+                        if (sidebarToggleDesktop && sidebar) {
+                            if (sidebar.classList.contains('collapsed')) {
+                                sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                            } else {
+                                sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                            }
+                        }
                     } else {
                         // On mobile, close sidebar if open
                         closeSidebar();
                     }
                 }, 250);
             });
+            
+            // Initialize desktop toggle button position on load
+            if (!isMobile() && sidebarToggleDesktop && sidebar) {
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                }
+            }
             
             // Update active link on scroll
             const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');

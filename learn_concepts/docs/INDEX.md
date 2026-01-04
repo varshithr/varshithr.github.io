@@ -57,6 +57,7 @@ Follow these phases in order. Each phase builds on the previous one.
 - [BigQuery Architecture](03-gcp-core-building-blocks/bigquery.md)
 - [Pub/Sub: Delivery Guarantees](03-gcp-core-building-blocks/pubsub.md)
 - [Cloud KMS & Secret Management](03-gcp-core-building-blocks/kms-secrets.md)
+- [AlloyDB: PostgreSQL-Compatible Database](03-gcp-core-building-blocks/alloydb.md)
 
 **Milestone**: You can design systems using GCP primitives, understand their failure modes, and make informed tradeoffs.
 
@@ -87,8 +88,8 @@ Follow these phases in order. Each phase builds on the previous one.
 
 **Topics**:
 - [Multi-Region API on GCP](06-case-studies/multi-region-api.md)
-- [High-Throughput Data Pipeline](06-case-studies/data-pipeline.md) (coming soon)
-- [Global Content Delivery System](06-case-studies/cdn-system.md) (coming soon)
+- [High-Throughput Data Pipeline](06-case-studies/data-pipeline.md)
+- [Global Content Delivery System](06-case-studies/cdn-system.md)
 
 **Milestone**: You can design, implement, and operate production systems with clear SLOs and operational playbooks.
 
@@ -125,6 +126,7 @@ Browse by topic area. Each entry links to deep dives and notes prerequisites.
 | **BigQuery** | [BigQuery Architecture](03-gcp-core-building-blocks/bigquery.md) | Storage, Sharding |
 | **Pub/Sub** | [Pub/Sub Guarantees](03-gcp-core-building-blocks/pubsub.md) | Queues, Idempotency |
 | **Secrets** | [KMS & Secrets](03-gcp-core-building-blocks/kms-secrets.md) | IAM |
+| **AlloyDB** | [AlloyDB Architecture](03-gcp-core-building-blocks/alloydb.md) | Spanner, Replication |
 
 ### Reliability & SRE
 

@@ -185,12 +185,17 @@
             background-color: white;
             border-right: 1px solid #E5E7EB;
             overflow-y: auto;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 40;
             box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
         }
         .sidebar.collapsed {
             transform: translateX(-100%);
+        }
+        @media (min-width: 1025px) {
+            .sidebar {
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+            }
         }
         .sidebar-header {
             display: flex;
@@ -227,14 +232,24 @@
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: none;
+            transition: left 0.3s ease, background-color 0.2s ease;
         }
         .sidebar-toggle:hover {
             background-color: #F3F4F6;
         }
         .sidebar-toggle.desktop {
-            display: block;
-            top: 90px;
-            left: 300px;
+            display: none;
+        }
+        @media (min-width: 1025px) {
+            .sidebar-toggle.desktop {
+                display: block;
+                top: 90px;
+                left: 300px;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .sidebar-toggle.desktop.sidebar-collapsed {
+                left: 20px;
+            }
         }
         @media (max-width: 1024px) {
             .sidebar-toggle.desktop {
@@ -300,12 +315,29 @@
             font-size: 0.75rem;
         }
         .main-content {
-            margin-left: 280px;
-            transition: margin-left 0.3s ease;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-left: 0;
         }
-        .main-content.no-sidebar,
-        .main-content.sidebar-collapsed {
-            margin-left: 0;
+        @media (min-width: 1025px) {
+            .main-content {
+                margin-left: 280px !important;
+                max-width: calc(100vw - 280px) !important;
+                width: calc(100% - 280px) !important;
+            }
+            .main-content.sidebar-collapsed {
+                margin-left: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .main-content.container {
+                max-width: calc(100vw - 280px) !important;
+            }
+            .main-content.sidebar-collapsed.container {
+                max-width: 100% !important;
+            }
+        }
+        .main-content.no-sidebar {
+            margin-left: 0 !important;
         }
         @media (max-width: 1024px) {
             .sidebar {
@@ -427,13 +459,13 @@
 <h3 id="phase-1-distributed-systems-building-blocks">Phase 1: Distributed Systems Building Blocks</h3>
 <p><strong>Goal</strong>: Understand the primitives that make distributed systems work.</p>
 <p><strong>Topics</strong>:
-- <a href="02-distributed-systems/time-ordering-causality.md">Time, Ordering, and Causality</a>
-- <a href="02-distributed-systems/consensus-leases.md">Consensus &amp; Leases</a>
-- <a href="02-distributed-systems/replication.md">Replication Strategies</a>
-- <a href="02-distributed-systems/sharding-partitioning.md">Sharding &amp; Partitioning</a>
+- <a href="02-distributed-systems/time-ordering-causality.html">Time, Ordering, and Causality</a>
+- <a href="02-distributed-systems/consensus-leases.html">Consensus &amp; Leases</a>
+- <a href="02-distributed-systems/replication.html">Replication Strategies</a>
+- <a href="02-distributed-systems/sharding-partitioning.html">Sharding &amp; Partitioning</a>
 - <a href="02-distributed-systems/overload-backpressure.html">Overload &amp; Backpressure</a>
 - <a href="02-distributed-systems/idempotency-retries.html">Idempotency &amp; Retry Semantics</a>
-- <a href="02-distributed-systems/queues-streams.md">Queues &amp; Streams</a></p>
+- <a href="02-distributed-systems/queues-streams.html">Queues &amp; Streams</a></p>
 <p><strong>Milestone</strong>: You understand when to use consensus vs leases, how to handle overload gracefully, and the tradeoffs in replication strategies.</p>
 <p><strong>Suggested pacing</strong>: 3-4 weeks</p>
 <hr />
@@ -441,14 +473,15 @@
 <p><strong>Goal</strong>: Deep understanding of GCP primitives: how they work, fail, and scale.</p>
 <p><strong>Topics</strong>:
 - <a href="03-gcp-core-building-blocks/vpc-lb-dns.html">VPC, Load Balancing &amp; DNS</a>
-- <a href="03-gcp-core-building-blocks/gke-internals.md">GKE Control Plane &amp; Data Plane</a>
+- <a href="03-gcp-core-building-blocks/gke-internals.html">GKE Control Plane &amp; Data Plane</a>
 - <a href="03-gcp-core-building-blocks/iam-evaluation.html">IAM Evaluation Model</a>
-- <a href="03-gcp-core-building-blocks/cloud-storage.md">Cloud Storage Deep Dive</a>
-- <a href="03-gcp-core-building-blocks/spanner.md">Spanner: Consistency &amp; Performance</a>
-- <a href="03-gcp-core-building-blocks/bigtable.md">Bigtable: Design &amp; Tradeoffs</a>
-- <a href="03-gcp-core-building-blocks/bigquery.md">BigQuery Architecture</a>
-- <a href="03-gcp-core-building-blocks/pubsub.md">Pub/Sub: Delivery Guarantees</a>
-- <a href="03-gcp-core-building-blocks/kms-secrets.md">Cloud KMS &amp; Secret Management</a></p>
+- <a href="03-gcp-core-building-blocks/cloud-storage.html">Cloud Storage Deep Dive</a>
+- <a href="03-gcp-core-building-blocks/spanner.html">Spanner: Consistency &amp; Performance</a>
+- <a href="03-gcp-core-building-blocks/bigtable.html">Bigtable: Design &amp; Tradeoffs</a>
+- <a href="03-gcp-core-building-blocks/bigquery.html">BigQuery Architecture</a>
+- <a href="03-gcp-core-building-blocks/pubsub.html">Pub/Sub: Delivery Guarantees</a>
+- <a href="03-gcp-core-building-blocks/kms-secrets.html">Cloud KMS &amp; Secret Management</a>
+- <a href="03-gcp-core-building-blocks/alloydb.html">AlloyDB: PostgreSQL-Compatible Database</a></p>
 <p><strong>Milestone</strong>: You can design systems using GCP primitives, understand their failure modes, and make informed tradeoffs.</p>
 <p><strong>Suggested pacing</strong>: 4-6 weeks</p>
 <hr />
@@ -457,11 +490,11 @@
 <p><strong>Topics</strong>:
 - <a href="04-reliability-sre/sli-slo-error-budget.html">SLIs, SLOs &amp; Error Budgets</a>
 - <a href="04-reliability-sre/prr-checklist.html">Production Readiness Reviews (PRR)</a>
-- <a href="04-reliability-sre/incident-response.md">Incident Response &amp; Postmortems</a>
-- <a href="04-reliability-sre/capacity-planning.md">Capacity Planning &amp; Forecasting</a>
-- <a href="04-reliability-sre/load-shedding.md">Load Shedding &amp; Circuit Breakers</a>
-- <a href="04-reliability-sre/canary-rollouts.md">Canary Deployments &amp; Rollouts</a>
-- <a href="04-reliability-sre/testing-for-failure.md">Testing for Failure</a></p>
+- <a href="04-reliability-sre/incident-response.html">Incident Response &amp; Postmortems</a>
+- <a href="04-reliability-sre/capacity-planning.html">Capacity Planning &amp; Forecasting</a>
+- <a href="04-reliability-sre/load-shedding.html">Load Shedding &amp; Circuit Breakers</a>
+- <a href="04-reliability-sre/canary-rollouts.html">Canary Deployments &amp; Rollouts</a>
+- <a href="04-reliability-sre/testing-for-failure.html">Testing for Failure</a></p>
 <p><strong>Milestone</strong>: You can define SLIs/SLOs, run PRRs, respond to incidents, and plan capacity.</p>
 <p><strong>Suggested pacing</strong>: 3-4 weeks</p>
 <hr />
@@ -469,8 +502,8 @@
 <p><strong>Goal</strong>: Apply everything to real-world scenarios.</p>
 <p><strong>Topics</strong>:
 - <a href="06-case-studies/multi-region-api.html">Multi-Region API on GCP</a>
-- <a href="06-case-studies/data-pipeline.md">High-Throughput Data Pipeline</a> (coming soon)
-- <a href="06-case-studies/cdn-system.md">Global Content Delivery System</a> (coming soon)</p>
+- <a href="06-case-studies/data-pipeline.html">High-Throughput Data Pipeline</a>
+- <a href="06-case-studies/cdn-system.html">Global Content Delivery System</a></p>
 <p><strong>Milestone</strong>: You can design, implement, and operate production systems with clear SLOs and operational playbooks.</p>
 <p><strong>Suggested pacing</strong>: 2-3 weeks per case study</p>
 <hr />
@@ -488,22 +521,22 @@
 <tbody>
 <tr>
 <td><strong>Time &amp; Ordering</strong></td>
-<td><a href="02-distributed-systems/time-ordering-causality.md">Time, Ordering, Causality</a></td>
+<td><a href="02-distributed-systems/time-ordering-causality.html">Time, Ordering, Causality</a></td>
 <td>Phase 0</td>
 </tr>
 <tr>
 <td><strong>Consensus</strong></td>
-<td><a href="02-distributed-systems/consensus-leases.md">Consensus &amp; Leases</a></td>
+<td><a href="02-distributed-systems/consensus-leases.html">Consensus &amp; Leases</a></td>
 <td>Time &amp; Ordering</td>
 </tr>
 <tr>
 <td><strong>Replication</strong></td>
-<td><a href="02-distributed-systems/replication.md">Replication Strategies</a></td>
+<td><a href="02-distributed-systems/replication.html">Replication Strategies</a></td>
 <td>Consensus</td>
 </tr>
 <tr>
 <td><strong>Sharding</strong></td>
-<td><a href="02-distributed-systems/sharding-partitioning.md">Sharding &amp; Partitioning</a></td>
+<td><a href="02-distributed-systems/sharding-partitioning.html">Sharding &amp; Partitioning</a></td>
 <td>Replication</td>
 </tr>
 <tr>
@@ -518,7 +551,7 @@
 </tr>
 <tr>
 <td><strong>Queues</strong></td>
-<td><a href="02-distributed-systems/queues-streams.md">Queues &amp; Streams</a></td>
+<td><a href="02-distributed-systems/queues-streams.html">Queues &amp; Streams</a></td>
 <td>Overload</td>
 </tr>
 </tbody>
@@ -540,7 +573,7 @@
 </tr>
 <tr>
 <td><strong>Kubernetes</strong></td>
-<td><a href="03-gcp-core-building-blocks/gke-internals.md">GKE Internals</a></td>
+<td><a href="03-gcp-core-building-blocks/gke-internals.html">GKE Internals</a></td>
 <td>Networking</td>
 </tr>
 <tr>
@@ -550,33 +583,38 @@
 </tr>
 <tr>
 <td><strong>Storage</strong></td>
-<td><a href="03-gcp-core-building-blocks/cloud-storage.md">Cloud Storage</a></td>
+<td><a href="03-gcp-core-building-blocks/cloud-storage.html">Cloud Storage</a></td>
 <td>Networking</td>
 </tr>
 <tr>
 <td><strong>Spanner</strong></td>
-<td><a href="03-gcp-core-building-blocks/spanner.md">Spanner Deep Dive</a></td>
+<td><a href="03-gcp-core-building-blocks/spanner.html">Spanner Deep Dive</a></td>
 <td>Consensus, Replication</td>
 </tr>
 <tr>
 <td><strong>Bigtable</strong></td>
-<td><a href="03-gcp-core-building-blocks/bigtable.md">Bigtable Design</a></td>
+<td><a href="03-gcp-core-building-blocks/bigtable.html">Bigtable Design</a></td>
 <td>Sharding</td>
 </tr>
 <tr>
 <td><strong>BigQuery</strong></td>
-<td><a href="03-gcp-core-building-blocks/bigquery.md">BigQuery Architecture</a></td>
+<td><a href="03-gcp-core-building-blocks/bigquery.html">BigQuery Architecture</a></td>
 <td>Storage, Sharding</td>
 </tr>
 <tr>
 <td><strong>Pub/Sub</strong></td>
-<td><a href="03-gcp-core-building-blocks/pubsub.md">Pub/Sub Guarantees</a></td>
+<td><a href="03-gcp-core-building-blocks/pubsub.html">Pub/Sub Guarantees</a></td>
 <td>Queues, Idempotency</td>
 </tr>
 <tr>
 <td><strong>Secrets</strong></td>
-<td><a href="03-gcp-core-building-blocks/kms-secrets.md">KMS &amp; Secrets</a></td>
+<td><a href="03-gcp-core-building-blocks/kms-secrets.html">KMS &amp; Secrets</a></td>
 <td>IAM</td>
+</tr>
+<tr>
+<td><strong>AlloyDB</strong></td>
+<td><a href="03-gcp-core-building-blocks/alloydb.html">AlloyDB Architecture</a></td>
+<td>Spanner, Replication</td>
 </tr>
 </tbody>
 </table>
@@ -602,27 +640,27 @@
 </tr>
 <tr>
 <td><strong>Incidents</strong></td>
-<td><a href="04-reliability-sre/incident-response.md">Incident Response</a></td>
+<td><a href="04-reliability-sre/incident-response.html">Incident Response</a></td>
 <td>SLIs/SLOs</td>
 </tr>
 <tr>
 <td><strong>Capacity</strong></td>
-<td><a href="04-reliability-sre/capacity-planning.md">Capacity Planning</a></td>
+<td><a href="04-reliability-sre/capacity-planning.html">Capacity Planning</a></td>
 <td>Capacity Math</td>
 </tr>
 <tr>
 <td><strong>Load Shedding</strong></td>
-<td><a href="04-reliability-sre/load-shedding.md">Load Shedding</a></td>
+<td><a href="04-reliability-sre/load-shedding.html">Load Shedding</a></td>
 <td>Overload</td>
 </tr>
 <tr>
 <td><strong>Rollouts</strong></td>
-<td><a href="04-reliability-sre/canary-rollouts.md">Canary &amp; Rollouts</a></td>
+<td><a href="04-reliability-sre/canary-rollouts.html">Canary &amp; Rollouts</a></td>
 <td>Testing for Failure</td>
 </tr>
 <tr>
 <td><strong>Testing</strong></td>
-<td><a href="04-reliability-sre/testing-for-failure.md">Testing for Failure</a></td>
+<td><a href="04-reliability-sre/testing-for-failure.html">Testing for Failure</a></td>
 <td>Phase 1</td>
 </tr>
 </tbody>
@@ -644,17 +682,17 @@
 </tr>
 <tr>
 <td><strong>Circuit Breakers</strong></td>
-<td><a href="05-llD-patterns/circuit-breakers.md">Circuit Breaker Pattern</a></td>
+<td><a href="05-llD-patterns/circuit-breakers.html">Circuit Breaker Pattern</a></td>
 <td>Load Shedding</td>
 </tr>
 <tr>
 <td><strong>Concurrency</strong></td>
-<td><a href="05-llD-patterns/concurrency.md">Concurrency Primitives</a></td>
+<td><a href="05-llD-patterns/concurrency.html">Concurrency Primitives</a></td>
 <td>Phase 1</td>
 </tr>
 <tr>
 <td><strong>Idempotency</strong></td>
-<td><a href="05-llD-patterns/idempotency-patterns.md">Idempotency Patterns</a></td>
+<td><a href="05-llD-patterns/idempotency-patterns.html">Idempotency Patterns</a></td>
 <td>Idempotency &amp; Retries</td>
 </tr>
 </tbody>
@@ -726,6 +764,14 @@ LLD --> Phase4
                     if (mainContent) {
                         mainContent.classList.toggle('sidebar-collapsed');
                     }
+                    // Update desktop toggle button position
+                    if (sidebarToggleDesktop) {
+                        if (sidebar.classList.contains('collapsed')) {
+                            sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                        } else {
+                            sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                        }
+                    }
                 }
             }
             
@@ -741,6 +787,9 @@ LLD --> Phase4
                     if (mainContent) {
                         mainContent.classList.add('sidebar-collapsed');
                     }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                    }
                 }
             }
             
@@ -755,6 +804,9 @@ LLD --> Phase4
                     sidebar.classList.remove('collapsed');
                     if (mainContent) {
                         mainContent.classList.remove('sidebar-collapsed');
+                    }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.remove('sidebar-collapsed');
                     }
                 }
             }
@@ -802,12 +854,27 @@ LLD --> Phase4
                             sidebarOverlay.classList.remove('active');
                         }
                         document.body.style.overflow = '';
+                        // Ensure toggle button position matches sidebar state
+                        if (sidebarToggleDesktop && sidebar) {
+                            if (sidebar.classList.contains('collapsed')) {
+                                sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                            } else {
+                                sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                            }
+                        }
                     } else {
                         // On mobile, close sidebar if open
                         closeSidebar();
                     }
                 }, 250);
             });
+            
+            // Initialize desktop toggle button position on load
+            if (!isMobile() && sidebarToggleDesktop && sidebar) {
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                }
+            }
             
             // Update active link on scroll
             const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');

@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gke Internals Answers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        @media (max-width: 640px) {
+            .content {
+                padding: 1rem;
+                margin-top: 1rem;
+                border-radius: 0.5rem;
+            }
+            .content h1 {
+                font-size: 1.75rem;
+            }
+            .content h2 {
+                font-size: 1.5rem;
+            }
+            .content h3 {
+                font-size: 1.25rem;
+            }
+            .content pre {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+                overflow-x: auto;
+            }
+            .content table {
+                font-size: 0.875rem;
+            }
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            list-style: none;
+            display: flex;
+            align-items: flex-start;
+        }
+        .content ul li::before {
+            content: none;
+        }
+        .progress-checkbox {
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            accent-color: #58508d;
+        }
+        .progress-checkbox:checked {
+            accent-color: #58508d;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: calc(100vh - 80px);
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid #E5E7EB;
+            overflow-y: auto;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 40;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        @media (min-width: 1025px) {
+            .sidebar {
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+            }
+        }
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+        .sidebar-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+        .sidebar-close:hover {
+            background-color: #F3F4F6;
+            color: #1E293B;
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 50;
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+            transition: left 0.3s ease, background-color 0.2s ease;
+        }
+        .sidebar-toggle:hover {
+            background-color: #F3F4F6;
+        }
+        .sidebar-toggle.desktop {
+            display: none;
+        }
+        @media (min-width: 1025px) {
+            .sidebar-toggle.desktop {
+                display: block;
+                top: 90px;
+                left: 300px;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .sidebar-toggle.desktop.sidebar-collapsed {
+                left: 20px;
+            }
+        }
+        @media (max-width: 1024px) {
+            .sidebar-toggle.desktop {
+                display: none !important;
+            }
+            .sidebar-toggle.mobile {
+                top: 85px;
+                left: 15px;
+            }
+        }
+        .sidebar-content {
+            padding: 1.5rem;
+        }
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin: 0;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #4B5563;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        .sidebar-nav a:hover {
+            background-color: #F3F4F6;
+            color: #58508d;
+        }
+        .sidebar-nav a.active {
+            background-color: #EEF2FF;
+            color: #58508d;
+            font-weight: 600;
+        }
+        .sidebar-nav .level-1 {
+            padding-left: 0.75rem;
+            font-weight: 600;
+            color: #1E293B;
+        }
+        .sidebar-nav .level-2 {
+            padding-left: 1.5rem;
+            color: #4B5563;
+        }
+        .sidebar-nav .level-3 {
+            padding-left: 2.25rem;
+            color: #6B7280;
+            font-size: 0.8125rem;
+        }
+        .sidebar-nav .level-4 {
+            padding-left: 3rem;
+            color: #9CA3AF;
+            font-size: 0.75rem;
+        }
+        .main-content {
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-left: 0;
+        }
+        @media (min-width: 1025px) {
+            .main-content {
+                margin-left: 280px !important;
+                max-width: calc(100vw - 280px) !important;
+                width: calc(100% - 280px) !important;
+            }
+            .main-content.sidebar-collapsed {
+                margin-left: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .main-content.container {
+                max-width: calc(100vw - 280px) !important;
+            }
+            .main-content.sidebar-collapsed.container {
+                max-width: 100% !important;
+            }
+        }
+        .main-content.no-sidebar {
+            margin-left: 0 !important;
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+            }
+            .sidebar.expanded {
+                transform: translateX(0);
+            }
+            .sidebar-toggle.mobile {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 35;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+        @media (min-width: 1025px) {
+            .sidebar-overlay {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../../../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <button class="sidebar-toggle mobile" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+    <button class="sidebar-toggle desktop" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#answer-key-gke-control-plane-data-plane" class="level-1">Answer Key: GKE Control Plane &amp; Data Plane</a></li>
+                <li><a href="#exercise-1-design-node-pools" class="level-2">Exercise 1: Design Node Pools</a></li>
+                <li><a href="#answer" class="level-3">Answer</a></li>
+                <li><a href="#node-pool-design" class="level-3">Node Pool Design</a></li>
+                <li><a href="#node-pool-summary" class="level-3">Node Pool Summary</a></li>
+                <li><a href="#key-principles" class="level-3">Key Principles</a></li>
+                <li><a href="#exercise-2-pod-scheduling" class="level-2">Exercise 2: Pod Scheduling</a></li>
+                <li><a href="#answer_1" class="level-3">Answer</a></li>
+                <li><a href="#scheduling-strategies" class="level-3">Scheduling Strategies</a></li>
+                <li><a href="#best-practices" class="level-3">Best Practices</a></li>
+                <li><a href="#answer_2" class="level-3">Answer</a></li>
+                <li><a href="#exercise-3-debug-pod-failure" class="level-2">Exercise 3: Debug Pod Failure</a></li>
+                <li><a href="#answer_3" class="level-3">Answer</a></li>
+                <li><a href="#debugging-steps" class="level-3">Debugging Steps</a></li>
+                <li><a href="#common-issues-and-solutions" class="level-3">Common Issues and Solutions</a></li>
+                <li><a href="#answer_4" class="level-3">Answer</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="answer-key-gke-control-plane-data-plane">Answer Key: GKE Control Plane &amp; Data Plane</h1>
+<p><a href="../../03-gcp-core-building-blocks/gke-internals.html">Back to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-design-node-pools">Exercise 1: Design Node Pools</h2>
+<p><strong>Question</strong>: Design node pools for a multi-tier application (web, app, database). What machine types? How many nodes?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Goal</strong>: Design node pools optimized for different workload types.</p>
+<h3 id="node-pool-design">Node Pool Design</h3>
+<p><strong>1. Web Tier Node Pool</strong></p>
+<p><strong>Purpose</strong>: Host web servers (stateless, high traffic)</p>
+<p><strong>Machine Type</strong>: <code>n1-standard-4</code> (4 vCPU, 15GB RAM)
+- <strong>CPU</strong>: 4 vCPU for handling HTTP requests
+- <strong>Memory</strong>: 15GB for web server processes
+- <strong>Cost</strong>: Moderate cost, good performance</p>
+<p><strong>Node Count</strong>: 3-10 nodes (auto-scaling)
+- <strong>Min</strong>: 3 nodes (high availability)
+- <strong>Max</strong>: 10 nodes (handle peak traffic)
+- <strong>Auto-scaling</strong>: Based on CPU/memory utilization</p>
+<p><strong>Configuration</strong>:
+- <strong>OS</strong>: Container-Optimized OS
+- <strong>Preemptible</strong>: No (need reliability)
+- <strong>Labels</strong>: <code>tier=web</code></p>
+<p><strong>2. App Tier Node Pool</strong></p>
+<p><strong>Purpose</strong>: Host application servers (CPU-intensive, stateful)</p>
+<p><strong>Machine Type</strong>: <code>n1-standard-8</code> (8 vCPU, 30GB RAM)
+- <strong>CPU</strong>: 8 vCPU for application processing
+- <strong>Memory</strong>: 30GB for application state
+- <strong>Cost</strong>: Higher cost, better performance</p>
+<p><strong>Node Count</strong>: 5-20 nodes (auto-scaling)
+- <strong>Min</strong>: 5 nodes (handle base load)
+- <strong>Max</strong>: 20 nodes (handle peak load)
+- <strong>Auto-scaling</strong>: Based on CPU/memory utilization</p>
+<p><strong>Configuration</strong>:
+- <strong>OS</strong>: Container-Optimized OS
+- <strong>Preemptible</strong>: No (need reliability)
+- <strong>Labels</strong>: <code>tier=app</code></p>
+<p><strong>3. Database Tier Node Pool</strong></p>
+<p><strong>Purpose</strong>: Host database pods (memory-intensive, I/O-intensive)</p>
+<p><strong>Machine Type</strong>: <code>n1-highmem-8</code> (8 vCPU, 52GB RAM)
+- <strong>CPU</strong>: 8 vCPU for database operations
+- <strong>Memory</strong>: 52GB for database cache
+- <strong>Cost</strong>: Higher cost, optimized for memory</p>
+<p><strong>Node Count</strong>: 3-6 nodes (limited scaling)
+- <strong>Min</strong>: 3 nodes (high availability)
+- <strong>Max</strong>: 6 nodes (limited by database design)
+- <strong>Auto-scaling</strong>: Conservative (databases don't scale horizontally easily)</p>
+<p><strong>Configuration</strong>:
+- <strong>OS</strong>: Container-Optimized OS
+- <strong>Preemptible</strong>: No (critical tier)
+- <strong>Labels</strong>: <code>tier=database</code>
+- <strong>Taints</strong>: <code>database=true:NoSchedule</code> (prevent non-database pods)</p>
+<h3 id="node-pool-summary">Node Pool Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Machine Type</th>
+<th>Nodes</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web</td>
+<td>n1-standard-4</td>
+<td>3-10</td>
+<td>Stateless web servers</td>
+</tr>
+<tr>
+<td>App</td>
+<td>n1-standard-8</td>
+<td>5-20</td>
+<td>Application servers</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>n1-highmem-8</td>
+<td>3-6</td>
+<td>Database pods</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-principles">Key Principles</h3>
+<ol>
+<li><strong>Right-size machines</strong>: Match machine type to workload</li>
+<li><strong>Separate tiers</strong>: Different node pools for different workloads</li>
+<li><strong>Auto-scaling</strong>: Enable auto-scaling for variable load</li>
+<li><strong>High availability</strong>: Minimum 3 nodes per tier</li>
+<li><strong>Cost optimization</strong>: Use appropriate machine types</li>
+</ol>
+<hr />
+<h2 id="exercise-2-pod-scheduling">Exercise 2: Pod Scheduling</h2>
+<p><strong>Question</strong>: You have pods that need to run on specific nodes. How do you ensure they're scheduled correctly?</p>
+<h3 id="answer_1">Answer</h3>
+<p><strong>Goal</strong>: Ensure pods are scheduled on correct nodes using Kubernetes scheduling features.</p>
+<h3 id="scheduling-strategies">Scheduling Strategies</h3>
+<p><strong>1. Node Selectors</strong></p>
+<p><strong>Use case</strong>: Simple node selection based on labels</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: database-pod
+spec:
+  nodeSelector:
+    tier: database
+  containers:
+  - name: database
+    image: postgres:13
+</code></pre>
+<p><strong>How it works</strong>:
+- Pod only schedules on nodes with <code>tier=database</code> label
+- Simple and straightforward
+- Hard requirement (pod won't schedule if no matching nodes)</p>
+<p><strong>2. Node Affinity</strong></p>
+<p><strong>Use case</strong>: More flexible node selection</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: app-pod
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+          - key: tier
+            operator: In
+            values:
+            - app
+            - web
+</code></pre>
+<p><strong>How it works</strong>:
+- Prefer nodes with <code>tier=app</code> or <code>tier=web</code>
+- Soft requirement (pod can schedule elsewhere if needed)
+- More flexible than node selectors</p>
+<p><strong>3. Taints and Tolerations</strong></p>
+<p><strong>Use case</strong>: Prevent pods from scheduling on specific nodes</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-yaml"># Taint node
+kubectl taint nodes database-node-1 database=true:NoSchedule
+
+# Pod with toleration
+apiVersion: v1
+kind: Pod
+metadata:
+  name: database-pod
+spec:
+  tolerations:
+  - key: database
+    operator: Equal
+    value: &quot;true&quot;
+    effect: NoSchedule
+  containers:
+  - name: database
+    image: postgres:13
+</code></pre>
+<p><strong>How it works</strong>:
+- Taint prevents most pods from scheduling
+- Toleration allows specific pods to schedule
+- Useful for dedicated nodes (e.g., database nodes)</p>
+<p><strong>4. Pod Affinity/Anti-Affinity</strong></p>
+<p><strong>Use case</strong>: Co-locate or separate pods</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: app-pod
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - myapp
+        topologyKey: kubernetes.io/hostname
+</code></pre>
+<p><strong>How it works</strong>:
+- Co-locate pods with same <code>app=myapp</code> label on same node
+- Useful for related pods that benefit from co-location</p>
+<h3 id="best-practices">Best Practices</h3>
+<p><strong>1. Use Node Selectors for Simple Cases</strong>:
+- Simple label matching
+- Hard requirements</p>
+<p><strong>2. Use Node Affinity for Flexibility</strong>:
+- Soft requirements
+- Multiple preferences</p>
+<p><strong>3. Use Taints/Tolerations for Dedicated Nodes</strong>:
+- Database nodes
+- GPU nodes
+- Specialized hardware</p>
+<p><strong>4. Use Pod Affinity for Co-location</strong>:
+- Related pods
+- Performance optimization</p>
+<p><strong>5. Monitor Scheduling</strong>:
+- Check pod scheduling status
+- Monitor node utilization
+- Adjust as needed</p>
+<h3 id="answer_2">Answer</h3>
+<p><strong>Use Node Selectors</strong> for simple cases:
+- Add labels to nodes: <code>tier=web</code>, <code>tier=app</code>, <code>tier=database</code>
+- Use <code>nodeSelector</code> in pod spec to select nodes</p>
+<p><strong>Use Taints/Tolerations</strong> for dedicated nodes:
+- Taint database nodes: <code>database=true:NoSchedule</code>
+- Add toleration to database pods
+- Prevents non-database pods from scheduling</p>
+<p><strong>Use Pod Affinity</strong> for co-location:
+- Co-locate related pods on same node
+- Improve performance and reduce network latency</p>
+<p><strong>Key principles</strong>:
+- <strong>Labels</strong>: Use labels to identify node types
+- <strong>Selectors</strong>: Use node selectors for simple matching
+- <strong>Taints</strong>: Use taints to reserve nodes for specific workloads
+- <strong>Affinity</strong>: Use affinity for flexible scheduling
+- <strong>Monitor</strong>: Monitor scheduling and adjust as needed</p>
+<hr />
+<h2 id="exercise-3-debug-pod-failure">Exercise 3: Debug Pod Failure</h2>
+<p><strong>Question</strong>: A pod is crashing. How do you debug this? What logs do you check?</p>
+<h3 id="answer_3">Answer</h3>
+<p><strong>Goal</strong>: Debug pod crashes systematically using Kubernetes debugging tools.</p>
+<h3 id="debugging-steps">Debugging Steps</h3>
+<p><strong>1. Check Pod Status</strong></p>
+<p><strong>Command</strong>:</p>
+<pre><code class="language-bash">kubectl get pods
+kubectl describe pod &lt;pod-name&gt;
+</code></pre>
+<p><strong>What to look for</strong>:
+- <strong>Status</strong>: <code>CrashLoopBackOff</code>, <code>Error</code>, <code>Pending</code>
+- <strong>Events</strong>: Recent events showing errors
+- <strong>Restarts</strong>: Number of restarts
+- <strong>State</strong>: Current state and last state</p>
+<p><strong>Example output</strong>:</p>
+<pre><code>Name:         app-pod
+Status:       CrashLoopBackOff
+Restarts:     5
+Last State:   Terminated
+  Reason:     Error
+  Exit Code:  1
+</code></pre>
+<p><strong>2. Check Pod Logs</strong></p>
+<p><strong>Command</strong>:</p>
+<pre><code class="language-bash">kubectl logs &lt;pod-name&gt;
+kubectl logs &lt;pod-name&gt; --previous  # Previous container instance
+kubectl logs &lt;pod-name&gt; -f  # Follow logs
+</code></pre>
+<p><strong>What to look for</strong>:
+- <strong>Error messages</strong>: Application errors
+- <strong>Stack traces</strong>: Exception stack traces
+- <strong>Startup errors</strong>: Configuration errors
+- <strong>Runtime errors</strong>: Application runtime errors</p>
+<p><strong>3. Check Container Logs</strong></p>
+<p><strong>Command</strong>:</p>
+<pre><code class="language-bash">kubectl logs &lt;pod-name&gt; -c &lt;container-name&gt;  # Multi-container pods
+</code></pre>
+<p><strong>What to look for</strong>:
+- <strong>Sidecar logs</strong>: Sidecar container logs
+- <strong>Init container logs</strong>: Init container logs
+- <strong>Application logs</strong>: Main application logs</p>
+<p><strong>4. Check Events</strong></p>
+<p><strong>Command</strong>:</p>
+<pre><code class="language-bash">kubectl get events --sort-by=.metadata.creationTimestamp
+kubectl describe pod &lt;pod-name&gt; | grep Events -A 10
+</code></pre>
+<p><strong>What to look for</strong>:
+- <strong>Scheduling events</strong>: Pod scheduling issues
+- <strong>Image pull events</strong>: Image pull failures
+- <strong>Startup events</strong>: Container startup failures
+- <strong>Health check events</strong>: Liveness/readiness probe failures</p>
+<p><strong>5. Check Resource Limits</strong></p>
+<p><strong>Command</strong>:</p>
+<pre><code class="language-bash">kubectl describe pod &lt;pod-name&gt; | grep Limits -A 5
+kubectl top pod &lt;pod-name&gt;
+</code></pre>
+<p><strong>What to look for</strong>:
+- <strong>Memory limits</strong>: OOM (Out of Memory) kills
+- <strong>CPU limits</strong>: CPU throttling
+- <strong>Resource usage</strong>: Current vs limits</p>
+<p><strong>6. Check Configuration</strong></p>
+<p><strong>Command</strong>:</p>
+<pre><code class="language-bash">kubectl get pod &lt;pod-name&gt; -o yaml
+kubectl get configmap &lt;configmap-name&gt; -o yaml
+kubectl get secret &lt;secret-name&gt; -o yaml
+</code></pre>
+<p><strong>What to look for</strong>:
+- <strong>Environment variables</strong>: Missing or incorrect values
+- <strong>ConfigMaps</strong>: Configuration errors
+- <strong>Secrets</strong>: Missing or incorrect secrets
+- <strong>Volume mounts</strong>: Volume mount issues</p>
+<p><strong>7. Check Health Checks</strong></p>
+<p><strong>Command</strong>:</p>
+<pre><code class="language-bash">kubectl describe pod &lt;pod-name&gt; | grep Liveness -A 5
+kubectl describe pod &lt;pod-name&gt; | grep Readiness -A 5
+</code></pre>
+<p><strong>What to look for</strong>:
+- <strong>Liveness probe</strong>: Failing liveness probes
+- <strong>Readiness probe</strong>: Failing readiness probes
+- <strong>Probe configuration</strong>: Incorrect probe settings</p>
+<h3 id="common-issues-and-solutions">Common Issues and Solutions</h3>
+<p><strong>1. Image Pull Errors</strong></p>
+<p><strong>Symptoms</strong>: <code>ImagePullBackOff</code>, <code>ErrImagePull</code></p>
+<p><strong>Debug</strong>:</p>
+<pre><code class="language-bash">kubectl describe pod &lt;pod-name&gt; | grep Events
+</code></pre>
+<p><strong>Solutions</strong>:
+- Check image name and tag
+- Check image pull secrets
+- Verify image registry access</p>
+<p><strong>2. OOM Kills</strong></p>
+<p><strong>Symptoms</strong>: <code>OOMKilled</code>, frequent restarts</p>
+<p><strong>Debug</strong>:</p>
+<pre><code class="language-bash">kubectl describe pod &lt;pod-name&gt; | grep OOM
+kubectl top pod &lt;pod-name&gt;
+</code></pre>
+<p><strong>Solutions</strong>:
+- Increase memory limits
+- Optimize application memory usage
+- Check for memory leaks</p>
+<p><strong>3. Configuration Errors</strong></p>
+<p><strong>Symptoms</strong>: Application startup failures, missing config</p>
+<p><strong>Debug</strong>:</p>
+<pre><code class="language-bash">kubectl logs &lt;pod-name&gt;
+kubectl get configmap &lt;configmap-name&gt;
+</code></pre>
+<p><strong>Solutions</strong>:
+- Check ConfigMap/Secret existence
+- Verify environment variables
+- Check configuration values</p>
+<p><strong>4. Health Check Failures</strong></p>
+<p><strong>Symptoms</strong>: <code>Unhealthy</code>, <code>Readiness probe failed</code></p>
+<p><strong>Debug</strong>:</p>
+<pre><code class="language-bash">kubectl describe pod &lt;pod-name&gt; | grep Probe
+kubectl exec &lt;pod-name&gt; -- curl http://localhost:8080/health
+</code></pre>
+<p><strong>Solutions</strong>:
+- Fix health check endpoint
+- Adjust probe timeout/interval
+- Check application health</p>
+<h3 id="answer_4">Answer</h3>
+<p><strong>Debugging Steps</strong>:</p>
+<ol>
+<li><strong>Check pod status</strong>: <code>kubectl get pods</code> and <code>kubectl describe pod &lt;pod-name&gt;</code></li>
+<li>
+<p>Look for status, restarts, events</p>
+</li>
+<li>
+<p><strong>Check pod logs</strong>: <code>kubectl logs &lt;pod-name&gt;</code></p>
+</li>
+<li>
+<p>Look for error messages, stack traces</p>
+</li>
+<li>
+<p><strong>Check previous logs</strong>: <code>kubectl logs &lt;pod-name&gt; --previous</code></p>
+</li>
+<li>
+<p>Check logs from previous container instance</p>
+</li>
+<li>
+<p><strong>Check events</strong>: <code>kubectl get events</code></p>
+</li>
+<li>
+<p>Look for scheduling, image pull, startup events</p>
+</li>
+<li>
+<p><strong>Check resources</strong>: <code>kubectl top pod &lt;pod-name&gt;</code></p>
+</li>
+<li>
+<p>Look for OOM kills, CPU throttling</p>
+</li>
+<li>
+<p><strong>Check configuration</strong>: <code>kubectl get pod &lt;pod-name&gt; -o yaml</code></p>
+</li>
+<li>
+<p>Look for ConfigMaps, Secrets, environment variables</p>
+</li>
+<li>
+<p><strong>Check health checks</strong>: <code>kubectl describe pod &lt;pod-name&gt;</code></p>
+</li>
+<li>Look for liveness/readiness probe failures</li>
+</ol>
+<p><strong>Key logs to check</strong>:
+- <strong>Application logs</strong>: Main application error logs
+- <strong>Container logs</strong>: Sidecar and init container logs
+- <strong>System logs</strong>: Kubernetes system logs
+- <strong>Event logs</strong>: Pod events and scheduling events</p>
+<p><strong>Common issues</strong>:
+- <strong>Image pull errors</strong>: Check image name, registry access
+- <strong>OOM kills</strong>: Increase memory limits, optimize memory usage
+- <strong>Configuration errors</strong>: Check ConfigMaps, Secrets, environment variables
+- <strong>Health check failures</strong>: Fix health check endpoint, adjust probe settings</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const sidebarToggleMobile = document.getElementById('sidebarToggleMobile');
+            const sidebarToggleDesktop = document.getElementById('sidebarToggleDesktop');
+            const sidebarClose = document.getElementById('sidebarClose');
+            const mainContent = document.querySelector('.main-content');
+            
+            function isMobile() {
+                return window.innerWidth <= 1024;
+            }
+            
+            function toggleSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.toggle('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.toggle('active');
+                    }
+                    // Prevent body scroll when sidebar is open
+                    if (sidebar.classList.contains('expanded')) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.toggle('sidebar-collapsed');
+                    }
+                    // Update desktop toggle button position
+                    if (sidebarToggleDesktop) {
+                        if (sidebar.classList.contains('collapsed')) {
+                            sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                        } else {
+                            sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                        }
+                    }
+                }
+            }
+            
+            function closeSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.remove('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.remove('active');
+                    }
+                    document.body.style.overflow = '';
+                } else {
+                    sidebar.classList.add('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.add('sidebar-collapsed');
+                    }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                    }
+                }
+            }
+            
+            function openSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.add('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.add('active');
+                    }
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    sidebar.classList.remove('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.remove('sidebar-collapsed');
+                    }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                    }
+                }
+            }
+            
+            // Mobile toggle
+            if (sidebarToggleMobile) {
+                sidebarToggleMobile.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+            
+            // Desktop toggle
+            if (sidebarToggleDesktop) {
+                sidebarToggleDesktop.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+            
+            // Close button in sidebar
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            
+            // Overlay click to close on mobile
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (!isMobile()) {
+                        // On desktop, ensure sidebar state is correct
+                        if (sidebarOverlay) {
+                            sidebarOverlay.classList.remove('active');
+                        }
+                        document.body.style.overflow = '';
+                        // Ensure toggle button position matches sidebar state
+                        if (sidebarToggleDesktop && sidebar) {
+                            if (sidebar.classList.contains('collapsed')) {
+                                sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                            } else {
+                                sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                            }
+                        }
+                    } else {
+                        // On mobile, close sidebar if open
+                        closeSidebar();
+                    }
+                }, 250);
+            });
+            
+            // Initialize desktop toggle button position on load
+            if (!isMobile() && sidebarToggleDesktop && sidebar) {
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                }
+            }
+            
+            // Update active link on scroll
+            const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            function updateActiveLink() {
+                let current = '';
+                headings.forEach(heading => {
+                    const rect = heading.getBoundingClientRect();
+                    if (rect.top <= 100) {
+                        current = heading.id;
+                    }
+                });
+                
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+            
+            // Smooth scroll for sidebar links
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            const headerOffset = 80;
+                            const elementPosition = target.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                            
+                            // Close sidebar on mobile after click
+                            if (isMobile()) {
+                                closeSidebar();
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

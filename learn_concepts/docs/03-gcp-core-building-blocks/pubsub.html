@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pubsub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        @media (max-width: 640px) {
+            .content {
+                padding: 1rem;
+                margin-top: 1rem;
+                border-radius: 0.5rem;
+            }
+            .content h1 {
+                font-size: 1.75rem;
+            }
+            .content h2 {
+                font-size: 1.5rem;
+            }
+            .content h3 {
+                font-size: 1.25rem;
+            }
+            .content pre {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+                overflow-x: auto;
+            }
+            .content table {
+                font-size: 0.875rem;
+            }
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            list-style: none;
+            display: flex;
+            align-items: flex-start;
+        }
+        .content ul li::before {
+            content: none;
+        }
+        .progress-checkbox {
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            accent-color: #58508d;
+        }
+        .progress-checkbox:checked {
+            accent-color: #58508d;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: calc(100vh - 80px);
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid #E5E7EB;
+            overflow-y: auto;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 40;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        @media (min-width: 1025px) {
+            .sidebar {
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+            }
+        }
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+        .sidebar-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+        .sidebar-close:hover {
+            background-color: #F3F4F6;
+            color: #1E293B;
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 50;
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+            transition: left 0.3s ease, background-color 0.2s ease;
+        }
+        .sidebar-toggle:hover {
+            background-color: #F3F4F6;
+        }
+        .sidebar-toggle.desktop {
+            display: none;
+        }
+        @media (min-width: 1025px) {
+            .sidebar-toggle.desktop {
+                display: block;
+                top: 90px;
+                left: 300px;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .sidebar-toggle.desktop.sidebar-collapsed {
+                left: 20px;
+            }
+        }
+        @media (max-width: 1024px) {
+            .sidebar-toggle.desktop {
+                display: none !important;
+            }
+            .sidebar-toggle.mobile {
+                top: 85px;
+                left: 15px;
+            }
+        }
+        .sidebar-content {
+            padding: 1.5rem;
+        }
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin: 0;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #4B5563;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        .sidebar-nav a:hover {
+            background-color: #F3F4F6;
+            color: #58508d;
+        }
+        .sidebar-nav a.active {
+            background-color: #EEF2FF;
+            color: #58508d;
+            font-weight: 600;
+        }
+        .sidebar-nav .level-1 {
+            padding-left: 0.75rem;
+            font-weight: 600;
+            color: #1E293B;
+        }
+        .sidebar-nav .level-2 {
+            padding-left: 1.5rem;
+            color: #4B5563;
+        }
+        .sidebar-nav .level-3 {
+            padding-left: 2.25rem;
+            color: #6B7280;
+            font-size: 0.8125rem;
+        }
+        .sidebar-nav .level-4 {
+            padding-left: 3rem;
+            color: #9CA3AF;
+            font-size: 0.75rem;
+        }
+        .main-content {
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-left: 0;
+        }
+        @media (min-width: 1025px) {
+            .main-content {
+                margin-left: 280px !important;
+                max-width: calc(100vw - 280px) !important;
+                width: calc(100% - 280px) !important;
+            }
+            .main-content.sidebar-collapsed {
+                margin-left: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .main-content.container {
+                max-width: calc(100vw - 280px) !important;
+            }
+            .main-content.sidebar-collapsed.container {
+                max-width: 100% !important;
+            }
+        }
+        .main-content.no-sidebar {
+            margin-left: 0 !important;
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+            }
+            .sidebar.expanded {
+                transform: translateX(0);
+            }
+            .sidebar-toggle.mobile {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 35;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+        @media (min-width: 1025px) {
+            .sidebar-overlay {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <button class="sidebar-toggle mobile" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+    <button class="sidebar-toggle desktop" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#pubsub-delivery-guarantees" class="level-1">Pub/Sub: Delivery Guarantees</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#pubsub-architecture" class="level-3">Pub/Sub Architecture</a></li>
+                <li><a href="#delivery-model" class="level-3">Delivery Model</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#message-delivery" class="level-3">Message Delivery</a></li>
+                <li><a href="#at-least-once-delivery" class="level-4">At-Least-Once Delivery</a></li>
+                <li><a href="#ordering-guarantees" class="level-4">Ordering Guarantees</a></li>
+                <li><a href="#dead-letter-queues" class="level-3">Dead Letter Queues</a></li>
+                <li><a href="#message-retention" class="level-3">Message Retention</a></li>
+                <li><a href="#performance-characteristics" class="level-3">Performance Characteristics</a></li>
+                <li><a href="#throughput" class="level-4">Throughput</a></li>
+                <li><a href="#latency" class="level-4">Latency</a></li>
+                <li><a href="#scalability" class="level-4">Scalability</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#pubsub-failures" class="level-3">Pub/Sub Failures</a></li>
+                <li><a href="#scenario-1-service-outage" class="level-4">Scenario 1: Service Outage</a></li>
+                <li><a href="#scenario-2-subscription-failure" class="level-4">Scenario 2: Subscription Failure</a></li>
+                <li><a href="#scenario-3-message-loss" class="level-4">Scenario 3: Message Loss</a></li>
+                <li><a href="#delivery-failures" class="level-3">Delivery Failures</a></li>
+                <li><a href="#scenario-1-duplicate-messages" class="level-4">Scenario 1: Duplicate Messages</a></li>
+                <li><a href="#scenario-2-out-of-order-messages" class="level-4">Scenario 2: Out-of-Order Messages</a></li>
+                <li><a href="#scenario-3-poison-messages" class="level-4">Scenario 3: Poison Messages</a></li>
+                <li><a href="#overload-scenarios" class="level-3">Overload Scenarios</a></li>
+                <li><a href="#10-normal-load" class="level-4">10× Normal Load</a></li>
+                <li><a href="#100-normal-load" class="level-4">100× Normal Load</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics-to-track" class="level-3">Metrics to Track</a></li>
+                <li><a href="#topic-metrics" class="level-4">Topic Metrics</a></li>
+                <li><a href="#subscription-metrics" class="level-4">Subscription Metrics</a></li>
+                <li><a href="#dead-letter-queue-metrics" class="level-4">Dead Letter Queue Metrics</a></li>
+                <li><a href="#logs" class="level-3">Logs</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#topic-changes" class="level-3">Topic Changes</a></li>
+                <li><a href="#creating-topics" class="level-4">Creating Topics</a></li>
+                <li><a href="#changing-retention" class="level-4">Changing Retention</a></li>
+                <li><a href="#subscription-changes" class="level-3">Subscription Changes</a></li>
+                <li><a href="#creating-subscriptions" class="level-4">Creating Subscriptions</a></li>
+                <li><a href="#changing-acknowledgment-deadline" class="level-4">Changing Acknowledgment Deadline</a></li>
+                <li><a href="#enabling-dead-letter-queue" class="level-4">Enabling Dead Letter Queue</a></li>
+                <li><a href="#security-boundaries" class="level-2">Security Boundaries</a></li>
+                <li><a href="#access-control" class="level-3">Access Control</a></li>
+                <li><a href="#encryption" class="level-3">Encryption</a></li>
+                <li><a href="#data-protection" class="level-3">Data Protection</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#delivery-at-least-once-vs-exactly-once" class="level-3">Delivery: At-Least-Once vs Exactly-Once</a></li>
+                <li><a href="#ordering-per-key-vs-global" class="level-3">Ordering: Per-Key vs Global</a></li>
+                <li><a href="#retention-short-vs-long" class="level-3">Retention: Short vs Long</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#capacity-planning" class="level-3">Capacity Planning</a></li>
+                <li><a href="#monitoring-debugging" class="level-3">Monitoring &amp; Debugging</a></li>
+                <li><a href="#incident-response" class="level-3">Incident Response</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#design-questions" class="level-3">Design Questions</a></li>
+                <li><a href="#scale-questions" class="level-3">Scale Questions</a></li>
+                <li><a href="#reliability-questions" class="level-3">Reliability Questions</a></li>
+                <li><a href="#operational-questions" class="level-3">Operational Questions</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="pubsub-delivery-guarantees">Pub/Sub: Delivery Guarantees</h1>
+<p><strong>One-line summary</strong>: Deep dive into Pub/Sub's at-least-once delivery, ordering guarantees, dead letter queues, and how to design for reliability and scale.</p>
+<p><strong>Prerequisites</strong>: <a href="../02-distributed-systems/queues-streams.html">Queues &amp; Streams</a>, <a href="../02-distributed-systems/idempotency-retries.html">Idempotency &amp; Retries</a>, Basic messaging concepts (publish-subscribe, message queues).</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="pubsub-architecture">Pub/Sub Architecture</h3>
+<div class="mermaid">
+flowchart TB
+Publisher1[Publisher 1] --> Topic[Topic]
+Publisher2[Publisher 2] --> Topic
+Topic --> Subscription1[Subscription 1]
+Topic --> Subscription2[Subscription 2]
+Topic --> Subscription3[Subscription 3]
+Subscription1 --> Subscriber1[Subscriber 1]
+Subscription2 --> Subscriber2[Subscriber 2]
+Subscription3 --> Subscriber3[Subscriber 3]
+Subscription1 --> DLQ1[Dead Letter Queue]
+Subscription2 --> DLQ2[Dead Letter Queue]
+style Topic fill:#99ccff
+style Subscription1 fill:#ffcc99
+style DLQ1 fill:#ff9999
+</div>
+<p><strong>Key insight</strong>: Pub/Sub provides at-least-once delivery with ordering guarantees. Understanding delivery semantics and how to handle duplicates is critical for building reliable systems.</p>
+<h3 id="delivery-model">Delivery Model</h3>
+<p><strong>Publish-Subscribe</strong>: Decoupled messaging pattern.</p>
+<p><strong>Components</strong>:
+- <strong>Topic</strong>: Channel for messages
+- <strong>Subscription</strong>: Consumer group for messages
+- <strong>Publisher</strong>: Sends messages to topic
+- <strong>Subscriber</strong>: Receives messages from subscription</p>
+<p><strong>Delivery guarantees</strong>:
+- <strong>At-least-once</strong>: Messages delivered at least once (may be duplicated)
+- <strong>Ordering</strong>: Messages ordered within ordering key
+- <strong>Durability</strong>: Messages persisted until acknowledged</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="message-delivery">Message Delivery</h3>
+<h4 id="at-least-once-delivery">At-Least-Once Delivery</h4>
+<p><strong>Guarantee</strong>: Messages delivered at least once.</p>
+<p><strong>How it works</strong>:
+1. <strong>Publish</strong>: Publisher sends message to topic
+2. <strong>Store</strong>: Message stored in topic
+3. <strong>Deliver</strong>: Message delivered to subscription
+4. <strong>Acknowledge</strong>: Subscriber acknowledges message
+5. <strong>Retry</strong>: If not acknowledged, message redelivered</p>
+<p><strong>Duplicates</strong>: Messages may be duplicated if:
+- <strong>Network failure</strong>: Acknowledgment lost
+- <strong>Subscriber failure</strong>: Subscriber crashes before acknowledging
+- <strong>Timeout</strong>: Acknowledgment timeout</p>
+<p><strong>Handling duplicates</strong>:
+- <strong>Idempotency</strong>: Make operations idempotent
+- <strong>Deduplication</strong>: Track processed message IDs
+- <strong>Idempotency keys</strong>: Use idempotency keys for deduplication</p>
+<h4 id="ordering-guarantees">Ordering Guarantees</h4>
+<p><strong>Ordering</strong>: Messages ordered within ordering key.</p>
+<p><strong>How it works</strong>:
+1. <strong>Ordering key</strong>: Publisher specifies ordering key
+2. <strong>Partitioning</strong>: Messages with same key go to same partition
+3. <strong>Delivery</strong>: Messages delivered in order per key
+4. <strong>Guarantee</strong>: Messages with same key delivered in order</p>
+<p><strong>Limitations</strong>:
+- <strong>Per-key ordering</strong>: Ordering only within same key
+- <strong>No global ordering</strong>: No global ordering across keys
+- <strong>Partition failures</strong>: Ordering may be affected by partition failures</p>
+<p><strong>Use cases</strong>:
+- <strong>User events</strong>: Order events per user
+- <strong>Entity updates</strong>: Order updates per entity
+- <strong>Time-series</strong>: Order events per time series</p>
+<h3 id="dead-letter-queues">Dead Letter Queues</h3>
+<p><strong>Dead Letter Queue (DLQ)</strong>: Queue for messages that cannot be processed.</p>
+<p><strong>Configuration</strong>:
+- <strong>Max delivery attempts</strong>: Maximum delivery attempts before DLQ
+- <strong>DLQ topic</strong>: Topic for dead letter messages
+- <strong>Retry policy</strong>: Retry policy for failed messages</p>
+<p><strong>Use cases</strong>:
+- <strong>Poison messages</strong>: Messages that always fail
+- <strong>Invalid data</strong>: Messages with invalid data
+- <strong>Processing errors</strong>: Messages that cause processing errors</p>
+<p><strong>Handling DLQ</strong>:
+- <strong>Monitor</strong>: Monitor DLQ for messages
+- <strong>Investigate</strong>: Investigate why messages failed
+- <strong>Fix</strong>: Fix processing logic or data
+- <strong>Reprocess</strong>: Reprocess messages from DLQ</p>
+<h3 id="message-retention">Message Retention</h3>
+<p><strong>Retention</strong>: How long messages are retained.</p>
+<p><strong>Configuration</strong>:
+- <strong>Retention duration</strong>: How long messages retained (default: 7 days)
+- <strong>Acknowledgment deadline</strong>: Time to acknowledge message (default: 10 seconds)</p>
+<p><strong>Use cases</strong>:
+- <strong>Replay</strong>: Replay messages for reprocessing
+- <strong>Debugging</strong>: Debug issues by replaying messages
+- <strong>Recovery</strong>: Recover from processing failures</p>
+<h3 id="performance-characteristics">Performance Characteristics</h3>
+<h4 id="throughput">Throughput</h4>
+<p><strong>Publish throughput</strong>:
+- <strong>Per topic</strong>: Millions of messages per second
+- <strong>Per publisher</strong>: Limited by network bandwidth
+- <strong>Scaling</strong>: Scales linearly with publishers</p>
+<p><strong>Subscribe throughput</strong>:
+- <strong>Per subscription</strong>: Millions of messages per second
+- <strong>Per subscriber</strong>: Limited by processing capacity
+- <strong>Scaling</strong>: Scales linearly with subscribers</p>
+<h4 id="latency">Latency</h4>
+<p><strong>Publish latency</strong>:
+- <strong>P95</strong>: &lt; 100ms
+- <strong>P99</strong>: &lt; 500ms
+- <strong>Factors</strong>: Network latency, topic load</p>
+<p><strong>Subscribe latency</strong>:
+- <strong>P95</strong>: &lt; 100ms
+- <strong>P99</strong>: &lt; 500ms
+- <strong>Factors</strong>: Network latency, subscription load</p>
+<h4 id="scalability">Scalability</h4>
+<p><strong>Limits</strong>:
+- <strong>Topics</strong>: Unlimited per project
+- <strong>Subscriptions</strong>: Unlimited per topic
+- <strong>Messages</strong>: Unlimited per topic
+- <strong>Throughput</strong>: Millions of messages per second</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="pubsub-failures">Pub/Sub Failures</h3>
+<h4 id="scenario-1-service-outage">Scenario 1: Service Outage</h4>
+<ul>
+<li><strong>Impact</strong>: Cannot publish or subscribe, messages queued</li>
+<li><strong>Blast radius</strong>: All topics and subscriptions</li>
+<li><strong>Detection</strong>: Publish/subscribe failures, API errors</li>
+<li><strong>Recovery</strong>: Service automatically recovers, messages delivered</li>
+<li><strong>Mitigation</strong>: GCP managed service (high availability)</li>
+</ul>
+<h4 id="scenario-2-subscription-failure">Scenario 2: Subscription Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Messages not delivered to subscription</li>
+<li><strong>Blast radius</strong>: Affected subscription</li>
+<li><strong>Detection</strong>: Messages not acknowledged, subscription errors</li>
+<li><strong>Recovery</strong>: </li>
+<li>Fix subscription configuration</li>
+<li>Restart subscribers</li>
+<li>Messages redelivered automatically</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Monitor subscription health</li>
+<li>Automatic retries</li>
+<li>Dead letter queues</li>
+</ul>
+<h4 id="scenario-3-message-loss">Scenario 3: Message Loss</h4>
+<ul>
+<li><strong>Impact</strong>: Messages lost, not delivered</li>
+<li><strong>Blast radius</strong>: Affected messages</li>
+<li><strong>Detection</strong>: Messages missing, processing gaps</li>
+<li><strong>Recovery</strong>: </li>
+<li>Replay messages from retention</li>
+<li>Republish messages if needed</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Message retention</li>
+<li>Acknowledgment tracking</li>
+<li>Monitoring</li>
+</ul>
+<h3 id="delivery-failures">Delivery Failures</h3>
+<h4 id="scenario-1-duplicate-messages">Scenario 1: Duplicate Messages</h4>
+<ul>
+<li><strong>Impact</strong>: Messages processed multiple times</li>
+<li><strong>Blast radius</strong>: Affected messages</li>
+<li><strong>Detection</strong>: Duplicate processing detected</li>
+<li><strong>Recovery</strong>: </li>
+<li>Implement idempotency</li>
+<li>Deduplicate messages</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Idempotent operations</li>
+<li>Message deduplication</li>
+<li>Idempotency keys</li>
+</ul>
+<h4 id="scenario-2-out-of-order-messages">Scenario 2: Out-of-Order Messages</h4>
+<ul>
+<li><strong>Impact</strong>: Messages processed out of order</li>
+<li><strong>Blast radius</strong>: Affected ordering keys</li>
+<li><strong>Detection</strong>: Order violations detected</li>
+<li><strong>Recovery</strong>: </li>
+<li>Use ordering keys correctly</li>
+<li>Handle out-of-order messages</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Proper ordering key usage</li>
+<li>Order-aware processing</li>
+<li>Monitoring</li>
+</ul>
+<h4 id="scenario-3-poison-messages">Scenario 3: Poison Messages</h4>
+<ul>
+<li><strong>Impact</strong>: Messages cause processing failures</li>
+<li><strong>Blast radius</strong>: Affected messages, may affect subscription</li>
+<li><strong>Detection</strong>: Repeated processing failures</li>
+<li><strong>Recovery</strong>: </li>
+<li>Move to dead letter queue</li>
+<li>Fix processing logic</li>
+<li>Reprocess messages</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Dead letter queues</li>
+<li>Error handling</li>
+<li>Monitoring</li>
+</ul>
+<h3 id="overload-scenarios">Overload Scenarios</h3>
+<h4 id="10-normal-load">10× Normal Load</h4>
+<ul>
+<li><strong>Latency</strong>: May increase, messages may queue</li>
+<li><strong>Throughput</strong>: Handles load, may need scaling</li>
+<li><strong>Delivery</strong>: Delivery guarantees maintained</li>
+</ul>
+<h4 id="100-normal-load">100× Normal Load</h4>
+<ul>
+<li><strong>Latency</strong>: Significantly increased, messages queue</li>
+<li><strong>Throughput</strong>: May need significant scaling</li>
+<li><strong>Delivery</strong>: Delivery guarantees maintained, but latency high</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics-to-track">Metrics to Track</h3>
+<h4 id="topic-metrics">Topic Metrics</h4>
+<ul>
+<li><strong>Publish rate</strong>: Messages published per second</li>
+<li><strong>Publish latency</strong>: Publish latency (P50/P95/P99)</li>
+<li><strong>Message count</strong>: Messages in topic</li>
+<li><strong>Message size</strong>: Average message size</li>
+</ul>
+<h4 id="subscription-metrics">Subscription Metrics</h4>
+<ul>
+<li><strong>Delivery rate</strong>: Messages delivered per second</li>
+<li><strong>Acknowledgment rate</strong>: Messages acknowledged per second</li>
+<li><strong>Backlog</strong>: Unacknowledged messages</li>
+<li><strong>Delivery latency</strong>: Delivery latency (P50/P95/P99)</li>
+</ul>
+<h4 id="dead-letter-queue-metrics">Dead Letter Queue Metrics</h4>
+<ul>
+<li><strong>DLQ message count</strong>: Messages in DLQ</li>
+<li><strong>DLQ rate</strong>: Messages sent to DLQ per second</li>
+<li><strong>DLQ age</strong>: Age of messages in DLQ</li>
+</ul>
+<h3 id="logs">Logs</h3>
+<p><strong>Pub/Sub logs</strong>:
+- Publish logs (if enabled)
+- Subscribe logs (if enabled)
+- Error logs
+- Admin activity logs</p>
+<h3 id="alerts">Alerts</h3>
+<p><strong>Critical alerts</strong>:
+- Service unavailable
+- High error rate (&gt; 1%)
+- High backlog (&gt; threshold)
+- DLQ message count high</p>
+<p><strong>Warning alerts</strong>:
+- High latency
+- Low acknowledgment rate
+- High duplicate rate
+- Subscription failures</p>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="topic-changes">Topic Changes</h3>
+<h4 id="creating-topics">Creating Topics</h4>
+<ul>
+<li><strong>Process</strong>: Create topic, configure settings</li>
+<li><strong>Risk</strong>: Low (additive change)</li>
+<li><strong>Rollback</strong>: Delete topic (if empty)</li>
+</ul>
+<h4 id="changing-retention">Changing Retention</h4>
+<ul>
+<li><strong>Process</strong>: Update retention duration, verify messages retained</li>
+<li><strong>Risk</strong>: Low (configuration change)</li>
+<li><strong>Rollback</strong>: Revert retention duration</li>
+</ul>
+<h3 id="subscription-changes">Subscription Changes</h3>
+<h4 id="creating-subscriptions">Creating Subscriptions</h4>
+<ul>
+<li><strong>Process</strong>: Create subscription, configure settings</li>
+<li><strong>Risk</strong>: Low (additive change)</li>
+<li><strong>Rollback</strong>: Delete subscription</li>
+</ul>
+<h4 id="changing-acknowledgment-deadline">Changing Acknowledgment Deadline</h4>
+<ul>
+<li><strong>Process</strong>: Update deadline, verify message delivery</li>
+<li><strong>Risk</strong>: Medium (may affect message delivery)</li>
+<li><strong>Rollback</strong>: Revert deadline</li>
+</ul>
+<h4 id="enabling-dead-letter-queue">Enabling Dead Letter Queue</h4>
+<ul>
+<li><strong>Process</strong>: Enable DLQ, configure DLQ topic</li>
+<li><strong>Risk</strong>: Low (additive change)</li>
+<li><strong>Rollback</strong>: Disable DLQ</li>
+</ul>
+<hr />
+<h2 id="security-boundaries">Security Boundaries</h2>
+<h3 id="access-control">Access Control</h3>
+<ul>
+<li><strong>IAM</strong>: Topic and subscription-level IAM policies</li>
+<li><strong>Service accounts</strong>: Use service accounts for authentication</li>
+<li><strong>VPC</strong>: VPC Service Controls for network isolation</li>
+</ul>
+<h3 id="encryption">Encryption</h3>
+<p><strong>At rest</strong>:
+- <strong>Google-managed keys</strong>: Default encryption
+- <strong>Customer-managed keys</strong>: Cloud KMS keys</p>
+<p><strong>In transit</strong>:
+- <strong>TLS</strong>: All connections use TLS
+- <strong>Encryption</strong>: Data encrypted in transit</p>
+<h3 id="data-protection">Data Protection</h3>
+<ul>
+<li><strong>Message retention</strong>: Configurable message retention</li>
+<li><strong>Audit logs</strong>: Audit all publish/subscribe access</li>
+<li><strong>Data privacy</strong>: Messages not accessible to Google</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="delivery-at-least-once-vs-exactly-once">Delivery: At-Least-Once vs Exactly-Once</h3>
+<p><strong>At-least-once</strong>:
+- <strong>Pros</strong>: Simpler, better performance
+- <strong>Cons</strong>: May have duplicates</p>
+<p><strong>Exactly-once</strong>:
+- <strong>Pros</strong>: No duplicates
+- <strong>Cons</strong>: More complex, lower performance</p>
+<h3 id="ordering-per-key-vs-global">Ordering: Per-Key vs Global</h3>
+<p><strong>Per-key ordering</strong>:
+- <strong>Pros</strong>: Simpler, better performance
+- <strong>Cons</strong>: No global ordering</p>
+<p><strong>Global ordering</strong>:
+- <strong>Pros</strong>: Global ordering
+- <strong>Cons</strong>: More complex, lower performance</p>
+<h3 id="retention-short-vs-long">Retention: Short vs Long</h3>
+<p><strong>Short retention</strong>:
+- <strong>Pros</strong>: Lower storage cost
+- <strong>Cons</strong>: Less time for replay</p>
+<p><strong>Long retention</strong>:
+- <strong>Pros</strong>: More time for replay
+- <strong>Cons</strong>: Higher storage cost</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<p><strong>Throughput</strong>:
+- <strong>Publish</strong>: Plan for publish throughput
+- <strong>Subscribe</strong>: Plan for subscribe throughput
+- <strong>Scaling</strong>: Plan for scaling</p>
+<p><strong>Storage</strong>:
+- <strong>Retention</strong>: Plan for message retention storage
+- <strong>Backlog</strong>: Plan for message backlog storage
+- <strong>Cost</strong>: Plan for storage costs</p>
+<h3 id="monitoring-debugging">Monitoring &amp; Debugging</h3>
+<p><strong>Monitor</strong>:
+- Publish/subscribe rates
+- Message backlog
+- Delivery latency
+- Error rates
+- Dead letter queues</p>
+<p><strong>Debug issues</strong>:
+1. Check topic/subscription health
+2. Check message delivery
+3. Check acknowledgment rate
+4. Check dead letter queues
+5. Review logs</p>
+<h3 id="incident-response">Incident Response</h3>
+<p><strong>Common incidents</strong>:
+- High backlog
+- Message delivery failures
+- Duplicate messages
+- Poison messages</p>
+<p><strong>Response</strong>:
+1. Check topic/subscription health
+2. Check message delivery
+3. Check acknowledgment rate
+4. Check dead letter queues
+5. Scale if needed
+6. Contact support if persistent</p>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>"What's the delivery guarantee?"</li>
+<li>"How is ordering handled?"</li>
+<li>"What's the dead letter queue strategy?"</li>
+<li>"How are duplicates handled?"</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>"What happens at 10× load?"</li>
+<li>"How does Pub/Sub scale?"</li>
+<li>"What are the throughput limits?"</li>
+<li>"How do you handle backpressure?"</li>
+</ul>
+<h3 id="reliability-questions">Reliability Questions</h3>
+<ul>
+<li>"How is at-least-once delivery handled?"</li>
+<li>"What's the idempotency strategy?"</li>
+<li>"How are poison messages handled?"</li>
+<li>"What's the retry strategy?"</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>"How do you monitor Pub/Sub?"</li>
+<li>"What alerts do you have?"</li>
+<li>"How do you debug delivery issues?"</li>
+<li>"What's the dead letter queue strategy?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/pubsub.html">Further Reading: Pub/Sub</a></p>
+<p><strong>Quick Links</strong>:
+- <a href="https://cloud.google.com/pubsub/docs">Pub/Sub Documentation</a>
+- <a href="https://cloud.google.com/pubsub/docs/overview">Delivery Guarantees</a>
+- <a href="https://cloud.google.com/pubsub/docs/ordering">Ordering Guarantees</a>
+- <a href="https://cloud.google.com/pubsub/docs/dead-letter-topics">Dead Letter Queues</a>
+- <a href="README.html">Back to GCP Core Building Blocks</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design messaging</strong>: Design a Pub/Sub architecture for an event-driven application. What topics? What subscriptions? How is ordering handled?</p>
+</li>
+<li>
+<p><strong>Handle duplicates</strong>: Your application receives duplicate messages. How do you handle them? What's the idempotency strategy?</p>
+</li>
+<li>
+<p><strong>Handle failures</strong>: Messages are failing to process. How do you handle failures? What's the dead letter queue strategy?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/pubsub-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const sidebarToggleMobile = document.getElementById('sidebarToggleMobile');
+            const sidebarToggleDesktop = document.getElementById('sidebarToggleDesktop');
+            const sidebarClose = document.getElementById('sidebarClose');
+            const mainContent = document.querySelector('.main-content');
+            
+            function isMobile() {
+                return window.innerWidth <= 1024;
+            }
+            
+            function toggleSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.toggle('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.toggle('active');
+                    }
+                    // Prevent body scroll when sidebar is open
+                    if (sidebar.classList.contains('expanded')) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.toggle('sidebar-collapsed');
+                    }
+                    // Update desktop toggle button position
+                    if (sidebarToggleDesktop) {
+                        if (sidebar.classList.contains('collapsed')) {
+                            sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                        } else {
+                            sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                        }
+                    }
+                }
+            }
+            
+            function closeSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.remove('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.remove('active');
+                    }
+                    document.body.style.overflow = '';
+                } else {
+                    sidebar.classList.add('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.add('sidebar-collapsed');
+                    }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                    }
+                }
+            }
+            
+            function openSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.add('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.add('active');
+                    }
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    sidebar.classList.remove('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.remove('sidebar-collapsed');
+                    }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                    }
+                }
+            }
+            
+            // Mobile toggle
+            if (sidebarToggleMobile) {
+                sidebarToggleMobile.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+            
+            // Desktop toggle
+            if (sidebarToggleDesktop) {
+                sidebarToggleDesktop.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+            
+            // Close button in sidebar
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            
+            // Overlay click to close on mobile
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (!isMobile()) {
+                        // On desktop, ensure sidebar state is correct
+                        if (sidebarOverlay) {
+                            sidebarOverlay.classList.remove('active');
+                        }
+                        document.body.style.overflow = '';
+                        // Ensure toggle button position matches sidebar state
+                        if (sidebarToggleDesktop && sidebar) {
+                            if (sidebar.classList.contains('collapsed')) {
+                                sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                            } else {
+                                sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                            }
+                        }
+                    } else {
+                        // On mobile, close sidebar if open
+                        closeSidebar();
+                    }
+                }, 250);
+            });
+            
+            // Initialize desktop toggle button position on load
+            if (!isMobile() && sidebarToggleDesktop && sidebar) {
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                }
+            }
+            
+            // Update active link on scroll
+            const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            function updateActiveLink() {
+                let current = '';
+                headings.forEach(heading => {
+                    const rect = heading.getBoundingClientRect();
+                    if (rect.top <= 100) {
+                        current = heading.id;
+                    }
+                });
+                
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+            
+            // Smooth scroll for sidebar links
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            const headerOffset = 80;
+                            const elementPosition = target.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                            
+                            // Close sidebar on mobile after click
+                            if (isMobile()) {
+                                closeSidebar();
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

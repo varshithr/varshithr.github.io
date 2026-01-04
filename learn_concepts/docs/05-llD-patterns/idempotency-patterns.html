@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idempotency Patterns</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+            color: #1E293B;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #58508d, #bc5090);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            margin-top: 2rem;
+        }
+        @media (max-width: 640px) {
+            .content {
+                padding: 1rem;
+                margin-top: 1rem;
+                border-radius: 0.5rem;
+            }
+            .content h1 {
+                font-size: 1.75rem;
+            }
+            .content h2 {
+                font-size: 1.5rem;
+            }
+            .content h3 {
+                font-size: 1.25rem;
+            }
+            .content pre {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+                overflow-x: auto;
+            }
+            .content table {
+                font-size: 0.875rem;
+            }
+        }
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #1E293B;
+        }
+        .content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1E293B;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+        }
+        .content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1E293B;
+        }
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1E293B;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            list-style: none;
+            display: flex;
+            align-items: flex-start;
+        }
+        .content ul li::before {
+            content: none;
+        }
+        .progress-checkbox {
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            accent-color: #58508d;
+        }
+        .progress-checkbox:checked {
+            accent-color: #58508d;
+        }
+        .content code {
+            background-color: #F3F4F6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background-color: #1E293B;
+            color: #F0F4F8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: inherit;
+        }
+        .content blockquote {
+            border-left: 4px solid #58508d;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4B5563;
+            font-style: italic;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        .content th {
+            background-color: #F3F4F6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid #E5E7EB;
+        }
+        .content td {
+            padding: 0.75rem;
+            border: 1px solid #E5E7EB;
+        }
+        .content tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .content a {
+            color: #58508d;
+            text-decoration: underline;
+        }
+        .content a:hover {
+            color: #bc5090;
+        }
+        .content hr {
+            border: none;
+            border-top: 2px solid #E5E7EB;
+            margin: 2rem 0;
+        }
+        .mermaid {
+            margin: 2rem 0;
+            text-align: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            height: calc(100vh - 80px);
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid #E5E7EB;
+            overflow-y: auto;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 40;
+            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        @media (min-width: 1025px) {
+            .sidebar {
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+            }
+        }
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid #E5E7EB;
+        }
+        .sidebar-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+        .sidebar-close:hover {
+            background-color: #F3F4F6;
+            color: #1E293B;
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 50;
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+            transition: left 0.3s ease, background-color 0.2s ease;
+        }
+        .sidebar-toggle:hover {
+            background-color: #F3F4F6;
+        }
+        .sidebar-toggle.desktop {
+            display: none;
+        }
+        @media (min-width: 1025px) {
+            .sidebar-toggle.desktop {
+                display: block;
+                top: 90px;
+                left: 300px;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .sidebar-toggle.desktop.sidebar-collapsed {
+                left: 20px;
+            }
+        }
+        @media (max-width: 1024px) {
+            .sidebar-toggle.desktop {
+                display: none !important;
+            }
+            .sidebar-toggle.mobile {
+                top: 85px;
+                left: 15px;
+            }
+        }
+        .sidebar-content {
+            padding: 1.5rem;
+        }
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin: 0;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #4B5563;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        .sidebar-nav a:hover {
+            background-color: #F3F4F6;
+            color: #58508d;
+        }
+        .sidebar-nav a.active {
+            background-color: #EEF2FF;
+            color: #58508d;
+            font-weight: 600;
+        }
+        .sidebar-nav .level-1 {
+            padding-left: 0.75rem;
+            font-weight: 600;
+            color: #1E293B;
+        }
+        .sidebar-nav .level-2 {
+            padding-left: 1.5rem;
+            color: #4B5563;
+        }
+        .sidebar-nav .level-3 {
+            padding-left: 2.25rem;
+            color: #6B7280;
+            font-size: 0.8125rem;
+        }
+        .sidebar-nav .level-4 {
+            padding-left: 3rem;
+            color: #9CA3AF;
+            font-size: 0.75rem;
+        }
+        .main-content {
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-left: 0;
+        }
+        @media (min-width: 1025px) {
+            .main-content {
+                margin-left: 280px !important;
+                max-width: calc(100vw - 280px) !important;
+                width: calc(100% - 280px) !important;
+            }
+            .main-content.sidebar-collapsed {
+                margin-left: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .main-content.container {
+                max-width: calc(100vw - 280px) !important;
+            }
+            .main-content.sidebar-collapsed.container {
+                max-width: 100% !important;
+            }
+        }
+        .main-content.no-sidebar {
+            margin-left: 0 !important;
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+            }
+            .sidebar.expanded {
+                transform: translateX(0);
+            }
+            .sidebar-toggle.mobile {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 35;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+        @media (min-width: 1025px) {
+            .sidebar-overlay {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="../../../index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Data Engineering Concepts</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <button class="sidebar-toggle mobile" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+    <button class="sidebar-toggle desktop" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#idempotency-patterns" class="level-1">Idempotency Patterns</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#idempotency-patterns_1" class="level-3">Idempotency Patterns</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#idempotency-key-pattern" class="level-3">Idempotency Key Pattern</a></li>
+                <li><a href="#deduplication-pattern" class="level-3">Deduplication Pattern</a></li>
+                <li><a href="#idempotent-operations" class="level-3">Idempotent Operations</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#idempotency-failures" class="level-3">Idempotency Failures</a></li>
+                <li><a href="#scenario-1-key-collision" class="level-4">Scenario 1: Key Collision</a></li>
+                <li><a href="#scenario-2-key-expiry" class="level-4">Scenario 2: Key Expiry</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics" class="level-3">Metrics</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#idempotency-changes" class="level-3">Idempotency Changes</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#in-memory-vs-persistent-storage" class="level-3">In-Memory vs Persistent Storage</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#best-practices" class="level-3">Best Practices</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="content">
+<h1 id="idempotency-patterns">Idempotency Patterns</h1>
+<p><strong>One-line summary</strong>: How to implement idempotency patterns to make operations safe to retry.</p>
+<p><strong>Prerequisites</strong>: <a href="../02-distributed-systems/idempotency-retries.html">Idempotency &amp; Retries</a>, understanding of distributed systems.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="idempotency-patterns_1">Idempotency Patterns</h3>
+<p><strong>Idempotency</strong>: Performing operation multiple times has same effect as once.</p>
+<p><strong>Patterns</strong>:
+- <strong>Idempotency keys</strong>: Unique keys for operations
+- <strong>Deduplication</strong>: Track processed operations
+- <strong>Idempotent operations</strong>: Design operations to be idempotent</p>
+<div class="mermaid">
+graph LR
+Request[Request] --> Key[Idempotency Key]
+Key --> Check{Processed?}
+Check -->|Yes| Return[Return Cached Result]
+Check -->|No| Process[Process & Cache]
+style Key fill:#99ccff
+style Check fill:#ffcc99
+</div>
+<p><strong>Key insight</strong>: Idempotency patterns make operations safe to retry by ensuring same result.</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="idempotency-key-pattern">Idempotency Key Pattern</h3>
+<p><strong>How it works</strong>:
+1. <strong>Generate key</strong>: Client generates unique idempotency key
+2. <strong>Send request</strong>: Include key in request
+3. <strong>Check key</strong>: Server checks if key processed
+4. <strong>Process or return</strong>: Process if new, return cached if duplicate</p>
+<p><strong>Key generation</strong>:
+- <strong>UUID</strong>: Generate UUID for each operation
+- <strong>Hash</strong>: Hash of operation + context
+- <strong>Client ID + sequence</strong>: Client ID + sequence number</p>
+<h3 id="deduplication-pattern">Deduplication Pattern</h3>
+<p><strong>How it works</strong>:
+1. <strong>Store keys</strong>: Store processed idempotency keys
+2. <strong>Check before process</strong>: Check key before processing
+3. <strong>Store after process</strong>: Store key after processing
+4. <strong>TTL</strong>: Expire keys after TTL</p>
+<p><strong>Storage</strong>:
+- <strong>In-memory</strong>: Fast, but lost on restart
+- <strong>Database</strong>: Persistent, but slower
+- <strong>Distributed cache</strong>: Fast and distributed</p>
+<h3 id="idempotent-operations">Idempotent Operations</h3>
+<p><strong>Design principles</strong>:
+- <strong>Upsert</strong>: Use upsert instead of insert
+- <strong>Set operations</strong>: Use set instead of increment
+- <strong>Idempotent APIs</strong>: Design APIs to be idempotent</p>
+<p><strong>Examples</strong>:
+- <strong>PUT</strong>: Idempotent (replaces resource)
+- <strong>DELETE</strong>: Idempotent (no-op if already deleted)
+- <strong>POST</strong>: Not idempotent (creates new resource)</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="idempotency-failures">Idempotency Failures</h3>
+<h4 id="scenario-1-key-collision">Scenario 1: Key Collision</h4>
+<ul>
+<li><strong>Impact</strong>: Operations deduplicated incorrectly</li>
+<li><strong>Blast radius</strong>: Affected operations</li>
+<li><strong>Detection</strong>: Operations not processed</li>
+<li><strong>Recovery</strong>: Use better key generation</li>
+<li><strong>Mitigation</strong>: Use UUIDs, include context in keys</li>
+</ul>
+<h4 id="scenario-2-key-expiry">Scenario 2: Key Expiry</h4>
+<ul>
+<li><strong>Impact</strong>: Operations processed multiple times</li>
+<li><strong>Blast radius</strong>: Operations after expiry</li>
+<li><strong>Detection</strong>: Duplicate processing</li>
+<li><strong>Recovery</strong>: Increase TTL, fix key storage</li>
+<li><strong>Mitigation</strong>: Appropriate TTL, persistent storage</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics">Metrics</h3>
+<ul>
+<li><strong>Idempotency key usage</strong>: Keys generated per second</li>
+<li><strong>Deduplication rate</strong>: Duplicate requests detected</li>
+<li><strong>Key storage size</strong>: Size of key storage</li>
+<li><strong>Key expiry rate</strong>: Keys expired per second</li>
+</ul>
+<h3 id="alerts">Alerts</h3>
+<ul>
+<li>High key collision rate</li>
+<li>Key storage full</li>
+<li>High key expiry rate</li>
+<li>Deduplication failures</li>
+</ul>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="idempotency-changes">Idempotency Changes</h3>
+<ul>
+<li><strong>Process</strong>: Update idempotency logic, verify behavior</li>
+<li><strong>Risk</strong>: Medium (may affect operation processing)</li>
+<li><strong>Rollback</strong>: Revert changes</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="in-memory-vs-persistent-storage">In-Memory vs Persistent Storage</h3>
+<p><strong>In-memory</strong>:
+- <strong>Pros</strong>: Fast, low latency
+- <strong>Cons</strong>: Lost on restart, not distributed</p>
+<p><strong>Persistent storage</strong>:
+- <strong>Pros</strong>: Survives restarts, distributed
+- <strong>Cons</strong>: Slower, higher latency</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="best-practices">Best Practices</h3>
+<ol>
+<li><strong>Use UUIDs</strong>: Generate unique keys</li>
+<li><strong>Store keys</strong>: Store processed keys</li>
+<li><strong>Set TTL</strong>: Expire keys appropriately</li>
+<li><strong>Monitor</strong>: Monitor key usage and collisions</li>
+</ol>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<ul>
+<li>"How is idempotency implemented?"</li>
+<li>"What keys are used?"</li>
+<li>"How are duplicates detected?"</li>
+<li>"What's the TTL policy?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/idempotency-patterns.html">Further Reading: Idempotency Patterns</a></p>
+<p><strong>Quick Links</strong>:
+- <a href="../02-distributed-systems/idempotency-retries.html">Idempotency &amp; Retries</a>
+- <a href="../03-gcp-core-building-blocks/pubsub.html">Pub/Sub: Delivery Guarantees</a>
+- <a href="README.html">Back to LLD Patterns</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Implement idempotency</strong>: Implement idempotency for an API. What pattern?</p>
+</li>
+<li>
+<p><strong>Handle duplicates</strong>: Your system receives duplicate requests. How do you handle them?</p>
+</li>
+<li>
+<p><strong>Design keys</strong>: Design idempotency keys for a payment system. What's the format?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/idempotency-patterns-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const sidebarToggleMobile = document.getElementById('sidebarToggleMobile');
+            const sidebarToggleDesktop = document.getElementById('sidebarToggleDesktop');
+            const sidebarClose = document.getElementById('sidebarClose');
+            const mainContent = document.querySelector('.main-content');
+            
+            function isMobile() {
+                return window.innerWidth <= 1024;
+            }
+            
+            function toggleSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.toggle('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.toggle('active');
+                    }
+                    // Prevent body scroll when sidebar is open
+                    if (sidebar.classList.contains('expanded')) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.toggle('sidebar-collapsed');
+                    }
+                    // Update desktop toggle button position
+                    if (sidebarToggleDesktop) {
+                        if (sidebar.classList.contains('collapsed')) {
+                            sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                        } else {
+                            sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                        }
+                    }
+                }
+            }
+            
+            function closeSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.remove('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.remove('active');
+                    }
+                    document.body.style.overflow = '';
+                } else {
+                    sidebar.classList.add('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.add('sidebar-collapsed');
+                    }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                    }
+                }
+            }
+            
+            function openSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.add('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.add('active');
+                    }
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    sidebar.classList.remove('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.remove('sidebar-collapsed');
+                    }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                    }
+                }
+            }
+            
+            // Mobile toggle
+            if (sidebarToggleMobile) {
+                sidebarToggleMobile.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+            
+            // Desktop toggle
+            if (sidebarToggleDesktop) {
+                sidebarToggleDesktop.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+            
+            // Close button in sidebar
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            
+            // Overlay click to close on mobile
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (!isMobile()) {
+                        // On desktop, ensure sidebar state is correct
+                        if (sidebarOverlay) {
+                            sidebarOverlay.classList.remove('active');
+                        }
+                        document.body.style.overflow = '';
+                        // Ensure toggle button position matches sidebar state
+                        if (sidebarToggleDesktop && sidebar) {
+                            if (sidebar.classList.contains('collapsed')) {
+                                sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                            } else {
+                                sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                            }
+                        }
+                    } else {
+                        // On mobile, close sidebar if open
+                        closeSidebar();
+                    }
+                }, 250);
+            });
+            
+            // Initialize desktop toggle button position on load
+            if (!isMobile() && sidebarToggleDesktop && sidebar) {
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                }
+            }
+            
+            // Update active link on scroll
+            const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            function updateActiveLink() {
+                let current = '';
+                headings.forEach(heading => {
+                    const rect = heading.getBoundingClientRect();
+                    if (rect.top <= 100) {
+                        current = heading.id;
+                    }
+                });
+                
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+            
+            // Smooth scroll for sidebar links
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            const headerOffset = 80;
+                            const elementPosition = target.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                            
+                            // Close sidebar on mobile after click
+                            if (isMobile()) {
+                                closeSidebar();
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

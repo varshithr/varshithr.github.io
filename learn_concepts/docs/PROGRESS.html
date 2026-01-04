@@ -185,12 +185,17 @@
             background-color: white;
             border-right: 1px solid #E5E7EB;
             overflow-y: auto;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 40;
             box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
         }
         .sidebar.collapsed {
             transform: translateX(-100%);
+        }
+        @media (min-width: 1025px) {
+            .sidebar {
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+            }
         }
         .sidebar-header {
             display: flex;
@@ -227,14 +232,24 @@
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: none;
+            transition: left 0.3s ease, background-color 0.2s ease;
         }
         .sidebar-toggle:hover {
             background-color: #F3F4F6;
         }
         .sidebar-toggle.desktop {
-            display: block;
-            top: 90px;
-            left: 300px;
+            display: none;
+        }
+        @media (min-width: 1025px) {
+            .sidebar-toggle.desktop {
+                display: block;
+                top: 90px;
+                left: 300px;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .sidebar-toggle.desktop.sidebar-collapsed {
+                left: 20px;
+            }
         }
         @media (max-width: 1024px) {
             .sidebar-toggle.desktop {
@@ -300,12 +315,29 @@
             font-size: 0.75rem;
         }
         .main-content {
-            margin-left: 280px;
-            transition: margin-left 0.3s ease;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-left: 0;
         }
-        .main-content.no-sidebar,
-        .main-content.sidebar-collapsed {
-            margin-left: 0;
+        @media (min-width: 1025px) {
+            .main-content {
+                margin-left: 280px !important;
+                max-width: calc(100vw - 280px) !important;
+                width: calc(100% - 280px) !important;
+            }
+            .main-content.sidebar-collapsed {
+                margin-left: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .main-content.container {
+                max-width: calc(100vw - 280px) !important;
+            }
+            .main-content.sidebar-collapsed.container {
+                max-width: 100% !important;
+            }
+        }
+        .main-content.no-sidebar {
+            margin-left: 0 !important;
         }
         @media (max-width: 1024px) {
             .sidebar {
@@ -408,27 +440,27 @@
 <hr />
 <h2 id="phase-1-distributed-systems-building-blocks">Phase 1: Distributed Systems Building Blocks</h2>
 <ul>
-<li><input type="checkbox" class="progress-checkbox" id="progress-71ccda5803c8" data-progress-item data-link-url="02-distributed-systems/time-ordering-causality.md" > <a href="02-distributed-systems/time-ordering-causality.md">Time, Ordering, and Causality</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-511cbf399edb" data-progress-item data-link-url="02-distributed-systems/consensus-leases.md" > <a href="02-distributed-systems/consensus-leases.md">Consensus &amp; Leases</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-51e94be8bc07" data-progress-item data-link-url="02-distributed-systems/replication.md" > <a href="02-distributed-systems/replication.md">Replication Strategies</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-fb8b5f1b853f" data-progress-item data-link-url="02-distributed-systems/sharding-partitioning.md" > <a href="02-distributed-systems/sharding-partitioning.md">Sharding &amp; Partitioning</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-71ccda5803c8" data-progress-item data-link-url="02-distributed-systems/time-ordering-causality.md" > <a href="02-distributed-systems/time-ordering-causality.html">Time, Ordering, and Causality</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-511cbf399edb" data-progress-item data-link-url="02-distributed-systems/consensus-leases.md" > <a href="02-distributed-systems/consensus-leases.html">Consensus &amp; Leases</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-51e94be8bc07" data-progress-item data-link-url="02-distributed-systems/replication.md" > <a href="02-distributed-systems/replication.html">Replication Strategies</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-fb8b5f1b853f" data-progress-item data-link-url="02-distributed-systems/sharding-partitioning.md" > <a href="02-distributed-systems/sharding-partitioning.html">Sharding &amp; Partitioning</a></li>
 <li><input type="checkbox" class="progress-checkbox" id="progress-4a7a6baabbf2" data-progress-item data-link-url="02-distributed-systems/overload-backpressure.md" > <a href="02-distributed-systems/overload-backpressure.html">Overload &amp; Backpressure</a></li>
 <li><input type="checkbox" class="progress-checkbox" id="progress-62928773cdf6" data-progress-item data-link-url="02-distributed-systems/idempotency-retries.md" > <a href="02-distributed-systems/idempotency-retries.html">Idempotency &amp; Retry Semantics</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-431dcbeadc9d" data-progress-item data-link-url="02-distributed-systems/queues-streams.md" > <a href="02-distributed-systems/queues-streams.md">Queues &amp; Streams</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-431dcbeadc9d" data-progress-item data-link-url="02-distributed-systems/queues-streams.md" > <a href="02-distributed-systems/queues-streams.html">Queues &amp; Streams</a></li>
 </ul>
 <p><strong>Milestone</strong>: Understand consensus vs leases, handle overload gracefully, know replication tradeoffs.</p>
 <hr />
 <h2 id="phase-2-gcp-core-building-blocks">Phase 2: GCP Core Building Blocks</h2>
 <ul>
 <li><input type="checkbox" class="progress-checkbox" id="progress-be01c4906536" data-progress-item data-link-url="03-gcp-core-building-blocks/vpc-lb-dns.md" > <a href="03-gcp-core-building-blocks/vpc-lb-dns.html">VPC, Load Balancing &amp; DNS</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-60ba286898c8" data-progress-item data-link-url="03-gcp-core-building-blocks/gke-internals.md" > <a href="03-gcp-core-building-blocks/gke-internals.md">GKE Control Plane &amp; Data Plane</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-60ba286898c8" data-progress-item data-link-url="03-gcp-core-building-blocks/gke-internals.md" > <a href="03-gcp-core-building-blocks/gke-internals.html">GKE Control Plane &amp; Data Plane</a></li>
 <li><input type="checkbox" class="progress-checkbox" id="progress-45ae1a970504" data-progress-item data-link-url="03-gcp-core-building-blocks/iam-evaluation.md" > <a href="03-gcp-core-building-blocks/iam-evaluation.html">IAM Evaluation Model</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-438a22f00575" data-progress-item data-link-url="03-gcp-core-building-blocks/cloud-storage.md" > <a href="03-gcp-core-building-blocks/cloud-storage.md">Cloud Storage Deep Dive</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-cb892e678b07" data-progress-item data-link-url="03-gcp-core-building-blocks/spanner.md" > <a href="03-gcp-core-building-blocks/spanner.md">Spanner: Consistency &amp; Performance</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-9a926719f8d4" data-progress-item data-link-url="03-gcp-core-building-blocks/bigtable.md" > <a href="03-gcp-core-building-blocks/bigtable.md">Bigtable: Design &amp; Tradeoffs</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-192b4c11fcd4" data-progress-item data-link-url="03-gcp-core-building-blocks/bigquery.md" > <a href="03-gcp-core-building-blocks/bigquery.md">BigQuery Architecture</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-9e583936ec2e" data-progress-item data-link-url="03-gcp-core-building-blocks/pubsub.md" > <a href="03-gcp-core-building-blocks/pubsub.md">Pub/Sub: Delivery Guarantees</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-43d6ce5f423d" data-progress-item data-link-url="03-gcp-core-building-blocks/kms-secrets.md" > <a href="03-gcp-core-building-blocks/kms-secrets.md">Cloud KMS &amp; Secret Management</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-438a22f00575" data-progress-item data-link-url="03-gcp-core-building-blocks/cloud-storage.md" > <a href="03-gcp-core-building-blocks/cloud-storage.html">Cloud Storage Deep Dive</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-cb892e678b07" data-progress-item data-link-url="03-gcp-core-building-blocks/spanner.md" > <a href="03-gcp-core-building-blocks/spanner.html">Spanner: Consistency &amp; Performance</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-9a926719f8d4" data-progress-item data-link-url="03-gcp-core-building-blocks/bigtable.md" > <a href="03-gcp-core-building-blocks/bigtable.html">Bigtable: Design &amp; Tradeoffs</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-192b4c11fcd4" data-progress-item data-link-url="03-gcp-core-building-blocks/bigquery.md" > <a href="03-gcp-core-building-blocks/bigquery.html">BigQuery Architecture</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-9e583936ec2e" data-progress-item data-link-url="03-gcp-core-building-blocks/pubsub.md" > <a href="03-gcp-core-building-blocks/pubsub.html">Pub/Sub: Delivery Guarantees</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-43d6ce5f423d" data-progress-item data-link-url="03-gcp-core-building-blocks/kms-secrets.md" > <a href="03-gcp-core-building-blocks/kms-secrets.html">Cloud KMS &amp; Secret Management</a></li>
 </ul>
 <p><strong>Milestone</strong>: Can design systems using GCP primitives, understand failure modes, make tradeoffs.</p>
 <hr />
@@ -436,19 +468,19 @@
 <ul>
 <li><input type="checkbox" class="progress-checkbox" id="progress-90a2ac30e232" data-progress-item data-link-url="04-reliability-sre/sli-slo-error-budget.md" > <a href="04-reliability-sre/sli-slo-error-budget.html">SLIs, SLOs &amp; Error Budgets</a></li>
 <li><input type="checkbox" class="progress-checkbox" id="progress-a6bfb3efc79c" data-progress-item data-link-url="04-reliability-sre/prr-checklist.md" > <a href="04-reliability-sre/prr-checklist.html">Production Readiness Reviews (PRR)</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-5df264005dc8" data-progress-item data-link-url="04-reliability-sre/incident-response.md" > <a href="04-reliability-sre/incident-response.md">Incident Response &amp; Postmortems</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-b3c220cc2b20" data-progress-item data-link-url="04-reliability-sre/capacity-planning.md" > <a href="04-reliability-sre/capacity-planning.md">Capacity Planning &amp; Forecasting</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-52421cf7911f" data-progress-item data-link-url="04-reliability-sre/load-shedding.md" > <a href="04-reliability-sre/load-shedding.md">Load Shedding &amp; Circuit Breakers</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-bb31a67735e6" data-progress-item data-link-url="04-reliability-sre/canary-rollouts.md" > <a href="04-reliability-sre/canary-rollouts.md">Canary Deployments &amp; Rollouts</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-8ed28140bcc5" data-progress-item data-link-url="04-reliability-sre/testing-for-failure.md" > <a href="04-reliability-sre/testing-for-failure.md">Testing for Failure</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-5df264005dc8" data-progress-item data-link-url="04-reliability-sre/incident-response.md" > <a href="04-reliability-sre/incident-response.html">Incident Response &amp; Postmortems</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-b3c220cc2b20" data-progress-item data-link-url="04-reliability-sre/capacity-planning.md" > <a href="04-reliability-sre/capacity-planning.html">Capacity Planning &amp; Forecasting</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-52421cf7911f" data-progress-item data-link-url="04-reliability-sre/load-shedding.md" > <a href="04-reliability-sre/load-shedding.html">Load Shedding &amp; Circuit Breakers</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-bb31a67735e6" data-progress-item data-link-url="04-reliability-sre/canary-rollouts.md" > <a href="04-reliability-sre/canary-rollouts.html">Canary Deployments &amp; Rollouts</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-8ed28140bcc5" data-progress-item data-link-url="04-reliability-sre/testing-for-failure.md" > <a href="04-reliability-sre/testing-for-failure.html">Testing for Failure</a></li>
 </ul>
 <p><strong>Milestone</strong>: Can define SLIs/SLOs, run PRRs, respond to incidents, plan capacity.</p>
 <hr />
 <h2 id="phase-4-case-studies-end-to-end-design">Phase 4: Case Studies &amp; End-to-End Design</h2>
 <ul>
 <li><input type="checkbox" class="progress-checkbox" id="progress-21a69cd56161" data-progress-item data-link-url="06-case-studies/multi-region-api.md" > <a href="06-case-studies/multi-region-api.html">Multi-Region API on GCP</a></li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-f1ff0ea06067" data-progress-item data-link-url="06-case-studies/data-pipeline.md" > <a href="06-case-studies/data-pipeline.md">High-Throughput Data Pipeline</a> (coming soon)</li>
-<li><input type="checkbox" class="progress-checkbox" id="progress-9e31c15c8dff" data-progress-item data-link-url="06-case-studies/cdn-system.md" > <a href="06-case-studies/cdn-system.md">Global Content Delivery System</a> (coming soon)</li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-f1ff0ea06067" data-progress-item data-link-url="06-case-studies/data-pipeline.md" > <a href="06-case-studies/data-pipeline.html">High-Throughput Data Pipeline</a> (coming soon)</li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-9e31c15c8dff" data-progress-item data-link-url="06-case-studies/cdn-system.md" > <a href="06-case-studies/cdn-system.html">Global Content Delivery System</a> (coming soon)</li>
 </ul>
 <p><strong>Milestone</strong>: Can design, implement, and operate production systems with SLOs and playbooks.</p>
 <hr />
@@ -494,6 +526,14 @@
                     if (mainContent) {
                         mainContent.classList.toggle('sidebar-collapsed');
                     }
+                    // Update desktop toggle button position
+                    if (sidebarToggleDesktop) {
+                        if (sidebar.classList.contains('collapsed')) {
+                            sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                        } else {
+                            sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                        }
+                    }
                 }
             }
             
@@ -509,6 +549,9 @@
                     if (mainContent) {
                         mainContent.classList.add('sidebar-collapsed');
                     }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                    }
                 }
             }
             
@@ -523,6 +566,9 @@
                     sidebar.classList.remove('collapsed');
                     if (mainContent) {
                         mainContent.classList.remove('sidebar-collapsed');
+                    }
+                    if (sidebarToggleDesktop) {
+                        sidebarToggleDesktop.classList.remove('sidebar-collapsed');
                     }
                 }
             }
@@ -570,12 +616,27 @@
                             sidebarOverlay.classList.remove('active');
                         }
                         document.body.style.overflow = '';
+                        // Ensure toggle button position matches sidebar state
+                        if (sidebarToggleDesktop && sidebar) {
+                            if (sidebar.classList.contains('collapsed')) {
+                                sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                            } else {
+                                sidebarToggleDesktop.classList.remove('sidebar-collapsed');
+                            }
+                        }
                     } else {
                         // On mobile, close sidebar if open
                         closeSidebar();
                     }
                 }, 250);
             });
+            
+            // Initialize desktop toggle button position on load
+            if (!isMobile() && sidebarToggleDesktop && sidebar) {
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebarToggleDesktop.classList.add('sidebar-collapsed');
+                }
+            }
             
             // Update active link on scroll
             const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');

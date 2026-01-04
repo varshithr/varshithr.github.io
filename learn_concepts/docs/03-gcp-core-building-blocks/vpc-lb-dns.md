@@ -500,5 +500,5 @@ Trace:
 
 3. **DNS strategy**: You're deploying a new service. What DNS TTL do you use? How do you handle DNS updates during deployments?
 
-**Answer Key**: [View Answers](../../exercises/answers/vpc-lb-dns-answers.md)
+**Answer Key**: [View Answers](../exercises/answers/vpc-lb-dns-answers.md)
 

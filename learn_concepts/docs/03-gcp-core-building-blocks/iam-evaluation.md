@@ -413,5 +413,5 @@ Log events:
 
 3. **Debug access issue**: A service is getting "permission denied" errors accessing a bucket. How do you debug this?
 
-**Answer Key**: [View Answers](../../exercises/answers/iam-evaluation-answers.md)
+**Answer Key**: [View Answers](../exercises/answers/iam-evaluation-answers.md)
 

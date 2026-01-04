@@ -364,5 +364,5 @@ graph TD
 
 3. **Design for PRR**: Design a system that passes PRR. What do you include?
 
-**Answer Key**: [View Answers](../../exercises/answers/prr-checklist-answers.md)
+**Answer Key**: [View Answers](../exercises/answers/prr-checklist-answers.md)
 
