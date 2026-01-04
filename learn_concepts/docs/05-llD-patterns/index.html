@@ -27,6 +27,30 @@
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
             margin-top: 2rem;
         }
+        @media (max-width: 640px) {
+            .content {
+                padding: 1rem;
+                margin-top: 1rem;
+                border-radius: 0.5rem;
+            }
+            .content h1 {
+                font-size: 1.75rem;
+            }
+            .content h2 {
+                font-size: 1.5rem;
+            }
+            .content h3 {
+                font-size: 1.25rem;
+            }
+            .content pre {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+                overflow-x: auto;
+            }
+            .content table {
+                font-size: 0.875rem;
+            }
+        }
         .content h1 {
             font-size: 2.5rem;
             font-weight: 900;
@@ -67,6 +91,24 @@
         .content li {
             margin-bottom: 0.5rem;
             line-height: 1.6;
+            list-style: none;
+            display: flex;
+            align-items: flex-start;
+        }
+        .content ul li::before {
+            content: none;
+        }
+        .progress-checkbox {
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            accent-color: #58508d;
+        }
+        .progress-checkbox:checked {
+            accent-color: #58508d;
         }
         .content code {
             background-color: #F3F4F6;
@@ -196,7 +238,11 @@
         }
         @media (max-width: 1024px) {
             .sidebar-toggle.desktop {
-                display: none;
+                display: none !important;
+            }
+            .sidebar-toggle.mobile {
+                top: 85px;
+                left: 15px;
             }
         }
         .sidebar-content {
@@ -254,16 +300,18 @@
             font-size: 0.75rem;
         }
         .main-content {
-            margin-left: 280px !important;
+            margin-left: 280px;
             transition: margin-left 0.3s ease;
         }
         .main-content.no-sidebar,
         .main-content.sidebar-collapsed {
-            margin-left: 0 !important;
+            margin-left: 0;
         }
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: 280px;
+                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
             }
             .sidebar.expanded {
                 transform: translateX(0);
@@ -272,7 +320,29 @@
                 display: block;
             }
             .main-content {
-                margin-left: 0;
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 35;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+        @media (min-width: 1025px) {
+            .sidebar-overlay {
+                display: none !important;
             }
         }
     </style>
@@ -281,14 +351,14 @@
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../../index.html" class="flex items-center">
+                <a href="../../../index.html" class="flex items-center">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     <span class="gradient-text">Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
-                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
@@ -302,7 +372,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
     </button>
-        <aside class="sidebar" id="sidebar">
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-title">Table of Contents</div>
             <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
@@ -391,62 +462,114 @@
         // Sidebar toggle functionality
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
             const sidebarToggleMobile = document.getElementById('sidebarToggleMobile');
             const sidebarToggleDesktop = document.getElementById('sidebarToggleDesktop');
             const sidebarClose = document.getElementById('sidebarClose');
             const mainContent = document.querySelector('.main-content');
             
+            function isMobile() {
+                return window.innerWidth <= 1024;
+            }
+            
             function toggleSidebar() {
-                sidebar.classList.toggle('collapsed');
-                if (mainContent) {
-                    mainContent.classList.toggle('sidebar-collapsed');
+                if (isMobile()) {
+                    sidebar.classList.toggle('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.toggle('active');
+                    }
+                    // Prevent body scroll when sidebar is open
+                    if (sidebar.classList.contains('expanded')) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.toggle('sidebar-collapsed');
+                    }
                 }
             }
             
-            function expandSidebar() {
-                sidebar.classList.add('expanded');
+            function closeSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.remove('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.remove('active');
+                    }
+                    document.body.style.overflow = '';
+                } else {
+                    sidebar.classList.add('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.add('sidebar-collapsed');
+                    }
+                }
             }
             
-            function collapseSidebar() {
-                sidebar.classList.remove('expanded');
-                sidebar.classList.add('collapsed');
-                if (mainContent) {
-                    mainContent.classList.add('sidebar-collapsed');
+            function openSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.add('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.add('active');
+                    }
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    sidebar.classList.remove('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.remove('sidebar-collapsed');
+                    }
                 }
             }
             
             // Mobile toggle
             if (sidebarToggleMobile) {
-                sidebarToggleMobile.addEventListener('click', function() {
-                    sidebar.classList.toggle('expanded');
+                sidebarToggleMobile.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
                 });
             }
             
             // Desktop toggle
             if (sidebarToggleDesktop) {
-                sidebarToggleDesktop.addEventListener('click', toggleSidebar);
+                sidebarToggleDesktop.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
             }
             
             // Close button in sidebar
             if (sidebarClose) {
-                sidebarClose.addEventListener('click', function() {
-                    if (window.innerWidth <= 1024) {
-                        collapseSidebar();
-                    } else {
-                        toggleSidebar();
-                    }
+                sidebarClose.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
                 });
             }
             
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', function(event) {
-                if (window.innerWidth <= 1024) {
-                    const isClickInsideSidebar = sidebar && sidebar.contains(event.target);
-                    const isClickOnToggle = sidebarToggleMobile && sidebarToggleMobile.contains(event.target);
-                    if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains('expanded')) {
-                        collapseSidebar();
+            // Overlay click to close on mobile
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (!isMobile()) {
+                        // On desktop, ensure sidebar state is correct
+                        if (sidebarOverlay) {
+                            sidebarOverlay.classList.remove('active');
+                        }
+                        document.body.style.overflow = '';
+                    } else {
+                        // On mobile, close sidebar if open
+                        closeSidebar();
                     }
-                }
+                }, 250);
             });
             
             // Update active link on scroll
@@ -491,8 +614,8 @@
                             });
                             
                             // Close sidebar on mobile after click
-                            if (window.innerWidth <= 1024) {
-                                sidebar.classList.remove('expanded');
+                            if (isMobile()) {
+                                closeSidebar();
                             }
                         }
                     }

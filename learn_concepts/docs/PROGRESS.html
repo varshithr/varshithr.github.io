@@ -27,6 +27,30 @@
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
             margin-top: 2rem;
         }
+        @media (max-width: 640px) {
+            .content {
+                padding: 1rem;
+                margin-top: 1rem;
+                border-radius: 0.5rem;
+            }
+            .content h1 {
+                font-size: 1.75rem;
+            }
+            .content h2 {
+                font-size: 1.5rem;
+            }
+            .content h3 {
+                font-size: 1.25rem;
+            }
+            .content pre {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+                overflow-x: auto;
+            }
+            .content table {
+                font-size: 0.875rem;
+            }
+        }
         .content h1 {
             font-size: 2.5rem;
             font-weight: 900;
@@ -67,6 +91,24 @@
         .content li {
             margin-bottom: 0.5rem;
             line-height: 1.6;
+            list-style: none;
+            display: flex;
+            align-items: flex-start;
+        }
+        .content ul li::before {
+            content: none;
+        }
+        .progress-checkbox {
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            accent-color: #58508d;
+        }
+        .progress-checkbox:checked {
+            accent-color: #58508d;
         }
         .content code {
             background-color: #F3F4F6;
@@ -196,7 +238,11 @@
         }
         @media (max-width: 1024px) {
             .sidebar-toggle.desktop {
-                display: none;
+                display: none !important;
+            }
+            .sidebar-toggle.mobile {
+                top: 85px;
+                left: 15px;
             }
         }
         .sidebar-content {
@@ -254,16 +300,18 @@
             font-size: 0.75rem;
         }
         .main-content {
-            margin-left: 280px !important;
+            margin-left: 280px;
             transition: margin-left 0.3s ease;
         }
         .main-content.no-sidebar,
         .main-content.sidebar-collapsed {
-            margin-left: 0 !important;
+            margin-left: 0;
         }
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
+                width: 280px;
+                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
             }
             .sidebar.expanded {
                 transform: translateX(0);
@@ -272,7 +320,29 @@
                 display: block;
             }
             .main-content {
-                margin-left: 0;
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 35;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+        @media (min-width: 1025px) {
+            .sidebar-overlay {
+                display: none !important;
             }
         }
     </style>
@@ -281,14 +351,14 @@
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../index.html" class="flex items-center">
+                <a href="../../index.html" class="flex items-center">
                     <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                     <span class="gradient-text">Data Engineering Concepts</span>
                 </a>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
-                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+                <li><a href="../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
             </ul>
         </nav>
     </header>
@@ -302,7 +372,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
     </button>
-        <aside class="sidebar" id="sidebar">
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-title">Table of Contents</div>
             <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
@@ -329,55 +400,55 @@
 <p>Track your learning progress through the staff-level GCP curriculum.</p>
 <h2 id="phase-0-foundations-quantitative-reasoning">Phase 0: Foundations &amp; Quantitative Reasoning</h2>
 <ul>
-<li>[ ] <a href="01-foundations/queueing-tail-latency.html">Queueing Theory &amp; Tail Latency</a></li>
-<li>[ ] <a href="01-foundations/capacity-math.html">Capacity Math Cheat Sheet</a></li>
-<li>[ ] <a href="01-foundations/observability-basics.html">Observability Basics</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-232061d85e6e" data-progress-item data-link-url="01-foundations/queueing-tail-latency.md" > <a href="01-foundations/queueing-tail-latency.html">Queueing Theory &amp; Tail Latency</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-6e1b2725912b" data-progress-item data-link-url="01-foundations/capacity-math.md" > <a href="01-foundations/capacity-math.html">Capacity Math Cheat Sheet</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-1d1edddcc2ec" data-progress-item data-link-url="01-foundations/observability-basics.md" > <a href="01-foundations/observability-basics.html">Observability Basics</a></li>
 </ul>
 <p><strong>Milestone</strong>: Can reason about P50/P95/P99 latency and calculate capacity needs.</p>
 <hr />
 <h2 id="phase-1-distributed-systems-building-blocks">Phase 1: Distributed Systems Building Blocks</h2>
 <ul>
-<li>[ ] <a href="02-distributed-systems/time-ordering-causality.md">Time, Ordering, and Causality</a></li>
-<li>[ ] <a href="02-distributed-systems/consensus-leases.md">Consensus &amp; Leases</a></li>
-<li>[ ] <a href="02-distributed-systems/replication.md">Replication Strategies</a></li>
-<li>[ ] <a href="02-distributed-systems/sharding-partitioning.md">Sharding &amp; Partitioning</a></li>
-<li>[ ] <a href="02-distributed-systems/overload-backpressure.html">Overload &amp; Backpressure</a></li>
-<li>[ ] <a href="02-distributed-systems/idempotency-retries.html">Idempotency &amp; Retry Semantics</a></li>
-<li>[ ] <a href="02-distributed-systems/queues-streams.md">Queues &amp; Streams</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-71ccda5803c8" data-progress-item data-link-url="02-distributed-systems/time-ordering-causality.md" > <a href="02-distributed-systems/time-ordering-causality.md">Time, Ordering, and Causality</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-511cbf399edb" data-progress-item data-link-url="02-distributed-systems/consensus-leases.md" > <a href="02-distributed-systems/consensus-leases.md">Consensus &amp; Leases</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-51e94be8bc07" data-progress-item data-link-url="02-distributed-systems/replication.md" > <a href="02-distributed-systems/replication.md">Replication Strategies</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-fb8b5f1b853f" data-progress-item data-link-url="02-distributed-systems/sharding-partitioning.md" > <a href="02-distributed-systems/sharding-partitioning.md">Sharding &amp; Partitioning</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-4a7a6baabbf2" data-progress-item data-link-url="02-distributed-systems/overload-backpressure.md" > <a href="02-distributed-systems/overload-backpressure.html">Overload &amp; Backpressure</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-62928773cdf6" data-progress-item data-link-url="02-distributed-systems/idempotency-retries.md" > <a href="02-distributed-systems/idempotency-retries.html">Idempotency &amp; Retry Semantics</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-431dcbeadc9d" data-progress-item data-link-url="02-distributed-systems/queues-streams.md" > <a href="02-distributed-systems/queues-streams.md">Queues &amp; Streams</a></li>
 </ul>
 <p><strong>Milestone</strong>: Understand consensus vs leases, handle overload gracefully, know replication tradeoffs.</p>
 <hr />
 <h2 id="phase-2-gcp-core-building-blocks">Phase 2: GCP Core Building Blocks</h2>
 <ul>
-<li>[ ] <a href="03-gcp-core-building-blocks/vpc-lb-dns.html">VPC, Load Balancing &amp; DNS</a></li>
-<li>[ ] <a href="03-gcp-core-building-blocks/gke-internals.md">GKE Control Plane &amp; Data Plane</a></li>
-<li>[ ] <a href="03-gcp-core-building-blocks/iam-evaluation.html">IAM Evaluation Model</a></li>
-<li>[ ] <a href="03-gcp-core-building-blocks/cloud-storage.md">Cloud Storage Deep Dive</a></li>
-<li>[ ] <a href="03-gcp-core-building-blocks/spanner.md">Spanner: Consistency &amp; Performance</a></li>
-<li>[ ] <a href="03-gcp-core-building-blocks/bigtable.md">Bigtable: Design &amp; Tradeoffs</a></li>
-<li>[ ] <a href="03-gcp-core-building-blocks/bigquery.md">BigQuery Architecture</a></li>
-<li>[ ] <a href="03-gcp-core-building-blocks/pubsub.md">Pub/Sub: Delivery Guarantees</a></li>
-<li>[ ] <a href="03-gcp-core-building-blocks/kms-secrets.md">Cloud KMS &amp; Secret Management</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-be01c4906536" data-progress-item data-link-url="03-gcp-core-building-blocks/vpc-lb-dns.md" > <a href="03-gcp-core-building-blocks/vpc-lb-dns.html">VPC, Load Balancing &amp; DNS</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-60ba286898c8" data-progress-item data-link-url="03-gcp-core-building-blocks/gke-internals.md" > <a href="03-gcp-core-building-blocks/gke-internals.md">GKE Control Plane &amp; Data Plane</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-45ae1a970504" data-progress-item data-link-url="03-gcp-core-building-blocks/iam-evaluation.md" > <a href="03-gcp-core-building-blocks/iam-evaluation.html">IAM Evaluation Model</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-438a22f00575" data-progress-item data-link-url="03-gcp-core-building-blocks/cloud-storage.md" > <a href="03-gcp-core-building-blocks/cloud-storage.md">Cloud Storage Deep Dive</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-cb892e678b07" data-progress-item data-link-url="03-gcp-core-building-blocks/spanner.md" > <a href="03-gcp-core-building-blocks/spanner.md">Spanner: Consistency &amp; Performance</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-9a926719f8d4" data-progress-item data-link-url="03-gcp-core-building-blocks/bigtable.md" > <a href="03-gcp-core-building-blocks/bigtable.md">Bigtable: Design &amp; Tradeoffs</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-192b4c11fcd4" data-progress-item data-link-url="03-gcp-core-building-blocks/bigquery.md" > <a href="03-gcp-core-building-blocks/bigquery.md">BigQuery Architecture</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-9e583936ec2e" data-progress-item data-link-url="03-gcp-core-building-blocks/pubsub.md" > <a href="03-gcp-core-building-blocks/pubsub.md">Pub/Sub: Delivery Guarantees</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-43d6ce5f423d" data-progress-item data-link-url="03-gcp-core-building-blocks/kms-secrets.md" > <a href="03-gcp-core-building-blocks/kms-secrets.md">Cloud KMS &amp; Secret Management</a></li>
 </ul>
 <p><strong>Milestone</strong>: Can design systems using GCP primitives, understand failure modes, make tradeoffs.</p>
 <hr />
 <h2 id="phase-3-reliability-engineering-sre">Phase 3: Reliability Engineering &amp; SRE</h2>
 <ul>
-<li>[ ] <a href="04-reliability-sre/sli-slo-error-budget.html">SLIs, SLOs &amp; Error Budgets</a></li>
-<li>[ ] <a href="04-reliability-sre/prr-checklist.html">Production Readiness Reviews (PRR)</a></li>
-<li>[ ] <a href="04-reliability-sre/incident-response.md">Incident Response &amp; Postmortems</a></li>
-<li>[ ] <a href="04-reliability-sre/capacity-planning.md">Capacity Planning &amp; Forecasting</a></li>
-<li>[ ] <a href="04-reliability-sre/load-shedding.md">Load Shedding &amp; Circuit Breakers</a></li>
-<li>[ ] <a href="04-reliability-sre/canary-rollouts.md">Canary Deployments &amp; Rollouts</a></li>
-<li>[ ] <a href="04-reliability-sre/testing-for-failure.md">Testing for Failure</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-90a2ac30e232" data-progress-item data-link-url="04-reliability-sre/sli-slo-error-budget.md" > <a href="04-reliability-sre/sli-slo-error-budget.html">SLIs, SLOs &amp; Error Budgets</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-a6bfb3efc79c" data-progress-item data-link-url="04-reliability-sre/prr-checklist.md" > <a href="04-reliability-sre/prr-checklist.html">Production Readiness Reviews (PRR)</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-5df264005dc8" data-progress-item data-link-url="04-reliability-sre/incident-response.md" > <a href="04-reliability-sre/incident-response.md">Incident Response &amp; Postmortems</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-b3c220cc2b20" data-progress-item data-link-url="04-reliability-sre/capacity-planning.md" > <a href="04-reliability-sre/capacity-planning.md">Capacity Planning &amp; Forecasting</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-52421cf7911f" data-progress-item data-link-url="04-reliability-sre/load-shedding.md" > <a href="04-reliability-sre/load-shedding.md">Load Shedding &amp; Circuit Breakers</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-bb31a67735e6" data-progress-item data-link-url="04-reliability-sre/canary-rollouts.md" > <a href="04-reliability-sre/canary-rollouts.md">Canary Deployments &amp; Rollouts</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-8ed28140bcc5" data-progress-item data-link-url="04-reliability-sre/testing-for-failure.md" > <a href="04-reliability-sre/testing-for-failure.md">Testing for Failure</a></li>
 </ul>
 <p><strong>Milestone</strong>: Can define SLIs/SLOs, run PRRs, respond to incidents, plan capacity.</p>
 <hr />
 <h2 id="phase-4-case-studies-end-to-end-design">Phase 4: Case Studies &amp; End-to-End Design</h2>
 <ul>
-<li>[ ] <a href="06-case-studies/multi-region-api.html">Multi-Region API on GCP</a></li>
-<li>[ ] <a href="06-case-studies/data-pipeline.md">High-Throughput Data Pipeline</a> (coming soon)</li>
-<li>[ ] <a href="06-case-studies/cdn-system.md">Global Content Delivery System</a> (coming soon)</li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-21a69cd56161" data-progress-item data-link-url="06-case-studies/multi-region-api.md" > <a href="06-case-studies/multi-region-api.html">Multi-Region API on GCP</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-f1ff0ea06067" data-progress-item data-link-url="06-case-studies/data-pipeline.md" > <a href="06-case-studies/data-pipeline.md">High-Throughput Data Pipeline</a> (coming soon)</li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-9e31c15c8dff" data-progress-item data-link-url="06-case-studies/cdn-system.md" > <a href="06-case-studies/cdn-system.md">Global Content Delivery System</a> (coming soon)</li>
 </ul>
 <p><strong>Milestone</strong>: Can design, implement, and operate production systems with SLOs and playbooks.</p>
 <hr />
@@ -396,62 +467,114 @@
         // Sidebar toggle functionality
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
             const sidebarToggleMobile = document.getElementById('sidebarToggleMobile');
             const sidebarToggleDesktop = document.getElementById('sidebarToggleDesktop');
             const sidebarClose = document.getElementById('sidebarClose');
             const mainContent = document.querySelector('.main-content');
             
+            function isMobile() {
+                return window.innerWidth <= 1024;
+            }
+            
             function toggleSidebar() {
-                sidebar.classList.toggle('collapsed');
-                if (mainContent) {
-                    mainContent.classList.toggle('sidebar-collapsed');
+                if (isMobile()) {
+                    sidebar.classList.toggle('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.toggle('active');
+                    }
+                    // Prevent body scroll when sidebar is open
+                    if (sidebar.classList.contains('expanded')) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.toggle('sidebar-collapsed');
+                    }
                 }
             }
             
-            function expandSidebar() {
-                sidebar.classList.add('expanded');
+            function closeSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.remove('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.remove('active');
+                    }
+                    document.body.style.overflow = '';
+                } else {
+                    sidebar.classList.add('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.add('sidebar-collapsed');
+                    }
+                }
             }
             
-            function collapseSidebar() {
-                sidebar.classList.remove('expanded');
-                sidebar.classList.add('collapsed');
-                if (mainContent) {
-                    mainContent.classList.add('sidebar-collapsed');
+            function openSidebar() {
+                if (isMobile()) {
+                    sidebar.classList.add('expanded');
+                    if (sidebarOverlay) {
+                        sidebarOverlay.classList.add('active');
+                    }
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    sidebar.classList.remove('collapsed');
+                    if (mainContent) {
+                        mainContent.classList.remove('sidebar-collapsed');
+                    }
                 }
             }
             
             // Mobile toggle
             if (sidebarToggleMobile) {
-                sidebarToggleMobile.addEventListener('click', function() {
-                    sidebar.classList.toggle('expanded');
+                sidebarToggleMobile.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
                 });
             }
             
             // Desktop toggle
             if (sidebarToggleDesktop) {
-                sidebarToggleDesktop.addEventListener('click', toggleSidebar);
+                sidebarToggleDesktop.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
             }
             
             // Close button in sidebar
             if (sidebarClose) {
-                sidebarClose.addEventListener('click', function() {
-                    if (window.innerWidth <= 1024) {
-                        collapseSidebar();
-                    } else {
-                        toggleSidebar();
-                    }
+                sidebarClose.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
                 });
             }
             
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', function(event) {
-                if (window.innerWidth <= 1024) {
-                    const isClickInsideSidebar = sidebar && sidebar.contains(event.target);
-                    const isClickOnToggle = sidebarToggleMobile && sidebarToggleMobile.contains(event.target);
-                    if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains('expanded')) {
-                        collapseSidebar();
+            // Overlay click to close on mobile
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeSidebar();
+                });
+            }
+            
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (!isMobile()) {
+                        // On desktop, ensure sidebar state is correct
+                        if (sidebarOverlay) {
+                            sidebarOverlay.classList.remove('active');
+                        }
+                        document.body.style.overflow = '';
+                    } else {
+                        // On mobile, close sidebar if open
+                        closeSidebar();
                     }
-                }
+                }, 250);
             });
             
             // Update active link on scroll
@@ -496,12 +619,85 @@
                             });
                             
                             // Close sidebar on mobile after click
-                            if (window.innerWidth <= 1024) {
-                                sidebar.classList.remove('expanded');
+                            if (isMobile()) {
+                                closeSidebar();
                             }
                         }
                     }
                 });
+            });
+        });
+    </script>
+
+    <script>
+        // Progress tracking with localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.progress-checkbox');
+            const storageKey = 'learn_concepts_progress';
+            
+            // Load saved progress
+            function loadProgress() {
+                try {
+                    const saved = localStorage.getItem(storageKey);
+                    if (saved) {
+                        const progress = JSON.parse(saved);
+                        checkboxes.forEach(checkbox => {
+                            const id = checkbox.id;
+                            if (progress[id] !== undefined) {
+                                checkbox.checked = progress[id];
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.error('Error loading progress:', e);
+                }
+            }
+            
+            // Save progress
+            function saveProgress() {
+                try {
+                    const progress = {};
+                    checkboxes.forEach(checkbox => {
+                        progress[checkbox.id] = checkbox.checked;
+                    });
+                    localStorage.setItem(storageKey, JSON.stringify(progress));
+                } catch (e) {
+                    console.error('Error saving progress:', e);
+                }
+            }
+            
+            // Load progress on page load
+            loadProgress();
+            
+            // Save progress when checkbox changes
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', saveProgress);
+            });
+            
+            // Calculate and display progress percentage
+            function updateProgressStats() {
+                const total = checkboxes.length;
+                const completed = Array.from(checkboxes).filter(cb => cb.checked).length;
+                const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+                
+                // Update or create progress stats element
+                let statsEl = document.getElementById('progress-stats');
+                if (!statsEl) {
+                    statsEl = document.createElement('div');
+                    statsEl.id = 'progress-stats';
+                    statsEl.style.cssText = 'background-color: #EEF2FF; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; border-left: 4px solid #58508d;';
+                    const contentDiv = document.querySelector('.content');
+                    if (contentDiv && contentDiv.firstChild) {
+                        contentDiv.insertBefore(statsEl, contentDiv.firstChild.nextSibling);
+                    }
+                }
+                statsEl.innerHTML = `<strong>Progress:</strong> ${completed} of ${total} completed (${percentage}%)`;
+            }
+            
+            // Update stats on load and change
+            updateProgressStats();
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateProgressStats);
             });
         });
     </script>

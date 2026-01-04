@@ -47,6 +47,30 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
             margin-top: 2rem;
         }}
+        @media (max-width: 640px) {{
+            .content {{
+                padding: 1rem;
+                margin-top: 1rem;
+                border-radius: 0.5rem;
+            }}
+            .content h1 {{
+                font-size: 1.75rem;
+            }}
+            .content h2 {{
+                font-size: 1.5rem;
+            }}
+            .content h3 {{
+                font-size: 1.25rem;
+            }}
+            .content pre {{
+                padding: 0.75rem;
+                font-size: 0.875rem;
+                overflow-x: auto;
+            }}
+            .content table {{
+                font-size: 0.875rem;
+            }}
+        }}
         .content h1 {{
             font-size: 2.5rem;
             font-weight: 900;
@@ -87,6 +111,24 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .content li {{
             margin-bottom: 0.5rem;
             line-height: 1.6;
+            list-style: none;
+            display: flex;
+            align-items: flex-start;
+        }}
+        .content ul li::before {{
+            content: none;
+        }}
+        .progress-checkbox {{
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            accent-color: #58508d;
+        }}
+        .progress-checkbox:checked {{
+            accent-color: #58508d;
         }}
         .content code {{
             background-color: #F3F4F6;
@@ -216,7 +258,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         }}
         @media (max-width: 1024px) {{
             .sidebar-toggle.desktop {{
-                display: none;
+                display: none !important;
+            }}
+            .sidebar-toggle.mobile {{
+                top: 85px;
+                left: 15px;
             }}
         }}
         .sidebar-content {{
@@ -274,16 +320,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-size: 0.75rem;
         }}
         .main-content {{
-            margin-left: 280px !important;
+            margin-left: 280px;
             transition: margin-left 0.3s ease;
         }}
         .main-content.no-sidebar,
         .main-content.sidebar-collapsed {{
-            margin-left: 0 !important;
+            margin-left: 0;
         }}
         @media (max-width: 1024px) {{
             .sidebar {{
                 transform: translateX(-100%);
+                width: 280px;
+                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
             }}
             .sidebar.expanded {{
                 transform: translateX(0);
@@ -292,7 +340,29 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 display: block;
             }}
             .main-content {{
-                margin-left: 0;
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }}
+            .sidebar-overlay {{
+                display: none;
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 35;
+            }}
+            .sidebar-overlay.active {{
+                display: block;
+            }}
+        }}
+        @media (min-width: 1025px) {{
+            .sidebar-overlay {{
+                display: none !important;
             }}
         }}
     </style>
@@ -328,62 +398,114 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         // Sidebar toggle functionality
         document.addEventListener('DOMContentLoaded', function() {{
             const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
             const sidebarToggleMobile = document.getElementById('sidebarToggleMobile');
             const sidebarToggleDesktop = document.getElementById('sidebarToggleDesktop');
             const sidebarClose = document.getElementById('sidebarClose');
             const mainContent = document.querySelector('.main-content');
             
+            function isMobile() {{
+                return window.innerWidth <= 1024;
+            }}
+            
             function toggleSidebar() {{
-                sidebar.classList.toggle('collapsed');
-                if (mainContent) {{
-                    mainContent.classList.toggle('sidebar-collapsed');
+                if (isMobile()) {{
+                    sidebar.classList.toggle('expanded');
+                    if (sidebarOverlay) {{
+                        sidebarOverlay.classList.toggle('active');
+                    }}
+                    // Prevent body scroll when sidebar is open
+                    if (sidebar.classList.contains('expanded')) {{
+                        document.body.style.overflow = 'hidden';
+                    }} else {{
+                        document.body.style.overflow = '';
+                    }}
+                }} else {{
+                    sidebar.classList.toggle('collapsed');
+                    if (mainContent) {{
+                        mainContent.classList.toggle('sidebar-collapsed');
+                    }}
                 }}
             }}
             
-            function expandSidebar() {{
-                sidebar.classList.add('expanded');
+            function closeSidebar() {{
+                if (isMobile()) {{
+                    sidebar.classList.remove('expanded');
+                    if (sidebarOverlay) {{
+                        sidebarOverlay.classList.remove('active');
+                    }}
+                    document.body.style.overflow = '';
+                }} else {{
+                    sidebar.classList.add('collapsed');
+                    if (mainContent) {{
+                        mainContent.classList.add('sidebar-collapsed');
+                    }}
+                }}
             }}
             
-            function collapseSidebar() {{
-                sidebar.classList.remove('expanded');
-                sidebar.classList.add('collapsed');
-                if (mainContent) {{
-                    mainContent.classList.add('sidebar-collapsed');
+            function openSidebar() {{
+                if (isMobile()) {{
+                    sidebar.classList.add('expanded');
+                    if (sidebarOverlay) {{
+                        sidebarOverlay.classList.add('active');
+                    }}
+                    document.body.style.overflow = 'hidden';
+                }} else {{
+                    sidebar.classList.remove('collapsed');
+                    if (mainContent) {{
+                        mainContent.classList.remove('sidebar-collapsed');
+                    }}
                 }}
             }}
             
             // Mobile toggle
             if (sidebarToggleMobile) {{
-                sidebarToggleMobile.addEventListener('click', function() {{
-                    sidebar.classList.toggle('expanded');
+                sidebarToggleMobile.addEventListener('click', function(e) {{
+                    e.stopPropagation();
+                    toggleSidebar();
                 }});
             }}
             
             // Desktop toggle
             if (sidebarToggleDesktop) {{
-                sidebarToggleDesktop.addEventListener('click', toggleSidebar);
+                sidebarToggleDesktop.addEventListener('click', function(e) {{
+                    e.stopPropagation();
+                    toggleSidebar();
+                }});
             }}
             
             // Close button in sidebar
             if (sidebarClose) {{
-                sidebarClose.addEventListener('click', function() {{
-                    if (window.innerWidth <= 1024) {{
-                        collapseSidebar();
-                    }} else {{
-                        toggleSidebar();
-                    }}
+                sidebarClose.addEventListener('click', function(e) {{
+                    e.stopPropagation();
+                    closeSidebar();
                 }});
             }}
             
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', function(event) {{
-                if (window.innerWidth <= 1024) {{
-                    const isClickInsideSidebar = sidebar && sidebar.contains(event.target);
-                    const isClickOnToggle = sidebarToggleMobile && sidebarToggleMobile.contains(event.target);
-                    if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains('expanded')) {{
-                        collapseSidebar();
+            // Overlay click to close on mobile
+            if (sidebarOverlay) {{
+                sidebarOverlay.addEventListener('click', function(e) {{
+                    e.stopPropagation();
+                    closeSidebar();
+                }});
+            }}
+            
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {{
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {{
+                    if (!isMobile()) {{
+                        // On desktop, ensure sidebar state is correct
+                        if (sidebarOverlay) {{
+                            sidebarOverlay.classList.remove('active');
+                        }}
+                        document.body.style.overflow = '';
+                    }} else {{
+                        // On mobile, close sidebar if open
+                        closeSidebar();
                     }}
-                }}
+                }}, 250);
             }});
             
             // Update active link on scroll
@@ -428,8 +550,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                             }});
                             
                             // Close sidebar on mobile after click
-                            if (window.innerWidth <= 1024) {{
-                                sidebar.classList.remove('expanded');
+                            if (isMobile()) {{
+                                closeSidebar();
                             }}
                         }}
                     }}
@@ -455,17 +577,24 @@ def calculate_relative_path(from_path: Path, to_path: Path) -> str:
 
 def get_navigation_links(file_path: Path) -> Dict[str, str]:
     """Calculate navigation links based on file depth."""
-    depth = len(file_path.relative_to(BASE_DIR).parts) - 1
+    # Get relative path from BASE_DIR
+    rel_path = file_path.relative_to(BASE_DIR)
+    # Count directory levels (excluding filename)
+    # For learn_concepts/docs/01-foundations/file.html -> 3 directories
+    directory_parts = len(rel_path.parts) - 1
     
-    if depth == 1:  # Root level (learn_concepts/index.html)
+    if directory_parts == 1:  # Root level (learn_concepts/index.html)
         return {
-            'home_link': 'index.html',
-            'case_studies_link': 'case_studies.html',
-            'about_link': 'aboutme.html'
+            'home_link': '../index.html',
+            'case_studies_link': '../case_studies.html',
+            'about_link': '../aboutme.html'
         }
     else:
-        # Calculate how many levels up to root
-        up_levels = depth - 1
+        # Calculate how many levels up to root from the file's directory
+        # For learn_concepts/docs/01-foundations/file.html:
+        #   File is in: learn_concepts/docs/01-foundations/
+        #   Need to go up 3 levels: ../../../ to reach root
+        up_levels = directory_parts
         prefix = '../' * up_levels
         return {
             'home_link': f'{prefix}index.html',
@@ -579,7 +708,8 @@ def generate_sidebar_nav(html_content: str) -> Tuple[str, str, str]:
         level_class = f'level-{level}'
         nav_items.append(f'                <li><a href="#{heading_id}" class="{level_class}">{text}</a></li>')
     
-    sidebar_html = f'''    <aside class="sidebar" id="sidebar">
+    sidebar_html = f'''    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-title">Table of Contents</div>
             <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
@@ -609,10 +739,51 @@ def generate_sidebar_nav(html_content: str) -> Tuple[str, str, str]:
     return (sidebar_html, sidebar_toggle_html, ' ')
 
 
+def process_progress_checkboxes(content: str) -> str:
+    """Convert markdown checkboxes to HTML checkboxes with unique IDs."""
+    import hashlib
+    
+    # Pattern to match markdown checkboxes with link: - [ ] [text](url)
+    # This captures the full line including the link
+    pattern = r'- \[([ x])\]\s*\[([^\]]+)\]\(([^)]+)\)'
+    
+    def replace_checkbox_with_link(match):
+        checked = match.group(1).strip() == 'x'
+        link_text = match.group(2)
+        link_url = match.group(3)
+        # Generate ID based on link URL (most stable identifier)
+        checkbox_id = f'progress-{hashlib.md5(link_url.encode()).hexdigest()[:12]}'
+        checked_attr = 'checked' if checked else ''
+        # Return checkbox followed by the original link structure
+        # The markdown processor will handle the link conversion
+        return f'<input type="checkbox" class="progress-checkbox" id="{checkbox_id}" data-progress-item data-link-url="{link_url}" {checked_attr}> '
+    
+    # Pattern for checkboxes without links: - [ ] text
+    pattern_no_link = r'- \[([ x])\]([^\n]+)'
+    
+    def replace_checkbox_no_link(match):
+        checked = match.group(1).strip() == 'x'
+        text = match.group(2).strip()
+        # Generate ID based on text content
+        checkbox_id = f'progress-{hashlib.md5(text.encode()).hexdigest()[:12]}'
+        checked_attr = 'checked' if checked else ''
+        return f'<input type="checkbox" class="progress-checkbox" id="{checkbox_id}" data-progress-item {checked_attr}> {text}'
+    
+    # First replace checkboxes with links
+    content = re.sub(pattern, replace_checkbox_with_link, content)
+    # Then replace remaining checkboxes without links
+    content = re.sub(pattern_no_link, replace_checkbox_no_link, content)
+    
+    return content
+
+
 def convert_markdown_to_html(md_file: Path, all_md_files: Dict[str, Path]) -> str:
     """Convert a single Markdown file to HTML."""
     with open(md_file, 'r', encoding='utf-8') as f:
         md_content = f.read()
+    
+    # Check if this is PROGRESS.md - process checkboxes specially
+    is_progress_file = md_file.name == 'PROGRESS.md'
     
     # Extract Mermaid blocks and store them
     mermaid_pattern = r'```mermaid\n(.*?)\n```'
@@ -625,6 +796,24 @@ def convert_markdown_to_html(md_file: Path, all_md_files: Dict[str, Path]) -> st
         return f'\n\n{placeholder}\n\n'
     
     md_content = re.sub(mermaid_pattern, extract_mermaid, md_content, flags=re.DOTALL)
+    
+    # Store checkbox data for PROGRESS.md to process after markdown conversion
+    checkbox_data = []
+    if is_progress_file:
+        # Extract checkbox information before markdown conversion
+        checkbox_pattern = r'- \[([ x])\]\s*\[([^\]]+)\]\(([^)]+)\)'
+        for match in re.finditer(checkbox_pattern, md_content):
+            checked = match.group(1).strip() == 'x'
+            link_text = match.group(2)
+            link_url = match.group(3)
+            import hashlib
+            checkbox_id = f'progress-{hashlib.md5(link_url.encode()).hexdigest()[:12]}'
+            checkbox_data.append({
+                'id': checkbox_id,
+                'checked': checked,
+                'link_url': link_url,
+                'link_text': link_text
+            })
     
     # Convert markdown links
     md_content = convert_markdown_links(md_content, md_file, all_md_files)
@@ -702,6 +891,22 @@ def convert_markdown_to_html(md_file: Path, all_md_files: Dict[str, Path]) -> st
         flags=re.DOTALL
     )
     
+    # Process checkboxes for PROGRESS.html after markdown conversion
+    if is_progress_file and checkbox_data:
+        # Replace [ ] or [x] text in list items with actual checkboxes
+        checkbox_index = [0]  # Use list to allow modification in nested function
+        
+        def replace_in_li(match):
+            if checkbox_index[0] < len(checkbox_data):
+                cb_data = checkbox_data[checkbox_index[0]]
+                checked_attr = 'checked' if cb_data['checked'] else ''
+                checkbox_html = f'<input type="checkbox" class="progress-checkbox" id="{cb_data["id"]}" data-progress-item data-link-url="{cb_data["link_url"]}" {checked_attr}>'
+                checkbox_index[0] += 1
+                return f'<li>{checkbox_html} '
+            return match.group(0)
+        
+        html_content = re.sub(r'<li>\[([ x])\]\s*', replace_in_li, html_content)
+    
     # Get title from first h1 or filename
     title_match = re.search(r'<h1>(.*?)</h1>', html_content)
     if title_match:
@@ -717,6 +922,83 @@ def convert_markdown_to_html(md_file: Path, all_md_files: Dict[str, Path]) -> st
     # Get navigation links
     nav_links = get_navigation_links(md_file.with_suffix('.html'))
     
+    # Add progress tracking script if this is PROGRESS.html
+    progress_script = ''
+    if is_progress_file:
+        progress_script = '''
+    <script>
+        // Progress tracking with localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.progress-checkbox');
+            const storageKey = 'learn_concepts_progress';
+            
+            // Load saved progress
+            function loadProgress() {
+                try {
+                    const saved = localStorage.getItem(storageKey);
+                    if (saved) {
+                        const progress = JSON.parse(saved);
+                        checkboxes.forEach(checkbox => {
+                            const id = checkbox.id;
+                            if (progress[id] !== undefined) {
+                                checkbox.checked = progress[id];
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.error('Error loading progress:', e);
+                }
+            }
+            
+            // Save progress
+            function saveProgress() {
+                try {
+                    const progress = {};
+                    checkboxes.forEach(checkbox => {
+                        progress[checkbox.id] = checkbox.checked;
+                    });
+                    localStorage.setItem(storageKey, JSON.stringify(progress));
+                } catch (e) {
+                    console.error('Error saving progress:', e);
+                }
+            }
+            
+            // Load progress on page load
+            loadProgress();
+            
+            // Save progress when checkbox changes
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', saveProgress);
+            });
+            
+            // Calculate and display progress percentage
+            function updateProgressStats() {
+                const total = checkboxes.length;
+                const completed = Array.from(checkboxes).filter(cb => cb.checked).length;
+                const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+                
+                // Update or create progress stats element
+                let statsEl = document.getElementById('progress-stats');
+                if (!statsEl) {
+                    statsEl = document.createElement('div');
+                    statsEl.id = 'progress-stats';
+                    statsEl.style.cssText = 'background-color: #EEF2FF; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; border-left: 4px solid #58508d;';
+                    const contentDiv = document.querySelector('.content');
+                    if (contentDiv && contentDiv.firstChild) {
+                        contentDiv.insertBefore(statsEl, contentDiv.firstChild.nextSibling);
+                    }
+                }
+                statsEl.innerHTML = `<strong>Progress:</strong> ${completed} of ${total} completed (${percentage}%)`;
+            }
+            
+            // Update stats on load and change
+            updateProgressStats();
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateProgressStats);
+            });
+        });
+    </script>'''
+    
     # Format final HTML
     final_html = HTML_TEMPLATE.format(
         title=title,
@@ -726,6 +1008,10 @@ def convert_markdown_to_html(md_file: Path, all_md_files: Dict[str, Path]) -> st
         main_content_class=main_content_class,
         **nav_links
     )
+    
+    # Insert progress script before closing body tag
+    if progress_script:
+        final_html = final_html.replace('</body>', progress_script + '\n</body>')
     
     return final_html
 
