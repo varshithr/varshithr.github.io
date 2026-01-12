@@ -29,375 +29,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <style>
-        body {{
-            font-family: 'Inter', sans-serif;
-            background-color: #F0F4F8;
-            color: #1E293B;
-        }}
-        .gradient-text {{
-            background: linear-gradient(90deg, #58508d, #bc5090);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }}
-        .content {{
-            background-color: white;
-            border-radius: 0.75rem;
-            padding: 2rem;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-            margin-top: 2rem;
-        }}
-        @media (max-width: 640px) {{
-            .content {{
-                padding: 1rem;
-                margin-top: 1rem;
-                border-radius: 0.5rem;
-            }}
-            .content h1 {{
-                font-size: 1.75rem;
-            }}
-            .content h2 {{
-                font-size: 1.5rem;
-            }}
-            .content h3 {{
-                font-size: 1.25rem;
-            }}
-            .content pre {{
-                padding: 0.75rem;
-                font-size: 0.875rem;
-                overflow-x: auto;
-            }}
-            .content table {{
-                font-size: 0.875rem;
-            }}
-        }}
-        .content h1 {{
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-            color: #1E293B;
-        }}
-        .content h2 {{
-            font-size: 2rem;
-            font-weight: 700;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            color: #1E293B;
-            border-bottom: 2px solid #E5E7EB;
-            padding-bottom: 0.5rem;
-        }}
-        .content h3 {{
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
-            color: #1E293B;
-        }}
-        .content h4 {{
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-            color: #1E293B;
-        }}
-        .content p {{
-            margin-bottom: 1rem;
-            line-height: 1.7;
-        }}
-        .content ul, .content ol {{
-            margin-bottom: 1rem;
-            padding-left: 2rem;
-        }}
-        .content li {{
-            margin-bottom: 0.5rem;
-            line-height: 1.6;
-            list-style: none;
-            display: flex;
-            align-items: flex-start;
-        }}
-        .content ul li::before {{
-            content: none;
-        }}
-        .progress-checkbox {{
-            margin-right: 0.75rem;
-            margin-top: 0.25rem;
-            width: 1.25rem;
-            height: 1.25rem;
-            cursor: pointer;
-            flex-shrink: 0;
-            accent-color: #58508d;
-        }}
-        .progress-checkbox:checked {{
-            accent-color: #58508d;
-        }}
-        .content code {{
-            background-color: #F3F4F6;
-            padding: 0.2rem 0.4rem;
-            border-radius: 0.25rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-        }}
-        .content pre {{
-            background-color: #1E293B;
-            color: #F0F4F8;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            overflow-x: auto;
-            margin-bottom: 1rem;
-        }}
-        .content pre code {{
-            background-color: transparent;
-            padding: 0;
-            color: inherit;
-        }}
-        .content blockquote {{
-            border-left: 4px solid #58508d;
-            padding-left: 1rem;
-            margin-left: 0;
-            margin-bottom: 1rem;
-            color: #4B5563;
-            font-style: italic;
-        }}
-        .content table {{
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1rem;
-        }}
-        .content th {{
-            background-color: #F3F4F6;
-            padding: 0.75rem;
-            text-align: left;
-            font-weight: 600;
-            border: 1px solid #E5E7EB;
-        }}
-        .content td {{
-            padding: 0.75rem;
-            border: 1px solid #E5E7EB;
-        }}
-        .content tr:nth-child(even) {{
-            background-color: #F9FAFB;
-        }}
-        .content a {{
-            color: #58508d;
-            text-decoration: underline;
-        }}
-        .content a:hover {{
-            color: #bc5090;
-        }}
-        .content hr {{
-            border: none;
-            border-top: 2px solid #E5E7EB;
-            margin: 2rem 0;
-        }}
-        .mermaid {{
-            margin: 2rem 0;
-            text-align: center;
-            background-color: white;
-            padding: 1rem;
-            border-radius: 0.5rem;
-        }}
-        .sidebar {{
-            position: fixed;
-            top: 80px;
-            left: 0;
-            height: calc(100vh - 80px);
-            width: 280px;
-            background-color: white;
-            border-right: 1px solid #E5E7EB;
-            overflow-y: auto;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 40;
-            box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
-        }}
-        .sidebar.collapsed {{
-            transform: translateX(-100%);
-        }}
-        @media (min-width: 1025px) {{
-            .sidebar {{
-                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
-            }}
-        }}
-        .sidebar-header {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 1.5rem;
-            border-bottom: 2px solid #E5E7EB;
-        }}
-        .sidebar-close {{
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0.25rem;
-            color: #6B7280;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.25rem;
-            transition: all 0.2s;
-        }}
-        .sidebar-close:hover {{
-            background-color: #F3F4F6;
-            color: #1E293B;
-        }}
-        .sidebar-toggle {{
-            position: fixed;
-            top: 90px;
-            left: 20px;
-            z-index: 50;
-            background-color: white;
-            border: 1px solid #E5E7EB;
-            border-radius: 0.5rem;
-            padding: 0.5rem;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: none;
-            transition: left 0.3s ease, background-color 0.2s ease;
-        }}
-        .sidebar-toggle:hover {{
-            background-color: #F3F4F6;
-        }}
-        .sidebar-toggle.desktop {{
-            display: none;
-        }}
-        @media (min-width: 1025px) {{
-            .sidebar-toggle.desktop {{
-                display: block;
-                top: 90px;
-                left: 300px;
-                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }}
-            .sidebar-toggle.desktop.sidebar-collapsed {{
-                left: 20px;
-            }}
-        }}
-        @media (max-width: 1024px) {{
-            .sidebar-toggle.desktop {{
-                display: none !important;
-            }}
-            .sidebar-toggle.mobile {{
-                top: 85px;
-                left: 15px;
-            }}
-        }}
-        .sidebar-content {{
-            padding: 1.5rem;
-        }}
-        .sidebar-title {{
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: #1E293B;
-            margin: 0;
-        }}
-        .sidebar-nav {{
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }}
-        .sidebar-nav li {{
-            margin-bottom: 0.5rem;
-        }}
-        .sidebar-nav a {{
-            display: block;
-            padding: 0.5rem 0.75rem;
-            color: #4B5563;
-            text-decoration: none;
-            border-radius: 0.375rem;
-            transition: all 0.2s;
-            font-size: 0.875rem;
-        }}
-        .sidebar-nav a:hover {{
-            background-color: #F3F4F6;
-            color: #58508d;
-        }}
-        .sidebar-nav a.active {{
-            background-color: #EEF2FF;
-            color: #58508d;
-            font-weight: 600;
-        }}
-        .sidebar-nav .level-1 {{
-            padding-left: 0.75rem;
-            font-weight: 600;
-            color: #1E293B;
-        }}
-        .sidebar-nav .level-2 {{
-            padding-left: 1.5rem;
-            color: #4B5563;
-        }}
-        .sidebar-nav .level-3 {{
-            padding-left: 2.25rem;
-            color: #6B7280;
-            font-size: 0.8125rem;
-        }}
-        .sidebar-nav .level-4 {{
-            padding-left: 3rem;
-            color: #9CA3AF;
-            font-size: 0.75rem;
-        }}
-        .main-content {{
-            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            padding-left: 0;
-        }}
-        @media (min-width: 1025px) {{
-            .main-content {{
-                margin-left: 280px !important;
-                max-width: calc(100vw - 280px) !important;
-                width: calc(100% - 280px) !important;
-            }}
-            .main-content.sidebar-collapsed {{
-                margin-left: 0 !important;
-                max-width: 100% !important;
-                width: 100% !important;
-            }}
-            .main-content.container {{
-                max-width: calc(100vw - 280px) !important;
-            }}
-            .main-content.sidebar-collapsed.container {{
-                max-width: 100% !important;
-            }}
-        }}
-        .main-content.no-sidebar {{
-            margin-left: 0 !important;
-        }}
-        @media (max-width: 1024px) {{
-            .sidebar {{
-                transform: translateX(-100%);
-                width: 280px;
-                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
-            }}
-            .sidebar.expanded {{
-                transform: translateX(0);
-            }}
-            .sidebar-toggle.mobile {{
-                display: block;
-            }}
-            .main-content {{
-                margin-left: 0 !important;
-                width: 100% !important;
-                max-width: 100% !important;
-                padding-left: 0.5rem !important;
-                padding-right: 0.5rem !important;
-            }}
-            .sidebar-overlay {{
-                display: none;
-                position: fixed;
-                top: 80px;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: rgba(0, 0, 0, 0.5);
-                z-index: 35;
-            }}
-            .sidebar-overlay.active {{
-                display: block;
-            }}
-        }}
-        @media (min-width: 1025px) {{
-            .sidebar-overlay {{
-                display: none !important;
-            }}
-        }}
-    </style>
+    <link rel="stylesheet" href="{css_path}">
 </head>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
@@ -424,202 +56,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <footer class="bg-gray-800 text-white text-center p-6 mt-16">
         <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
     </footer>
-    <script>
-        mermaid.initialize({{ startOnLoad: true, theme: 'default' }});
-        
-        // Sidebar toggle functionality
-        document.addEventListener('DOMContentLoaded', function() {{
-            const sidebar = document.getElementById('sidebar');
-            const sidebarOverlay = document.getElementById('sidebarOverlay');
-            const sidebarToggleMobile = document.getElementById('sidebarToggleMobile');
-            const sidebarToggleDesktop = document.getElementById('sidebarToggleDesktop');
-            const sidebarClose = document.getElementById('sidebarClose');
-            const mainContent = document.querySelector('.main-content');
-            
-            function isMobile() {{
-                return window.innerWidth <= 1024;
-            }}
-            
-            function toggleSidebar() {{
-                if (isMobile()) {{
-                    sidebar.classList.toggle('expanded');
-                    if (sidebarOverlay) {{
-                        sidebarOverlay.classList.toggle('active');
-                    }}
-                    // Prevent body scroll when sidebar is open
-                    if (sidebar.classList.contains('expanded')) {{
-                        document.body.style.overflow = 'hidden';
-                    }} else {{
-                        document.body.style.overflow = '';
-                    }}
-                }} else {{
-                    sidebar.classList.toggle('collapsed');
-                    if (mainContent) {{
-                        mainContent.classList.toggle('sidebar-collapsed');
-                    }}
-                    // Update desktop toggle button position
-                    if (sidebarToggleDesktop) {{
-                        if (sidebar.classList.contains('collapsed')) {{
-                            sidebarToggleDesktop.classList.add('sidebar-collapsed');
-                        }} else {{
-                            sidebarToggleDesktop.classList.remove('sidebar-collapsed');
-                        }}
-                    }}
-                }}
-            }}
-            
-            function closeSidebar() {{
-                if (isMobile()) {{
-                    sidebar.classList.remove('expanded');
-                    if (sidebarOverlay) {{
-                        sidebarOverlay.classList.remove('active');
-                    }}
-                    document.body.style.overflow = '';
-                }} else {{
-                    sidebar.classList.add('collapsed');
-                    if (mainContent) {{
-                        mainContent.classList.add('sidebar-collapsed');
-                    }}
-                    if (sidebarToggleDesktop) {{
-                        sidebarToggleDesktop.classList.add('sidebar-collapsed');
-                    }}
-                }}
-            }}
-            
-            function openSidebar() {{
-                if (isMobile()) {{
-                    sidebar.classList.add('expanded');
-                    if (sidebarOverlay) {{
-                        sidebarOverlay.classList.add('active');
-                    }}
-                    document.body.style.overflow = 'hidden';
-                }} else {{
-                    sidebar.classList.remove('collapsed');
-                    if (mainContent) {{
-                        mainContent.classList.remove('sidebar-collapsed');
-                    }}
-                    if (sidebarToggleDesktop) {{
-                        sidebarToggleDesktop.classList.remove('sidebar-collapsed');
-                    }}
-                }}
-            }}
-            
-            // Mobile toggle
-            if (sidebarToggleMobile) {{
-                sidebarToggleMobile.addEventListener('click', function(e) {{
-                    e.stopPropagation();
-                    toggleSidebar();
-                }});
-            }}
-            
-            // Desktop toggle
-            if (sidebarToggleDesktop) {{
-                sidebarToggleDesktop.addEventListener('click', function(e) {{
-                    e.stopPropagation();
-                    toggleSidebar();
-                }});
-            }}
-            
-            // Close button in sidebar
-            if (sidebarClose) {{
-                sidebarClose.addEventListener('click', function(e) {{
-                    e.stopPropagation();
-                    closeSidebar();
-                }});
-            }}
-            
-            // Overlay click to close on mobile
-            if (sidebarOverlay) {{
-                sidebarOverlay.addEventListener('click', function(e) {{
-                    e.stopPropagation();
-                    closeSidebar();
-                }});
-            }}
-            
-            // Handle window resize
-            let resizeTimer;
-            window.addEventListener('resize', function() {{
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function() {{
-                    if (!isMobile()) {{
-                        // On desktop, ensure sidebar state is correct
-                        if (sidebarOverlay) {{
-                            sidebarOverlay.classList.remove('active');
-                        }}
-                        document.body.style.overflow = '';
-                        // Ensure toggle button position matches sidebar state
-                        if (sidebarToggleDesktop && sidebar) {{
-                            if (sidebar.classList.contains('collapsed')) {{
-                                sidebarToggleDesktop.classList.add('sidebar-collapsed');
-                            }} else {{
-                                sidebarToggleDesktop.classList.remove('sidebar-collapsed');
-                            }}
-                        }}
-                    }} else {{
-                        // On mobile, close sidebar if open
-                        closeSidebar();
-                    }}
-                }}, 250);
-            }});
-            
-            // Initialize desktop toggle button position on load
-            if (!isMobile() && sidebarToggleDesktop && sidebar) {{
-                if (sidebar.classList.contains('collapsed')) {{
-                    sidebarToggleDesktop.classList.add('sidebar-collapsed');
-                }}
-            }}
-            
-            // Update active link on scroll
-            const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');
-            const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
-            
-            function updateActiveLink() {{
-                let current = '';
-                headings.forEach(heading => {{
-                    const rect = heading.getBoundingClientRect();
-                    if (rect.top <= 100) {{
-                        current = heading.id;
-                    }}
-                }});
-                
-                sidebarLinks.forEach(link => {{
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === '#' + current) {{
-                        link.classList.add('active');
-                    }}
-                }});
-            }}
-            
-            window.addEventListener('scroll', updateActiveLink);
-            updateActiveLink();
-            
-            // Smooth scroll for sidebar links
-            sidebarLinks.forEach(link => {{
-                link.addEventListener('click', function(e) {{
-                    const href = this.getAttribute('href');
-                    if (href.startsWith('#')) {{
-                        e.preventDefault();
-                        const target = document.querySelector(href);
-                        if (target) {{
-                            const headerOffset = 80;
-                            const elementPosition = target.getBoundingClientRect().top;
-                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                            
-                            window.scrollTo({{
-                                top: offsetPosition,
-                                behavior: 'smooth'
-                            }});
-                            
-                            // Close sidebar on mobile after click
-                            if (isMobile()) {{
-                                closeSidebar();
-                            }}
-                        }}
-                    }}
-                }});
-            }});
-        }});
-    </script>
+    <script src="{scripts_path}"></script>
+    {progress_script}
 </body>
 </html>
 """
@@ -643,12 +81,14 @@ def get_navigation_links(file_path: Path) -> Dict[str, str]:
     # Count directory levels (excluding filename)
     # For learn_concepts/docs/01-foundations/file.html -> 3 directories
     directory_parts = len(rel_path.parts) - 1
-    
+
     if directory_parts == 1:  # Root level (learn_concepts/index.html)
         return {
             'home_link': '../index.html',
             'case_studies_link': '../case_studies.html',
-            'about_link': '../aboutme.html'
+            'about_link': '../aboutme.html',
+            'css_path': 'assets/styles.css',
+            'scripts_path': 'assets/scripts.js'
         }
     else:
         # Calculate how many levels up to root from the file's directory
@@ -657,10 +97,13 @@ def get_navigation_links(file_path: Path) -> Dict[str, str]:
         #   Need to go up 3 levels: ../../../ to reach root
         up_levels = directory_parts
         prefix = '../' * up_levels
+        assets_prefix = '../' * (up_levels - 1) + 'assets/'
         return {
             'home_link': f'{prefix}index.html',
             'case_studies_link': f'{prefix}case_studies.html',
-            'about_link': f'{prefix}aboutme.html'
+            'about_link': f'{prefix}aboutme.html',
+            'css_path': f'{assets_prefix}styles.css',
+            'scripts_path': f'{assets_prefix}scripts.js'
         }
 
 
@@ -693,8 +136,11 @@ def convert_markdown_links(content: str, current_file: Path, all_md_files: Dict[
         # Check if target exists in our markdown files
         target_md = target_path.with_suffix('.md')
         if target_md.exists() and target_md in all_md_files.values():
-            # Convert to HTML link
-            html_path = target_path.with_suffix('.html')
+            # Special handling for README.md -> index.html
+            if target_path.name == 'README':
+                html_path = target_path.parent / 'index.html'
+            else:
+                html_path = target_path.with_suffix('.html')
             rel_path = calculate_relative_path(current_file, html_path)
             return f'[{link_text}]({rel_path}{anchor})'
         else:
@@ -708,6 +154,10 @@ def convert_markdown_links(content: str, current_file: Path, all_md_files: Dict[
     # This handles links that were already processed by markdown but need .md -> .html
     content = re.sub(r'href="([^"]+\.md)(#[^"]+)?">', r'href="\1.html\2">', content)
     content = re.sub(r'href="([^"]+\.md)">', r'href="\1.html">', content)
+
+    # Third pass: convert README.html to index.html
+    content = re.sub(r'href="([^"]*)/README\.html([^"]*)">', r'href="\1/index.html\2">', content)
+    content = re.sub(r'href="README\.html([^"]*)">', r'href="index.html\1">', content)
     
     return content
 
@@ -986,79 +436,10 @@ def convert_markdown_to_html(md_file: Path, all_md_files: Dict[str, Path]) -> st
     # Add progress tracking script if this is PROGRESS.html
     progress_script = ''
     if is_progress_file:
-        progress_script = '''
-    <script>
-        // Progress tracking with localStorage
-        document.addEventListener('DOMContentLoaded', function() {
-            const checkboxes = document.querySelectorAll('.progress-checkbox');
-            const storageKey = 'learn_concepts_progress';
-            
-            // Load saved progress
-            function loadProgress() {
-                try {
-                    const saved = localStorage.getItem(storageKey);
-                    if (saved) {
-                        const progress = JSON.parse(saved);
-                        checkboxes.forEach(checkbox => {
-                            const id = checkbox.id;
-                            if (progress[id] !== undefined) {
-                                checkbox.checked = progress[id];
-                            }
-                        });
-                    }
-                } catch (e) {
-                    console.error('Error loading progress:', e);
-                }
-            }
-            
-            // Save progress
-            function saveProgress() {
-                try {
-                    const progress = {};
-                    checkboxes.forEach(checkbox => {
-                        progress[checkbox.id] = checkbox.checked;
-                    });
-                    localStorage.setItem(storageKey, JSON.stringify(progress));
-                } catch (e) {
-                    console.error('Error saving progress:', e);
-                }
-            }
-            
-            // Load progress on page load
-            loadProgress();
-            
-            // Save progress when checkbox changes
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', saveProgress);
-            });
-            
-            // Calculate and display progress percentage
-            function updateProgressStats() {
-                const total = checkboxes.length;
-                const completed = Array.from(checkboxes).filter(cb => cb.checked).length;
-                const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-                
-                // Update or create progress stats element
-                let statsEl = document.getElementById('progress-stats');
-                if (!statsEl) {
-                    statsEl = document.createElement('div');
-                    statsEl.id = 'progress-stats';
-                    statsEl.style.cssText = 'background-color: #EEF2FF; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; border-left: 4px solid #58508d;';
-                    const contentDiv = document.querySelector('.content');
-                    if (contentDiv && contentDiv.firstChild) {
-                        contentDiv.insertBefore(statsEl, contentDiv.firstChild.nextSibling);
-                    }
-                }
-                statsEl.innerHTML = `<strong>Progress:</strong> ${completed} of ${total} completed (${percentage}%)`;
-            }
-            
-            // Update stats on load and change
-            updateProgressStats();
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', updateProgressStats);
-            });
-        });
-    </script>'''
+        # Calculate path to progress.js relative to current file
+        nav_links = get_navigation_links(md_file.with_suffix('.html'))
+        progress_path = nav_links['scripts_path'].replace('scripts.js', 'progress.js')
+        progress_script = f'<script src="{progress_path}"></script>'
     
     # Format final HTML
     final_html = HTML_TEMPLATE.format(
@@ -1067,6 +448,7 @@ def convert_markdown_to_html(md_file: Path, all_md_files: Dict[str, Path]) -> st
         sidebar=sidebar_html,
         sidebar_toggle=sidebar_toggle_html,
         main_content_class=main_content_class,
+        progress_script=progress_script,
         **nav_links
     )
     
