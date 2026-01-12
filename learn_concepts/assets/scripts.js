@@ -30,14 +30,6 @@
                     if (mainContent) {
                         mainContent.classList.toggle('sidebar-collapsed');
                     }
-                    // Update desktop toggle button position
-                    if (sidebarToggleDesktop) {
-                        if (sidebar.classList.contains('collapsed')) {
-                            sidebarToggleDesktop.classList.add('sidebar-collapsed');
-                        } else {
-                            sidebarToggleDesktop.classList.remove('sidebar-collapsed');
-                        }
-                    }
                 }
             }
 
@@ -53,9 +45,6 @@
                     if (mainContent) {
                         mainContent.classList.add('sidebar-collapsed');
                     }
-                    if (sidebarToggleDesktop) {
-                        sidebarToggleDesktop.classList.add('sidebar-collapsed');
-                    }
                 }
             }
 
@@ -70,9 +59,6 @@
                     sidebar.classList.remove('collapsed');
                     if (mainContent) {
                         mainContent.classList.remove('sidebar-collapsed');
-                    }
-                    if (sidebarToggleDesktop) {
-                        sidebarToggleDesktop.classList.remove('sidebar-collapsed');
                     }
                 }
             }
@@ -120,27 +106,12 @@
                             sidebarOverlay.classList.remove('active');
                         }
                         document.body.style.overflow = '';
-                        // Ensure toggle button position matches sidebar state
-                        if (sidebarToggleDesktop && sidebar) {
-                            if (sidebar.classList.contains('collapsed')) {
-                                sidebarToggleDesktop.classList.add('sidebar-collapsed');
-                            } else {
-                                sidebarToggleDesktop.classList.remove('sidebar-collapsed');
-                            }
-                        }
                     } else {
                         // On mobile, close sidebar if open
                         closeSidebar();
                     }
                 }, 250);
             });
-
-            // Initialize desktop toggle button position on load
-            if (!isMobile() && sidebarToggleDesktop && sidebar) {
-                if (sidebar.classList.contains('collapsed')) {
-                    sidebarToggleDesktop.classList.add('sidebar-collapsed');
-                }
-            }
 
             // Update active link on scroll
             const headings = document.querySelectorAll('.content h1, .content h2, .content h3, .content h4');
@@ -174,7 +145,7 @@
                         e.preventDefault();
                         const target = document.querySelector(href);
                         if (target) {
-                            const headerOffset = 80;
+                            const headerOffset = 64;
                             const elementPosition = target.getBoundingClientRect().top;
                             const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 

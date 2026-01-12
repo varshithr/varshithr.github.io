@@ -13,12 +13,12 @@
             border-radius: 0.75rem;
             padding: 2rem;
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-            margin-top: 2rem;
+            margin-top: 0;
         }
         @media (max-width: 640px) {
             .content {
                 padding: 1rem;
-                margin-top: 1rem;
+                margin-top: 0;
                 border-radius: 0.5rem;
             }
             .content h1 {
@@ -166,9 +166,9 @@
         }
         .sidebar {
             position: fixed;
-            top: 80px;
+            top: 64px;
             left: 0;
-            height: calc(100vh - 80px);
+            height: calc(100vh - 64px);
             width: 280px;
             background-color: white;
             border-right: 1px solid #E5E7EB;
@@ -209,43 +209,33 @@
             color: #1E293B;
         }
         .sidebar-toggle {
-            position: fixed;
-            top: 90px;
-            left: 20px;
-            z-index: 50;
-            background-color: white;
-            border: 1px solid #E5E7EB;
-            border-radius: 0.5rem;
-            padding: 0.5rem;
+            background: none;
+            border: none;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: none;
-            transition: left 0.3s ease, background-color 0.2s ease;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
         }
         .sidebar-toggle:hover {
             background-color: #F3F4F6;
+            color: #1E293B;
+        }
+        .sidebar-toggle.mobile {
+            display: block;
         }
         .sidebar-toggle.desktop {
             display: none;
         }
-        @media (min-width: 1025px) {
+        @media (min-width: 768px) {
             .sidebar-toggle.desktop {
                 display: block;
-                top: 90px;
-                left: 300px;
-                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-            .sidebar-toggle.desktop.sidebar-collapsed {
-                left: 20px;
-            }
-        }
-        @media (max-width: 1024px) {
-            .sidebar-toggle.desktop {
-                display: none !important;
             }
             .sidebar-toggle.mobile {
-                top: 85px;
-                left: 15px;
+                display: none;
             }
         }
         .sidebar-content {
@@ -349,7 +339,7 @@
             .sidebar-overlay {
                 display: none;
                 position: fixed;
-                top: 80px;
+                top: 64px;
                 left: 0;
                 right: 0;
                 bottom: 0;

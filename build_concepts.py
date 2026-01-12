@@ -34,11 +34,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <body class="antialiased">
     <header class="bg-white sticky top-0 z-50 shadow-md">
         <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-            <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="{home_link}" class="flex items-center">
-                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
-                    <span class="gradient-text">Home</span>
-                </a>
+            <div class="flex items-center space-x-4">
+                {sidebar_toggle}
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="{home_link}" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
             </div>
             <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
                 <li><a href="{case_studies_link}" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
@@ -46,9 +49,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             </ul>
         </nav>
     </header>
-    {sidebar_toggle}
     {sidebar}
-    <main class="main-content{main_content_class}container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <main class="main-content{main_content_class}container mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div class="content">
 {content}
         </div>
@@ -236,16 +238,16 @@ def generate_sidebar_nav(html_content: str) -> Tuple[str, str, str]:
         </div>
     </aside>'''
     
-    sidebar_toggle_html = '''    <button class="sidebar-toggle mobile" id="sidebarToggleMobile" aria-label="Toggle sidebar">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
-    </button>
-    <button class="sidebar-toggle desktop" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
-    </button>'''
+    sidebar_toggle_html = '''                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>'''
     
     return (sidebar_html, sidebar_toggle_html, ' ')
 
