@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pubsub Answers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#answer-key-pubsub" class="level-1">Answer Key: Pub/Sub</a></li>
+                <li><a href="#exercise-1-design-messaging" class="level-2">Exercise 1: Design Messaging</a></li>
+                <li><a href="#answer" class="level-3">Answer</a></li>
+                <li><a href="#architecture" class="level-3">Architecture</a></li>
+                <li><a href="#exercise-2-handle-duplicates" class="level-2">Exercise 2: Handle Duplicates</a></li>
+                <li><a href="#answer_1" class="level-3">Answer</a></li>
+                <li><a href="#exercise-3-handle-failures" class="level-2">Exercise 3: Handle Failures</a></li>
+                <li><a href="#answer_2" class="level-3">Answer</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="answer-key-pubsub">Answer Key: Pub/Sub</h1>
+<p><a href="../../03-gcp-core-building-blocks/pubsub.html">Back to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-design-messaging">Exercise 1: Design Messaging</h2>
+<p><strong>Question</strong>: Design a Pub/Sub architecture for an event-driven application. What topics? What subscriptions? How is ordering handled?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Goal</strong>: Design Pub/Sub architecture for event-driven application.</p>
+<h3 id="architecture">Architecture</h3>
+<p><strong>Topics</strong>:
+- <code>user-events</code>: User actions (login, logout, profile updates)
+- <code>order-events</code>: Order events (created, updated, cancelled)
+- <code>payment-events</code>: Payment events (processed, failed)</p>
+<p><strong>Subscriptions</strong>:
+- <code>user-events-analytics</code>: Analytics processing
+- <code>order-events-notifications</code>: Notification service
+- <code>payment-events-audit</code>: Audit logging</p>
+<p><strong>Ordering</strong>: Use ordering keys (e.g., <code>user_id</code>, <code>order_id</code>) for per-entity ordering.</p>
+<p><strong>Answer</strong>: Separate topics by event type, create subscriptions per consumer, use ordering keys for per-entity ordering.</p>
+<hr />
+<h2 id="exercise-2-handle-duplicates">Exercise 2: Handle Duplicates</h2>
+<p><strong>Question</strong>: Your application receives duplicate messages. How do you handle them? What's the idempotency strategy?</p>
+<h3 id="answer_1">Answer</h3>
+<p><strong>Idempotency strategies</strong>:</p>
+<ol>
+<li><strong>Idempotency Keys</strong>: Use message ID or custom idempotency key</li>
+<li><strong>Deduplication</strong>: Track processed message IDs (e.g., in database)</li>
+<li><strong>Idempotent Operations</strong>: Make operations idempotent (e.g., upsert)</li>
+</ol>
+<p><strong>Example</strong>: Track processed message IDs in database, check before processing.</p>
+<p><strong>Answer</strong>: Use idempotency keys, track processed message IDs, make operations idempotent.</p>
+<hr />
+<h2 id="exercise-3-handle-failures">Exercise 3: Handle Failures</h2>
+<p><strong>Question</strong>: Messages are failing to process. How do you handle failures? What's the dead letter queue strategy?</p>
+<h3 id="answer_2">Answer</h3>
+<p><strong>Failure handling</strong>:</p>
+<ol>
+<li><strong>Dead Letter Queue</strong>: Configure DLQ for failed messages</li>
+<li><strong>Retry Logic</strong>: Implement exponential backoff retry</li>
+<li><strong>Error Handling</strong>: Handle different error types appropriately</li>
+<li><strong>Monitoring</strong>: Monitor DLQ and failed messages</li>
+</ol>
+<p><strong>Answer</strong>: Configure DLQ, implement retry logic, handle errors appropriately, monitor DLQ for issues.</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../../assets/scripts.js"></script>
+    
+</body>
+</html>

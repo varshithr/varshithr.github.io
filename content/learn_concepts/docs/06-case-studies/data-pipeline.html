@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Pipeline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#high-throughput-data-pipeline" class="level-1">High-Throughput Data Pipeline</a></li>
+                <li><a href="#system-overview" class="level-2">System Overview</a></li>
+                <li><a href="#requirements" class="level-3">Requirements</a></li>
+                <li><a href="#architecture" class="level-2">Architecture</a></li>
+                <li><a href="#high-level-architecture" class="level-3">High-Level Architecture</a></li>
+                <li><a href="#component-details" class="level-3">Component Details</a></li>
+                <li><a href="#1-event-sources" class="level-4">1. Event Sources</a></li>
+                <li><a href="#2-pubsub-topics" class="level-4">2. Pub/Sub Topics</a></li>
+                <li><a href="#3-dataflow-pipeline" class="level-4">3. Dataflow Pipeline</a></li>
+                <li><a href="#4-bigquery" class="level-4">4. BigQuery</a></li>
+                <li><a href="#5-dead-letter-queue" class="level-4">5. Dead Letter Queue</a></li>
+                <li><a href="#data-flow" class="level-2">Data Flow</a></li>
+                <li><a href="#event-ingestion-flow" class="level-3">Event Ingestion Flow</a></li>
+                <li><a href="#processing-stages" class="level-3">Processing Stages</a></li>
+                <li><a href="#stage-1-read-from-pubsub" class="level-4">Stage 1: Read from Pub/Sub</a></li>
+                <li><a href="#stage-2-transform-enrich" class="level-4">Stage 2: Transform &amp; Enrich</a></li>
+                <li><a href="#stage-3-validate" class="level-4">Stage 3: Validate</a></li>
+                <li><a href="#stage-4-deduplicate" class="level-4">Stage 4: Deduplicate</a></li>
+                <li><a href="#stage-5-write-to-bigquery" class="level-4">Stage 5: Write to BigQuery</a></li>
+                <li><a href="#slis-slos-error-budgets" class="level-2">SLIs, SLOs &amp; Error Budgets</a></li>
+                <li><a href="#slis-service-level-indicators" class="level-3">SLIs (Service Level Indicators)</a></li>
+                <li><a href="#1-ingestion-latency-sli" class="level-4">1. Ingestion Latency SLI</a></li>
+                <li><a href="#2-throughput-sli" class="level-4">2. Throughput SLI</a></li>
+                <li><a href="#3-error-rate-sli" class="level-4">3. Error Rate SLI</a></li>
+                <li><a href="#4-availability-sli" class="level-4">4. Availability SLI</a></li>
+                <li><a href="#slos-service-level-objectives" class="level-3">SLOs (Service Level Objectives)</a></li>
+                <li><a href="#error-budget-policy" class="level-3">Error Budget Policy</a></li>
+                <li><a href="#capacity-planning" class="level-2">Capacity Planning</a></li>
+                <li><a href="#current-capacity" class="level-3">Current Capacity</a></li>
+                <li><a href="#scaling-strategy" class="level-3">Scaling Strategy</a></li>
+                <li><a href="#capacity-forecasting" class="level-3">Capacity Forecasting</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#pipeline-failures" class="level-3">Pipeline Failures</a></li>
+                <li><a href="#scenario-1-pubsub-outage" class="level-4">Scenario 1: Pub/Sub Outage</a></li>
+                <li><a href="#scenario-2-dataflow-failure" class="level-4">Scenario 2: Dataflow Failure</a></li>
+                <li><a href="#scenario-3-bigquery-unavailable" class="level-4">Scenario 3: BigQuery Unavailable</a></li>
+                <li><a href="#backpressure-scenarios" class="level-3">Backpressure Scenarios</a></li>
+                <li><a href="#scenario-1-high-event-rate" class="level-4">Scenario 1: High Event Rate</a></li>
+                <li><a href="#scenario-2-slow-downstream-bigquery" class="level-4">Scenario 2: Slow Downstream (BigQuery)</a></li>
+                <li><a href="#overload-scenarios" class="level-3">Overload Scenarios</a></li>
+                <li><a href="#10-normal-load-10m-eventssecond" class="level-4">10× Normal Load (10M events/second)</a></li>
+                <li><a href="#100-normal-load-100m-eventssecond" class="level-4">100× Normal Load (100M events/second)</a></li>
+                <li><a href="#observability" class="level-2">Observability</a></li>
+                <li><a href="#metrics" class="level-3">Metrics</a></li>
+                <li><a href="#pipeline-metrics" class="level-4">Pipeline Metrics</a></li>
+                <li><a href="#component-metrics" class="level-4">Component Metrics</a></li>
+                <li><a href="#business-metrics" class="level-4">Business Metrics</a></li>
+                <li><a href="#dashboards" class="level-3">Dashboards</a></li>
+                <li><a href="#logs" class="level-3">Logs</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#deployment-rollout-strategy" class="level-2">Deployment &amp; Rollout Strategy</a></li>
+                <li><a href="#deployment-process" class="level-3">Deployment Process</a></li>
+                <li><a href="#rollout-process" class="level-3">Rollout Process</a></li>
+                <li><a href="#phase-1-canary-5-traffic" class="level-4">Phase 1: Canary (5% traffic)</a></li>
+                <li><a href="#phase-2-gradual-rollout-25-50-100" class="level-4">Phase 2: Gradual Rollout (25%, 50%, 100%)</a></li>
+                <li><a href="#rollback-strategy" class="level-3">Rollback Strategy</a></li>
+                <li><a href="#security" class="level-2">Security</a></li>
+                <li><a href="#authentication-authorization" class="level-3">Authentication &amp; Authorization</a></li>
+                <li><a href="#data-protection" class="level-3">Data Protection</a></li>
+                <li><a href="#cost-optimization" class="level-2">Cost Optimization</a></li>
+                <li><a href="#cost-breakdown" class="level-3">Cost Breakdown</a></li>
+                <li><a href="#optimization-strategies" class="level-3">Optimization Strategies</a></li>
+                <li><a href="#incident-response-playbook" class="level-2">Incident Response Playbook</a></li>
+                <li><a href="#common-incidents" class="level-3">Common Incidents</a></li>
+                <li><a href="#incident-1-high-backlog" class="level-4">Incident 1: High Backlog</a></li>
+                <li><a href="#incident-2-high-error-rate" class="level-4">Incident 2: High Error Rate</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="high-throughput-data-pipeline">High-Throughput Data Pipeline</h1>
+<p><strong>One-line summary</strong>: End-to-end design of a high-throughput data pipeline on GCP using Pub/Sub, Dataflow, and BigQuery with SLOs, backpressure handling, and failure recovery.</p>
+<p><strong>Prerequisites</strong>: <a href="../03-gcp-core-building-blocks/pubsub.html">Pub/Sub: Delivery Guarantees</a>, <a href="../03-gcp-core-building-blocks/bigquery.html">BigQuery Architecture</a>, <a href="../02-distributed-systems/overload-backpressure.html">Overload &amp; Backpressure</a>, <a href="../04-reliability-sre/README.html">Reliability &amp; SRE</a>.</p>
+<hr />
+<h2 id="system-overview">System Overview</h2>
+<h3 id="requirements">Requirements</h3>
+<p><strong>Functional Requirements</strong>:
+- Ingest events from multiple sources (mobile apps, web, IoT devices)
+- Process events in real-time (transform, enrich, validate)
+- Store processed events in data warehouse (BigQuery)
+- Support 1M+ events per second peak load
+- Support multiple event types (user events, transactions, telemetry)</p>
+<p><strong>Non-Functional Requirements</strong>:
+- <strong>Latency</strong>: P95 &lt; 5 seconds (event ingestion to queryable)
+- <strong>Throughput</strong>: Handle 1M+ events/second peak
+- <strong>Availability</strong>: 99.9% (SLO)
+- <strong>Durability</strong>: 99.999999% (11 nines)
+- <strong>Consistency</strong>: At-least-once delivery</p>
+<p><strong>Constraints</strong>:
+- Must use GCP services
+- Cost-effective at scale
+- Support schema evolution</p>
+<hr />
+<h2 id="architecture">Architecture</h2>
+<h3 id="high-level-architecture">High-Level Architecture</h3>
+<div class="mermaid">
+graph TB
+Sources[Event Sources<br/>Mobile, Web, IoT] --> PubSub[Pub/Sub<br/>Topics]
+PubSub --> Dataflow[Dataflow<br/>Streaming Pipeline]
+Dataflow --> Transform[Transform & Enrich]
+Dataflow --> Validate[Validate]
+Dataflow --> Dedupe[Deduplicate]
+Transform --> BigQuery[BigQuery<br/>Data Warehouse]
+Validate --> BigQuery
+Dedupe --> BigQuery
+Dataflow --> DLQ[Dead Letter Queue<br/>Pub/Sub]
+BigQuery --> Analytics[Analytics & Reporting]
+style PubSub fill:#99ccff
+style Dataflow fill:#ffcc99
+style BigQuery fill:#99ff99
+style DLQ fill:#ff9999
+</div>
+<h3 id="component-details">Component Details</h3>
+<h4 id="1-event-sources">1. Event Sources</h4>
+<ul>
+<li><strong>Types</strong>: Mobile apps, web applications, IoT devices</li>
+<li><strong>Protocol</strong>: HTTP POST to Pub/Sub push endpoint</li>
+<li><strong>Format</strong>: JSON events</li>
+<li><strong>Rate</strong>: Variable (100K-1M events/second)</li>
+</ul>
+<h4 id="2-pubsub-topics">2. Pub/Sub Topics</h4>
+<ul>
+<li><strong>Topics</strong>: Separate topics per event type</li>
+<li><code>user-events</code></li>
+<li><code>transactions</code></li>
+<li><code>telemetry</code></li>
+<li><strong>Configuration</strong>:</li>
+<li>Message retention: 7 days</li>
+<li>Ordering: Per user/device ID</li>
+<li>Dead letter queue: Enabled</li>
+</ul>
+<h4 id="3-dataflow-pipeline">3. Dataflow Pipeline</h4>
+<ul>
+<li><strong>Type</strong>: Streaming pipeline (Apache Beam)</li>
+<li><strong>Stages</strong>:</li>
+<li><strong>Read</strong>: Read from Pub/Sub subscriptions</li>
+<li><strong>Transform</strong>: Transform events (enrich, normalize)</li>
+<li><strong>Validate</strong>: Validate event schema</li>
+<li><strong>Deduplicate</strong>: Remove duplicates (idempotency)</li>
+<li><strong>Write</strong>: Write to BigQuery</li>
+<li><strong>Auto-scaling</strong>: Automatic scaling based on backlog</li>
+<li><strong>Regions</strong>: Multi-region deployment</li>
+</ul>
+<h4 id="4-bigquery">4. BigQuery</h4>
+<ul>
+<li><strong>Tables</strong>: Partitioned by event date</li>
+<li><strong>Clustering</strong>: By event type, user ID</li>
+<li><strong>Schema</strong>: JSON schema with schema evolution support</li>
+<li><strong>Load</strong>: Streaming inserts</li>
+</ul>
+<h4 id="5-dead-letter-queue">5. Dead Letter Queue</h4>
+<ul>
+<li><strong>Topic</strong>: <code>data-pipeline-dlq</code></li>
+<li><strong>Use case</strong>: Failed events, invalid events</li>
+<li><strong>Processing</strong>: Manual review and reprocessing</li>
+</ul>
+<hr />
+<h2 id="data-flow">Data Flow</h2>
+<h3 id="event-ingestion-flow">Event Ingestion Flow</h3>
+<div class="mermaid">
+sequenceDiagram
+participant Source
+participant PubSub
+participant Dataflow
+participant BigQuery
+participant DLQ
+Source->>PubSub: Publish event
+PubSub->>PubSub: Store message
+PubSub->>Dataflow: Deliver message
+Dataflow->>Dataflow: Transform & enrich
+Dataflow->>Dataflow: Validate schema
+alt Valid
+Dataflow->>Dataflow: Deduplicate
+Dataflow->>BigQuery: Stream insert
+BigQuery-->>Dataflow: Success
+Dataflow->>PubSub: Acknowledge
+else Invalid
+Dataflow->>DLQ: Publish failed event
+Dataflow->>PubSub: Acknowledge (to remove from subscription)
+end
+</div>
+<h3 id="processing-stages">Processing Stages</h3>
+<h4 id="stage-1-read-from-pubsub">Stage 1: Read from Pub/Sub</h4>
+<ul>
+<li><strong>Input</strong>: Pub/Sub subscriptions</li>
+<li><strong>Processing</strong>: Read messages, parse JSON</li>
+<li><strong>Backpressure</strong>: Automatic backpressure handling</li>
+</ul>
+<h4 id="stage-2-transform-enrich">Stage 2: Transform &amp; Enrich</h4>
+<ul>
+<li><strong>Transformations</strong>:</li>
+<li>Normalize event format</li>
+<li>Enrich with reference data (user profiles, product catalog)</li>
+<li>Add metadata (timestamp, source, version)</li>
+<li><strong>Performance</strong>: Parallel processing, caching</li>
+</ul>
+<h4 id="stage-3-validate">Stage 3: Validate</h4>
+<ul>
+<li><strong>Validation</strong>:</li>
+<li>Schema validation</li>
+<li>Required fields check</li>
+<li>Data type validation</li>
+<li>Business rule validation</li>
+<li><strong>Failure handling</strong>: Send invalid events to DLQ</li>
+</ul>
+<h4 id="stage-4-deduplicate">Stage 4: Deduplicate</h4>
+<ul>
+<li><strong>Deduplication</strong>: Track processed event IDs</li>
+<li><strong>Storage</strong>: Cloud Firestore for deduplication state</li>
+<li><strong>TTL</strong>: 7 days (event retention period)</li>
+</ul>
+<h4 id="stage-5-write-to-bigquery">Stage 5: Write to BigQuery</h4>
+<ul>
+<li><strong>Method</strong>: Streaming inserts</li>
+<li><strong>Batching</strong>: Batch inserts for efficiency</li>
+<li><strong>Error handling</strong>: Retry failed inserts, send to DLQ</li>
+</ul>
+<hr />
+<h2 id="slis-slos-error-budgets">SLIs, SLOs &amp; Error Budgets</h2>
+<h3 id="slis-service-level-indicators">SLIs (Service Level Indicators)</h3>
+<h4 id="1-ingestion-latency-sli">1. Ingestion Latency SLI</h4>
+<ul>
+<li><strong>Definition</strong>: Time from event published to queryable in BigQuery</li>
+<li><strong>Measurement</strong>: P95 latency</li>
+<li><strong>Current</strong>: P95 = 3 seconds</li>
+<li><strong>Target</strong>: P95 &lt; 5 seconds (SLO)</li>
+</ul>
+<h4 id="2-throughput-sli">2. Throughput SLI</h4>
+<ul>
+<li><strong>Definition</strong>: Events processed per second</li>
+<li><strong>Measurement</strong>: Events/second</li>
+<li><strong>Current</strong>: 800K events/second average</li>
+<li><strong>Target</strong>: Handle 1M events/second peak (SLO)</li>
+</ul>
+<h4 id="3-error-rate-sli">3. Error Rate SLI</h4>
+<ul>
+<li><strong>Definition</strong>: Fraction of events that fail processing</li>
+<li><strong>Measurement</strong>: Failed events / total events</li>
+<li><strong>Current</strong>: 0.1%</li>
+<li><strong>Target</strong>: &lt; 0.5% (SLO)</li>
+</ul>
+<h4 id="4-availability-sli">4. Availability SLI</h4>
+<ul>
+<li><strong>Definition</strong>: Fraction of time pipeline is processing events</li>
+<li><strong>Measurement</strong>: Uptime / total time</li>
+<li><strong>Current</strong>: 99.95%</li>
+<li><strong>Target</strong>: 99.9% (SLO)</li>
+</ul>
+<h3 id="slos-service-level-objectives">SLOs (Service Level Objectives)</h3>
+<table>
+<thead>
+<tr>
+<th>SLI</th>
+<th>SLO</th>
+<th>Error Budget</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ingestion Latency</td>
+<td>P95 &lt; 5 seconds</td>
+<td>&gt; 5 seconds for &gt; 0.1% events</td>
+</tr>
+<tr>
+<td>Throughput</td>
+<td>Handle 1M events/second</td>
+<td>&lt; 1M events/second for &gt; 0.1% time</td>
+</tr>
+<tr>
+<td>Error Rate</td>
+<td>&lt; 0.5%</td>
+<td>&gt; 0.5% for &gt; 0.1% events</td>
+</tr>
+<tr>
+<td>Availability</td>
+<td>99.9%</td>
+<td>&lt; 99.9% for &gt; 0.1% time</td>
+</tr>
+</tbody>
+</table>
+<h3 id="error-budget-policy">Error Budget Policy</h3>
+<p><strong>Policy</strong>:
+- <strong>&gt; 50% remaining</strong>: Normal operations, can ship features
+- <strong>25-50% remaining</strong>: Warning, reduce risky changes
+- <strong>&lt; 25% remaining</strong>: Critical, stop feature work, focus on reliability
+- <strong>0% remaining</strong>: Emergency, only reliability work</p>
+<hr />
+<h2 id="capacity-planning">Capacity Planning</h2>
+<h3 id="current-capacity">Current Capacity</h3>
+<p><strong>Pub/Sub</strong>:
+- <strong>Topics</strong>: 3 topics (user-events, transactions, telemetry)
+- <strong>Throughput</strong>: 1M messages/second per topic
+- <strong>Subscriptions</strong>: 1 subscription per topic</p>
+<p><strong>Dataflow</strong>:
+- <strong>Workers</strong>: Auto-scaling (10-100 workers)
+- <strong>Throughput</strong>: 100K events/second per worker
+- <strong>Total capacity</strong>: 10M events/second (with scaling)</p>
+<p><strong>BigQuery</strong>:
+- <strong>Slots</strong>: On-demand (2000 slots)
+- <strong>Throughput</strong>: Millions of rows/second
+- <strong>Storage</strong>: Petabytes</p>
+<h3 id="scaling-strategy">Scaling Strategy</h3>
+<p><strong>Auto-scaling</strong>:
+- <strong>Pub/Sub</strong>: Automatic (handles load)
+- <strong>Dataflow</strong>: Auto-scaling based on backlog
+  - Scale up: Backlog &gt; threshold
+  - Scale down: Backlog &lt; threshold
+- <strong>BigQuery</strong>: Automatic (handles load)</p>
+<p><strong>Manual scaling</strong>:
+- <strong>Dataflow</strong>: Adjust min/max workers if needed
+- <strong>BigQuery</strong>: Reserve slots for predictable workloads</p>
+<h3 id="capacity-forecasting">Capacity Forecasting</h3>
+<p><strong>Growth Projection</strong>:
+- <strong>Current</strong>: 800K events/second average, 1M peak
+- <strong>Growth</strong>: 30% per quarter
+- <strong>6 months</strong>: ~1.3M events/second average, ~1.6M peak
+- <strong>12 months</strong>: ~2.2M events/second average, ~2.7M peak</p>
+<p><strong>Capacity Needs</strong>:
+- <strong>6 months</strong>: Need to handle ~2M events/second peak
+- <strong>12 months</strong>: Need to handle ~3M events/second peak
+- <strong>Plan</strong>: Optimize pipeline, add more Pub/Sub topics if needed</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="pipeline-failures">Pipeline Failures</h3>
+<h4 id="scenario-1-pubsub-outage">Scenario 1: Pub/Sub Outage</h4>
+<ul>
+<li><strong>Impact</strong>: Cannot ingest events, events queued</li>
+<li><strong>Blast radius</strong>: All event sources</li>
+<li><strong>Detection</strong>: Publish failures, API errors</li>
+<li><strong>Recovery</strong>: </li>
+<li>Pub/Sub automatically recovers</li>
+<li>Events delivered after recovery</li>
+<li>May see increased latency</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Pub/Sub high availability</li>
+<li>Retry logic in clients</li>
+<li>Monitor Pub/Sub health</li>
+</ul>
+<h4 id="scenario-2-dataflow-failure">Scenario 2: Dataflow Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Events not processed, backlog grows</li>
+<li><strong>Blast radius</strong>: All events in pipeline</li>
+<li><strong>Detection</strong>: Dataflow job failures, backlog increasing</li>
+<li><strong>Recovery</strong>: </li>
+<li>Restart Dataflow job</li>
+<li>Process backlog</li>
+<li>May see increased latency</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Dataflow auto-restart</li>
+<li>Monitor job health</li>
+<li>Alert on failures</li>
+</ul>
+<h4 id="scenario-3-bigquery-unavailable">Scenario 3: BigQuery Unavailable</h4>
+<ul>
+<li><strong>Impact</strong>: Cannot write events, events queued in Dataflow</li>
+<li><strong>Blast radius</strong>: All processed events</li>
+<li><strong>Detection</strong>: BigQuery write failures, Dataflow backlog</li>
+<li><strong>Recovery</strong>: </li>
+<li>BigQuery automatically recovers</li>
+<li>Dataflow retries writes</li>
+<li>May see increased latency</li>
+<li><strong>Mitigation</strong>: </li>
+<li>BigQuery high availability</li>
+<li>Retry logic in Dataflow</li>
+<li>Monitor BigQuery health</li>
+</ul>
+<h3 id="backpressure-scenarios">Backpressure Scenarios</h3>
+<h4 id="scenario-1-high-event-rate">Scenario 1: High Event Rate</h4>
+<ul>
+<li><strong>Impact</strong>: Backlog grows, latency increases</li>
+<li><strong>Blast radius</strong>: All events</li>
+<li><strong>Detection</strong>: Pub/Sub backlog, Dataflow backlog</li>
+<li><strong>Recovery</strong>: </li>
+<li>Auto-scale Dataflow workers</li>
+<li>Reduce event rate if possible</li>
+<li>May need manual scaling</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Auto-scaling enabled</li>
+<li>Monitor backpressure</li>
+<li>Alert on high backlog</li>
+</ul>
+<h4 id="scenario-2-slow-downstream-bigquery">Scenario 2: Slow Downstream (BigQuery)</h4>
+<ul>
+<li><strong>Impact</strong>: Dataflow backlog grows, latency increases</li>
+<li><strong>Blast radius</strong>: All events</li>
+<li><strong>Detection</strong>: BigQuery write latency, Dataflow backlog</li>
+<li><strong>Recovery</strong>: </li>
+<li>Optimize BigQuery writes</li>
+<li>Scale BigQuery slots</li>
+<li>May need to reduce event rate</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Optimize BigQuery schema</li>
+<li>Monitor BigQuery performance</li>
+<li>Alert on high latency</li>
+</ul>
+<h3 id="overload-scenarios">Overload Scenarios</h3>
+<h4 id="10-normal-load-10m-eventssecond">10× Normal Load (10M events/second)</h4>
+<ul>
+<li><strong>Impact</strong>: </li>
+<li>Pub/Sub: Handles load, may see increased latency</li>
+<li>Dataflow: Auto-scales, may need more workers</li>
+<li>BigQuery: Handles load, may see increased latency</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Auto-scaling handles load</li>
+<li>Monitor performance</li>
+<li>Scale if needed</li>
+</ul>
+<h4 id="100-normal-load-100m-eventssecond">100× Normal Load (100M events/second)</h4>
+<ul>
+<li><strong>Impact</strong>: </li>
+<li>Pub/Sub: May be overwhelmed, need scaling</li>
+<li>Dataflow: Significant scaling needed</li>
+<li>BigQuery: May be overwhelmed, need scaling</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Significant scaling required</li>
+<li>May need to add more topics</li>
+<li>May need to optimize pipeline</li>
+</ul>
+<hr />
+<h2 id="observability">Observability</h2>
+<h3 id="metrics">Metrics</h3>
+<h4 id="pipeline-metrics">Pipeline Metrics</h4>
+<ul>
+<li><strong>Ingestion rate</strong>: Events ingested per second</li>
+<li><strong>Processing rate</strong>: Events processed per second</li>
+<li><strong>Latency</strong>: P50/P95/P99 latency (ingestion to queryable)</li>
+<li><strong>Error rate</strong>: Failed events / total events</li>
+<li><strong>Backlog</strong>: Unprocessed events in Pub/Sub/Dataflow</li>
+</ul>
+<h4 id="component-metrics">Component Metrics</h4>
+<ul>
+<li><strong>Pub/Sub</strong>: Publish rate, subscription delivery rate, backlog</li>
+<li><strong>Dataflow</strong>: Worker count, processing rate, backlog</li>
+<li><strong>BigQuery</strong>: Insert rate, query rate, slot usage</li>
+</ul>
+<h4 id="business-metrics">Business Metrics</h4>
+<ul>
+<li><strong>Event types</strong>: Events per type</li>
+<li><strong>Sources</strong>: Events per source</li>
+<li><strong>Success rate</strong>: Successful events / total events</li>
+</ul>
+<h3 id="dashboards">Dashboards</h3>
+<p><strong>Pipeline Dashboard</strong>:
+- Ingestion rate, processing rate, latency
+- Error rate, backlog
+- SLO compliance, error budget</p>
+<p><strong>Component Dashboards</strong>:
+- Pub/Sub: Publish rate, delivery rate, backlog
+- Dataflow: Worker count, processing rate, errors
+- BigQuery: Insert rate, query performance</p>
+<p><strong>DLQ Dashboard</strong>:
+- Failed events count, failure reasons
+- Reprocessing status</p>
+<h3 id="logs">Logs</h3>
+<p><strong>Application Logs</strong>:
+- Event processing logs (structured JSON)
+- Error logs with stack traces
+- Performance logs (slow processing)</p>
+<p><strong>Infrastructure Logs</strong>:
+- Pub/Sub logs
+- Dataflow logs
+- BigQuery logs</p>
+<h3 id="alerts">Alerts</h3>
+<p><strong>Critical Alerts</strong>:
+- Pipeline unavailable
+- High error rate (&gt; 1%)
+- High backlog (&gt; threshold)
+- SLO violation</p>
+<p><strong>Warning Alerts</strong>:
+- High latency
+- Error rate increasing
+- Backlog growing
+- Component failures</p>
+<hr />
+<h2 id="deployment-rollout-strategy">Deployment &amp; Rollout Strategy</h2>
+<h3 id="deployment-process">Deployment Process</h3>
+<div class="mermaid">
+graph LR
+Code[Code] --> CI[CI/CD Pipeline]
+CI --> Build[Build Pipeline]
+Build --> Test[Test Pipeline]
+Test --> Deploy[Deploy Pipeline]
+Deploy --> Canary[Canary Deployment]
+Canary --> Monitor[Monitor Metrics]
+Monitor -->|Success| Prod[Production]
+Monitor -->|Failure| Rollback[Rollback]
+style Canary fill:#ffcc99
+style Prod fill:#99ff99
+style Rollback fill:#ff9999
+</div>
+<h3 id="rollout-process">Rollout Process</h3>
+<h4 id="phase-1-canary-5-traffic">Phase 1: Canary (5% traffic)</h4>
+<ol>
+<li><strong>Deploy</strong>: Deploy new pipeline version (5% traffic)</li>
+<li><strong>Monitor</strong>: Monitor for 30 minutes</li>
+<li>Check error rate, latency, SLO compliance</li>
+<li>Compare to baseline</li>
+<li><strong>Decision</strong>: </li>
+<li><strong>Success</strong>: Proceed to Phase 2</li>
+<li><strong>Failure</strong>: Rollback immediately</li>
+</ol>
+<h4 id="phase-2-gradual-rollout-25-50-100">Phase 2: Gradual Rollout (25%, 50%, 100%)</h4>
+<ol>
+<li><strong>25% traffic</strong>: Monitor for 15 minutes</li>
+<li><strong>50% traffic</strong>: Monitor for 15 minutes</li>
+<li><strong>100% traffic</strong>: Monitor for 1 hour</li>
+<li><strong>Complete</strong>: Mark rollout complete</li>
+</ol>
+<h3 id="rollback-strategy">Rollback Strategy</h3>
+<p><strong>Automatic Rollback</strong>:
+- <strong>Trigger</strong>: Error rate &gt; 1% OR latency &gt; threshold OR SLO violation
+- <strong>Action</strong>: Automatically rollback to previous version
+- <strong>Time</strong>: &lt; 5 minutes</p>
+<p><strong>Manual Rollback</strong>:
+- <strong>Trigger</strong>: Manual decision
+- <strong>Action</strong>: Rollback via CI/CD pipeline
+- <strong>Time</strong>: &lt; 10 minutes</p>
+<hr />
+<h2 id="security">Security</h2>
+<h3 id="authentication-authorization">Authentication &amp; Authorization</h3>
+<p><strong>Authentication</strong>:
+- <strong>Pub/Sub</strong>: Service accounts for publishers
+- <strong>Dataflow</strong>: Service accounts for pipeline
+- <strong>BigQuery</strong>: Service accounts for writes</p>
+<p><strong>Authorization</strong>:
+- <strong>IAM</strong>: IAM policies for all components
+- <strong>Principle</strong>: Least privilege</p>
+<h3 id="data-protection">Data Protection</h3>
+<p><strong>Encryption</strong>:
+- <strong>At rest</strong>: All data encrypted (Pub/Sub, BigQuery)
+- <strong>In transit</strong>: TLS for all connections
+- <strong>Keys</strong>: Managed by Cloud KMS</p>
+<p><strong>Data Privacy</strong>:
+- <strong>PII</strong>: PII data handled per policy
+- <strong>Retention</strong>: Data retained per policy
+- <strong>Deletion</strong>: Secure deletion procedures</p>
+<hr />
+<h2 id="cost-optimization">Cost Optimization</h2>
+<h3 id="cost-breakdown">Cost Breakdown</h3>
+<p><strong>Monthly Costs</strong> (estimated for 1M events/second):
+- <strong>Pub/Sub</strong>: $5,000 (message storage, operations)
+- <strong>Dataflow</strong>: $10,000 (compute, streaming)
+- <strong>BigQuery</strong>: $15,000 (storage, queries)
+- <strong>Total</strong>: ~$30,000/month</p>
+<h3 id="optimization-strategies">Optimization Strategies</h3>
+<ol>
+<li><strong>Pub/Sub</strong>: Optimize message size, use compression</li>
+<li><strong>Dataflow</strong>: Right-size workers, optimize pipeline</li>
+<li><strong>BigQuery</strong>: Optimize schema, use partitioning/clustering</li>
+<li><strong>Deduplication</strong>: Optimize deduplication logic (reduce Firestore calls)</li>
+</ol>
+<hr />
+<h2 id="incident-response-playbook">Incident Response Playbook</h2>
+<h3 id="common-incidents">Common Incidents</h3>
+<h4 id="incident-1-high-backlog">Incident 1: High Backlog</h4>
+<p><strong>Symptoms</strong>:
+- Backlog growing, latency increasing
+- Events not processed</p>
+<p><strong>Response</strong>:
+1. <strong>Acknowledge</strong>: Acknowledge incident
+2. <strong>Assess</strong>: Check Pub/Sub backlog, Dataflow backlog
+3. <strong>Mitigate</strong>: 
+   - Scale Dataflow workers
+   - Check BigQuery performance
+   - Reduce event rate if possible
+4. <strong>Investigate</strong>: Root cause analysis
+5. <strong>Resolve</strong>: Fix root cause
+6. <strong>Postmortem</strong>: Write postmortem</p>
+<h4 id="incident-2-high-error-rate">Incident 2: High Error Rate</h4>
+<p><strong>Symptoms</strong>:
+- Error rate &gt; 1%
+- Many events in DLQ</p>
+<p><strong>Response</strong>:
+1. <strong>Acknowledge</strong>: Acknowledge incident
+2. <strong>Assess</strong>: Check error logs, DLQ
+3. <strong>Mitigate</strong>: 
+   - Fix validation logic if needed
+   - Check schema changes
+   - Reprocess DLQ if possible
+4. <strong>Investigate</strong>: Root cause analysis
+5. <strong>Resolve</strong>: Fix root cause
+6. <strong>Postmortem</strong>: Write postmortem</p>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/data-pipeline.html">Further Reading: Data Pipeline</a></p>
+<p><strong>Quick Links</strong>:
+- <a href="https://cloud.google.com/pubsub/docs">Pub/Sub Documentation</a>
+- <a href="https://cloud.google.com/dataflow/docs">Dataflow Documentation</a>
+- <a href="https://cloud.google.com/bigquery/docs">BigQuery Documentation</a>
+- <a href="../02-distributed-systems/overload-backpressure.html">Overload &amp; Backpressure</a>
+- <a href="README.html">Back to Case Studies</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design improvements</strong>: How would you improve this design? What tradeoffs?</p>
+</li>
+<li>
+<p><strong>Handle schema evolution</strong>: How do you handle schema changes without breaking the pipeline?</p>
+</li>
+<li>
+<p><strong>Optimize costs</strong>: How would you reduce costs by 30%? What tradeoffs?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/data-pipeline-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

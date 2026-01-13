@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vpc Lb Dns Answers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#answer-key-vpc-load-balancing-dns" class="level-1">Answer Key: VPC, Load Balancing &amp; DNS</a></li>
+                <li><a href="#exercise-1-design-vpc" class="level-2">Exercise 1: Design VPC</a></li>
+                <li><a href="#answer" class="level-3">Answer</a></li>
+                <li><a href="#vpc-architecture" class="level-3">VPC Architecture</a></li>
+                <li><a href="#subnet-design" class="level-3">Subnet Design</a></li>
+                <li><a href="#firewall-rules" class="level-3">Firewall Rules</a></li>
+                <li><a href="#network-design" class="level-3">Network Design</a></li>
+                <li><a href="#security-best-practices" class="level-3">Security Best Practices</a></li>
+                <li><a href="#answer_1" class="level-3">Answer</a></li>
+                <li><a href="#exercise-2-load-balancer-selection" class="level-2">Exercise 2: Load Balancer Selection</a></li>
+                <li><a href="#answer_2" class="level-3">Answer</a></li>
+                <li><a href="#comparison" class="level-3">Comparison</a></li>
+                <li><a href="#analysis" class="level-3">Analysis</a></li>
+                <li><a href="#recommendation" class="level-3">Recommendation</a></li>
+                <li><a href="#answer_3" class="level-3">Answer</a></li>
+                <li><a href="#exercise-3-dns-strategy" class="level-2">Exercise 3: DNS Strategy</a></li>
+                <li><a href="#answer_4" class="level-3">Answer</a></li>
+                <li><a href="#dns-ttl-selection" class="level-3">DNS TTL Selection</a></li>
+                <li><a href="#recommendation_1" class="level-3">Recommendation</a></li>
+                <li><a href="#dns-update-strategy-during-deployments" class="level-3">DNS Update Strategy During Deployments</a></li>
+                <li><a href="#best-practices" class="level-3">Best Practices</a></li>
+                <li><a href="#answer_5" class="level-3">Answer</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="answer-key-vpc-load-balancing-dns">Answer Key: VPC, Load Balancing &amp; DNS</h1>
+<p><a href="../../03-gcp-core-building-blocks/vpc-lb-dns.html">Back to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-design-vpc">Exercise 1: Design VPC</h2>
+<p><strong>Question</strong>: Design a VPC for a multi-tier application (web, app, database). What subnets do you need? What firewall rules?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Goal</strong>: Design secure, scalable VPC for multi-tier application.</p>
+<h3 id="vpc-architecture">VPC Architecture</h3>
+<p><strong>VPC</strong>: Single VPC with multiple subnets for different tiers.</p>
+<p><strong>Regions</strong>: Single region (us-central1) or multi-region for HA.</p>
+<h3 id="subnet-design">Subnet Design</h3>
+<p><strong>1. Public Subnet (Web Tier)</strong></p>
+<p><strong>Purpose</strong>: Host load balancers, bastion hosts</p>
+<p><strong>CIDR</strong>: <code>10.0.1.0/24</code> (256 IPs)</p>
+<p><strong>Resources</strong>:
+- Load balancers (external IPs)
+- Bastion hosts (SSH access)
+- NAT gateways (for private subnets)</p>
+<p><strong>2. Private Subnet - App Tier</strong></p>
+<p><strong>Purpose</strong>: Host application servers</p>
+<p><strong>CIDR</strong>: <code>10.0.2.0/24</code> (256 IPs)</p>
+<p><strong>Resources</strong>:
+- GKE nodes (application pods)
+- Application servers
+- Internal load balancers</p>
+<p><strong>3. Private Subnet - Database Tier</strong></p>
+<p><strong>Purpose</strong>: Host databases</p>
+<p><strong>CIDR</strong>: <code>10.0.3.0/24</code> (256 IPs)</p>
+<p><strong>Resources</strong>:
+- Cloud SQL instances
+- Spanner instances
+- Other databases</p>
+<p><strong>4. Management Subnet (Optional)</strong></p>
+<p><strong>Purpose</strong>: Management and monitoring</p>
+<p><strong>CIDR</strong>: <code>10.0.4.0/24</code> (256 IPs)</p>
+<p><strong>Resources</strong>:
+- Monitoring servers
+- Logging servers
+- Management tools</p>
+<h3 id="firewall-rules">Firewall Rules</h3>
+<p><strong>1. Ingress Rules</strong></p>
+<p><strong>Allow HTTP/HTTPS from internet to web tier</strong>:
+- <strong>Direction</strong>: Ingress
+- <strong>Source</strong>: <code>0.0.0.0/0</code> (internet)
+- <strong>Destination</strong>: Web tier subnet (<code>10.0.1.0/24</code>)
+- <strong>Protocol</strong>: TCP
+- <strong>Ports</strong>: 80, 443
+- <strong>Action</strong>: Allow</p>
+<p><strong>Allow SSH to bastion hosts</strong>:
+- <strong>Direction</strong>: Ingress
+- <strong>Source</strong>: Admin IP ranges (e.g., office IPs)
+- <strong>Destination</strong>: Web tier subnet (<code>10.0.1.0/24</code>)
+- <strong>Protocol</strong>: TCP
+- <strong>Port</strong>: 22
+- <strong>Action</strong>: Allow</p>
+<p><strong>Allow app tier to receive traffic from web tier</strong>:
+- <strong>Direction</strong>: Ingress
+- <strong>Source</strong>: Web tier subnet (<code>10.0.1.0/24</code>)
+- <strong>Destination</strong>: App tier subnet (<code>10.0.2.0/24</code>)
+- <strong>Protocol</strong>: TCP
+- <strong>Ports</strong>: 8080, 8443 (application ports)
+- <strong>Action</strong>: Allow</p>
+<p><strong>Allow database tier to receive traffic from app tier</strong>:
+- <strong>Direction</strong>: Ingress
+- <strong>Source</strong>: App tier subnet (<code>10.0.2.0/24</code>)
+- <strong>Destination</strong>: Database tier subnet (<code>10.0.3.0/24</code>)
+- <strong>Protocol</strong>: TCP
+- <strong>Ports</strong>: 3306 (MySQL), 5432 (PostgreSQL), 1433 (SQL Server)
+- <strong>Action</strong>: Allow</p>
+<p><strong>2. Egress Rules</strong></p>
+<p><strong>Default allow egress</strong>: Already configured by GCP (all outbound traffic allowed)</p>
+<p><strong>Optional: Restrict egress</strong>:
+- Allow app tier to access internet (for external APIs)
+- Allow database tier to access specific services only</p>
+<h3 id="network-design">Network Design</h3>
+<div class="mermaid">
+graph TD
+Internet[Internet] --> LB[Load Balancer<br/>Public Subnet]
+LB --> App[App Tier<br/>Private Subnet]
+App --> DB[Database Tier<br/>Private Subnet]
+Admin[Admin] --> Bastion[Bastion Host<br/>Public Subnet]
+Bastion --> App
+style LB fill:#ffcc99
+style App fill:#99ccff
+style DB fill:#99ff99
+</div>
+<h3 id="security-best-practices">Security Best Practices</h3>
+<p><strong>1. Least Privilege</strong>:
+- Only allow necessary traffic
+- Restrict source IPs where possible
+- Use service accounts for authentication</p>
+<p><strong>2. Network Segmentation</strong>:
+- Separate tiers into different subnets
+- Use firewall rules to control traffic
+- Isolate database tier (no direct internet access)</p>
+<p><strong>3. Private IPs</strong>:
+- Use private IPs for internal resources
+- Only public IPs for load balancers and bastion hosts
+- Use Cloud NAT for outbound internet access</p>
+<p><strong>4. Monitoring</strong>:
+- Enable VPC Flow Logs
+- Monitor firewall rule hits
+- Alert on suspicious traffic</p>
+<h3 id="answer_1">Answer</h3>
+<p><strong>VPC Design</strong>:</p>
+<p><strong>Subnets</strong>:
+1. <strong>Public subnet</strong> (<code>10.0.1.0/24</code>): Load balancers, bastion hosts
+2. <strong>App tier subnet</strong> (<code>10.0.2.0/24</code>): Application servers
+3. <strong>Database tier subnet</strong> (<code>10.0.3.0/24</code>): Databases
+4. <strong>Management subnet</strong> (<code>10.0.4.0/24</code>): Optional, for management</p>
+<p><strong>Firewall Rules</strong>:</p>
+<p><strong>Ingress</strong>:
+- HTTP/HTTPS (80, 443) from internet to web tier
+- SSH (22) from admin IPs to bastion hosts
+- App ports (8080, 8443) from web tier to app tier
+- Database ports (3306, 5432) from app tier to database tier</p>
+<p><strong>Egress</strong>:
+- Default allow (GCP default)
+- Optional: Restrict app tier egress</p>
+<p><strong>Key principles</strong>:
+- <strong>Network segmentation</strong>: Separate tiers
+- <strong>Least privilege</strong>: Only necessary traffic
+- <strong>Private IPs</strong>: Use private IPs for internal resources
+- <strong>Security</strong>: No direct database internet access</p>
+<hr />
+<h2 id="exercise-2-load-balancer-selection">Exercise 2: Load Balancer Selection</h2>
+<p><strong>Question</strong>: You have an API that needs low latency and high throughput. Do you use HTTP(S) or Network Load Balancer? Why?</p>
+<h3 id="answer_2">Answer</h3>
+<p><strong>Requirements</strong>:
+- Low latency
+- High throughput
+- API (HTTP/HTTPS traffic)</p>
+<h3 id="comparison">Comparison</h3>
+<p><strong>HTTP(S) Load Balancer</strong>:
+- <strong>Latency</strong>: Higher (more processing, SSL termination)
+- <strong>Throughput</strong>: Lower (more processing overhead)
+- <strong>Features</strong>: SSL termination, content-based routing, CDN integration
+- <strong>Use case</strong>: HTTP/HTTPS traffic, need advanced features</p>
+<p><strong>Network Load Balancer</strong>:
+- <strong>Latency</strong>: Lower (pass-through, less processing)
+- <strong>Throughput</strong>: Higher (less processing overhead)
+- <strong>Features</strong>: Fewer (basic load balancing)
+- <strong>Use case</strong>: Non-HTTP traffic, need high performance</p>
+<h3 id="analysis">Analysis</h3>
+<p><strong>For API with low latency and high throughput requirements</strong>:</p>
+<p><strong>Network Load Balancer is better</strong> because:
+1. <strong>Lower latency</strong>: Pass-through design, less processing
+2. <strong>Higher throughput</strong>: Less overhead, can handle more requests
+3. <strong>Preserves client IP</strong>: Better for rate limiting and logging
+4. <strong>TCP-level</strong>: Works at TCP level, more efficient</p>
+<p><strong>However</strong>, consider:
+- <strong>SSL termination</strong>: Network LB doesn't do SSL termination (need to handle in backend)
+- <strong>Features</strong>: Fewer features (no content-based routing, CDN)
+- <strong>HTTP-specific</strong>: If you need HTTP-specific features, HTTP(S) LB may be better</p>
+<h3 id="recommendation">Recommendation</h3>
+<p><strong>Use Network Load Balancer</strong> if:
+- Low latency is critical
+- High throughput is critical
+- Can handle SSL termination in backend
+- Don't need HTTP-specific features</p>
+<p><strong>Use HTTP(S) Load Balancer</strong> if:
+- Need SSL termination
+- Need content-based routing
+- Need CDN integration
+- Latency/throughput requirements are moderate</p>
+<h3 id="answer_3">Answer</h3>
+<p><strong>Use Network Load Balancer</strong> for this API.</p>
+<p><strong>Reasons</strong>:
+1. <strong>Lower latency</strong>: Pass-through design, minimal processing overhead
+2. <strong>Higher throughput</strong>: Less processing, can handle more requests per second
+3. <strong>Preserves client IP</strong>: Better for rate limiting, logging, and debugging
+4. <strong>TCP-level efficiency</strong>: Works at TCP level, more efficient than HTTP-level</p>
+<p><strong>Tradeoffs</strong>:
+- <strong>SSL termination</strong>: Must handle in backend (adds complexity)
+- <strong>Fewer features</strong>: No content-based routing, CDN integration
+- <strong>HTTP awareness</strong>: Less HTTP-specific features</p>
+<p><strong>If you need SSL termination</strong>: Use HTTP(S) Load Balancer with SSL termination, but accept higher latency.</p>
+<p><strong>Best practice</strong>: Use Network Load Balancer for high-performance APIs, handle SSL in backend or use HTTP(S) Load Balancer if SSL termination is required.</p>
+<hr />
+<h2 id="exercise-3-dns-strategy">Exercise 3: DNS Strategy</h2>
+<p><strong>Question</strong>: You're deploying a new service. What DNS TTL do you use? How do you handle DNS updates during deployments?</p>
+<h3 id="answer_4">Answer</h3>
+<p><strong>Goal</strong>: Balance DNS update speed with query load.</p>
+<h3 id="dns-ttl-selection">DNS TTL Selection</h3>
+<p><strong>TTL Options</strong>:</p>
+<p><strong>Short TTL (60 seconds)</strong>:
+- <strong>Pros</strong>: Fast DNS updates, quick failover
+- <strong>Cons</strong>: More DNS queries, higher DNS server load
+- <strong>Use case</strong>: Production services, need fast updates</p>
+<p><strong>Medium TTL (300 seconds = 5 minutes)</strong>:
+- <strong>Pros</strong>: Balance between update speed and query load
+- <strong>Cons</strong>: Moderate DNS queries
+- <strong>Use case</strong>: Most production services</p>
+<p><strong>Long TTL (3600 seconds = 1 hour)</strong>:
+- <strong>Pros</strong>: Fewer DNS queries, lower DNS server load
+- <strong>Cons</strong>: Slow DNS updates, slow failover
+- <strong>Use case</strong>: Static resources, CDN</p>
+<h3 id="recommendation_1">Recommendation</h3>
+<p><strong>For new service</strong>: <strong>60 seconds (short TTL)</strong></p>
+<p><strong>Why</strong>:
+- Fast DNS updates during deployments
+- Quick failover if issues occur
+- Better for canary deployments
+- Acceptable DNS query load for most services</p>
+<h3 id="dns-update-strategy-during-deployments">DNS Update Strategy During Deployments</h3>
+<p><strong>1. Pre-Deployment</strong></p>
+<p><strong>Prepare DNS records</strong>:
+- Create new DNS records pointing to new infrastructure
+- Use different hostnames (e.g., <code>api-v2.example.com</code>)
+- Verify DNS propagation</p>
+<p><strong>2. Canary Deployment</strong></p>
+<p><strong>Gradual DNS update</strong>:
+- <strong>Phase 1</strong>: Update 5% of traffic to new hostname
+- <strong>Phase 2</strong>: Update 25% of traffic
+- <strong>Phase 3</strong>: Update 50% of traffic
+- <strong>Phase 4</strong>: Update 100% of traffic</p>
+<p><strong>How</strong>: Use weighted routing or geographic routing in DNS</p>
+<p><strong>3. Blue-Green Deployment</strong></p>
+<p><strong>DNS cutover</strong>:
+- <strong>Blue</strong>: Old infrastructure (<code>api-blue.example.com</code>)
+- <strong>Green</strong>: New infrastructure (<code>api-green.example.com</code>)
+- <strong>Cutover</strong>: Update DNS to point to green
+- <strong>Rollback</strong>: Update DNS back to blue if issues</p>
+<p><strong>4. Zero-Downtime Deployment</strong></p>
+<p><strong>Strategy</strong>:
+1. <strong>Deploy new version</strong>: Deploy to new infrastructure
+2. <strong>Health checks</strong>: Verify new version is healthy
+3. <strong>DNS update</strong>: Update DNS to point to new infrastructure
+4. <strong>Monitor</strong>: Monitor for issues
+5. <strong>Rollback</strong>: Update DNS back if issues</p>
+<p><strong>Timeline</strong>:
+- DNS propagation: 60 seconds (with short TTL)
+- Health check: 30 seconds
+- Total: ~90 seconds for DNS cutover</p>
+<p><strong>5. Rollback Strategy</strong></p>
+<p><strong>If deployment fails</strong>:
+1. <strong>Detect issue</strong>: Monitor metrics, alerts
+2. <strong>DNS rollback</strong>: Update DNS to point to old infrastructure
+3. <strong>DNS propagation</strong>: Wait for DNS propagation (60 seconds)
+4. <strong>Verify</strong>: Verify traffic routed to old infrastructure</p>
+<h3 id="best-practices">Best Practices</h3>
+<p><strong>1. Use Short TTL</strong>:
+- 60 seconds for production
+- Allows fast updates and rollbacks</p>
+<p><strong>2. Health Checks</strong>:
+- Verify new infrastructure is healthy before DNS update
+- Don't update DNS if health checks fail</p>
+<p><strong>3. Gradual Rollout</strong>:
+- Use canary deployments with gradual DNS updates
+- Monitor at each stage</p>
+<p><strong>4. Monitoring</strong>:
+- Monitor DNS query rates
+- Monitor DNS resolution times
+- Alert on DNS failures</p>
+<p><strong>5. Documentation</strong>:
+- Document DNS update procedures
+- Document rollback procedures
+- Test DNS updates in staging</p>
+<h3 id="answer_5">Answer</h3>
+<p><strong>DNS TTL</strong>: <strong>60 seconds (short TTL)</strong></p>
+<p><strong>Why</strong>:
+- Fast DNS updates during deployments
+- Quick failover if issues occur
+- Better for canary deployments
+- Acceptable DNS query load</p>
+<p><strong>DNS Update Strategy</strong>:</p>
+<p><strong>1. Pre-deployment</strong>:
+- Create new DNS records
+- Verify DNS propagation
+- Health check new infrastructure</p>
+<p><strong>2. Deployment</strong>:
+- <strong>Canary</strong>: Gradual DNS update (5% → 25% → 50% → 100%)
+- <strong>Blue-Green</strong>: DNS cutover to new infrastructure
+- <strong>Monitor</strong>: Monitor metrics and alerts</p>
+<p><strong>3. Rollback</strong>:
+- Update DNS back to old infrastructure
+- Wait for DNS propagation (60 seconds)
+- Verify traffic routed correctly</p>
+<p><strong>Key principles</strong>:
+- <strong>Short TTL</strong>: 60 seconds for fast updates
+- <strong>Health checks</strong>: Verify before DNS update
+- <strong>Gradual rollout</strong>: Canary deployments
+- <strong>Monitoring</strong>: Monitor DNS and service health
+- <strong>Rollback plan</strong>: Quick DNS rollback if issues</p>
+<p><strong>Timeline</strong>:
+- DNS propagation: 60 seconds
+- Health check: 30 seconds
+- Total cutover time: ~90 seconds</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../../assets/scripts.js"></script>
+    
+</body>
+</html>

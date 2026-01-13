@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Ordering Causality Answers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#answer-key-time-ordering-and-causality" class="level-1">Answer Key: Time, Ordering, and Causality</a></li>
+                <li><a href="#exercise-1-design-ordering" class="level-2">Exercise 1: Design Ordering</a></li>
+                <li><a href="#answer" class="level-3">Answer</a></li>
+                <li><a href="#exercise-2-handle-clock-skew" class="level-2">Exercise 2: Handle Clock Skew</a></li>
+                <li><a href="#answer_1" class="level-3">Answer</a></li>
+                <li><a href="#exercise-3-establish-causality" class="level-2">Exercise 3: Establish Causality</a></li>
+                <li><a href="#answer_2" class="level-3">Answer</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="answer-key-time-ordering-and-causality">Answer Key: Time, Ordering, and Causality</h1>
+<p><a href="../../02-distributed-systems/time-ordering-causality.html">Back to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-design-ordering">Exercise 1: Design Ordering</h2>
+<p><strong>Question</strong>: Design an event ordering system for a distributed application. What clocks do you use?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Use Vector Clocks</strong> for precise causality tracking:
+- Each process maintains vector of counters
+- Captures causality precisely
+- Can detect concurrent events</p>
+<p><strong>Alternative</strong>: Use Lamport clocks if precision not needed (simpler, less storage).</p>
+<p><strong>Answer</strong>: Use vector clocks for precise causality, or Lamport clocks for simpler ordering.</p>
+<hr />
+<h2 id="exercise-2-handle-clock-skew">Exercise 2: Handle Clock Skew</h2>
+<p><strong>Question</strong>: Your system has clock skew. How do you handle it? What's the strategy?</p>
+<h3 id="answer_1">Answer</h3>
+<p><strong>Strategies</strong>:
+1. <strong>Use logical clocks</strong>: Don't rely on physical clocks
+2. <strong>Synchronize clocks</strong>: Regular clock synchronization (NTP)
+3. <strong>Bounded uncertainty</strong>: Use TrueTime-like approach with bounded uncertainty</p>
+<p><strong>Answer</strong>: Use logical clocks (vector clocks), synchronize physical clocks regularly, or use bounded clock uncertainty.</p>
+<hr />
+<h2 id="exercise-3-establish-causality">Exercise 3: Establish Causality</h2>
+<p><strong>Question</strong>: How do you establish causality between events in a distributed system?</p>
+<h3 id="answer_2">Answer</h3>
+<p><strong>Use Vector Clocks</strong>:
+- Each event gets vector clock timestamp
+- Compare vector clocks to establish causality
+- If V(A) &lt; V(B), then A → B</p>
+<p><strong>Answer</strong>: Use vector clocks to establish causality by comparing timestamps.</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../../assets/scripts.js"></script>
+    
+</body>
+</html>

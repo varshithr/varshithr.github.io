@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consensus Leases</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#consensus-leases" class="level-1">Consensus &amp; Leases</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#consensus-problem" class="level-3">Consensus Problem</a></li>
+                <li><a href="#leases" class="level-3">Leases</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#paxos" class="level-3">Paxos</a></li>
+                <li><a href="#raft" class="level-3">Raft</a></li>
+                <li><a href="#leases_1" class="level-3">Leases</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#consensus-failures" class="level-3">Consensus Failures</a></li>
+                <li><a href="#scenario-1-split-brain" class="level-4">Scenario 1: Split-Brain</a></li>
+                <li><a href="#scenario-2-leader-failure" class="level-4">Scenario 2: Leader Failure</a></li>
+                <li><a href="#lease-failures" class="level-3">Lease Failures</a></li>
+                <li><a href="#scenario-1-lease-expiry" class="level-4">Scenario 1: Lease Expiry</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics" class="level-3">Metrics</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#consensus-configuration-changes" class="level-3">Consensus Configuration Changes</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#consensus-vs-leases" class="level-3">Consensus vs Leases</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#best-practices" class="level-3">Best Practices</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="consensus-leases">Consensus &amp; Leases</h1>
+<p><strong>One-line summary</strong>: Understanding consensus algorithms (Paxos, Raft) and leases for coordination in distributed systems.</p>
+<p><strong>Prerequisites</strong>: <a href="time-ordering-causality.html">Time, Ordering, Causality</a>, understanding of distributed coordination.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="consensus-problem">Consensus Problem</h3>
+<p><strong>Consensus</strong>: Multiple nodes agree on a single value.</p>
+<p><strong>Requirements</strong>:
+- <strong>Agreement</strong>: All nodes agree on same value
+- <strong>Validity</strong>: Value must be proposed by some node
+- <strong>Termination</strong>: Algorithm eventually terminates
+- <strong>Integrity</strong>: Value decided at most once</p>
+<div class="mermaid">
+graph LR
+Proposer[Proposer] --> Nodes[Nodes]
+Nodes --> Consensus[Consensus<br/>Agreed Value]
+style Proposer fill:#99ccff
+style Consensus fill:#ffcc99
+</div>
+<p><strong>Key insight</strong>: Consensus enables coordination without a single leader, but is expensive.</p>
+<h3 id="leases">Leases</h3>
+<p><strong>Lease</strong>: Time-limited exclusive access to a resource.</p>
+<p><strong>Properties</strong>:
+- <strong>Exclusive</strong>: Only one holder at a time
+- <strong>Time-limited</strong>: Expires after duration
+- <strong>Renewable</strong>: Can be renewed before expiry</p>
+<p><strong>Use case</strong>: Lighter-weight than consensus for coordination.</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="paxos">Paxos</h3>
+<p><strong>Paxos</strong>: Classic consensus algorithm.</p>
+<p><strong>Phases</strong>:
+1. <strong>Prepare</strong>: Proposer sends prepare request with proposal number
+2. <strong>Promise</strong>: Acceptors promise not to accept lower-numbered proposals
+3. <strong>Accept</strong>: Proposer sends accept request with value
+4. <strong>Accepted</strong>: Acceptors accept value if no higher-numbered proposal</p>
+<p><strong>Properties</strong>:
+- <strong>Safety</strong>: Only one value can be chosen
+- <strong>Liveness</strong>: Eventually chooses a value (if majority available)</p>
+<p><strong>Use case</strong>: Foundation for many consensus implementations (e.g., Spanner).</p>
+<h3 id="raft">Raft</h3>
+<p><strong>Raft</strong>: Understandable consensus algorithm.</p>
+<p><strong>Components</strong>:
+- <strong>Leader</strong>: Single leader handles all client requests
+- <strong>Followers</strong>: Replicate leader's log
+- <strong>Candidate</strong>: Node seeking to become leader</p>
+<p><strong>Phases</strong>:
+1. <strong>Leader election</strong>: Elect leader when no leader
+2. <strong>Log replication</strong>: Leader replicates log to followers
+3. <strong>Safety</strong>: Ensure consistency</p>
+<p><strong>Properties</strong>:
+- <strong>Easier to understand</strong>: More understandable than Paxos
+- <strong>Same guarantees</strong>: Safety and liveness</p>
+<p><strong>Use case</strong>: Used in etcd, Consul, and many systems.</p>
+<h3 id="leases_1">Leases</h3>
+<p><strong>Lease mechanism</strong>:
+1. <strong>Acquire</strong>: Request lease from lease server
+2. <strong>Hold</strong>: Use resource while lease valid
+3. <strong>Renew</strong>: Renew lease before expiry
+4. <strong>Release</strong>: Release lease when done</p>
+<p><strong>Lease server</strong>: Manages leases and ensures exclusivity.</p>
+<p><strong>Properties</strong>:
+- <strong>Lighter-weight</strong>: Less overhead than consensus
+- <strong>Time-based</strong>: Relies on time, not consensus
+- <strong>Fault-tolerant</strong>: Lease server can be replicated</p>
+<p><strong>Use case</strong>: Coordination when consensus is too expensive.</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="consensus-failures">Consensus Failures</h3>
+<h4 id="scenario-1-split-brain">Scenario 1: Split-Brain</h4>
+<ul>
+<li><strong>Impact</strong>: Multiple leaders, inconsistent state</li>
+<li><strong>Blast radius</strong>: Entire system</li>
+<li><strong>Detection</strong>: Multiple leaders detected</li>
+<li><strong>Recovery</strong>: Resolve split-brain, elect single leader</li>
+<li><strong>Mitigation</strong>: Require majority, prevent split-brain</li>
+</ul>
+<h4 id="scenario-2-leader-failure">Scenario 2: Leader Failure</h4>
+<ul>
+<li><strong>Impact</strong>: No progress until new leader elected</li>
+<li><strong>Blast radius</strong>: All operations</li>
+<li><strong>Detection</strong>: Leader health checks fail</li>
+<li><strong>Recovery</strong>: Elect new leader</li>
+<li><strong>Mitigation</strong>: Fast leader election, automatic failover</li>
+</ul>
+<h3 id="lease-failures">Lease Failures</h3>
+<h4 id="scenario-1-lease-expiry">Scenario 1: Lease Expiry</h4>
+<ul>
+<li><strong>Impact</strong>: Lease holder loses access, another can acquire</li>
+<li><strong>Blast radius</strong>: Lease holder</li>
+<li><strong>Detection</strong>: Lease expiry</li>
+<li><strong>Recovery</strong>: Renew lease or release</li>
+<li><strong>Mitigation</strong>: Renew leases proactively, monitor expiry</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics">Metrics</h3>
+<ul>
+<li><strong>Consensus latency</strong>: Time to reach consensus</li>
+<li><strong>Leader election time</strong>: Time to elect new leader</li>
+<li><strong>Lease expiry rate</strong>: Rate of lease expiries</li>
+<li><strong>Split-brain events</strong>: Multiple leaders detected</li>
+</ul>
+<h3 id="alerts">Alerts</h3>
+<ul>
+<li>Leader election failures</li>
+<li>Split-brain detected</li>
+<li>High lease expiry rate</li>
+</ul>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="consensus-configuration-changes">Consensus Configuration Changes</h3>
+<ul>
+<li><strong>Process</strong>: Update consensus configuration, verify consensus</li>
+<li><strong>Risk</strong>: High (may cause split-brain)</li>
+<li><strong>Rollback</strong>: Revert configuration</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="consensus-vs-leases">Consensus vs Leases</h3>
+<p><strong>Consensus</strong>:
+- <strong>Pros</strong>: Strong guarantees, no single point of failure
+- <strong>Cons</strong>: Higher latency, more complex</p>
+<p><strong>Leases</strong>:
+- <strong>Pros</strong>: Lower latency, simpler
+- <strong>Cons</strong>: Weaker guarantees, relies on time</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="best-practices">Best Practices</h3>
+<ol>
+<li><strong>Choose right mechanism</strong>: Consensus for strong guarantees, leases for coordination</li>
+<li><strong>Monitor consensus</strong>: Track consensus health</li>
+<li><strong>Handle failures</strong>: Fast recovery from failures</li>
+<li><strong>Prevent split-brain</strong>: Require majority for consensus</li>
+</ol>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<ul>
+<li>"What consensus algorithm is used?"</li>
+<li>"How is leader election handled?"</li>
+<li>"What happens if leader fails?"</li>
+<li>"How are leases managed?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/consensus-leases.html">Further Reading: Consensus &amp; Leases</a></p>
+<p><strong>Quick Links</strong>:
+- "The Part-Time Parliament" (Lamport, 1998) - Paxos paper
+- "In Search of an Understandable Consensus Algorithm" (Ongaro &amp; Ousterhout, 2014) - Raft paper
+- <a href="replication.html">Replication Strategies</a>
+- <a href="../03-gcp-core-building-blocks/spanner.html">Spanner: Consistency &amp; Performance</a>
+- <a href="README.html">Back to Distributed Systems</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Choose consensus</strong>: When do you use consensus vs leases? What are the tradeoffs?</p>
+</li>
+<li>
+<p><strong>Handle leader failure</strong>: Your consensus system loses its leader. How does it recover?</p>
+</li>
+<li>
+<p><strong>Design leases</strong>: Design a lease system for coordinating access to a shared resource.</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/consensus-leases-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

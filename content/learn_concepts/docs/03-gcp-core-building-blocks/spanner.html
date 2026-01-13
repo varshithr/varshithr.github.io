@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spanner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#spanner-consistency-performance" class="level-1">Spanner: Consistency &amp; Performance</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#spanner-architecture" class="level-3">Spanner Architecture</a></li>
+                <li><a href="#consistency-model" class="level-3">Consistency Model</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#truetime" class="level-3">TrueTime</a></li>
+                <li><a href="#paxos-consensus" class="level-3">Paxos Consensus</a></li>
+                <li><a href="#distributed-transactions" class="level-3">Distributed Transactions</a></li>
+                <li><a href="#two-phase-commit-2pc" class="level-4">Two-Phase Commit (2PC)</a></li>
+                <li><a href="#read-write-transactions" class="level-4">Read-Write Transactions</a></li>
+                <li><a href="#read-only-transactions" class="level-4">Read-Only Transactions</a></li>
+                <li><a href="#schema-design" class="level-3">Schema Design</a></li>
+                <li><a href="#tables" class="level-4">Tables</a></li>
+                <li><a href="#interleaving" class="level-4">Interleaving</a></li>
+                <li><a href="#secondary-indexes" class="level-4">Secondary Indexes</a></li>
+                <li><a href="#performance-characteristics" class="level-3">Performance Characteristics</a></li>
+                <li><a href="#latency" class="level-4">Latency</a></li>
+                <li><a href="#throughput" class="level-4">Throughput</a></li>
+                <li><a href="#scalability" class="level-4">Scalability</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#spanner-failures" class="level-3">Spanner Failures</a></li>
+                <li><a href="#scenario-1-regional-outage" class="level-4">Scenario 1: Regional Outage</a></li>
+                <li><a href="#scenario-2-leader-failure" class="level-4">Scenario 2: Leader Failure</a></li>
+                <li><a href="#scenario-3-truetime-failure" class="level-4">Scenario 3: TrueTime Failure</a></li>
+                <li><a href="#consistency-failures" class="level-3">Consistency Failures</a></li>
+                <li><a href="#scenario-1-clock-skew" class="level-4">Scenario 1: Clock Skew</a></li>
+                <li><a href="#scenario-2-network-partition" class="level-4">Scenario 2: Network Partition</a></li>
+                <li><a href="#performance-failures" class="level-3">Performance Failures</a></li>
+                <li><a href="#scenario-1-hot-spots" class="level-4">Scenario 1: Hot Spots</a></li>
+                <li><a href="#scenario-2-transaction-conflicts" class="level-4">Scenario 2: Transaction Conflicts</a></li>
+                <li><a href="#overload-scenarios" class="level-3">Overload Scenarios</a></li>
+                <li><a href="#10-normal-load" class="level-4">10× Normal Load</a></li>
+                <li><a href="#100-normal-load" class="level-4">100× Normal Load</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics-to-track" class="level-3">Metrics to Track</a></li>
+                <li><a href="#database-metrics" class="level-4">Database Metrics</a></li>
+                <li><a href="#node-metrics" class="level-4">Node Metrics</a></li>
+                <li><a href="#replication-metrics" class="level-4">Replication Metrics</a></li>
+                <li><a href="#logs" class="level-3">Logs</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#schema-changes" class="level-3">Schema Changes</a></li>
+                <li><a href="#adding-tables" class="level-4">Adding Tables</a></li>
+                <li><a href="#adding-columns" class="level-4">Adding Columns</a></li>
+                <li><a href="#changing-primary-key" class="level-4">Changing Primary Key</a></li>
+                <li><a href="#index-changes" class="level-3">Index Changes</a></li>
+                <li><a href="#adding-indexes" class="level-4">Adding Indexes</a></li>
+                <li><a href="#removing-indexes" class="level-4">Removing Indexes</a></li>
+                <li><a href="#configuration-changes" class="level-3">Configuration Changes</a></li>
+                <li><a href="#changing-replication" class="level-4">Changing Replication</a></li>
+                <li><a href="#scaling-nodes" class="level-4">Scaling Nodes</a></li>
+                <li><a href="#security-boundaries" class="level-2">Security Boundaries</a></li>
+                <li><a href="#access-control" class="level-3">Access Control</a></li>
+                <li><a href="#encryption" class="level-3">Encryption</a></li>
+                <li><a href="#data-protection" class="level-3">Data Protection</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#consistency-external-vs-serializability" class="level-3">Consistency: External vs Serializability</a></li>
+                <li><a href="#replication-multi-region-vs-regional" class="level-3">Replication: Multi-Region vs Regional</a></li>
+                <li><a href="#schema-normalized-vs-denormalized" class="level-3">Schema: Normalized vs Denormalized</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#capacity-planning" class="level-3">Capacity Planning</a></li>
+                <li><a href="#monitoring-debugging" class="level-3">Monitoring &amp; Debugging</a></li>
+                <li><a href="#incident-response" class="level-3">Incident Response</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#design-questions" class="level-3">Design Questions</a></li>
+                <li><a href="#scale-questions" class="level-3">Scale Questions</a></li>
+                <li><a href="#consistency-questions" class="level-3">Consistency Questions</a></li>
+                <li><a href="#operational-questions" class="level-3">Operational Questions</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="spanner-consistency-performance">Spanner: Consistency &amp; Performance</h1>
+<p><strong>One-line summary</strong>: Deep dive into Spanner's TrueTime, distributed transactions, external consistency guarantees, and how to design schemas for scale.</p>
+<p><strong>Prerequisites</strong>: <a href="../02-distributed-systems/consensus-leases.html">Consensus &amp; Leases</a>, <a href="../02-distributed-systems/replication.html">Replication Strategies</a>, Basic database concepts (ACID, transactions).</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="spanner-architecture">Spanner Architecture</h3>
+<div class="mermaid">
+flowchart TB
+Client[Client] --> LB[Load Balancer]
+LB --> Spanner[Spanner Instance]
+Spanner --> Zone1[Zone 1<br/>Replicas]
+Spanner --> Zone2[Zone 2<br/>Replicas]
+Spanner --> Zone3[Zone 3<br/>Replicas]
+Zone1 --> Paxos1[Paxos<br/>Consensus]
+Zone2 --> Paxos2[Paxos<br/>Consensus]
+Zone3 --> Paxos3[Paxos<br/>Consensus]
+Paxos1 --> TrueTime[TrueTime<br/>Clock]
+Paxos2 --> TrueTime
+Paxos3 --> TrueTime
+style Spanner fill:#99ccff
+style TrueTime fill:#ffcc99
+style Paxos1 fill:#99ff99
+style Paxos2 fill:#99ff99
+style Paxos3 fill:#99ff99
+</div>
+<p><strong>Key insight</strong>: Spanner provides external consistency (stronger than serializability) using TrueTime and Paxos. Understanding TrueTime is critical for understanding Spanner's guarantees.</p>
+<h3 id="consistency-model">Consistency Model</h3>
+<p><strong>External Consistency</strong>: Strongest consistency guarantee.
+- <strong>Definition</strong>: All transactions appear to execute in a global order
+- <strong>Guarantee</strong>: If transaction T1 commits before T2 starts, T2 sees T1's writes
+- <strong>Use case</strong>: Financial transactions, inventory management</p>
+<p><strong>Serializability</strong>: Standard database consistency.
+- <strong>Definition</strong>: Transactions appear to execute serially
+- <strong>Guarantee</strong>: No anomalies (dirty reads, lost updates)
+- <strong>Use case</strong>: General-purpose applications</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="truetime">TrueTime</h3>
+<p><strong>TrueTime</strong>: Spanner's distributed clock.</p>
+<p><strong>Components</strong>:
+- <strong>GPS clocks</strong>: Atomic clocks synchronized via GPS
+- <strong>Atomic clocks</strong>: High-precision clocks
+- <strong>Time uncertainty</strong>: Bounded clock uncertainty (ε)</p>
+<p><strong>Time representation</strong>: <code>TTinterval = [earliest, latest]</code>
+- <strong>earliest</strong>: Earliest possible time
+- <strong>latest</strong>: Latest possible time
+- <strong>ε</strong>: Clock uncertainty (typically &lt; 7ms)</p>
+<p><strong>Why TrueTime?</strong>
+- <strong>External consistency</strong>: Enables external consistency without blocking
+- <strong>Global ordering</strong>: Provides global transaction ordering
+- <strong>Low latency</strong>: Avoids expensive coordination</p>
+<h3 id="paxos-consensus">Paxos Consensus</h3>
+<p><strong>Paxos</strong>: Consensus algorithm for replication.</p>
+<p><strong>How it works</strong>:
+1. <strong>Leader election</strong>: Elect leader for each Paxos group
+2. <strong>Proposal</strong>: Leader proposes writes
+3. <strong>Voting</strong>: Replicas vote on proposals
+4. <strong>Commit</strong>: Commit when majority agrees</p>
+<p><strong>Replication</strong>:
+- <strong>Multi-region</strong>: Replicas across regions
+- <strong>Quorum</strong>: Majority of replicas must agree
+- <strong>Durability</strong>: Data durable once committed</p>
+<h3 id="distributed-transactions">Distributed Transactions</h3>
+<h4 id="two-phase-commit-2pc">Two-Phase Commit (2PC)</h4>
+<p><strong>Process</strong>:
+1. <strong>Prepare phase</strong>: Coordinator asks participants to prepare
+2. <strong>Commit phase</strong>: Coordinator commits if all prepared, aborts otherwise</p>
+<p><strong>Spanner's 2PC</strong>:
+- <strong>Paxos per shard</strong>: Each shard uses Paxos
+- <strong>Coordinator</strong>: Coordinates across shards
+- <strong>TrueTime</strong>: Uses TrueTime for commit timestamps</p>
+<h4 id="read-write-transactions">Read-Write Transactions</h4>
+<p><strong>Process</strong>:
+1. <strong>Read</strong>: Read from consistent snapshot
+2. <strong>Write</strong>: Buffer writes locally
+3. <strong>Commit</strong>: Two-phase commit with TrueTime timestamp
+4. <strong>External consistency</strong>: Commit timestamp ensures external consistency</p>
+<p><strong>Example</strong>:</p>
+<pre><code>T1: Write X=1, commit at t1
+T2: Starts at t2 &gt; t1, reads X, sees X=1
+</code></pre>
+<h4 id="read-only-transactions">Read-Only Transactions</h4>
+<p><strong>Process</strong>:
+1. <strong>Snapshot</strong>: Read from consistent snapshot
+2. <strong>No locks</strong>: No locks needed (read-only)
+3. <strong>Low latency</strong>: Can read from nearby replica</p>
+<p><strong>Use case</strong>: Analytics, reporting, read-heavy workloads</p>
+<h3 id="schema-design">Schema Design</h3>
+<h4 id="tables">Tables</h4>
+<p><strong>Tables</strong>: Collections of rows.</p>
+<p><strong>Schema</strong>:</p>
+<pre><code class="language-sql">CREATE TABLE Users (
+  UserId INT64 NOT NULL,
+  Name STRING(MAX),
+  Email STRING(MAX),
+  CreatedAt TIMESTAMP,
+) PRIMARY KEY (UserId);
+</code></pre>
+<p><strong>Primary key</strong>: Required, determines data distribution.</p>
+<h4 id="interleaving">Interleaving</h4>
+<p><strong>Interleaved tables</strong>: Co-locate related data.</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-sql">CREATE TABLE Orders (
+  OrderId INT64 NOT NULL,
+  UserId INT64 NOT NULL,
+  Total FLOAT64,
+) PRIMARY KEY (UserId, OrderId),
+  INTERLEAVE IN PARENT Users ON DELETE CASCADE;
+</code></pre>
+<p><strong>Benefits</strong>:
+- <strong>Co-location</strong>: Related data on same server
+- <strong>Performance</strong>: Faster joins, better locality
+- <strong>Transactions</strong>: Can update parent and child in same transaction</p>
+<h4 id="secondary-indexes">Secondary Indexes</h4>
+<p><strong>Indexes</strong>: Improve query performance.</p>
+<p><strong>Types</strong>:
+- <strong>Storing indexes</strong>: Store additional columns (covering indexes)
+- <strong>Null-filtered indexes</strong>: Filter NULL values
+- <strong>Array indexes</strong>: Index array elements</p>
+<p><strong>Tradeoffs</strong>:
+- <strong>Write cost</strong>: Indexes increase write cost
+- <strong>Storage cost</strong>: Indexes consume storage
+- <strong>Query performance</strong>: Indexes improve query performance</p>
+<h3 id="performance-characteristics">Performance Characteristics</h3>
+<h4 id="latency">Latency</h4>
+<p><strong>Read latency</strong>:
+- <strong>Single region</strong>: P95 &lt; 10ms
+- <strong>Multi-region</strong>: P95 &lt; 50ms (depends on distance)</p>
+<p><strong>Write latency</strong>:
+- <strong>Single region</strong>: P95 &lt; 10ms
+- <strong>Multi-region</strong>: P95 &lt; 100ms (2PC overhead)</p>
+<h4 id="throughput">Throughput</h4>
+<p><strong>Read throughput</strong>:
+- <strong>Scales linearly</strong>: With number of nodes
+- <strong>Bottleneck</strong>: Usually network bandwidth</p>
+<p><strong>Write throughput</strong>:
+- <strong>Scales linearly</strong>: With number of nodes
+- <strong>Bottleneck</strong>: Usually 2PC coordination overhead</p>
+<h4 id="scalability">Scalability</h4>
+<p><strong>Limits</strong>:
+- <strong>Database size</strong>: Petabytes
+- <strong>Nodes</strong>: Thousands of nodes
+- <strong>QPS</strong>: Millions of queries per second
+- <strong>Regions</strong>: Global distribution</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="spanner-failures">Spanner Failures</h3>
+<h4 id="scenario-1-regional-outage">Scenario 1: Regional Outage</h4>
+<ul>
+<li><strong>Impact</strong>: Replicas in affected region unavailable</li>
+<li><strong>Blast radius</strong>: Affected region (other regions continue)</li>
+<li><strong>Detection</strong>: Replica health checks fail, increased latency</li>
+<li><strong>Recovery</strong>: </li>
+<li>Automatic failover to other regions</li>
+<li>Replicas restored when region recovers</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Multi-region configuration</li>
+<li>Sufficient replicas per region</li>
+</ul>
+<h4 id="scenario-2-leader-failure">Scenario 2: Leader Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Paxos group loses leader, temporary unavailability</li>
+<li><strong>Blast radius</strong>: Affected Paxos group</li>
+<li><strong>Detection</strong>: Leader health checks fail</li>
+<li><strong>Recovery</strong>: </li>
+<li>Automatic leader election (&lt; 10 seconds)</li>
+<li>Service resumes after leader election</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Multiple replicas per Paxos group</li>
+<li>Automatic leader election</li>
+</ul>
+<h4 id="scenario-3-truetime-failure">Scenario 3: TrueTime Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Cannot assign commit timestamps, transactions fail</li>
+<li><strong>Blast radius</strong>: All transactions</li>
+<li><strong>Detection</strong>: TrueTime API errors, transaction failures</li>
+<li><strong>Recovery</strong>: TrueTime has redundancy, automatic failover</li>
+<li><strong>Mitigation</strong>: TrueTime has multiple atomic clocks (redundancy)</li>
+</ul>
+<h3 id="consistency-failures">Consistency Failures</h3>
+<h4 id="scenario-1-clock-skew">Scenario 1: Clock Skew</h4>
+<ul>
+<li><strong>Impact</strong>: External consistency may be violated</li>
+<li><strong>Blast radius</strong>: Transactions during clock skew</li>
+<li><strong>Detection</strong>: TrueTime uncertainty increases</li>
+<li><strong>Recovery</strong>: TrueTime waits for uncertainty to decrease</li>
+<li><strong>Mitigation</strong>: TrueTime has bounded uncertainty (&lt; 7ms)</li>
+</ul>
+<h4 id="scenario-2-network-partition">Scenario 2: Network Partition</h4>
+<ul>
+<li><strong>Impact</strong>: Cannot reach majority, writes fail</li>
+<li><strong>Blast radius</strong>: Affected Paxos groups</li>
+<li><strong>Detection</strong>: Cannot reach quorum, write failures</li>
+<li><strong>Recovery</strong>: </li>
+<li>Partition resolves, quorum restored</li>
+<li>Writes resume after partition resolves</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Multi-region configuration (reduces partition risk)</li>
+<li>Sufficient replicas per region</li>
+</ul>
+<h3 id="performance-failures">Performance Failures</h3>
+<h4 id="scenario-1-hot-spots">Scenario 1: Hot Spots</h4>
+<ul>
+<li><strong>Impact</strong>: Single node overloaded, increased latency</li>
+<li><strong>Blast radius</strong>: Affected shard</li>
+<li><strong>Detection</strong>: High latency on specific keys, node CPU high</li>
+<li><strong>Recovery</strong>: </li>
+<li>Redesign schema (better key distribution)</li>
+<li>Add more nodes (may not help if hot spot persists)</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Design keys for even distribution</li>
+<li>Monitor hot spots</li>
+<li>Use interleaving to co-locate related data</li>
+</ul>
+<h4 id="scenario-2-transaction-conflicts">Scenario 2: Transaction Conflicts</h4>
+<ul>
+<li><strong>Impact</strong>: Transactions abort, retries needed</li>
+<li><strong>Blast radius</strong>: Conflicting transactions</li>
+<li><strong>Detection</strong>: High abort rate, transaction retries</li>
+<li><strong>Recovery</strong>: </li>
+<li>Implement exponential backoff</li>
+<li>Redesign transactions (reduce conflict probability)</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Design transactions to minimize conflicts</li>
+<li>Use read-only transactions when possible</li>
+<li>Batch operations when possible</li>
+</ul>
+<h3 id="overload-scenarios">Overload Scenarios</h3>
+<h4 id="10-normal-load">10× Normal Load</h4>
+<ul>
+<li><strong>Latency</strong>: May increase, especially for writes (2PC overhead)</li>
+<li><strong>Throughput</strong>: Handles load, may need to scale nodes</li>
+<li><strong>Consistency</strong>: Maintains consistency, may see increased latency</li>
+</ul>
+<h4 id="100-normal-load">100× Normal Load</h4>
+<ul>
+<li><strong>Latency</strong>: Significantly increased, may need scaling</li>
+<li><strong>Throughput</strong>: May need significant scaling</li>
+<li><strong>Consistency</strong>: Maintains consistency, but latency may be high</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics-to-track">Metrics to Track</h3>
+<h4 id="database-metrics">Database Metrics</h4>
+<ul>
+<li><strong>QPS</strong>: Queries per second (read/write)</li>
+<li><strong>Latency</strong>: P50/P95/P99 latency (read/write)</li>
+<li><strong>Error rate</strong>: Error rate (4xx/5xx)</li>
+<li><strong>Transaction rate</strong>: Transactions per second</li>
+<li><strong>Abort rate</strong>: Transaction abort rate</li>
+</ul>
+<h4 id="node-metrics">Node Metrics</h4>
+<ul>
+<li><strong>CPU</strong>: CPU utilization per node</li>
+<li><strong>Memory</strong>: Memory utilization per node</li>
+<li><strong>Disk</strong>: Disk I/O per node</li>
+<li><strong>Network</strong>: Network bandwidth per node</li>
+</ul>
+<h4 id="replication-metrics">Replication Metrics</h4>
+<ul>
+<li><strong>Replica lag</strong>: Replication lag between replicas</li>
+<li><strong>Leader elections</strong>: Leader election count</li>
+<li><strong>Paxos latency</strong>: Paxos consensus latency</li>
+</ul>
+<h3 id="logs">Logs</h3>
+<p><strong>Spanner logs</strong>:
+- Query logs (if enabled)
+- Transaction logs
+- Error logs
+- Admin activity logs</p>
+<h3 id="alerts">Alerts</h3>
+<p><strong>Critical alerts</strong>:
+- Database unavailable
+- High error rate (&gt; 1%)
+- High latency (&gt; threshold)
+- Replica failures</p>
+<p><strong>Warning alerts</strong>:
+- High abort rate
+- Hot spots detected
+- Replica lag increasing
+- Node resource exhaustion</p>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="schema-changes">Schema Changes</h3>
+<h4 id="adding-tables">Adding Tables</h4>
+<ul>
+<li><strong>Process</strong>: Create table, verify schema</li>
+<li><strong>Risk</strong>: Low (additive change)</li>
+<li><strong>Rollback</strong>: Drop table (if empty)</li>
+</ul>
+<h4 id="adding-columns">Adding Columns</h4>
+<ul>
+<li><strong>Process</strong>: Add column, verify application compatibility</li>
+<li><strong>Risk</strong>: Low (additive change, nullable columns)</li>
+<li><strong>Rollback</strong>: Drop column (if not used)</li>
+</ul>
+<h4 id="changing-primary-key">Changing Primary Key</h4>
+<ul>
+<li><strong>Process</strong>: Cannot change primary key (requires table recreation)</li>
+<li><strong>Risk</strong>: High (requires data migration)</li>
+<li><strong>Rollback</strong>: Recreate table with old primary key</li>
+</ul>
+<h3 id="index-changes">Index Changes</h3>
+<h4 id="adding-indexes">Adding Indexes</h4>
+<ul>
+<li><strong>Process</strong>: Create index, verify query performance</li>
+<li><strong>Risk</strong>: Medium (increases write cost)</li>
+<li><strong>Rollback</strong>: Drop index</li>
+</ul>
+<h4 id="removing-indexes">Removing Indexes</h4>
+<ul>
+<li><strong>Process</strong>: Drop index, verify query performance</li>
+<li><strong>Risk</strong>: Medium (may slow queries)</li>
+<li><strong>Rollback</strong>: Recreate index</li>
+</ul>
+<h3 id="configuration-changes">Configuration Changes</h3>
+<h4 id="changing-replication">Changing Replication</h4>
+<ul>
+<li><strong>Process</strong>: Update replication configuration, verify availability</li>
+<li><strong>Risk</strong>: High (affects availability, requires downtime)</li>
+<li><strong>Rollback</strong>: Revert replication configuration</li>
+</ul>
+<h4 id="scaling-nodes">Scaling Nodes</h4>
+<ul>
+<li><strong>Process</strong>: Add/remove nodes, verify performance</li>
+<li><strong>Risk</strong>: Medium (may affect performance temporarily)</li>
+<li><strong>Rollback</strong>: Revert node count</li>
+</ul>
+<hr />
+<h2 id="security-boundaries">Security Boundaries</h2>
+<h3 id="access-control">Access Control</h3>
+<ul>
+<li><strong>IAM</strong>: Database and table-level IAM policies</li>
+<li><strong>Row-level security</strong>: Filter rows based on identity (if configured)</li>
+<li><strong>Encryption</strong>: Encryption at rest and in transit</li>
+</ul>
+<h3 id="encryption">Encryption</h3>
+<p><strong>At rest</strong>:
+- <strong>Google-managed keys</strong>: Default encryption
+- <strong>Customer-managed keys</strong>: Cloud KMS keys</p>
+<p><strong>In transit</strong>:
+- <strong>TLS</strong>: All connections use TLS
+- <strong>Encryption</strong>: Data encrypted in transit</p>
+<h3 id="data-protection">Data Protection</h3>
+<ul>
+<li><strong>Backups</strong>: Automatic backups (point-in-time recovery)</li>
+<li><strong>Audit logs</strong>: Audit all database access</li>
+<li><strong>Data retention</strong>: Configurable data retention</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="consistency-external-vs-serializability">Consistency: External vs Serializability</h3>
+<p><strong>External consistency</strong>:
+- <strong>Pros</strong>: Strongest guarantee, no anomalies
+- <strong>Cons</strong>: Higher latency (TrueTime wait), higher cost</p>
+<p><strong>Serializability</strong>:
+- <strong>Pros</strong>: Standard guarantee, lower latency
+- <strong>Cons</strong>: Weaker than external consistency</p>
+<h3 id="replication-multi-region-vs-regional">Replication: Multi-Region vs Regional</h3>
+<p><strong>Multi-region</strong>:
+- <strong>Pros</strong>: Highest availability, disaster recovery
+- <strong>Cons</strong>: Higher latency, higher cost</p>
+<p><strong>Regional</strong>:
+- <strong>Pros</strong>: Lower latency, lower cost
+- <strong>Cons</strong>: Single region failure affects availability</p>
+<h3 id="schema-normalized-vs-denormalized">Schema: Normalized vs Denormalized</h3>
+<p><strong>Normalized</strong>:
+- <strong>Pros</strong>: Less storage, easier updates
+- <strong>Cons</strong>: More joins, potentially slower queries</p>
+<p><strong>Denormalized</strong>:
+- <strong>Pros</strong>: Faster queries, fewer joins
+- <strong>Cons</strong>: More storage, harder updates</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<p><strong>Storage</strong>:
+- <strong>Growth</strong>: Plan for storage growth
+- <strong>Backups</strong>: Plan for backup storage
+- <strong>Indexes</strong>: Plan for index storage</p>
+<p><strong>Compute</strong>:
+- <strong>Nodes</strong>: Plan for node capacity
+- <strong>QPS</strong>: Plan for query throughput
+- <strong>Scaling</strong>: Plan for auto-scaling</p>
+<h3 id="monitoring-debugging">Monitoring &amp; Debugging</h3>
+<p><strong>Monitor</strong>:
+- Query performance
+- Transaction performance
+- Node health
+- Replication health</p>
+<p><strong>Debug issues</strong>:
+1. Check query performance (slow queries)
+2. Check transaction conflicts
+3. Check hot spots
+4. Check node health
+5. Check replication lag
+6. Review logs</p>
+<h3 id="incident-response">Incident Response</h3>
+<p><strong>Common incidents</strong>:
+- High latency
+- Transaction conflicts
+- Hot spots
+- Replica failures</p>
+<p><strong>Response</strong>:
+1. Check database health
+2. Check query performance
+3. Check transaction conflicts
+4. Check hot spots
+5. Scale if needed
+6. Contact support if persistent</p>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>"What's the schema design?"</li>
+<li>"How are transactions used?"</li>
+<li>"What's the replication configuration?"</li>
+<li>"How is consistency guaranteed?"</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>"What happens at 10× load?"</li>
+<li>"How does Spanner scale?"</li>
+<li>"What are the hot spots?"</li>
+<li>"How do you handle transaction conflicts?"</li>
+</ul>
+<h3 id="consistency-questions">Consistency Questions</h3>
+<ul>
+<li>"What consistency guarantees are needed?"</li>
+<li>"How is external consistency achieved?"</li>
+<li>"What's the TrueTime uncertainty?"</li>
+<li>"How are conflicts handled?"</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>"How do you monitor Spanner?"</li>
+<li>"What alerts do you have?"</li>
+<li>"How do you debug performance issues?"</li>
+<li>"What's the backup strategy?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/spanner.html">Further Reading: Spanner</a></p>
+<p><strong>Quick Links</strong>:
+- <a href="https://cloud.google.com/spanner/docs">Spanner Documentation</a>
+- "Spanner: Google's Globally-Distributed Database" (Corbett et al., 2012)
+- "Spanner, TrueTime and The CAP Theorem" (Google Research)
+- <a href="https://cloud.google.com/spanner/docs/schema-design">Schema Design</a>
+- <a href="README.html">Back to GCP Core Building Blocks</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design schema</strong>: Design a schema for an e-commerce application. What tables? What indexes? How do you handle interleaving?</p>
+</li>
+<li>
+<p><strong>Handle consistency</strong>: Your application needs external consistency. How do you ensure this with Spanner?</p>
+</li>
+<li>
+<p><strong>Optimize performance</strong>: Your queries are slow. How do you optimize them? What indexes do you add?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/spanner-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

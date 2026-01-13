@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#progress-tracker" class="level-1">Progress Tracker</a></li>
+                <li><a href="#phase-0-foundations-quantitative-reasoning" class="level-2">Phase 0: Foundations &amp; Quantitative Reasoning</a></li>
+                <li><a href="#phase-1-distributed-systems-building-blocks" class="level-2">Phase 1: Distributed Systems Building Blocks</a></li>
+                <li><a href="#phase-2-gcp-core-building-blocks" class="level-2">Phase 2: GCP Core Building Blocks</a></li>
+                <li><a href="#phase-3-reliability-engineering-sre" class="level-2">Phase 3: Reliability Engineering &amp; SRE</a></li>
+                <li><a href="#phase-4-case-studies-end-to-end-design" class="level-2">Phase 4: Case Studies &amp; End-to-End Design</a></li>
+                <li><a href="#notes" class="level-2">Notes</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="progress-tracker">Progress Tracker</h1>
+<p>Track your learning progress through the staff-level GCP curriculum.</p>
+<h2 id="phase-0-foundations-quantitative-reasoning">Phase 0: Foundations &amp; Quantitative Reasoning</h2>
+<ul>
+<li><input type="checkbox" class="progress-checkbox" id="progress-232061d85e6e" data-progress-item data-link-url="01-foundations/queueing-tail-latency.md" > <a href="01-foundations/queueing-tail-latency.html">Queueing Theory &amp; Tail Latency</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-6e1b2725912b" data-progress-item data-link-url="01-foundations/capacity-math.md" > <a href="01-foundations/capacity-math.html">Capacity Math Cheat Sheet</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-1d1edddcc2ec" data-progress-item data-link-url="01-foundations/observability-basics.md" > <a href="01-foundations/observability-basics.html">Observability Basics</a></li>
+</ul>
+<p><strong>Milestone</strong>: Can reason about P50/P95/P99 latency and calculate capacity needs.</p>
+<hr />
+<h2 id="phase-1-distributed-systems-building-blocks">Phase 1: Distributed Systems Building Blocks</h2>
+<ul>
+<li><input type="checkbox" class="progress-checkbox" id="progress-71ccda5803c8" data-progress-item data-link-url="02-distributed-systems/time-ordering-causality.md" > <a href="02-distributed-systems/time-ordering-causality.html">Time, Ordering, and Causality</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-511cbf399edb" data-progress-item data-link-url="02-distributed-systems/consensus-leases.md" > <a href="02-distributed-systems/consensus-leases.html">Consensus &amp; Leases</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-51e94be8bc07" data-progress-item data-link-url="02-distributed-systems/replication.md" > <a href="02-distributed-systems/replication.html">Replication Strategies</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-fb8b5f1b853f" data-progress-item data-link-url="02-distributed-systems/sharding-partitioning.md" > <a href="02-distributed-systems/sharding-partitioning.html">Sharding &amp; Partitioning</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-4a7a6baabbf2" data-progress-item data-link-url="02-distributed-systems/overload-backpressure.md" > <a href="02-distributed-systems/overload-backpressure.html">Overload &amp; Backpressure</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-62928773cdf6" data-progress-item data-link-url="02-distributed-systems/idempotency-retries.md" > <a href="02-distributed-systems/idempotency-retries.html">Idempotency &amp; Retry Semantics</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-431dcbeadc9d" data-progress-item data-link-url="02-distributed-systems/queues-streams.md" > <a href="02-distributed-systems/queues-streams.html">Queues &amp; Streams</a></li>
+</ul>
+<p><strong>Milestone</strong>: Understand consensus vs leases, handle overload gracefully, know replication tradeoffs.</p>
+<hr />
+<h2 id="phase-2-gcp-core-building-blocks">Phase 2: GCP Core Building Blocks</h2>
+<ul>
+<li><input type="checkbox" class="progress-checkbox" id="progress-be01c4906536" data-progress-item data-link-url="03-gcp-core-building-blocks/vpc-lb-dns.md" > <a href="03-gcp-core-building-blocks/vpc-lb-dns.html">VPC, Load Balancing &amp; DNS</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-60ba286898c8" data-progress-item data-link-url="03-gcp-core-building-blocks/gke-internals.md" > <a href="03-gcp-core-building-blocks/gke-internals.html">GKE Control Plane &amp; Data Plane</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-45ae1a970504" data-progress-item data-link-url="03-gcp-core-building-blocks/iam-evaluation.md" > <a href="03-gcp-core-building-blocks/iam-evaluation.html">IAM Evaluation Model</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-438a22f00575" data-progress-item data-link-url="03-gcp-core-building-blocks/cloud-storage.md" > <a href="03-gcp-core-building-blocks/cloud-storage.html">Cloud Storage Deep Dive</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-cb892e678b07" data-progress-item data-link-url="03-gcp-core-building-blocks/spanner.md" > <a href="03-gcp-core-building-blocks/spanner.html">Spanner: Consistency &amp; Performance</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-9a926719f8d4" data-progress-item data-link-url="03-gcp-core-building-blocks/bigtable.md" > <a href="03-gcp-core-building-blocks/bigtable.html">Bigtable: Design &amp; Tradeoffs</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-192b4c11fcd4" data-progress-item data-link-url="03-gcp-core-building-blocks/bigquery.md" > <a href="03-gcp-core-building-blocks/bigquery.html">BigQuery Architecture</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-9e583936ec2e" data-progress-item data-link-url="03-gcp-core-building-blocks/pubsub.md" > <a href="03-gcp-core-building-blocks/pubsub.html">Pub/Sub: Delivery Guarantees</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-43d6ce5f423d" data-progress-item data-link-url="03-gcp-core-building-blocks/kms-secrets.md" > <a href="03-gcp-core-building-blocks/kms-secrets.html">Cloud KMS &amp; Secret Management</a></li>
+</ul>
+<p><strong>Milestone</strong>: Can design systems using GCP primitives, understand failure modes, make tradeoffs.</p>
+<hr />
+<h2 id="phase-3-reliability-engineering-sre">Phase 3: Reliability Engineering &amp; SRE</h2>
+<ul>
+<li><input type="checkbox" class="progress-checkbox" id="progress-90a2ac30e232" data-progress-item data-link-url="04-reliability-sre/sli-slo-error-budget.md" > <a href="04-reliability-sre/sli-slo-error-budget.html">SLIs, SLOs &amp; Error Budgets</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-a6bfb3efc79c" data-progress-item data-link-url="04-reliability-sre/prr-checklist.md" > <a href="04-reliability-sre/prr-checklist.html">Production Readiness Reviews (PRR)</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-5df264005dc8" data-progress-item data-link-url="04-reliability-sre/incident-response.md" > <a href="04-reliability-sre/incident-response.html">Incident Response &amp; Postmortems</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-b3c220cc2b20" data-progress-item data-link-url="04-reliability-sre/capacity-planning.md" > <a href="04-reliability-sre/capacity-planning.html">Capacity Planning &amp; Forecasting</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-52421cf7911f" data-progress-item data-link-url="04-reliability-sre/load-shedding.md" > <a href="04-reliability-sre/load-shedding.html">Load Shedding &amp; Circuit Breakers</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-bb31a67735e6" data-progress-item data-link-url="04-reliability-sre/canary-rollouts.md" > <a href="04-reliability-sre/canary-rollouts.html">Canary Deployments &amp; Rollouts</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-8ed28140bcc5" data-progress-item data-link-url="04-reliability-sre/testing-for-failure.md" > <a href="04-reliability-sre/testing-for-failure.html">Testing for Failure</a></li>
+</ul>
+<p><strong>Milestone</strong>: Can define SLIs/SLOs, run PRRs, respond to incidents, plan capacity.</p>
+<hr />
+<h2 id="phase-4-case-studies-end-to-end-design">Phase 4: Case Studies &amp; End-to-End Design</h2>
+<ul>
+<li><input type="checkbox" class="progress-checkbox" id="progress-21a69cd56161" data-progress-item data-link-url="06-case-studies/multi-region-api.md" > <a href="06-case-studies/multi-region-api.html">Multi-Region API on GCP</a></li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-f1ff0ea06067" data-progress-item data-link-url="06-case-studies/data-pipeline.md" > <a href="06-case-studies/data-pipeline.html">High-Throughput Data Pipeline</a> (coming soon)</li>
+<li><input type="checkbox" class="progress-checkbox" id="progress-9e31c15c8dff" data-progress-item data-link-url="06-case-studies/cdn-system.md" > <a href="06-case-studies/cdn-system.html">Global Content Delivery System</a> (coming soon)</li>
+</ul>
+<p><strong>Milestone</strong>: Can design, implement, and operate production systems with SLOs and playbooks.</p>
+<hr />
+<h2 id="notes">Notes</h2>
+<p>Use this section to track insights, questions, or areas to revisit:</p>
+<pre><code>Add your notes here as you progress...
+</code></pre>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../assets/scripts.js"></script>
+    <script src="../assets/progress.js"></script>
+<script src="../assets/progress.js"></script>
+</body>
+</html>

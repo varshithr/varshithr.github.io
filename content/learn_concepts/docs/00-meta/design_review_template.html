@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design_Review_Template</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#design-review-template" class="level-1">Design Review Template</a></li>
+                <li><a href="#design-overview" class="level-2">Design Overview</a></li>
+                <li><a href="#requirements-constraints" class="level-2">Requirements &amp; Constraints</a></li>
+                <li><a href="#functional-requirements" class="level-3">Functional Requirements</a></li>
+                <li><a href="#non-functional-requirements" class="level-3">Non-Functional Requirements</a></li>
+                <li><a href="#constraints" class="level-3">Constraints</a></li>
+                <li><a href="#architecture-review" class="level-2">Architecture Review</a></li>
+                <li><a href="#high-level-design" class="level-3">High-Level Design</a></li>
+                <li><a href="#component-design" class="level-3">Component Design</a></li>
+                <li><a href="#data-model" class="level-3">Data Model</a></li>
+                <li><a href="#failure-modes-reliability" class="level-2">Failure Modes &amp; Reliability</a></li>
+                <li><a href="#failure-domains" class="level-3">Failure Domains</a></li>
+                <li><a href="#failure-scenarios" class="level-3">Failure Scenarios</a></li>
+                <li><a href="#overload-behavior" class="level-3">Overload Behavior</a></li>
+                <li><a href="#slis-slos-error-budgets" class="level-3">SLIs, SLOs &amp; Error Budgets</a></li>
+                <li><a href="#observability" class="level-2">Observability</a></li>
+                <li><a href="#metrics" class="level-3">Metrics</a></li>
+                <li><a href="#logging" class="level-3">Logging</a></li>
+                <li><a href="#tracing" class="level-3">Tracing</a></li>
+                <li><a href="#alerting" class="level-3">Alerting</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#deployment-strategy" class="level-3">Deployment Strategy</a></li>
+                <li><a href="#testing" class="level-3">Testing</a></li>
+                <li><a href="#feature-flags" class="level-3">Feature Flags</a></li>
+                <li><a href="#security" class="level-2">Security</a></li>
+                <li><a href="#identity-authentication" class="level-3">Identity &amp; Authentication</a></li>
+                <li><a href="#authorization" class="level-3">Authorization</a></li>
+                <li><a href="#data-protection" class="level-3">Data Protection</a></li>
+                <li><a href="#attack-surfaces" class="level-3">Attack Surfaces</a></li>
+                <li><a href="#capacity-performance" class="level-2">Capacity &amp; Performance</a></li>
+                <li><a href="#capacity-planning" class="level-3">Capacity Planning</a></li>
+                <li><a href="#performance" class="level-3">Performance</a></li>
+                <li><a href="#cost" class="level-3">Cost</a></li>
+                <li><a href="#operational-readiness" class="level-2">Operational Readiness</a></li>
+                <li><a href="#documentation" class="level-3">Documentation</a></li>
+                <li><a href="#on-call" class="level-3">On-Call</a></li>
+                <li><a href="#monitoring" class="level-3">Monitoring</a></li>
+                <li><a href="#staff-level-questions" class="level-2">Staff-Level Questions</a></li>
+                <li><a href="#design-questions" class="level-3">Design Questions</a></li>
+                <li><a href="#scale-questions" class="level-3">Scale Questions</a></li>
+                <li><a href="#security-questions" class="level-3">Security Questions</a></li>
+                <li><a href="#operational-questions" class="level-3">Operational Questions</a></li>
+                <li><a href="#review-feedback" class="level-2">Review Feedback</a></li>
+                <li><a href="#critical-issues-must-fix" class="level-3">Critical Issues (Must Fix)</a></li>
+                <li><a href="#important-issues-should-fix" class="level-3">Important Issues (Should Fix)</a></li>
+                <li><a href="#nice-to-have-consider" class="level-3">Nice-to-Have (Consider)</a></li>
+                <li><a href="#questions" class="level-3">Questions</a></li>
+                <li><a href="#approval" class="level-2">Approval</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="design-review-template">Design Review Template</h1>
+<p>Use this template when reviewing system designs at staff level.</p>
+<h2 id="design-overview">Design Overview</h2>
+<p><strong>System Name</strong>: [Name]</p>
+<p><strong>Purpose</strong>: [What problem does this solve?]</p>
+<p><strong>Designer</strong>: [Who designed this?]</p>
+<p><strong>Reviewer</strong>: [Who is reviewing?]</p>
+<p><strong>Date</strong>: [Date]</p>
+<hr />
+<h2 id="requirements-constraints">Requirements &amp; Constraints</h2>
+<h3 id="functional-requirements">Functional Requirements</h3>
+<ul>
+<li>[Requirement 1]</li>
+<li>[Requirement 2]</li>
+</ul>
+<h3 id="non-functional-requirements">Non-Functional Requirements</h3>
+<ul>
+<li><strong>Latency</strong>: [Target latency, e.g., P95 &lt; 100ms]</li>
+<li><strong>Throughput</strong>: [Target QPS]</li>
+<li><strong>Availability</strong>: [Target uptime, e.g., 99.9%]</li>
+<li><strong>Consistency</strong>: [Consistency model]</li>
+<li><strong>Durability</strong>: [Data durability requirements]</li>
+</ul>
+<h3 id="constraints">Constraints</h3>
+<ul>
+<li><strong>Budget</strong>: [Cost constraints]</li>
+<li><strong>Timeline</strong>: [Deadlines]</li>
+<li><strong>Dependencies</strong>: [External dependencies]</li>
+<li><strong>Compliance</strong>: [Regulatory requirements]</li>
+</ul>
+<hr />
+<h2 id="architecture-review">Architecture Review</h2>
+<h3 id="high-level-design">High-Level Design</h3>
+<ul>
+<li>[ ] Architecture diagram is clear and accurate</li>
+<li>[ ] Components and responsibilities are well-defined</li>
+<li>[ ] Data flow is documented</li>
+<li>[ ] Critical paths are identified</li>
+</ul>
+<h3 id="component-design">Component Design</h3>
+<ul>
+<li>[ ] Each component has a clear purpose</li>
+<li>[ ] Component boundaries are well-defined</li>
+<li>[ ] Interfaces are documented</li>
+<li>[ ] Dependencies are explicit</li>
+</ul>
+<h3 id="data-model">Data Model</h3>
+<ul>
+<li>[ ] Data model is appropriate for use case</li>
+<li>[ ] Schema is documented</li>
+<li>[ ] Data lifecycle is considered</li>
+<li>[ ] Data retention policies are defined</li>
+</ul>
+<hr />
+<h2 id="failure-modes-reliability">Failure Modes &amp; Reliability</h2>
+<h3 id="failure-domains">Failure Domains</h3>
+<ul>
+<li>[ ] Failure domains are identified</li>
+<li>[ ] Blast radius is limited</li>
+<li>[ ] Failures are isolated</li>
+<li>[ ] Single points of failure are eliminated</li>
+</ul>
+<h3 id="failure-scenarios">Failure Scenarios</h3>
+<ul>
+<li>[ ] Common failure scenarios are documented</li>
+<li>[ ] Failure detection is planned</li>
+<li>[ ] Recovery procedures are defined</li>
+<li>[ ] Cascading failures are prevented</li>
+</ul>
+<h3 id="overload-behavior">Overload Behavior</h3>
+<ul>
+<li>[ ] Behavior at 10× load is understood</li>
+<li>[ ] Behavior at 100× load is considered</li>
+<li>[ ] Load shedding is implemented</li>
+<li>[ ] Graceful degradation is planned</li>
+</ul>
+<h3 id="slis-slos-error-budgets">SLIs, SLOs &amp; Error Budgets</h3>
+<ul>
+<li>[ ] SLIs are defined and measurable</li>
+<li>[ ] SLOs are set appropriately</li>
+<li>[ ] Error budgets are calculated</li>
+<li>[ ] Alerting thresholds are set</li>
+</ul>
+<hr />
+<h2 id="observability">Observability</h2>
+<h3 id="metrics">Metrics</h3>
+<ul>
+<li>[ ] Key metrics are identified</li>
+<li>[ ] Latency metrics (P50/P95/P99) are tracked</li>
+<li>[ ] Throughput metrics are tracked</li>
+<li>[ ] Error rates are tracked</li>
+<li>[ ] Resource usage is monitored</li>
+</ul>
+<h3 id="logging">Logging</h3>
+<ul>
+<li>[ ] Critical events are logged</li>
+<li>[ ] Log levels are appropriate</li>
+<li>[ ] Logs are structured</li>
+<li>[ ] Log retention is defined</li>
+</ul>
+<h3 id="tracing">Tracing</h3>
+<ul>
+<li>[ ] Critical paths are traced</li>
+<li>[ ] Spans are well-defined</li>
+<li>[ ] Trace sampling strategy is defined</li>
+<li>[ ] Cross-service correlation works</li>
+</ul>
+<h3 id="alerting">Alerting</h3>
+<ul>
+<li>[ ] Alerts are actionable</li>
+<li>[ ] Alert fatigue is avoided</li>
+<li>[ ] On-call procedures are defined</li>
+<li>[ ] Escalation paths are clear</li>
+</ul>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="deployment-strategy">Deployment Strategy</h3>
+<ul>
+<li>[ ] Rollout strategy is defined</li>
+<li>[ ] Canary deployment is planned</li>
+<li>[ ] Rollback procedure is documented</li>
+<li>[ ] Feature flags are used appropriately</li>
+</ul>
+<h3 id="testing">Testing</h3>
+<ul>
+<li>[ ] Unit tests are planned</li>
+<li>[ ] Integration tests are planned</li>
+<li>[ ] Load tests are planned</li>
+<li>[ ] Chaos tests are considered</li>
+</ul>
+<h3 id="feature-flags">Feature Flags</h3>
+<ul>
+<li>[ ] Feature flags are used for risky changes</li>
+<li>[ ] Kill switches are implemented</li>
+<li>[ ] Flag management is documented</li>
+</ul>
+<hr />
+<h2 id="security">Security</h2>
+<h3 id="identity-authentication">Identity &amp; Authentication</h3>
+<ul>
+<li>[ ] Authentication is required</li>
+<li>[ ] Authentication mechanism is appropriate</li>
+<li>[ ] Identity is verified correctly</li>
+</ul>
+<h3 id="authorization">Authorization</h3>
+<ul>
+<li>[ ] Authorization is checked</li>
+<li>[ ] Principle of least privilege is followed</li>
+<li>[ ] Permissions are well-defined</li>
+<li>[ ] Access is audited</li>
+</ul>
+<h3 id="data-protection">Data Protection</h3>
+<ul>
+<li>[ ] Data is encrypted at rest</li>
+<li>[ ] Data is encrypted in transit</li>
+<li>[ ] Key management is secure</li>
+<li>[ ] Data exfiltration is prevented</li>
+</ul>
+<h3 id="attack-surfaces">Attack Surfaces</h3>
+<ul>
+<li>[ ] Attack vectors are identified</li>
+<li>[ ] Mitigations are in place</li>
+<li>[ ] Security monitoring is planned</li>
+</ul>
+<hr />
+<h2 id="capacity-performance">Capacity &amp; Performance</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<ul>
+<li>[ ] Capacity requirements are calculated</li>
+<li>[ ] Scaling strategy is defined</li>
+<li>[ ] Scaling limits are understood</li>
+<li>[ ] Capacity forecasting is planned</li>
+</ul>
+<h3 id="performance">Performance</h3>
+<ul>
+<li>[ ] Performance targets are met</li>
+<li>[ ] Bottlenecks are identified</li>
+<li>[ ] Optimization opportunities are considered</li>
+<li>[ ] Tail latency is addressed</li>
+</ul>
+<h3 id="cost">Cost</h3>
+<ul>
+<li>[ ] Cost model is understood</li>
+<li>[ ] Cost optimization is considered</li>
+<li>[ ] Cost monitoring is planned</li>
+</ul>
+<hr />
+<h2 id="operational-readiness">Operational Readiness</h2>
+<h3 id="documentation">Documentation</h3>
+<ul>
+<li>[ ] Architecture is documented</li>
+<li>[ ] Runbooks are written</li>
+<li>[ ] Onboarding docs exist</li>
+<li>[ ] Troubleshooting guides exist</li>
+</ul>
+<h3 id="on-call">On-Call</h3>
+<ul>
+<li>[ ] On-call rotation is defined</li>
+<li>[ ] Escalation paths are clear</li>
+<li>[ ] Incident response is planned</li>
+<li>[ ] Postmortem process is defined</li>
+</ul>
+<h3 id="monitoring">Monitoring</h3>
+<ul>
+<li>[ ] Dashboards are created</li>
+<li>[ ] Alerts are configured</li>
+<li>[ ] Monitoring is tested</li>
+<li>[ ] Debugging tools are available</li>
+</ul>
+<hr />
+<h2 id="staff-level-questions">Staff-Level Questions</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>[ ] What's the failure domain?</li>
+<li>[ ] How do we detect failures?</li>
+<li>[ ] What's the blast radius?</li>
+<li>[ ] How do we roll back?</li>
+<li>[ ] What's the observability contract?</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>[ ] What happens at 10× load?</li>
+<li>[ ] What are the bottlenecks?</li>
+<li>[ ] How does it degrade?</li>
+</ul>
+<h3 id="security-questions">Security Questions</h3>
+<ul>
+<li>[ ] Who can access this?</li>
+<li>[ ] How is data protected?</li>
+<li>[ ] What's the attack surface?</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>[ ] How do we monitor this?</li>
+<li>[ ] What's the runbook?</li>
+<li>[ ] How do we debug issues?</li>
+</ul>
+<hr />
+<h2 id="review-feedback">Review Feedback</h2>
+<h3 id="critical-issues-must-fix">Critical Issues (Must Fix)</h3>
+<ol>
+<li>[Issue 1]</li>
+<li>[Issue 2]</li>
+</ol>
+<h3 id="important-issues-should-fix">Important Issues (Should Fix)</h3>
+<ol>
+<li>[Issue 1]</li>
+<li>[Issue 2]</li>
+</ol>
+<h3 id="nice-to-have-consider">Nice-to-Have (Consider)</h3>
+<ol>
+<li>[Issue 1]</li>
+<li>[Issue 2]</li>
+</ol>
+<h3 id="questions">Questions</h3>
+<ol>
+<li>[Question 1]</li>
+<li>[Question 2]</li>
+</ol>
+<hr />
+<h2 id="approval">Approval</h2>
+<ul>
+<li>[ ] <strong>Approved</strong> - Design is ready for implementation</li>
+<li>[ ] <strong>Approved with Changes</strong> - Design is approved pending fixes</li>
+<li>[ ] <strong>Needs Revision</strong> - Design needs significant changes</li>
+<li>[ ] <strong>Rejected</strong> - Design is not viable</li>
+</ul>
+<p><strong>Reviewer Signature</strong>: [Name]</p>
+<p><strong>Date</strong>: [Date]</p>
+<p><strong>Next Steps</strong>: [What happens next?]</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alloydb Answers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#answer-key-alloydb" class="level-1">Answer Key: AlloyDB</a></li>
+                <li><a href="#exercise-1-design-architecture" class="level-2">Exercise 1: Design Architecture</a></li>
+                <li><a href="#answer" class="level-3">Answer</a></li>
+                <li><a href="#architecture" class="level-3">Architecture</a></li>
+                <li><a href="#exercise-2-handle-scaling" class="level-2">Exercise 2: Handle Scaling</a></li>
+                <li><a href="#answer_1" class="level-3">Answer</a></li>
+                <li><a href="#exercise-3-optimize-performance" class="level-2">Exercise 3: Optimize Performance</a></li>
+                <li><a href="#answer_2" class="level-3">Answer</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="answer-key-alloydb">Answer Key: AlloyDB</h1>
+<p><a href="../../03-gcp-core-building-blocks/alloydb.html">Back to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-design-architecture">Exercise 1: Design Architecture</h2>
+<p><strong>Question</strong>: Design an AlloyDB architecture for a high-traffic application. How many read replicas? What's the failover strategy?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Goal</strong>: Design high-availability AlloyDB architecture.</p>
+<h3 id="architecture">Architecture</h3>
+<p><strong>Primary Instance</strong>: 
+- Region: <code>us-central1</code>
+- Machine Type: <code>db-standard-8</code> (8 vCPU, 30GB RAM)
+- High Availability: Enabled</p>
+<p><strong>Read Replicas</strong>:
+- <strong>Replica 1</strong>: <code>us-central1</code> (same zone as primary)
+- <strong>Replica 2</strong>: <code>us-east1</code> (different region)
+- <strong>Replica 3</strong>: <code>us-west1</code> (different region)</p>
+<p><strong>Failover Strategy</strong>:
+- Automatic failover (&lt; 60 seconds)
+- Promote read replica to primary
+- Update application connection strings</p>
+<p><strong>Answer</strong>: Use 3 read replicas (1 same region, 2 different regions), enable automatic failover, design for &lt; 60 second RTO.</p>
+<hr />
+<h2 id="exercise-2-handle-scaling">Exercise 2: Handle Scaling</h2>
+<p><strong>Question</strong>: Your application needs to scale reads. How do you scale with AlloyDB? What's the strategy?</p>
+<h3 id="answer_1">Answer</h3>
+<p><strong>Scaling strategies</strong>:</p>
+<ol>
+<li><strong>Add Read Replicas</strong>: Add more read replicas for read scaling</li>
+<li><strong>Connection Pooling</strong>: Use connection pooling for efficient connections</li>
+<li><strong>Read-Write Splitting</strong>: Route reads to replicas, writes to primary</li>
+<li><strong>Monitor Performance</strong>: Monitor replica lag and performance</li>
+</ol>
+<p><strong>Answer</strong>: Add read replicas for horizontal read scaling, use connection pooling, implement read-write splitting.</p>
+<hr />
+<h2 id="exercise-3-optimize-performance">Exercise 3: Optimize Performance</h2>
+<p><strong>Question</strong>: Your queries are slow. How do you optimize them? What AlloyDB features do you use?</p>
+<h3 id="answer_2">Answer</h3>
+<p><strong>Optimization strategies</strong>:</p>
+<ol>
+<li><strong>Use Columnar Cache</strong>: Enable columnar cache for analytics</li>
+<li><strong>Optimize Queries</strong>: Use appropriate indexes and query patterns</li>
+<li><strong>Connection Pooling</strong>: Use connection pooling</li>
+<li><strong>Monitor Performance</strong>: Monitor query performance and optimize</li>
+</ol>
+<p><strong>Answer</strong>: Enable columnar cache, optimize queries with indexes, use connection pooling, monitor and optimize continuously.</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../../assets/scripts.js"></script>
+    
+</body>
+</html>

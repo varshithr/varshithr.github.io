@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bigquery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#bigquery-architecture" class="level-1">BigQuery Architecture</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#bigquery-architecture_1" class="level-3">BigQuery Architecture</a></li>
+                <li><a href="#columnar-storage" class="level-3">Columnar Storage</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#dremel-query-execution" class="level-3">Dremel Query Execution</a></li>
+                <li><a href="#slots" class="level-3">Slots</a></li>
+                <li><a href="#columnar-storage-details" class="level-3">Columnar Storage Details</a></li>
+                <li><a href="#columnar-format" class="level-4">Columnar Format</a></li>
+                <li><a href="#partitioning" class="level-4">Partitioning</a></li>
+                <li><a href="#clustering" class="level-4">Clustering</a></li>
+                <li><a href="#query-optimization" class="level-3">Query Optimization</a></li>
+                <li><a href="#query-planning" class="level-4">Query Planning</a></li>
+                <li><a href="#execution-strategies" class="level-4">Execution Strategies</a></li>
+                <li><a href="#performance-characteristics" class="level-3">Performance Characteristics</a></li>
+                <li><a href="#latency" class="level-4">Latency</a></li>
+                <li><a href="#throughput" class="level-4">Throughput</a></li>
+                <li><a href="#scalability" class="level-4">Scalability</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#bigquery-failures" class="level-3">BigQuery Failures</a></li>
+                <li><a href="#scenario-1-service-outage" class="level-4">Scenario 1: Service Outage</a></li>
+                <li><a href="#scenario-2-slot-exhaustion" class="level-4">Scenario 2: Slot Exhaustion</a></li>
+                <li><a href="#scenario-3-storage-io-bottleneck" class="level-4">Scenario 3: Storage I/O Bottleneck</a></li>
+                <li><a href="#performance-failures" class="level-3">Performance Failures</a></li>
+                <li><a href="#scenario-1-expensive-queries" class="level-4">Scenario 1: Expensive Queries</a></li>
+                <li><a href="#scenario-2-query-timeout" class="level-4">Scenario 2: Query Timeout</a></li>
+                <li><a href="#overload-scenarios" class="level-3">Overload Scenarios</a></li>
+                <li><a href="#10-normal-load" class="level-4">10× Normal Load</a></li>
+                <li><a href="#100-normal-load" class="level-4">100× Normal Load</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics-to-track" class="level-3">Metrics to Track</a></li>
+                <li><a href="#query-metrics" class="level-4">Query Metrics</a></li>
+                <li><a href="#table-metrics" class="level-4">Table Metrics</a></li>
+                <li><a href="#job-metrics" class="level-4">Job Metrics</a></li>
+                <li><a href="#logs" class="level-3">Logs</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#schema-changes" class="level-3">Schema Changes</a></li>
+                <li><a href="#adding-columns" class="level-4">Adding Columns</a></li>
+                <li><a href="#changing-partitioning" class="level-4">Changing Partitioning</a></li>
+                <li><a href="#adding-clustering" class="level-4">Adding Clustering</a></li>
+                <li><a href="#configuration-changes" class="level-3">Configuration Changes</a></li>
+                <li><a href="#changing-slot-reservation" class="level-4">Changing Slot Reservation</a></li>
+                <li><a href="#enabling-query-caching" class="level-4">Enabling Query Caching</a></li>
+                <li><a href="#security-boundaries" class="level-2">Security Boundaries</a></li>
+                <li><a href="#access-control" class="level-3">Access Control</a></li>
+                <li><a href="#encryption" class="level-3">Encryption</a></li>
+                <li><a href="#data-protection" class="level-3">Data Protection</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#storage-columnar-vs-row" class="level-3">Storage: Columnar vs Row</a></li>
+                <li><a href="#pricing-on-demand-vs-reserved" class="level-3">Pricing: On-Demand vs Reserved</a></li>
+                <li><a href="#partitioning-time-vs-integer-range" class="level-3">Partitioning: Time vs Integer Range</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#capacity-planning" class="level-3">Capacity Planning</a></li>
+                <li><a href="#monitoring-debugging" class="level-3">Monitoring &amp; Debugging</a></li>
+                <li><a href="#incident-response" class="level-3">Incident Response</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#design-questions" class="level-3">Design Questions</a></li>
+                <li><a href="#scale-questions" class="level-3">Scale Questions</a></li>
+                <li><a href="#performance-questions" class="level-3">Performance Questions</a></li>
+                <li><a href="#operational-questions" class="level-3">Operational Questions</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="bigquery-architecture">BigQuery Architecture</h1>
+<p><strong>One-line summary</strong>: Deep dive into BigQuery's columnar storage, Dremel query execution, slot allocation, and how to optimize queries for performance and cost.</p>
+<p><strong>Prerequisites</strong>: <a href="cloud-storage.html">Cloud Storage Deep Dive</a>, <a href="../02-distributed-systems/sharding-partitioning.html">Sharding &amp; Partitioning</a>, Basic SQL concepts (queries, joins, aggregations).</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="bigquery-architecture_1">BigQuery Architecture</h3>
+<div class="mermaid">
+flowchart TB
+Client[Client] --> API[BigQuery API]
+API --> Scheduler[Query Scheduler]
+Scheduler --> Slots1[Slots<br/>Compute Units]
+Scheduler --> Slots2[Slots<br/>Compute Units]
+Scheduler --> Slots3[Slots<br/>Compute Units]
+Slots1 --> Storage1[Columnar Storage]
+Slots2 --> Storage2[Columnar Storage]
+Slots3 --> Storage3[Columnar Storage]
+Storage1 --> GCS[Cloud Storage<br/>Backend]
+Storage2 --> GCS
+Storage3 --> GCS
+style API fill:#99ccff
+style Scheduler fill:#ffcc99
+style Storage1 fill:#99ff99
+</div>
+<p><strong>Key insight</strong>: BigQuery uses columnar storage and Dremel query execution to achieve high performance on petabyte-scale data. Understanding slots and query optimization is critical for performance and cost.</p>
+<h3 id="columnar-storage">Columnar Storage</h3>
+<p><strong>Columnar storage</strong>: Store data by column, not by row.</p>
+<p><strong>Benefits</strong>:
+- <strong>Compression</strong>: Better compression (similar values in columns)
+- <strong>Scan efficiency</strong>: Scan only needed columns
+- <strong>Vectorization</strong>: Vectorized operations on columns</p>
+<p><strong>Example</strong>:</p>
+<pre><code>Row Storage:
+  Row 1: [id=1, name=&quot;Alice&quot;, age=30]
+  Row 2: [id=2, name=&quot;Bob&quot;, age=25]
+
+Columnar Storage:
+  id: [1, 2]
+  name: [&quot;Alice&quot;, &quot;Bob&quot;]
+  age: [30, 25]
+</code></pre>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="dremel-query-execution">Dremel Query Execution</h3>
+<p><strong>Dremel</strong>: BigQuery's query execution engine.</p>
+<p><strong>Architecture</strong>:
+- <strong>Tree structure</strong>: Query execution tree
+- <strong>Parallel execution</strong>: Execute in parallel across slots
+- <strong>Columnar processing</strong>: Process columns efficiently</p>
+<p><strong>Query execution</strong>:
+1. <strong>Parse</strong>: Parse SQL query
+2. <strong>Plan</strong>: Generate execution plan
+3. <strong>Schedule</strong>: Schedule across slots
+4. <strong>Execute</strong>: Execute in parallel
+5. <strong>Aggregate</strong>: Aggregate results
+6. <strong>Return</strong>: Return results</p>
+<h3 id="slots">Slots</h3>
+<p><strong>Slots</strong>: Compute units for query execution.</p>
+<p><strong>Allocation</strong>:
+- <strong>On-demand</strong>: Pay per query (slots allocated dynamically)
+- <strong>Reserved</strong>: Reserve slots (flat-rate pricing)</p>
+<p><strong>Slot usage</strong>:
+- <strong>Query complexity</strong>: More complex queries use more slots
+- <strong>Data scanned</strong>: More data scanned uses more slots
+- <strong>Concurrency</strong>: More concurrent queries use more slots</p>
+<p><strong>Limits</strong>:
+- <strong>On-demand</strong>: 2000 slots per project (can request increase)
+- <strong>Reserved</strong>: Based on reservation</p>
+<h3 id="columnar-storage-details">Columnar Storage Details</h3>
+<h4 id="columnar-format">Columnar Format</h4>
+<p><strong>Format</strong>: Columnar storage format (Capacitor).</p>
+<p><strong>Features</strong>:
+- <strong>Compression</strong>: Advanced compression algorithms
+- <strong>Encoding</strong>: Efficient encoding schemes
+- <strong>Indexing</strong>: Column-level indexing</p>
+<p><strong>Benefits</strong>:
+- <strong>Storage efficiency</strong>: Better compression than row storage
+- <strong>Scan efficiency</strong>: Scan only needed columns
+- <strong>Query performance</strong>: Faster queries on large datasets</p>
+<h4 id="partitioning">Partitioning</h4>
+<p><strong>Partitioning</strong>: Divide tables into partitions.</p>
+<p><strong>Types</strong>:
+- <strong>Time-based</strong>: Partition by date/timestamp
+- <strong>Integer range</strong>: Partition by integer range
+- <strong>Ingestion time</strong>: Partition by ingestion time</p>
+<p><strong>Benefits</strong>:
+- <strong>Query performance</strong>: Scan only relevant partitions
+- <strong>Cost</strong>: Reduce data scanned (lower cost)
+- <strong>Management</strong>: Easier to manage large tables</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-sql">CREATE TABLE events (
+  event_id INT64,
+  event_time TIMESTAMP,
+  event_data STRING
+)
+PARTITION BY DATE(event_time);
+</code></pre>
+<h4 id="clustering">Clustering</h4>
+<p><strong>Clustering</strong>: Sort data within partitions.</p>
+<p><strong>Benefits</strong>:
+- <strong>Query performance</strong>: Faster queries on clustered columns
+- <strong>Cost</strong>: Reduce data scanned (lower cost)
+- <strong>Filtering</strong>: Efficient filtering on clustered columns</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-sql">CREATE TABLE events (
+  event_id INT64,
+  user_id INT64,
+  event_time TIMESTAMP
+)
+PARTITION BY DATE(event_time)
+CLUSTER BY user_id;
+</code></pre>
+<h3 id="query-optimization">Query Optimization</h3>
+<h4 id="query-planning">Query Planning</h4>
+<p><strong>Query planner</strong>: Optimizes query execution.</p>
+<p><strong>Optimizations</strong>:
+- <strong>Predicate pushdown</strong>: Push filters to storage layer
+- <strong>Projection pushdown</strong>: Push column selection to storage layer
+- <strong>Join optimization</strong>: Optimize join strategies
+- <strong>Aggregation optimization</strong>: Optimize aggregations</p>
+<h4 id="execution-strategies">Execution Strategies</h4>
+<p><strong>Join strategies</strong>:
+- <strong>Hash join</strong>: Build hash table for one side
+- <strong>Broadcast join</strong>: Broadcast small table to all slots
+- <strong>Sort-merge join</strong>: Sort both sides, merge</p>
+<p><strong>Aggregation strategies</strong>:
+- <strong>Partial aggregation</strong>: Aggregate per slot
+- <strong>Final aggregation</strong>: Aggregate partial results</p>
+<h3 id="performance-characteristics">Performance Characteristics</h3>
+<h4 id="latency">Latency</h4>
+<p><strong>Query latency</strong>:
+- <strong>Small queries</strong>: &lt; 1 second
+- <strong>Medium queries</strong>: 1-10 seconds
+- <strong>Large queries</strong>: 10+ seconds (depends on data size)</p>
+<p><strong>Factors</strong>:
+- <strong>Data scanned</strong>: More data = higher latency
+- <strong>Query complexity</strong>: More complex = higher latency
+- <strong>Slot availability</strong>: More slots = lower latency</p>
+<h4 id="throughput">Throughput</h4>
+<p><strong>Query throughput</strong>:
+- <strong>Concurrent queries</strong>: Handle hundreds of concurrent queries
+- <strong>Slot capacity</strong>: Limited by slot capacity
+- <strong>Data scanned</strong>: Limited by storage I/O</p>
+<h4 id="scalability">Scalability</h4>
+<p><strong>Limits</strong>:
+- <strong>Table size</strong>: Petabytes per table
+- <strong>Query size</strong>: Unlimited query size
+- <strong>Concurrency</strong>: Hundreds of concurrent queries</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="bigquery-failures">BigQuery Failures</h3>
+<h4 id="scenario-1-service-outage">Scenario 1: Service Outage</h4>
+<ul>
+<li><strong>Impact</strong>: Queries unavailable, cannot run queries</li>
+<li><strong>Blast radius</strong>: All queries</li>
+<li><strong>Detection</strong>: Query failures, API errors</li>
+<li><strong>Recovery</strong>: Service automatically recovers</li>
+<li><strong>Mitigation</strong>: GCP managed service (high availability)</li>
+</ul>
+<h4 id="scenario-2-slot-exhaustion">Scenario 2: Slot Exhaustion</h4>
+<ul>
+<li><strong>Impact</strong>: Queries queued, increased latency</li>
+<li><strong>Blast radius</strong>: New queries (existing queries continue)</li>
+<li><strong>Detection</strong>: Queries queued, slot utilization high</li>
+<li><strong>Recovery</strong>: </li>
+<li>Reduce concurrent queries</li>
+<li>Increase slot reservation</li>
+<li>Optimize queries (reduce slot usage)</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Monitor slot usage</li>
+<li>Reserve slots if needed</li>
+<li>Optimize queries</li>
+</ul>
+<h4 id="scenario-3-storage-io-bottleneck">Scenario 3: Storage I/O Bottleneck</h4>
+<ul>
+<li><strong>Impact</strong>: Slow queries, increased latency</li>
+<li><strong>Blast radius</strong>: All queries scanning data</li>
+<li><strong>Detection</strong>: High storage I/O latency</li>
+<li><strong>Recovery</strong>: </li>
+<li>Optimize queries (reduce data scanned)</li>
+<li>Use partitioning/clustering</li>
+<li>Increase slot capacity</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Optimize queries</li>
+<li>Use partitioning/clustering</li>
+<li>Monitor storage I/O</li>
+</ul>
+<h3 id="performance-failures">Performance Failures</h3>
+<h4 id="scenario-1-expensive-queries">Scenario 1: Expensive Queries</h4>
+<ul>
+<li><strong>Impact</strong>: High cost, slow queries</li>
+<li><strong>Blast radius</strong>: Affected queries</li>
+<li><strong>Detection</strong>: High query cost, slow execution</li>
+<li><strong>Recovery</strong>: </li>
+<li>Optimize queries (reduce data scanned)</li>
+<li>Use partitioning/clustering</li>
+<li>Limit query results</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Query optimization</li>
+<li>Cost monitoring</li>
+<li>Query limits</li>
+</ul>
+<h4 id="scenario-2-query-timeout">Scenario 2: Query Timeout</h4>
+<ul>
+<li><strong>Impact</strong>: Queries fail, no results</li>
+<li><strong>Blast radius</strong>: Long-running queries</li>
+<li><strong>Detection</strong>: Query timeout errors</li>
+<li><strong>Recovery</strong>: </li>
+<li>Optimize queries</li>
+<li>Increase timeout limit</li>
+<li>Break query into smaller parts</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Query optimization</li>
+<li>Query limits</li>
+<li>Query monitoring</li>
+</ul>
+<h3 id="overload-scenarios">Overload Scenarios</h3>
+<h4 id="10-normal-load">10× Normal Load</h4>
+<ul>
+<li><strong>Latency</strong>: May increase, queries may queue</li>
+<li><strong>Throughput</strong>: Handles load, may need more slots</li>
+<li><strong>Cost</strong>: Cost increases linearly with data scanned</li>
+</ul>
+<h4 id="100-normal-load">100× Normal Load</h4>
+<ul>
+<li><strong>Latency</strong>: Significantly increased, queries queue</li>
+<li><strong>Throughput</strong>: May need significant slot scaling</li>
+<li><strong>Cost</strong>: Cost increases significantly</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics-to-track">Metrics to Track</h3>
+<h4 id="query-metrics">Query Metrics</h4>
+<ul>
+<li><strong>Query count</strong>: Queries per second</li>
+<li><strong>Query latency</strong>: P50/P95/P99 latency</li>
+<li><strong>Query cost</strong>: Cost per query</li>
+<li><strong>Data scanned</strong>: Data scanned per query</li>
+<li><strong>Slot usage</strong>: Slot utilization</li>
+</ul>
+<h4 id="table-metrics">Table Metrics</h4>
+<ul>
+<li><strong>Table size</strong>: Size per table</li>
+<li><strong>Partition count</strong>: Partitions per table</li>
+<li><strong>Storage cost</strong>: Storage cost per table</li>
+</ul>
+<h4 id="job-metrics">Job Metrics</h4>
+<ul>
+<li><strong>Job count</strong>: Jobs per second</li>
+<li><strong>Job latency</strong>: Job execution time</li>
+<li><strong>Job failures</strong>: Failed jobs</li>
+</ul>
+<h3 id="logs">Logs</h3>
+<p><strong>BigQuery logs</strong>:
+- Query logs (if enabled)
+- Job logs
+- Error logs
+- Admin activity logs</p>
+<h3 id="alerts">Alerts</h3>
+<p><strong>Critical alerts</strong>:
+- Service unavailable
+- High error rate (&gt; 1%)
+- Query timeout rate high
+- Slot exhaustion</p>
+<p><strong>Warning alerts</strong>:
+- High query latency
+- High query cost
+- High data scanned
+- Storage I/O bottleneck</p>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="schema-changes">Schema Changes</h3>
+<h4 id="adding-columns">Adding Columns</h4>
+<ul>
+<li><strong>Process</strong>: Add column, verify application compatibility</li>
+<li><strong>Risk</strong>: Low (additive change, nullable columns)</li>
+<li><strong>Rollback</strong>: Drop column (if not used)</li>
+</ul>
+<h4 id="changing-partitioning">Changing Partitioning</h4>
+<ul>
+<li><strong>Process</strong>: Cannot change partitioning (requires table recreation)</li>
+<li><strong>Risk</strong>: High (requires data migration)</li>
+<li><strong>Rollback</strong>: Recreate table with old partitioning</li>
+</ul>
+<h4 id="adding-clustering">Adding Clustering</h4>
+<ul>
+<li><strong>Process</strong>: Add clustering, verify query performance</li>
+<li><strong>Risk</strong>: Low (additive change, may improve performance)</li>
+<li><strong>Rollback</strong>: Remove clustering</li>
+</ul>
+<h3 id="configuration-changes">Configuration Changes</h3>
+<h4 id="changing-slot-reservation">Changing Slot Reservation</h4>
+<ul>
+<li><strong>Process</strong>: Update slot reservation, verify performance</li>
+<li><strong>Risk</strong>: Medium (may affect query performance)</li>
+<li><strong>Rollback</strong>: Revert slot reservation</li>
+</ul>
+<h4 id="enabling-query-caching">Enabling Query Caching</h4>
+<ul>
+<li><strong>Process</strong>: Enable caching, verify cache hits</li>
+<li><strong>Risk</strong>: Low (additive change)</li>
+<li><strong>Rollback</strong>: Disable caching</li>
+</ul>
+<hr />
+<h2 id="security-boundaries">Security Boundaries</h2>
+<h3 id="access-control">Access Control</h3>
+<ul>
+<li><strong>IAM</strong>: Dataset and table-level IAM policies</li>
+<li><strong>Row-level security</strong>: Filter rows based on identity</li>
+<li><strong>Column-level security</strong>: Mask sensitive columns</li>
+</ul>
+<h3 id="encryption">Encryption</h3>
+<p><strong>At rest</strong>:
+- <strong>Google-managed keys</strong>: Default encryption
+- <strong>Customer-managed keys</strong>: Cloud KMS keys</p>
+<p><strong>In transit</strong>:
+- <strong>TLS</strong>: All connections use TLS
+- <strong>Encryption</strong>: Data encrypted in transit</p>
+<h3 id="data-protection">Data Protection</h3>
+<ul>
+<li><strong>Backups</strong>: Automatic backups (point-in-time recovery)</li>
+<li><strong>Audit logs</strong>: Audit all query access</li>
+<li><strong>Data retention</strong>: Configurable data retention</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="storage-columnar-vs-row">Storage: Columnar vs Row</h3>
+<p><strong>Columnar</strong>:
+- <strong>Pros</strong>: Better compression, scan efficiency, analytics performance
+- <strong>Cons</strong>: Slower for point lookups, more complex updates</p>
+<p><strong>Row</strong>:
+- <strong>Pros</strong>: Faster for point lookups, simpler updates
+- <strong>Cons</strong>: Worse compression, scan efficiency, analytics performance</p>
+<h3 id="pricing-on-demand-vs-reserved">Pricing: On-Demand vs Reserved</h3>
+<p><strong>On-demand</strong>:
+- <strong>Pros</strong>: Pay per query, flexible
+- <strong>Cons</strong>: Higher cost for high usage</p>
+<p><strong>Reserved</strong>:
+- <strong>Pros</strong>: Lower cost for high usage, predictable
+- <strong>Cons</strong>: Fixed cost, less flexible</p>
+<h3 id="partitioning-time-vs-integer-range">Partitioning: Time vs Integer Range</h3>
+<p><strong>Time-based</strong>:
+- <strong>Pros</strong>: Natural for time-series data, easy to manage
+- <strong>Cons</strong>: Limited to time-based queries</p>
+<p><strong>Integer range</strong>:
+- <strong>Pros</strong>: Flexible, supports range queries
+- <strong>Cons</strong>: More complex to manage</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<p><strong>Storage</strong>:
+- <strong>Growth</strong>: Plan for storage growth
+- <strong>Backups</strong>: Plan for backup storage
+- <strong>Cost</strong>: Plan for storage costs</p>
+<p><strong>Compute</strong>:
+- <strong>Slots</strong>: Plan for slot capacity
+- <strong>Concurrency</strong>: Plan for concurrent queries
+- <strong>Cost</strong>: Plan for query costs</p>
+<h3 id="monitoring-debugging">Monitoring &amp; Debugging</h3>
+<p><strong>Monitor</strong>:
+- Query performance
+- Query cost
+- Slot usage
+- Storage usage</p>
+<p><strong>Debug issues</strong>:
+1. Check query performance (slow queries)
+2. Check query cost (expensive queries)
+3. Check slot usage
+4. Check storage I/O
+5. Review logs</p>
+<h3 id="incident-response">Incident Response</h3>
+<p><strong>Common incidents</strong>:
+- Slow queries
+- High query cost
+- Slot exhaustion
+- Query timeouts</p>
+<p><strong>Response</strong>:
+1. Check query performance
+2. Check query cost
+3. Check slot usage
+4. Optimize queries
+5. Scale slots if needed
+6. Contact support if persistent</p>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>"What's the schema design?"</li>
+<li>"How is data partitioned?"</li>
+<li>"What's the clustering strategy?"</li>
+<li>"How are queries optimized?"</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>"What happens at 10× load?"</li>
+<li>"How does BigQuery scale?"</li>
+<li>"What are the slot limits?"</li>
+<li>"How do you handle concurrent queries?"</li>
+</ul>
+<h3 id="performance-questions">Performance Questions</h3>
+<ul>
+<li>"What's the query latency?"</li>
+<li>"How is query cost optimized?"</li>
+<li>"What's the data scan efficiency?"</li>
+<li>"How are joins optimized?"</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>"How do you monitor BigQuery?"</li>
+<li>"What alerts do you have?"</li>
+<li>"How do you debug slow queries?"</li>
+<li>"What's the cost optimization strategy?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/bigquery.html">Further Reading: BigQuery</a></p>
+<p><strong>Quick Links</strong>:
+- <a href="https://cloud.google.com/bigquery/docs">BigQuery Documentation</a>
+- "Dremel: Interactive Analysis of Web-Scale Datasets" (Melnik et al., 2010)
+- <a href="https://cloud.google.com/bigquery/docs/best-practices-performance-overview">Query Optimization</a>
+- <a href="https://cloud.google.com/bigquery/docs/partitioned-tables">Partitioning and Clustering</a>
+- <a href="README.html">Back to GCP Core Building Blocks</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design schema</strong>: Design a BigQuery schema for a time-series analytics application. How do you partition? How do you cluster?</p>
+</li>
+<li>
+<p><strong>Optimize queries</strong>: Your queries are slow and expensive. How do you optimize them? What partitioning/clustering do you use?</p>
+</li>
+<li>
+<p><strong>Handle scaling</strong>: Your application needs to handle 100× more queries. How do you scale BigQuery? What's the strategy?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/bigquery-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

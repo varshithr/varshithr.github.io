@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning_Principles</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#learning-principles" class="level-1">Learning Principles</a></li>
+                <li><a href="#how-to-use-this-repository" class="level-2">How to Use This Repository</a></li>
+                <li><a href="#depth-over-breadth" class="level-3">Depth Over Breadth</a></li>
+                <li><a href="#active-learning" class="level-3">Active Learning</a></li>
+                <li><a href="#quantitative-reasoning" class="level-3">Quantitative Reasoning</a></li>
+                <li><a href="#failure-first-thinking" class="level-3">Failure-First Thinking</a></li>
+                <li><a href="#production-mindset" class="level-3">Production Mindset</a></li>
+                <li><a href="#study-techniques" class="level-2">Study Techniques</a></li>
+                <li><a href="#1-mental-models-first" class="level-3">1. Mental Models First</a></li>
+                <li><a href="#2-failure-modes-analysis" class="level-3">2. Failure Modes Analysis</a></li>
+                <li><a href="#3-tradeoff-analysis" class="level-3">3. Tradeoff Analysis</a></li>
+                <li><a href="#4-cross-reference" class="level-3">4. Cross-Reference</a></li>
+                <li><a href="#staff-level-expectations" class="level-2">Staff-Level Expectations</a></li>
+                <li><a href="#what-staff-engineers-know" class="level-3">What Staff Engineers Know</a></li>
+                <li><a href="#what-staff-engineers-ask" class="level-3">What Staff Engineers Ask</a></li>
+                <li><a href="#what-staff-engineers-care-about" class="level-3">What Staff Engineers Care About</a></li>
+                <li><a href="#progression-path" class="level-2">Progression Path</a></li>
+                <li><a href="#common-pitfalls" class="level-2">Common Pitfalls</a></li>
+                <li><a href="#surface-level-understanding" class="level-3">❌ Surface-Level Understanding</a></li>
+                <li><a href="#deep-understanding" class="level-3">✅ Deep Understanding</a></li>
+                <li><a href="#ignoring-operations" class="level-3">❌ Ignoring Operations</a></li>
+                <li><a href="#production-first-thinking" class="level-3">✅ Production-First Thinking</a></li>
+                <li><a href="#avoiding-math" class="level-3">❌ Avoiding Math</a></li>
+                <li><a href="#quantitative-reasoning_1" class="level-3">✅ Quantitative Reasoning</a></li>
+                <li><a href="#resources" class="level-2">Resources</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="learning-principles">Learning Principles</h1>
+<h2 id="how-to-use-this-repository">How to Use This Repository</h2>
+<h3 id="depth-over-breadth">Depth Over Breadth</h3>
+<ul>
+<li><strong>Staff-level depth</strong> means understanding internals, failure modes, and tradeoffs</li>
+<li>Don't skip sections—each builds on previous concepts</li>
+<li>When you encounter a term you don't know, check the <a href="glossary.html">glossary</a></li>
+</ul>
+<h3 id="active-learning">Active Learning</h3>
+<ul>
+<li><strong>Don't just read</strong>—implement concepts, draw diagrams, explain to others</li>
+<li>Use the templates to create your own deep dives</li>
+<li>Challenge assumptions: "What if this fails?" "What happens at 10× load?"</li>
+</ul>
+<h3 id="quantitative-reasoning">Quantitative Reasoning</h3>
+<ul>
+<li>Always think in numbers: latency (P50/P95/P99), throughput (QPS), capacity (CPU/memory/IOPS)</li>
+<li>Understand the math behind queueing, capacity planning, and SLOs</li>
+<li>Use back-of-envelope calculations to validate designs</li>
+</ul>
+<h3 id="failure-first-thinking">Failure-First Thinking</h3>
+<ul>
+<li><strong>Every system fails</strong>—understand how and why</li>
+<li>Design for graceful degradation, not perfection</li>
+<li>Know your failure domains and blast radius</li>
+</ul>
+<h3 id="production-mindset">Production Mindset</h3>
+<ul>
+<li>Systems are built to be operated, not just deployed</li>
+<li>Consider observability, rollouts, and incident response from day one</li>
+<li>Security and reliability are not afterthoughts</li>
+</ul>
+<h2 id="study-techniques">Study Techniques</h2>
+<h3 id="1-mental-models-first">1. Mental Models First</h3>
+<p>Before diving into implementation details, build a mental model:
+- How does data flow?
+- What are the critical paths?
+- Where are the bottlenecks?</p>
+<h3 id="2-failure-modes-analysis">2. Failure Modes Analysis</h3>
+<p>For every system, ask:
+- What breaks first under load?
+- What happens if component X fails?
+- How do we detect and recover?</p>
+<h3 id="3-tradeoff-analysis">3. Tradeoff Analysis</h3>
+<p>Every design choice has tradeoffs:
+- What do we gain?
+- What do we lose?
+- What are the operational implications?</p>
+<h3 id="4-cross-reference">4. Cross-Reference</h3>
+<ul>
+<li>Link related concepts</li>
+<li>Build a web of understanding</li>
+<li>Revisit topics as you learn more</li>
+</ul>
+<h2 id="staff-level-expectations">Staff-Level Expectations</h2>
+<h3 id="what-staff-engineers-know">What Staff Engineers Know</h3>
+<ul>
+<li><strong>Internals</strong>: How systems actually work under the hood</li>
+<li><strong>Failure modes</strong>: What breaks and why</li>
+<li><strong>Scale</strong>: Behavior at 10×, 100×, 1000× normal load</li>
+<li><strong>Tradeoffs</strong>: When to use what and why</li>
+<li><strong>Operations</strong>: How to run systems reliably</li>
+</ul>
+<h3 id="what-staff-engineers-ask">What Staff Engineers Ask</h3>
+<ul>
+<li>"What's the failure domain?"</li>
+<li>"How do we detect this?"</li>
+<li>"What's the blast radius?"</li>
+<li>"How do we roll back?"</li>
+<li>"What's the observability contract?"</li>
+</ul>
+<h3 id="what-staff-engineers-care-about">What Staff Engineers Care About</h3>
+<ul>
+<li><strong>Reliability</strong>: SLOs, error budgets, incident response</li>
+<li><strong>Security</strong>: Identity, authorization, data protection</li>
+<li><strong>Performance</strong>: Latency, throughput, tail latency</li>
+<li><strong>Operability</strong>: Rollouts, monitoring, debugging</li>
+<li><strong>Cost</strong>: Capacity planning, efficiency</li>
+</ul>
+<h2 id="progression-path">Progression Path</h2>
+<ol>
+<li><strong>Understand the concept</strong> (what is it?)</li>
+<li><strong>Understand the internals</strong> (how does it work?)</li>
+<li><strong>Understand failure modes</strong> (what breaks?)</li>
+<li><strong>Understand tradeoffs</strong> (when to use it?)</li>
+<li><strong>Understand operations</strong> (how to run it?)</li>
+<li><strong>Apply to real systems</strong> (case studies)</li>
+</ol>
+<h2 id="common-pitfalls">Common Pitfalls</h2>
+<h3 id="surface-level-understanding">❌ Surface-Level Understanding</h3>
+<ul>
+<li>"I know what Spanner is" → but can't explain consistency model</li>
+<li>"I understand SLOs" → but can't define SLIs for a real system</li>
+</ul>
+<h3 id="deep-understanding">✅ Deep Understanding</h3>
+<ul>
+<li>Can explain Spanner's TrueTime and how it enables external consistency</li>
+<li>Can define SLIs, set SLOs, and use error budgets in practice</li>
+</ul>
+<h3 id="ignoring-operations">❌ Ignoring Operations</h3>
+<ul>
+<li>Focus only on design, ignore rollouts and incidents</li>
+<li>Don't think about observability until production</li>
+</ul>
+<h3 id="production-first-thinking">✅ Production-First Thinking</h3>
+<ul>
+<li>Design with rollouts and rollbacks in mind</li>
+<li>Define observability contract before implementation</li>
+</ul>
+<h3 id="avoiding-math">❌ Avoiding Math</h3>
+<ul>
+<li>Skip capacity calculations</li>
+<li>Don't understand queueing theory</li>
+</ul>
+<h3 id="quantitative-reasoning_1">✅ Quantitative Reasoning</h3>
+<ul>
+<li>Calculate capacity needs from requirements</li>
+<li>Understand tail latency and its causes</li>
+</ul>
+<h2 id="resources">Resources</h2>
+<ul>
+<li><a href="reading_list.html">Reading List</a> - Books and papers for deeper study</li>
+<li><a href="glossary.html">Glossary</a> - Definitions of terms</li>
+<li><a href="deep_dive_template.html">Deep Dive Template</a> - Structure for your own deep dives</li>
+<li><a href="design_review_template.html">Design Review Template</a> - How to review designs</li>
+<li><a href="prr_template.html">PRR Template</a> - Production readiness checklist</li>
+<li><a href="postmortem_template.html">Postmortem Template</a> - Incident analysis structure</li>
+</ul>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

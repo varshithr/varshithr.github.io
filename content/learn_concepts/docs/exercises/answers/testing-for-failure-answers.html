@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing For Failure Answers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#answer-key-testing-for-failure" class="level-1">Answer Key: Testing for Failure</a></li>
+                <li><a href="#exercise-1-design-failure-tests" class="level-2">Exercise 1: Design Failure Tests</a></li>
+                <li><a href="#answer" class="level-3">Answer</a></li>
+                <li><a href="#exercise-2-run-chaos-experiment" class="level-2">Exercise 2: Run Chaos Experiment</a></li>
+                <li><a href="#answer_1" class="level-3">Answer</a></li>
+                <li><a href="#exercise-3-handle-test-failure" class="level-2">Exercise 3: Handle Test Failure</a></li>
+                <li><a href="#answer_2" class="level-3">Answer</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="answer-key-testing-for-failure">Answer Key: Testing for Failure</h1>
+<p><a href="../../04-reliability-sre/testing-for-failure.html">Back to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-design-failure-tests">Exercise 1: Design Failure Tests</h2>
+<p><strong>Question</strong>: Design failure tests for a distributed system. What failures do you test?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Failure Tests</strong>:
+- <strong>Network failures</strong>: Latency, packet loss, partitions
+- <strong>Node failures</strong>: Process kills, reboots, resource exhaustion
+- <strong>Service failures</strong>: Service down, slow responses, errors
+- <strong>Database failures</strong>: Connection failures, query failures</p>
+<p><strong>Answer</strong>: Test network, node, service, and database failures systematically.</p>
+<hr />
+<h2 id="exercise-2-run-chaos-experiment">Exercise 2: Run Chaos Experiment</h2>
+<p><strong>Question</strong>: Run a chaos engineering experiment. What's the process?</p>
+<h3 id="answer_1">Answer</h3>
+<p><strong>Chaos Process</strong>:
+1. <strong>Hypothesis</strong>: Form hypothesis about system behavior
+2. <strong>Experiment</strong>: Run in staging first, then production
+3. <strong>Observe</strong>: Monitor system behavior
+4. <strong>Learn</strong>: Learn from results, improve system</p>
+<p><strong>Answer</strong>: Hypothesis → Experiment → Observe → Learn, start in staging.</p>
+<hr />
+<h2 id="exercise-3-handle-test-failure">Exercise 3: Handle Test Failure</h2>
+<p><strong>Question</strong>: Your failure test causes system failure. How do you respond?</p>
+<h3 id="answer_2">Answer</h3>
+<p><strong>Response</strong>:
+1. <strong>Stop test</strong>: Stop failure injection immediately
+2. <strong>Restore</strong>: Restore system to normal state
+3. <strong>Investigate</strong>: Investigate why system failed
+4. <strong>Fix</strong>: Fix issues, improve resilience
+5. <strong>Retry</strong>: Retry test after fixes</p>
+<p><strong>Answer</strong>: Stop test, restore system, investigate, fix issues, improve resilience, retry.</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../../assets/scripts.js"></script>
+    
+</body>
+</html>

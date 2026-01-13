@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Redshift Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        @media (max-width: 767px) {
+            .responsive-table thead { display: none; }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; }
+            .responsive-table tr { margin-bottom: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); background-color: white; }
+            .responsive-table td { display: flex; justify-content: space-between; align-items: center; text-align: right; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; }
+            .responsive-table td::before { content: attr(data-label); text-align: left; font-weight: 600; color: #b98700; padding-right: 1rem; white-space: nowrap; }
+            .responsive-table td:last-child { border-bottom: none; }
+        }
+    </style>
+    <script>
+        const state = { currentTab: 'architecture' };
+        const concepts = {
+            architecture: {
+                title: "1. Redshift Core Architecture (MPP)",
+                description: "Redshift uses a Massively Parallel Processing (MPP) architecture to distribute and parallelize queries across a cluster of nodes.",
+                headers: ["Component", "Function", "Key Characteristic"],
+                rows: [
+                    { key: "Leader Node", data: ["Manages client connections, parses queries, develops execution plans", "Coordinates parallel execution on compute nodes"] },
+                    { key: "Compute Nodes", data: ["Execute the compiled query plans and store data", "Each node has its own CPU, memory, and storage"] },
+                    { key: "Node Slices", data: ["Logical partitions of a compute node's disk space", "The number of slices per node depends on the node type"] },
+                ]
+            },
+            storage: {
+                title: "2. Storage and Data Layout",
+                description: "Redshift's performance relies heavily on its columnar storage and data distribution strategies.",
+                headers: ["Concept", "Description", "Impact on Performance"],
+                rows: [
+                    { key: "Columnar Storage", data: ["Data is stored in columns, not rows", "Dramatically reduces I/O for analytical queries"] },
+                    { key: "Distribution Style", data: ["Determines how table rows are distributed across compute nodes", "Choosing the right style (KEY, ALL, EVEN) is critical for minimizing data movement in joins"] },
+                    { key: "Sort Keys", data: ["Defines how data is sorted within each node", "Allows the query optimizer to skip large blocks of data"] },
+                    { key: "Compression", data: ["Redshift automatically applies optimal compression encodings", "Reduces storage footprint and I/O"] },
+                ]
+            },
+            features: {
+                title: "3. Advanced Features",
+                description: "Redshift offers several advanced features to enhance performance, scalability, and analytics capabilities.",
+                headers: ["Feature", "Description", "Use Case"],
+                rows: [
+                    { key: "Redshift Spectrum", data: ["Query data directly in your S3 data lake", "Enables a 'Lake House' architecture, querying exabytes of data without loading"] },
+                    { key: "Concurrency Scaling", data: ["Automatically adds cluster capacity for peak query loads", "Provides consistent performance for thousands of concurrent users"] },
+                    { key: "Materialized Views", data: ["Pre-computed result sets stored on disk", "Speeds up complex and repetitive queries on large datasets"] },
+                    { key: "Redshift ML", data: ["Create, train, and deploy ML models using SQL", "Leverages Amazon SageMaker for model building and inference"] },
+                ]
+            },
+            tuning: {
+                title: "4. Performance Tuning",
+                description: "Regular maintenance and proper configuration are key to maintaining a high-performance Redshift cluster.",
+                headers: ["Task", "Command", "Purpose"],
+                rows: [
+                    { key: "Vacuum", data: ["VACUUM", "Reclaims space from deleted rows and re-sorts tables"] },
+                    { key: "Analyze", data: ["ANALYZE", "Updates table statistics for the query optimizer to generate better plans"] },
+                    { key: "Workload Management (WLM)", data: ["Configure query queues", "Prioritize critical queries and manage resource allocation"] },
+                    { key: "Advisor", data: ["A built-in tool that provides recommendations", "Suggests optimal sort keys, distribution styles, and other optimizations"] },
+                ]
+            }
+        };
+        const render = () => {
+            const container = document.getElementById('table-container');
+            const messageBar = document.getElementById('message-bar');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => {
+                btn.classList.remove('bg-gray-700', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+                if (btn.dataset.tab === state.currentTab) {
+                    btn.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+                    btn.classList.add('bg-gray-700', 'text-white', 'shadow-lg');
+                }
+            });
+            messageBar.innerHTML = `<span class="font-bold">${concepts[state.currentTab].title}</span>: ${concepts[state.currentTab].description}`;
+            const currentConcept = concepts[state.currentTab];
+            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
+            html += '<thead class="bg-yellow-500 text-gray-800"><tr>';
+            currentConcept.headers.forEach(header => {
+                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
+            });
+            html += '</tr></thead>';
+            html += '<tbody>';
+            currentConcept.rows.forEach(row => {
+                html += '<tr class="md:border-b md:border-gray-200">';
+                html += `<td data-label="${currentConcept.headers[0]}" class="font-semibold text-yellow-800 md:bg-yellow-50">${row.key}</td>`;
+                row.data.forEach((cellData, colIndex) => {
+                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}">${cellData}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        };
+        const switchTab = (tabName) => {
+            state.currentTab = tabName;
+            render();
+        };
+        window.onload = () => {
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => switchTab(button.dataset.tab));
+            });
+            switchTab('architecture');
+        };
+    </script>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Back to AWS Topics</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../aboutme.html" class="hover:text-[#FF9900] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
+        Amazon Redshift: Cloud Data Warehousing
+    </h1>
+    <p class="text-base sm:text-lg text-gray-600 mb-8">A deep dive into Amazon Redshift, the petabyte-scale data warehouse service optimized for high-performance analytics.</p>
+    <div class="flex flex-wrap gap-2 mb-8">
+        <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">1. Core Architecture</button>
+        <button data-tab="storage" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">2. Storage & Data Layout</button>
+        <button data-tab="features" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">3. Advanced Features</button>
+        <button data-tab="tuning" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">4. Performance Tuning</button>
+    </div>
+    <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base"></div>
+    <div id="table-container" class="mt-8"></div>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>

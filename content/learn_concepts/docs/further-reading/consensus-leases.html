@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consensus Leases</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#further-reading-consensus-leases" class="level-1">Further Reading: Consensus &amp; Leases</a></li>
+                <li><a href="#research-papers" class="level-2">Research Papers</a></li>
+                <li><a href="#additional-resources" class="level-2">Additional Resources</a></li>
+                <li><a href="#books" class="level-3">Books</a></li>
+                <li><a href="#key-takeaways" class="level-2">Key Takeaways</a></li>
+                <li><a href="#related-topics" class="level-2">Related Topics</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="further-reading-consensus-leases">Further Reading: Consensus &amp; Leases</h1>
+<p><a href="../02-distributed-systems/consensus-leases.html">Back to Consensus &amp; Leases</a></p>
+<hr />
+<h2 id="research-papers">Research Papers</h2>
+<p><strong>"The Part-Time Parliament"</strong> (Lamport, 1998)
+- Original Paxos paper
+- <a href="https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf">Link</a></p>
+<p><strong>"In Search of an Understandable Consensus Algorithm"</strong> (Ongaro &amp; Ousterhout, 2014)
+- Raft paper
+- <a href="https://raft.github.io/raft.pdf">Link</a></p>
+<hr />
+<h2 id="additional-resources">Additional Resources</h2>
+<h3 id="books">Books</h3>
+<p><strong>"Designing Data-Intensive Applications"</strong> by Martin Kleppmann
+- Chapter on consensus
+- Paxos and Raft explained</p>
+<hr />
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ol>
+<li><strong>Consensus</strong>: Enables coordination without single leader</li>
+<li><strong>Paxos</strong>: Classic consensus algorithm</li>
+<li><strong>Raft</strong>: More understandable consensus algorithm</li>
+<li><strong>Leases</strong>: Lighter-weight coordination mechanism</li>
+</ol>
+<hr />
+<h2 id="related-topics">Related Topics</h2>
+<ul>
+<li><a href="../02-distributed-systems/replication.html">Replication Strategies</a> - Replication patterns</li>
+<li><a href="../03-gcp-core-building-blocks/spanner.html">Spanner: Consistency &amp; Performance</a> - Paxos in Spanner</li>
+<li><a href="../02-distributed-systems/README.html">Back to Distributed Systems</a></li>
+</ul>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

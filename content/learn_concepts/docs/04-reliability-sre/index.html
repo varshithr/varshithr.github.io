@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Readme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#reliability-engineering-sre" class="level-1">Reliability Engineering &amp; SRE</a></li>
+                <li><a href="#overview" class="level-2">Overview</a></li>
+                <li><a href="#topics" class="level-2">Topics</a></li>
+                <li><a href="#learning-objectives" class="level-2">Learning Objectives</a></li>
+                <li><a href="#prerequisites" class="level-2">Prerequisites</a></li>
+                <li><a href="#next-steps" class="level-2">Next Steps</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="reliability-engineering-sre">Reliability Engineering &amp; SRE</h1>
+<p>Building and operating reliable systems at scale: SLIs/SLOs, incidents, capacity planning, and more.</p>
+<h2 id="overview">Overview</h2>
+<p>This chapter covers SRE practices for building reliable systems:
+- <strong>SLIs/SLOs</strong>: Defining and measuring reliability
+- <strong>PRRs</strong>: Production readiness reviews
+- <strong>Incidents</strong>: Response and postmortems
+- <strong>Capacity</strong>: Planning and forecasting
+- <strong>Load shedding</strong>: Handling overload
+- <strong>Rollouts</strong>: Safe deployments
+- <strong>Testing</strong>: Testing for failure</p>
+<h2 id="topics">Topics</h2>
+<ol>
+<li><a href="sli-slo-error-budget.html">SLIs, SLOs &amp; Error Budgets</a></li>
+<li>Defining meaningful SLIs</li>
+<li>Setting appropriate SLOs</li>
+<li>
+<p>Using error budgets</p>
+</li>
+<li>
+<p><a href="prr-checklist.html">Production Readiness Reviews (PRR)</a></p>
+</li>
+<li>What staff engineers look for</li>
+<li>PRR checklist and process</li>
+<li>
+<p>Common PRR failures</p>
+</li>
+<li>
+<p><a href="incident-response.html">Incident Response &amp; Postmortems</a></p>
+</li>
+<li>Incident response process</li>
+<li>Writing effective postmortems</li>
+<li>
+<p>Learning from incidents</p>
+</li>
+<li>
+<p><a href="capacity-planning.html">Capacity Planning &amp; Forecasting</a></p>
+</li>
+<li>Calculating capacity needs</li>
+<li>Forecasting growth</li>
+<li>
+<p>Scaling strategies</p>
+</li>
+<li>
+<p><a href="load-shedding.html">Load Shedding &amp; Circuit Breakers</a></p>
+</li>
+<li>When and how to shed load</li>
+<li>Circuit breaker patterns</li>
+<li>
+<p>Graceful degradation</p>
+</li>
+<li>
+<p><a href="canary-rollouts.html">Canary Deployments &amp; Rollouts</a></p>
+</li>
+<li>Canary deployment strategies</li>
+<li>Rollout automation</li>
+<li>
+<p>Rollback procedures</p>
+</li>
+<li>
+<p><a href="testing-for-failure.html">Testing for Failure</a></p>
+</li>
+<li>Chaos engineering</li>
+<li>Failure injection</li>
+<li>Load testing</li>
+</ol>
+<h2 id="learning-objectives">Learning Objectives</h2>
+<p>After completing this chapter, you should be able to:
+- Define SLIs and set SLOs for systems
+- Run production readiness reviews
+- Respond to incidents effectively
+- Plan capacity and forecast needs
+- Design systems that degrade gracefully
+- Deploy changes safely</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><a href="../01-foundations/README.html">Phase 0: Foundations</a></li>
+<li><a href="../03-gcp-core-building-blocks/README.html">Phase 2: GCP Core Building Blocks</a></li>
+</ul>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="../06-case-studies/README.html">Phase 4: Case Studies</a></li>
+<li><a href="../INDEX.html">Back to Index</a></li>
+</ul>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

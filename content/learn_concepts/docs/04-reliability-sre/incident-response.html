@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Response</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#incident-response-postmortems" class="level-1">Incident Response &amp; Postmortems</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#incident-response-lifecycle" class="level-3">Incident Response Lifecycle</a></li>
+                <li><a href="#incident-severity" class="level-3">Incident Severity</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#incident-response-process" class="level-3">Incident Response Process</a></li>
+                <li><a href="#1-detection" class="level-4">1. Detection</a></li>
+                <li><a href="#2-assessment" class="level-4">2. Assessment</a></li>
+                <li><a href="#3-mitigation" class="level-4">3. Mitigation</a></li>
+                <li><a href="#4-resolution" class="level-4">4. Resolution</a></li>
+                <li><a href="#5-postmortem" class="level-4">5. Postmortem</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#incident-response-failures" class="level-3">Incident Response Failures</a></li>
+                <li><a href="#scenario-1-slow-detection" class="level-4">Scenario 1: Slow Detection</a></li>
+                <li><a href="#scenario-2-poor-communication" class="level-4">Scenario 2: Poor Communication</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics" class="level-3">Metrics</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#incident-response-process-changes" class="level-3">Incident Response Process Changes</a></li>
+                <li><a href="#security-boundaries" class="level-2">Security Boundaries</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#speed-vs-accuracy" class="level-3">Speed vs Accuracy</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#best-practices" class="level-3">Best Practices</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="incident-response-postmortems">Incident Response &amp; Postmortems</h1>
+<p><strong>One-line summary</strong>: How to respond to incidents effectively, write postmortems, and learn from failures.</p>
+<p><strong>Prerequisites</strong>: <a href="sli-slo-error-budget.html">SLIs, SLOs &amp; Error Budgets</a>, understanding of monitoring and alerting.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="incident-response-lifecycle">Incident Response Lifecycle</h3>
+<div class="mermaid">
+graph LR
+Detect[Detect] --> Assess[Assess]
+Assess --> Mitigate[Mitigate]
+Mitigate --> Resolve[Resolve]
+Resolve --> Learn[Learn]
+Learn --> Improve[Improve]
+style Detect fill:#ff9999
+style Mitigate fill:#ffcc99
+style Resolve fill:#99ff99
+</div>
+<p><strong>Key insight</strong>: Effective incident response requires preparation, clear processes, and learning from incidents.</p>
+<h3 id="incident-severity">Incident Severity</h3>
+<p><strong>P0 (Critical)</strong>: Complete outage, data loss, security breach.
+<strong>P1 (High)</strong>: Partial outage, degraded performance.
+<strong>P2 (Medium)</strong>: Minor issues, non-critical errors.
+<strong>P3 (Low)</strong>: Cosmetic issues, minor bugs.</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="incident-response-process">Incident Response Process</h3>
+<h4 id="1-detection">1. Detection</h4>
+<p><strong>Detection methods</strong>:
+- <strong>Monitoring alerts</strong>: Automated alerts from monitoring
+- <strong>User reports</strong>: Users reporting issues
+- <strong>Health checks</strong>: Health check failures
+- <strong>Error rates</strong>: Spike in error rates</p>
+<p><strong>Detection time</strong>: Minimize time to detection (MTTD).</p>
+<h4 id="2-assessment">2. Assessment</h4>
+<p><strong>Assessment steps</strong>:
+1. <strong>Acknowledge</strong>: Acknowledge incident, create ticket
+2. <strong>Triage</strong>: Assess severity and impact
+3. <strong>Escalate</strong>: Escalate if needed
+4. <strong>Communicate</strong>: Communicate to stakeholders</p>
+<p><strong>Assessment questions</strong>:
+- What is affected?
+- How many users affected?
+- What's the severity?
+- What's the root cause?</p>
+<h4 id="3-mitigation">3. Mitigation</h4>
+<p><strong>Mitigation strategies</strong>:
+- <strong>Rollback</strong>: Rollback recent changes
+- <strong>Scale</strong>: Scale up resources
+- <strong>Circuit breakers</strong>: Enable circuit breakers
+- <strong>Load shedding</strong>: Shed non-critical load</p>
+<p><strong>Mitigation goal</strong>: Restore service quickly.</p>
+<h4 id="4-resolution">4. Resolution</h4>
+<p><strong>Resolution steps</strong>:
+1. <strong>Fix root cause</strong>: Fix underlying issue
+2. <strong>Verify fix</strong>: Verify service restored
+3. <strong>Monitor</strong>: Monitor for recurrence
+4. <strong>Communicate</strong>: Communicate resolution</p>
+<h4 id="5-postmortem">5. Postmortem</h4>
+<p><strong>Postmortem process</strong>:
+1. <strong>Timeline</strong>: Document incident timeline
+2. <strong>Root cause</strong>: Identify root cause
+3. <strong>Impact</strong>: Assess impact
+4. <strong>Actions</strong>: Define action items
+5. <strong>Share</strong>: Share learnings</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="incident-response-failures">Incident Response Failures</h3>
+<h4 id="scenario-1-slow-detection">Scenario 1: Slow Detection</h4>
+<ul>
+<li><strong>Impact</strong>: Extended outage, more users affected</li>
+<li><strong>Blast radius</strong>: All users during detection delay</li>
+<li><strong>Detection</strong>: High MTTD</li>
+<li><strong>Recovery</strong>: Improve monitoring, reduce alert thresholds</li>
+<li><strong>Mitigation</strong>: Better monitoring, faster alerts</li>
+</ul>
+<h4 id="scenario-2-poor-communication">Scenario 2: Poor Communication</h4>
+<ul>
+<li><strong>Impact</strong>: Confusion, delayed resolution</li>
+<li><strong>Blast radius</strong>: Incident response team</li>
+<li><strong>Detection</strong>: Communication gaps</li>
+<li><strong>Recovery</strong>: Improve communication processes</li>
+<li><strong>Mitigation</strong>: Clear communication channels, runbooks</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics">Metrics</h3>
+<ul>
+<li><strong>MTTD</strong>: Mean time to detection</li>
+<li><strong>MTTR</strong>: Mean time to resolution</li>
+<li><strong>Incident frequency</strong>: Incidents per time period</li>
+<li><strong>Postmortem completion</strong>: Postmortems written per incident</li>
+</ul>
+<h3 id="alerts">Alerts</h3>
+<ul>
+<li>Incident detected</li>
+<li>High MTTD</li>
+<li>High MTTR</li>
+<li>Missing postmortems</li>
+</ul>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="incident-response-process-changes">Incident Response Process Changes</h3>
+<ul>
+<li><strong>Process</strong>: Update processes, train team</li>
+<li><strong>Risk</strong>: Low (process improvement)</li>
+<li><strong>Rollback</strong>: Revert process changes</li>
+</ul>
+<hr />
+<h2 id="security-boundaries">Security Boundaries</h2>
+<ul>
+<li><strong>Incident data</strong>: Protect sensitive incident data</li>
+<li><strong>Access control</strong>: Limit access to incident systems</li>
+<li><strong>Audit</strong>: Audit incident response actions</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="speed-vs-accuracy">Speed vs Accuracy</h3>
+<p><strong>Fast response</strong>:
+- <strong>Pros</strong>: Faster resolution, less impact
+- <strong>Cons</strong>: May miss root cause</p>
+<p><strong>Thorough response</strong>:
+- <strong>Pros</strong>: Better understanding, fewer recurrences
+- <strong>Cons</strong>: Slower resolution, more impact</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="best-practices">Best Practices</h3>
+<ol>
+<li><strong>Prepare</strong>: Runbooks, playbooks, training</li>
+<li><strong>Practice</strong>: Regular incident drills</li>
+<li><strong>Learn</strong>: Postmortems, action items</li>
+<li><strong>Improve</strong>: Continuous improvement</li>
+</ol>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<ul>
+<li>"What's the incident response process?"</li>
+<li>"How are incidents detected?"</li>
+<li>"What's the escalation process?"</li>
+<li>"How are postmortems conducted?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/incident-response.html">Further Reading: Incident Response</a></p>
+<p><strong>Quick Links</strong>:
+- "Site Reliability Engineering" (Google SRE Book) - Chapter on Incident Response
+- <a href="prr-checklist.html">PRR Checklist</a>
+- <a href="sli-slo-error-budget.html">SLIs, SLOs &amp; Error Budgets</a>
+- <a href="README.html">Back to Reliability &amp; SRE</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design incident response</strong>: Design an incident response process. What are the steps?</p>
+</li>
+<li>
+<p><strong>Write postmortem</strong>: Write a postmortem for a hypothetical incident. What's included?</p>
+</li>
+<li>
+<p><strong>Handle incident</strong>: Your service is down. How do you respond? What's the process?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/incident-response-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

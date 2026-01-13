@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idempotency Retries</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#idempotency-retry-semantics" class="level-1">Idempotency &amp; Retry Semantics</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#the-retry-problem" class="level-3">The Retry Problem</a></li>
+                <li><a href="#idempotency" class="level-3">Idempotency</a></li>
+                <li><a href="#retry-semantics" class="level-3">Retry Semantics</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#making-operations-idempotent" class="level-3">Making Operations Idempotent</a></li>
+                <li><a href="#1-natural-idempotency" class="level-4">1. Natural Idempotency</a></li>
+                <li><a href="#2-idempotency-keys" class="level-4">2. Idempotency Keys</a></li>
+                <li><a href="#3-conditional-updates" class="level-4">3. Conditional Updates</a></li>
+                <li><a href="#4-deduplication" class="level-4">4. Deduplication</a></li>
+                <li><a href="#retry-strategies" class="level-3">Retry Strategies</a></li>
+                <li><a href="#1-exponential-backoff" class="level-4">1. Exponential Backoff</a></li>
+                <li><a href="#2-jitter" class="level-4">2. Jitter</a></li>
+                <li><a href="#3-retry-limits" class="level-4">3. Retry Limits</a></li>
+                <li><a href="#4-circuit-breaker" class="level-4">4. Circuit Breaker</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#retry-failures" class="level-3">Retry Failures</a></li>
+                <li><a href="#scenario-1-duplicate-operations" class="level-4">Scenario 1: Duplicate Operations</a></li>
+                <li><a href="#scenario-2-thundering-herd" class="level-4">Scenario 2: Thundering Herd</a></li>
+                <li><a href="#scenario-3-infinite-retries" class="level-4">Scenario 3: Infinite Retries</a></li>
+                <li><a href="#scenario-4-stale-idempotency-keys" class="level-4">Scenario 4: Stale Idempotency Keys</a></li>
+                <li><a href="#overload-scenarios" class="level-3">Overload Scenarios</a></li>
+                <li><a href="#10-normal-load-with-retries" class="level-4">10× Normal Load (with retries)</a></li>
+                <li><a href="#100-normal-load-thundering-herd" class="level-4">100× Normal Load (thundering herd)</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics-to-track" class="level-3">Metrics to Track</a></li>
+                <li><a href="#retry-metrics" class="level-4">Retry Metrics</a></li>
+                <li><a href="#idempotency-metrics" class="level-4">Idempotency Metrics</a></li>
+                <li><a href="#error-metrics" class="level-4">Error Metrics</a></li>
+                <li><a href="#logs" class="level-3">Logs</a></li>
+                <li><a href="#traces" class="level-3">Traces</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#implementing-idempotency" class="level-3">Implementing Idempotency</a></li>
+                <li><a href="#1-add-idempotency-keys" class="level-4">1. Add Idempotency Keys</a></li>
+                <li><a href="#2-implement-deduplication" class="level-4">2. Implement Deduplication</a></li>
+                <li><a href="#3-use-conditional-updates" class="level-4">3. Use Conditional Updates</a></li>
+                <li><a href="#implementing-retries" class="level-3">Implementing Retries</a></li>
+                <li><a href="#1-add-exponential-backoff" class="level-4">1. Add Exponential Backoff</a></li>
+                <li><a href="#2-set-retry-limits" class="level-4">2. Set Retry Limits</a></li>
+                <li><a href="#3-add-circuit-breakers" class="level-4">3. Add Circuit Breakers</a></li>
+                <li><a href="#testing-strategy" class="level-3">Testing Strategy</a></li>
+                <li><a href="#security-boundaries" class="level-2">Security Boundaries</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#what-we-gain-with-idempotency" class="level-3">What We Gain with Idempotency</a></li>
+                <li><a href="#what-we-lose" class="level-3">What We Lose</a></li>
+                <li><a href="#when-to-use-idempotency" class="level-3">When to Use Idempotency</a></li>
+                <li><a href="#alternatives" class="level-3">Alternatives</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#capacity-planning" class="level-3">Capacity Planning</a></li>
+                <li><a href="#monitoring-debugging" class="level-3">Monitoring &amp; Debugging</a></li>
+                <li><a href="#incident-response" class="level-3">Incident Response</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#design-questions" class="level-3">Design Questions</a></li>
+                <li><a href="#scale-questions" class="level-3">Scale Questions</a></li>
+                <li><a href="#operational-questions" class="level-3">Operational Questions</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="idempotency-retry-semantics">Idempotency &amp; Retry Semantics</h1>
+<p><strong>One-line summary</strong>: Making operations safe to retry by ensuring idempotency, and designing retry strategies that don't make things worse.</p>
+<p><strong>Prerequisites</strong>: <a href="time-ordering-causality.html">Time, Ordering, Causality</a>, understanding of request/response model.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="the-retry-problem">The Retry Problem</h3>
+<p>When a request fails (network error, timeout, server error), clients retry. Without idempotency, retries can cause:
+- <strong>Duplicate operations</strong>: Payment charged twice, order created twice
+- <strong>Inconsistent state</strong>: Partial updates applied multiple times
+- <strong>Data corruption</strong>: Conflicting updates</p>
+<div class="mermaid">
+sequenceDiagram
+participant Client
+participant Server
+Client->>Server: Request (fails)
+Note over Client,Server: Network timeout
+Client->>Server: Retry (duplicate!)
+Server->>Server: Process twice
+Note over Server: Duplicate operation!
+rect rgb(255, 200, 200)
+Note over Server: Without idempotency:<br/>Operations executed multiple times
+end
+</div>
+<h3 id="idempotency">Idempotency</h3>
+<p><strong>Idempotency</strong>: Performing an operation multiple times has the same effect as performing it once.</p>
+<p><strong>Key insight</strong>: Idempotent operations are safe to retry.</p>
+<div class="mermaid">
+sequenceDiagram
+participant Client
+participant Server
+participant Storage
+Client->>Server: Request with Idempotency Key
+Server->>Storage: Check if key exists
+alt Key exists
+Storage-->>Server: Return cached result
+Server-->>Client: Return cached response
+else Key doesn't exist
+Server->>Server: Process request
+Server->>Storage: Store result with key
+Server-->>Client: Return response
+end
+Note over Client,Server: Retries return same result
+</div>
+<h3 id="retry-semantics">Retry Semantics</h3>
+<p><strong>At-least-once</strong>: Operation may be executed multiple times, but at least once.
+- <strong>Use case</strong>: Reading data, idempotent writes
+- <strong>Requirement</strong>: Operations must be idempotent</p>
+<p><strong>At-most-once</strong>: Operation is executed at most once, may not execute at all.
+- <strong>Use case</strong>: Non-critical operations
+- <strong>Requirement</strong>: Accept that operations may be lost</p>
+<p><strong>Exactly-once</strong>: Operation is executed exactly once.
+- <strong>Use case</strong>: Critical operations (payments, orders)
+- <strong>Requirement</strong>: Complex, often requires distributed transactions</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="making-operations-idempotent">Making Operations Idempotent</h3>
+<h4 id="1-natural-idempotency">1. Natural Idempotency</h4>
+<p>Some operations are naturally idempotent:
+- <strong>GET</strong>: Reading data doesn't change state
+- <strong>PUT</strong>: Replacing entire resource is idempotent
+- <strong>DELETE</strong>: Deleting already-deleted resource is idempotent</p>
+<h4 id="2-idempotency-keys">2. Idempotency Keys</h4>
+<p><strong>Idempotency key</strong>: Unique identifier for an operation.</p>
+<p><strong>Process</strong>:
+1. Client generates unique idempotency key
+2. Client includes key in request
+3. Server checks if key was seen before
+4. If seen: Return previous result
+5. If not seen: Execute operation, store result</p>
+<p><strong>Storage</strong>: Store idempotency keys in:
+- <strong>In-memory cache</strong>: Fast, but lost on restart
+- <strong>Database</strong>: Persistent, but slower
+- <strong>Distributed cache</strong>: Fast and persistent (Redis)</p>
+<p><strong>TTL</strong>: Idempotency keys should expire (e.g., 24 hours).</p>
+<h4 id="3-conditional-updates">3. Conditional Updates</h4>
+<p><strong>ETags</strong>: Use ETags for conditional updates:
+1. Client reads resource, gets ETag
+2. Client updates resource with ETag
+3. Server checks ETag matches
+4. If matches: Update succeeds
+5. If not: Update fails (conflict)</p>
+<p><strong>Version numbers</strong>: Similar to ETags, use version numbers.</p>
+<h4 id="4-deduplication">4. Deduplication</h4>
+<p><strong>Deduplication window</strong>: Time window for detecting duplicates.</p>
+<p><strong>Process</strong>:
+1. Hash request (content + client ID)
+2. Check if hash seen in window
+3. If seen: Return previous result
+4. If not: Execute operation, store hash</p>
+<h3 id="retry-strategies">Retry Strategies</h3>
+<h4 id="1-exponential-backoff">1. Exponential Backoff</h4>
+<p><strong>Strategy</strong>: Wait longer between each retry.</p>
+<p><strong>Formula</strong>: <code>Wait Time = Base Delay × 2^Attempt</code></p>
+<p><strong>Example</strong>:
+- Attempt 1: Wait 1s
+- Attempt 2: Wait 2s
+- Attempt 3: Wait 4s
+- Attempt 4: Wait 8s</p>
+<p><strong>Benefits</strong>: Reduces load on server, allows recovery time.</p>
+<h4 id="2-jitter">2. Jitter</h4>
+<p><strong>Problem</strong>: Without jitter, all clients retry at the same time (thundering herd).</p>
+<p><strong>Solution</strong>: Add random jitter to backoff.</p>
+<p><strong>Formula</strong>: <code>Wait Time = Base Delay × 2^Attempt + Random(0, Jitter)</code></p>
+<p><strong>Benefits</strong>: Spreads out retries, prevents thundering herd.</p>
+<h4 id="3-retry-limits">3. Retry Limits</h4>
+<p><strong>Strategy</strong>: Limit number of retries.</p>
+<p><strong>Example</strong>: Retry up to 3 times, then fail.</p>
+<p><strong>Benefits</strong>: Prevents infinite retries, fails fast.</p>
+<h4 id="4-circuit-breaker">4. Circuit Breaker</h4>
+<p><strong>Strategy</strong>: Stop retrying if service is failing.</p>
+<p><strong>Process</strong>:
+1. Track failure rate
+2. If failure rate &gt; threshold: Open circuit
+3. Stop retrying (fail fast)
+4. After cooldown: Try again (half-open)
+5. If succeeds: Close circuit</p>
+<p><strong>Benefits</strong>: Prevents cascading failures, fails fast.</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="retry-failures">Retry Failures</h3>
+<h4 id="scenario-1-duplicate-operations">Scenario 1: Duplicate Operations</h4>
+<ul>
+<li><strong>Cause</strong>: Non-idempotent operation retried</li>
+<li><strong>Impact</strong>: Payment charged twice, order created twice</li>
+<li><strong>Blast radius</strong>: User data, financial transactions</li>
+<li><strong>Prevention</strong>: Use idempotency keys</li>
+</ul>
+<h4 id="scenario-2-thundering-herd">Scenario 2: Thundering Herd</h4>
+<ul>
+<li><strong>Cause</strong>: All clients retry at the same time</li>
+<li><strong>Impact</strong>: Server overloaded, cascading failures</li>
+<li><strong>Blast radius</strong>: Entire service</li>
+<li><strong>Prevention</strong>: Use jitter in backoff</li>
+</ul>
+<h4 id="scenario-3-infinite-retries">Scenario 3: Infinite Retries</h4>
+<ul>
+<li><strong>Cause</strong>: No retry limit, service permanently down</li>
+<li><strong>Impact</strong>: Client stuck retrying, resource waste</li>
+<li><strong>Blast radius</strong>: Client and server resources</li>
+<li><strong>Prevention</strong>: Set retry limits, use circuit breakers</li>
+</ul>
+<h4 id="scenario-4-stale-idempotency-keys">Scenario 4: Stale Idempotency Keys</h4>
+<ul>
+<li><strong>Cause</strong>: Idempotency key reused after TTL expired</li>
+<li><strong>Impact</strong>: Duplicate operation executed</li>
+<li><strong>Blast radius</strong>: User data</li>
+<li><strong>Prevention</strong>: Use long TTLs, or never reuse keys</li>
+</ul>
+<h3 id="overload-scenarios">Overload Scenarios</h3>
+<h4 id="10-normal-load-with-retries">10× Normal Load (with retries)</h4>
+<ul>
+<li><strong>Impact</strong>: Retries increase load significantly</li>
+<li><strong>Mitigation</strong>: Exponential backoff, jitter, retry limits</li>
+</ul>
+<h4 id="100-normal-load-thundering-herd">100× Normal Load (thundering herd)</h4>
+<ul>
+<li><strong>Impact</strong>: All retries hit at once, system overwhelmed</li>
+<li><strong>Mitigation</strong>: Jitter, circuit breakers, load shedding</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics-to-track">Metrics to Track</h3>
+<h4 id="retry-metrics">Retry Metrics</h4>
+<ul>
+<li><strong>Retry rate</strong>: Retries per second</li>
+<li><strong>Retry success rate</strong>: Percentage of retries that succeed</li>
+<li><strong>Retry attempts</strong>: Average number of retries per request</li>
+</ul>
+<h4 id="idempotency-metrics">Idempotency Metrics</h4>
+<ul>
+<li><strong>Idempotency key hits</strong>: Requests with duplicate keys</li>
+<li><strong>Idempotency key misses</strong>: Requests with new keys</li>
+<li><strong>Idempotency storage size</strong>: Number of keys stored</li>
+</ul>
+<h4 id="error-metrics">Error Metrics</h4>
+<ul>
+<li><strong>Transient errors</strong>: Errors that should be retried</li>
+<li><strong>Permanent errors</strong>: Errors that shouldn't be retried</li>
+<li><strong>Timeout errors</strong>: Errors due to timeouts</li>
+</ul>
+<h3 id="logs">Logs</h3>
+<p>Log events:
+- Retry attempts (with attempt number)
+- Idempotency key hits/misses
+- Circuit breaker state changes
+- Retry failures (after max attempts)</p>
+<h3 id="traces">Traces</h3>
+<p>Trace:
+- Retry attempts
+- Idempotency key lookups
+- Circuit breaker state
+- Total retry time</p>
+<h3 id="alerts">Alerts</h3>
+<p><strong>Critical alerts</strong>:
+- Retry rate &gt; threshold (may indicate problems)
+- Retry success rate &lt; threshold (retries not helping)
+- Circuit breaker open (service failing)</p>
+<p><strong>Warning alerts</strong>:
+- Retry rate trending up
+- Idempotency key storage growing</p>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="implementing-idempotency">Implementing Idempotency</h3>
+<h4 id="1-add-idempotency-keys">1. Add Idempotency Keys</h4>
+<ul>
+<li>Generate unique keys on client</li>
+<li>Include keys in requests</li>
+<li>Check keys on server</li>
+<li>Store results keyed by idempotency key</li>
+</ul>
+<h4 id="2-implement-deduplication">2. Implement Deduplication</h4>
+<ul>
+<li>Hash requests</li>
+<li>Check hashes in deduplication window</li>
+<li>Return previous results for duplicates</li>
+</ul>
+<h4 id="3-use-conditional-updates">3. Use Conditional Updates</h4>
+<ul>
+<li>Use ETags or version numbers</li>
+<li>Check conditions before updates</li>
+<li>Return conflicts when conditions don't match</li>
+</ul>
+<h3 id="implementing-retries">Implementing Retries</h3>
+<h4 id="1-add-exponential-backoff">1. Add Exponential Backoff</h4>
+<ul>
+<li>Start with base delay (e.g., 100ms)</li>
+<li>Double delay for each attempt</li>
+<li>Add jitter to prevent thundering herd</li>
+</ul>
+<h4 id="2-set-retry-limits">2. Set Retry Limits</h4>
+<ul>
+<li>Limit retries (e.g., 3-5 attempts)</li>
+<li>Fail after max attempts</li>
+<li>Log failures</li>
+</ul>
+<h4 id="3-add-circuit-breakers">3. Add Circuit Breakers</h4>
+<ul>
+<li>Track failure rate</li>
+<li>Open circuit when failure rate high</li>
+<li>Close circuit after cooldown</li>
+</ul>
+<h3 id="testing-strategy">Testing Strategy</h3>
+<ol>
+<li><strong>Idempotency testing</strong>: Verify operations are idempotent</li>
+<li><strong>Retry testing</strong>: Test retry behavior under failures</li>
+<li><strong>Load testing</strong>: Test retry behavior under load</li>
+<li><strong>Chaos testing</strong>: Inject failures and verify retries work</li>
+</ol>
+<hr />
+<h2 id="security-boundaries">Security Boundaries</h2>
+<p>Idempotency and retries aren't security issues, but:
+- <strong>Idempotency key generation</strong>: Must be unpredictable (use UUIDs)
+- <strong>Idempotency key storage</strong>: Must be secure (encrypted)
+- <strong>Rate limiting</strong>: Retries can be used for DoS (rate limit retries)</p>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="what-we-gain-with-idempotency">What We Gain with Idempotency</h3>
+<ul>
+<li>Safe retries</li>
+<li>Better reliability</li>
+<li>Consistent state</li>
+<li>Better user experience</li>
+</ul>
+<h3 id="what-we-lose">What We Lose</h3>
+<ul>
+<li>More complex implementation</li>
+<li>Storage overhead (idempotency keys)</li>
+<li>Performance overhead (key lookups)</li>
+</ul>
+<h3 id="when-to-use-idempotency">When to Use Idempotency</h3>
+<ul>
+<li><strong>Always</strong>: For write operations</li>
+<li><strong>Critical</strong>: For financial transactions</li>
+<li><strong>Important</strong>: For operations that change state</li>
+</ul>
+<h3 id="alternatives">Alternatives</h3>
+<p>If idempotency is too complex:
+- <strong>Accept duplicates</strong>: Handle duplicates in application logic
+- <strong>Use transactions</strong>: Use distributed transactions (complex, slower)
+- <strong>Don't retry</strong>: Accept failures (unreliable)</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<p><strong>Idempotency key storage</strong>:
+- Estimate: Requests per second × TTL
+- Example: 10,000 req/s × 24 hours = 864M keys
+- Storage: ~100 bytes per key = 86GB</p>
+<p><strong>Retry load</strong>:
+- Estimate: Normal load × (1 + retry rate)
+- Example: 10,000 req/s × 1.2 = 12,000 req/s (with 20% retry rate)</p>
+<h3 id="monitoring-debugging">Monitoring &amp; Debugging</h3>
+<p><strong>Monitor</strong>:
+- Retry rate over time
+- Idempotency key hit rate
+- Circuit breaker state
+- Retry success rate</p>
+<p><strong>Debug retry issues</strong>:
+1. Check retry rate: Are retries too high?
+2. Check retry success rate: Are retries helping?
+3. Check idempotency keys: Are duplicates detected?
+4. Check circuit breakers: Are they opening correctly?</p>
+<h3 id="incident-response">Incident Response</h3>
+<p><strong>Common incidents</strong>:
+- High retry rate
+- Circuit breaker open
+- Duplicate operations</p>
+<p><strong>Response</strong>:
+1. Check downstream services: Are they failing?
+2. Check retry configuration: Are limits appropriate?
+3. Check idempotency: Are keys working correctly?
+4. Scale up if needed</p>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>"Are operations idempotent?"</li>
+<li>"What's the retry strategy?"</li>
+<li>"How do we prevent duplicate operations?"</li>
+<li>"What happens if idempotency key storage fails?"</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>"What's the retry rate at 10× load?"</li>
+<li>"How does idempotency key storage scale?"</li>
+<li>"What's the thundering herd risk?"</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>"How do we monitor retries?"</li>
+<li>"What alerts do we have?"</li>
+<li>"How do we debug retry issues?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/idempotency-retries.html">Further Reading: Idempotency &amp; Retry Semantics</a></p>
+<p><strong>Quick Links</strong>:
+- "Designing Data-Intensive Applications" (Kleppmann) - Chapter on reliability
+- "Time, Clocks, and the Ordering of Events" (Lamport, 1978)
+- PayPal and Stripe idempotency implementations
+- <a href="../05-llD-patterns/idempotency-patterns.html">Idempotency Patterns</a>
+- <a href="../04-reliability-sre/load-shedding.html">Circuit Breakers</a>
+- <a href="README.html">Back to Distributed Systems</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design idempotency</strong>: Design an idempotent payment API. How do you ensure payments aren't charged twice?</p>
+</li>
+<li>
+<p><strong>Retry strategy</strong>: Design a retry strategy for an API that calls a downstream service. What backoff do you use? What limits?</p>
+</li>
+<li>
+<p><strong>Handle duplicates</strong>: A non-idempotent operation is retried and creates duplicates. How do you detect and handle duplicates?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/idempotency-retries-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

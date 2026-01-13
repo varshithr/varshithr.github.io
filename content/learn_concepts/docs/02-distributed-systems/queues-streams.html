@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queues Streams</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#queues-streams" class="level-1">Queues &amp; Streams</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#queue-vs-stream" class="level-3">Queue vs Stream</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#message-queues" class="level-3">Message Queues</a></li>
+                <li><a href="#stream-processing" class="level-3">Stream Processing</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#queue-failures" class="level-3">Queue Failures</a></li>
+                <li><a href="#scenario-1-queue-overflow" class="level-4">Scenario 1: Queue Overflow</a></li>
+                <li><a href="#scenario-2-consumer-failure" class="level-4">Scenario 2: Consumer Failure</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics" class="level-3">Metrics</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#queue-configuration-changes" class="level-3">Queue Configuration Changes</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#queue-vs-stream_1" class="level-3">Queue vs Stream</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#best-practices" class="level-3">Best Practices</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="queues-streams">Queues &amp; Streams</h1>
+<p><strong>One-line summary</strong>: Understanding message queues and stream processing, delivery guarantees, and when to use each.</p>
+<p><strong>Prerequisites</strong>: <a href="overload-backpressure.html">Overload &amp; Backpressure</a>, understanding of messaging patterns.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="queue-vs-stream">Queue vs Stream</h3>
+<p><strong>Queue</strong>: Point-to-point messaging (one producer, one consumer).</p>
+<p><strong>Stream</strong>: Publish-subscribe messaging (one producer, many consumers).</p>
+<div class="mermaid">
+graph LR
+Producer[Producer] --> Queue[Queue]
+Queue --> Consumer1[Consumer 1]
+Queue --> Consumer2[Consumer 2]
+Producer --> Stream[Stream]
+Stream --> Sub1[Subscriber 1]
+Stream --> Sub2[Subscriber 2]
+Stream --> Sub3[Subscriber 3]
+style Queue fill:#99ccff
+style Stream fill:#ffcc99
+</div>
+<p><strong>Key insight</strong>: Queues are for task distribution, streams are for event distribution.</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="message-queues">Message Queues</h3>
+<p><strong>Queue model</strong>:
+- <strong>Producer</strong>: Sends messages to queue
+- <strong>Queue</strong>: Stores messages
+- <strong>Consumer</strong>: Processes messages from queue</p>
+<p><strong>Properties</strong>:
+- <strong>At-least-once delivery</strong>: Messages delivered at least once
+- <strong>Ordering</strong>: May preserve ordering (FIFO queues)
+- <strong>Durability</strong>: Messages persisted until consumed</p>
+<p><strong>Use case</strong>: Task queues, job processing.</p>
+<h3 id="stream-processing">Stream Processing</h3>
+<p><strong>Stream model</strong>:
+- <strong>Producer</strong>: Publishes events to stream
+- <strong>Stream</strong>: Stores events
+- <strong>Subscribers</strong>: Subscribe to stream and process events</p>
+<p><strong>Properties</strong>:
+- <strong>At-least-once delivery</strong>: Events delivered at least once
+- <strong>Ordering</strong>: May preserve ordering per key
+- <strong>Durability</strong>: Events persisted for retention period</p>
+<p><strong>Use case</strong>: Event-driven architectures, real-time processing.</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="queue-failures">Queue Failures</h3>
+<h4 id="scenario-1-queue-overflow">Scenario 1: Queue Overflow</h4>
+<ul>
+<li><strong>Impact</strong>: Messages dropped, system overloaded</li>
+<li><strong>Blast radius</strong>: All messages</li>
+<li><strong>Detection</strong>: Queue size exceeds limit</li>
+<li><strong>Recovery</strong>: Scale consumers, increase queue capacity</li>
+<li><strong>Mitigation</strong>: Monitor queue size, scale proactively</li>
+</ul>
+<h4 id="scenario-2-consumer-failure">Scenario 2: Consumer Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Messages not processed, queue backlog grows</li>
+<li><strong>Blast radius</strong>: Affected messages</li>
+<li><strong>Detection</strong>: Consumer health checks fail</li>
+<li><strong>Recovery</strong>: Restart consumer, process backlog</li>
+<li><strong>Mitigation</strong>: Multiple consumers, automatic restart</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics">Metrics</h3>
+<ul>
+<li><strong>Queue depth</strong>: Messages in queue</li>
+<li><strong>Processing rate</strong>: Messages processed per second</li>
+<li><strong>Consumer lag</strong>: Delay in processing</li>
+<li><strong>Error rate</strong>: Failed message processing</li>
+</ul>
+<h3 id="alerts">Alerts</h3>
+<ul>
+<li>High queue depth</li>
+<li>Consumer failures</li>
+<li>High consumer lag</li>
+<li>Processing errors</li>
+</ul>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="queue-configuration-changes">Queue Configuration Changes</h3>
+<ul>
+<li><strong>Process</strong>: Update queue configuration, verify processing</li>
+<li><strong>Risk</strong>: Medium (may affect message processing)</li>
+<li><strong>Rollback</strong>: Revert configuration</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="queue-vs-stream_1">Queue vs Stream</h3>
+<p><strong>Queue</strong>:
+- <strong>Pros</strong>: Simple, task distribution
+- <strong>Cons</strong>: Single consumer per message</p>
+<p><strong>Stream</strong>:
+- <strong>Pros</strong>: Multiple consumers, event distribution
+- <strong>Cons</strong>: More complex, event ordering challenges</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="best-practices">Best Practices</h3>
+<ol>
+<li><strong>Choose right model</strong>: Queue for tasks, stream for events</li>
+<li><strong>Monitor queues</strong>: Track depth and processing rate</li>
+<li><strong>Handle failures</strong>: Retry logic, dead letter queues</li>
+<li><strong>Scale consumers</strong>: Scale based on queue depth</li>
+</ol>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<ul>
+<li>"What messaging model is used?"</li>
+<li>"How is message delivery guaranteed?"</li>
+<li>"What happens if consumer fails?"</li>
+<li>"How is ordering handled?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/queues-streams.html">Further Reading: Queues &amp; Streams</a></p>
+<p><strong>Quick Links</strong>:
+- <a href="../03-gcp-core-building-blocks/pubsub.html">Pub/Sub: Delivery Guarantees</a>
+- <a href="overload-backpressure.html">Overload &amp; Backpressure</a>
+- <a href="idempotency-retries.html">Idempotency &amp; Retries</a>
+- <a href="README.html">Back to Distributed Systems</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Choose messaging</strong>: When do you use queues vs streams? What are the tradeoffs?</p>
+</li>
+<li>
+<p><strong>Handle backlog</strong>: Your queue has a large backlog. How do you handle it?</p>
+</li>
+<li>
+<p><strong>Design stream</strong>: Design a stream processing system for real-time events.</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/queues-streams-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concurrency</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#concurrency-primitives" class="level-1">Concurrency Primitives</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#concurrency-challenges" class="level-3">Concurrency Challenges</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#locks" class="level-3">Locks</a></li>
+                <li><a href="#semaphores" class="level-3">Semaphores</a></li>
+                <li><a href="#channels" class="level-3">Channels</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#concurrency-failures" class="level-3">Concurrency Failures</a></li>
+                <li><a href="#scenario-1-deadlock" class="level-4">Scenario 1: Deadlock</a></li>
+                <li><a href="#scenario-2-race-condition" class="level-4">Scenario 2: Race Condition</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics" class="level-3">Metrics</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#concurrency-changes" class="level-3">Concurrency Changes</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#locking-vs-lock-free" class="level-3">Locking vs Lock-Free</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#best-practices" class="level-3">Best Practices</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="concurrency-primitives">Concurrency Primitives</h1>
+<p><strong>One-line summary</strong>: Understanding concurrency primitives (locks, semaphores, channels) and how to use them correctly.</p>
+<p><strong>Prerequisites</strong>: <a href="../01-foundations/README.html">Foundations</a>, understanding of concurrent programming.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="concurrency-challenges">Concurrency Challenges</h3>
+<p><strong>Concurrency</strong>: Multiple operations executing simultaneously.</p>
+<p><strong>Challenges</strong>:
+- <strong>Race conditions</strong>: Unpredictable behavior from concurrent access
+- <strong>Deadlocks</strong>: Processes waiting for each other
+- <strong>Livelocks</strong>: Processes continuously changing state
+- <strong>Starvation</strong>: Processes never get resources</p>
+<div class="mermaid">
+graph LR
+Process1[Process 1] --> Resource[Shared Resource]
+Process2[Process 2] --> Resource
+Process3[Process 3] --> Resource
+Resource --> Lock[Lock]
+style Resource fill:#ffcc99
+style Lock fill:#99ccff
+</div>
+<p><strong>Key insight</strong>: Concurrency primitives coordinate access to shared resources and prevent race conditions.</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="locks">Locks</h3>
+<p><strong>Lock</strong>: Exclusive access to resource.</p>
+<p><strong>Types</strong>:
+- <strong>Mutex</strong>: Mutual exclusion lock
+- <strong>Read-write lock</strong>: Multiple readers, single writer
+- <strong>Spinlock</strong>: Busy-wait lock</p>
+<p><strong>Properties</strong>:
+- <strong>Exclusive</strong>: Only one holder at a time
+- <strong>Blocking</strong>: Waits if lock unavailable
+- <strong>Deadlock risk</strong>: Can cause deadlocks</p>
+<h3 id="semaphores">Semaphores</h3>
+<p><strong>Semaphore</strong>: Counter controlling access to resource.</p>
+<p><strong>Types</strong>:
+- <strong>Binary semaphore</strong>: 0 or 1 (like mutex)
+- <strong>Counting semaphore</strong>: 0 to N</p>
+<p><strong>Properties</strong>:
+- <strong>Counting</strong>: Tracks available resources
+- <strong>Blocking</strong>: Waits if no resources available
+- <strong>Flexible</strong>: Can allow multiple holders</p>
+<h3 id="channels">Channels</h3>
+<p><strong>Channel</strong>: Communication mechanism between goroutines/threads.</p>
+<p><strong>Types</strong>:
+- <strong>Buffered</strong>: Fixed-size buffer
+- <strong>Unbuffered</strong>: No buffer (synchronous)</p>
+<p><strong>Properties</strong>:
+- <strong>Communication</strong>: Enables communication
+- <strong>Synchronization</strong>: Synchronizes goroutines/threads
+- <strong>Safe</strong>: Thread-safe communication</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="concurrency-failures">Concurrency Failures</h3>
+<h4 id="scenario-1-deadlock">Scenario 1: Deadlock</h4>
+<ul>
+<li><strong>Impact</strong>: Processes blocked, system hangs</li>
+<li><strong>Blast radius</strong>: Affected processes</li>
+<li><strong>Detection</strong>: Processes waiting indefinitely</li>
+<li><strong>Recovery</strong>: Kill processes, restart</li>
+<li><strong>Mitigation</strong>: Avoid circular dependencies, timeout locks</li>
+</ul>
+<h4 id="scenario-2-race-condition">Scenario 2: Race Condition</h4>
+<ul>
+<li><strong>Impact</strong>: Incorrect behavior, data corruption</li>
+<li><strong>Blast radius</strong>: Shared resources</li>
+<li><strong>Detection</strong>: Intermittent bugs, test failures</li>
+<li><strong>Recovery</strong>: Fix race condition, add synchronization</li>
+<li><strong>Mitigation</strong>: Proper locking, atomic operations</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics">Metrics</h3>
+<ul>
+<li><strong>Lock contention</strong>: Lock wait time</li>
+<li><strong>Deadlock rate</strong>: Frequency of deadlocks</li>
+<li><strong>Race condition rate</strong>: Frequency of race conditions</li>
+<li><strong>Concurrency level</strong>: Number of concurrent operations</li>
+</ul>
+<h3 id="alerts">Alerts</h3>
+<ul>
+<li>Deadlocks detected</li>
+<li>High lock contention</li>
+<li>Race conditions detected</li>
+<li>High concurrency</li>
+</ul>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="concurrency-changes">Concurrency Changes</h3>
+<ul>
+<li><strong>Process</strong>: Update concurrency code, test thoroughly</li>
+<li><strong>Risk</strong>: High (may cause deadlocks, race conditions)</li>
+<li><strong>Rollback</strong>: Revert changes</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="locking-vs-lock-free">Locking vs Lock-Free</h3>
+<p><strong>Locking</strong>:
+- <strong>Pros</strong>: Simple, safe
+- <strong>Cons</strong>: Performance overhead, deadlock risk</p>
+<p><strong>Lock-free</strong>:
+- <strong>Pros</strong>: Better performance, no deadlocks
+- <strong>Cons</strong>: Complex, harder to reason about</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="best-practices">Best Practices</h3>
+<ol>
+<li><strong>Minimize locking</strong>: Reduce lock contention</li>
+<li><strong>Avoid deadlocks</strong>: Order locks consistently</li>
+<li><strong>Use atomic operations</strong>: For simple operations</li>
+<li><strong>Test thoroughly</strong>: Test concurrent code extensively</li>
+</ol>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<ul>
+<li>"How is concurrency handled?"</li>
+<li>"What locks are used?"</li>
+<li>"How are deadlocks prevented?"</li>
+<li>"What's the concurrency model?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/concurrency.html">Further Reading: Concurrency Primitives</a></p>
+<p><strong>Quick Links</strong>:
+- "The Art of Multiprocessor Programming" (Herlihy &amp; Shavit)
+- <a href="README.html">Back to LLD Patterns</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design concurrency</strong>: Design concurrent access to shared resource. What primitives?</p>
+</li>
+<li>
+<p><strong>Prevent deadlock</strong>: How do you prevent deadlocks in your system?</p>
+</li>
+<li>
+<p><strong>Handle race condition</strong>: Your system has a race condition. How do you fix it?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/concurrency-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

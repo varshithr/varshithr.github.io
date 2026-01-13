@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Readme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#distributed-systems" class="level-1">Distributed Systems</a></li>
+                <li><a href="#overview" class="level-2">Overview</a></li>
+                <li><a href="#topics" class="level-2">Topics</a></li>
+                <li><a href="#learning-objectives" class="level-2">Learning Objectives</a></li>
+                <li><a href="#prerequisites" class="level-2">Prerequisites</a></li>
+                <li><a href="#next-steps" class="level-2">Next Steps</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="distributed-systems">Distributed Systems</h1>
+<p>The building blocks that make distributed systems work: consensus, replication, ordering, and handling overload.</p>
+<h2 id="overview">Overview</h2>
+<p>Distributed systems are the foundation of modern cloud infrastructure. This chapter covers:
+- <strong>Time and ordering</strong>: How to reason about events in distributed systems
+- <strong>Consensus</strong>: How nodes agree on values
+- <strong>Replication</strong>: Keeping data consistent across nodes
+- <strong>Sharding</strong>: Partitioning data for scale
+- <strong>Overload</strong>: Handling more load than capacity
+- <strong>Idempotency</strong>: Making retries safe
+- <strong>Queues and streams</strong>: Asynchronous processing</p>
+<h2 id="topics">Topics</h2>
+<ol>
+<li><a href="time-ordering-causality.html">Time, Ordering, and Causality</a></li>
+<li>Logical clocks vs physical clocks</li>
+<li>Causality and happens-before relationships</li>
+<li>
+<p>Vector clocks</p>
+</li>
+<li>
+<p><a href="consensus-leases.html">Consensus &amp; Leases</a></p>
+</li>
+<li>Paxos and Raft algorithms</li>
+<li>Leases for distributed locking</li>
+<li>
+<p>When to use consensus vs leases</p>
+</li>
+<li>
+<p><a href="replication.html">Replication Strategies</a></p>
+</li>
+<li>Synchronous vs asynchronous replication</li>
+<li>Leader-follower and multi-leader patterns</li>
+<li>
+<p>Consistency models</p>
+</li>
+<li>
+<p><a href="sharding-partitioning.html">Sharding &amp; Partitioning</a></p>
+</li>
+<li>Horizontal vs vertical partitioning</li>
+<li>Sharding strategies and tradeoffs</li>
+<li>
+<p>Rebalancing and hot spots</p>
+</li>
+<li>
+<p><a href="overload-backpressure.html">Overload &amp; Backpressure</a></p>
+</li>
+<li>What happens when load exceeds capacity</li>
+<li>Backpressure mechanisms</li>
+<li>
+<p>Load shedding strategies</p>
+</li>
+<li>
+<p><a href="idempotency-retries.html">Idempotency &amp; Retry Semantics</a></p>
+</li>
+<li>Making operations idempotent</li>
+<li>Retry strategies and exponential backoff</li>
+<li>
+<p>Idempotency keys and deduplication</p>
+</li>
+<li>
+<p><a href="queues-streams.html">Queues &amp; Streams</a></p>
+</li>
+<li>Message queues vs streams</li>
+<li>Delivery guarantees (at-least-once, at-most-once, exactly-once)</li>
+<li>Ordering and partitioning</li>
+</ol>
+<h2 id="learning-objectives">Learning Objectives</h2>
+<p>After completing this chapter, you should be able to:
+- Choose between consensus and leases for coordination
+- Design replication strategies with appropriate consistency
+- Handle overload gracefully with backpressure
+- Make systems safe for retries with idempotency
+- Choose between queues and streams</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><a href="../01-foundations/README.html">Phase 0: Foundations</a></li>
+<li>Understanding of basic networking and system design</li>
+</ul>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="../03-gcp-core-building-blocks/README.html">Phase 2: GCP Core Building Blocks</a></li>
+<li><a href="../05-llD-patterns/README.html">Phase 3: LLD Patterns</a></li>
+<li><a href="../INDEX.html">Back to Index</a></li>
+</ul>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

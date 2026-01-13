@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cdn System Answers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#answer-key-cdn-system" class="level-1">Answer Key: CDN System</a></li>
+                <li><a href="#exercise-1-design-improvements" class="level-2">Exercise 1: Design Improvements</a></li>
+                <li><a href="#answer" class="level-3">Answer</a></li>
+                <li><a href="#exercise-2-handle-cache-invalidation" class="level-2">Exercise 2: Handle Cache Invalidation</a></li>
+                <li><a href="#answer_1" class="level-3">Answer</a></li>
+                <li><a href="#exercise-3-optimize-costs" class="level-2">Exercise 3: Optimize Costs</a></li>
+                <li><a href="#answer_2" class="level-3">Answer</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="answer-key-cdn-system">Answer Key: CDN System</h1>
+<p><a href="../../06-case-studies/cdn-system.html">Back to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-design-improvements">Exercise 1: Design Improvements</h2>
+<p><strong>Question</strong>: How would you improve this design? What tradeoffs?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Potential improvements</strong>:</p>
+<ol>
+<li><strong>Add More Edge Locations</strong>: Increase edge coverage</li>
+<li><strong>Implement Cache Warming</strong>: Pre-warm cache for popular content</li>
+<li><strong>Add Analytics</strong>: Enhanced analytics and monitoring</li>
+<li><strong>Optimize Compression</strong>: Better compression algorithms</li>
+</ol>
+<p><strong>Tradeoffs</strong>:
+- Higher cost vs better performance
+- More complexity vs simpler architecture
+- More maintenance vs better features</p>
+<p><strong>Answer</strong>: Add more edge locations, implement cache warming, enhance analytics, optimize compression. Balance cost vs performance.</p>
+<hr />
+<h2 id="exercise-2-handle-cache-invalidation">Exercise 2: Handle Cache Invalidation</h2>
+<p><strong>Question</strong>: How do you handle cache invalidation for frequently updated content?</p>
+<h3 id="answer_1">Answer</h3>
+<p><strong>Cache invalidation strategies</strong>:</p>
+<ol>
+<li><strong>Versioned URLs</strong>: Use versioned URLs (e.g., <code>/v1/image.jpg</code>)</li>
+<li><strong>Selective Invalidation</strong>: Invalidate only changed content</li>
+<li><strong>TTL Optimization</strong>: Use appropriate TTL for content type</li>
+<li><strong>Cache Tags</strong>: Use cache tags for grouped invalidation</li>
+</ol>
+<p><strong>Answer</strong>: Use versioned URLs, invalidate selectively, optimize TTL, use cache tags for grouped invalidation.</p>
+<hr />
+<h2 id="exercise-3-optimize-costs">Exercise 3: Optimize Costs</h2>
+<p><strong>Question</strong>: How would you reduce costs by 30%? What tradeoffs?</p>
+<h3 id="answer_2">Answer</h3>
+<p><strong>Cost optimization strategies</strong>:</p>
+<ol>
+<li><strong>Optimize Cache Hit Rate</strong>: Increase cache hit rate to reduce origin load</li>
+<li><strong>Use Regional Storage</strong>: Use regional instead of multi-region storage</li>
+<li><strong>Optimize Compression</strong>: Better compression to reduce bandwidth</li>
+<li><strong>Reduce Origin Load</strong>: Cache more content, reduce origin requests</li>
+</ol>
+<p><strong>Tradeoffs</strong>:
+- Lower cache hit rate vs cost savings
+- Less redundancy vs cost reduction
+- More optimization effort vs cost savings</p>
+<p><strong>Answer</strong>: Optimize cache hit rate, use regional storage, optimize compression, reduce origin load. Balance cost vs performance.</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../../assets/scripts.js"></script>
+    
+</body>
+</html>

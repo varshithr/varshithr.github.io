@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canary Rollouts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#canary-deployments-rollouts" class="level-1">Canary Deployments &amp; Rollouts</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#deployment-risk" class="level-3">Deployment Risk</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#canary-deployment" class="level-3">Canary Deployment</a></li>
+                <li><a href="#gradual-rollout" class="level-3">Gradual Rollout</a></li>
+                <li><a href="#blue-green-deployment" class="level-3">Blue-Green Deployment</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#deployment-failures" class="level-3">Deployment Failures</a></li>
+                <li><a href="#scenario-1-canary-failure" class="level-4">Scenario 1: Canary Failure</a></li>
+                <li><a href="#scenario-2-gradual-rollout-failure" class="level-4">Scenario 2: Gradual Rollout Failure</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics" class="level-3">Metrics</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#deployment-process" class="level-3">Deployment Process</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#canary-vs-blue-green" class="level-3">Canary vs Blue-Green</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#best-practices" class="level-3">Best Practices</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="canary-deployments-rollouts">Canary Deployments &amp; Rollouts</h1>
+<p><strong>One-line summary</strong>: How to deploy changes safely using canary deployments and gradual rollouts to minimize risk.</p>
+<p><strong>Prerequisites</strong>: <a href="testing-for-failure.html">Testing for Failure</a>, understanding of deployment strategies.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="deployment-risk">Deployment Risk</h3>
+<p><strong>Deployment risk</strong>: New code may introduce bugs, performance issues, or outages.</p>
+<p><strong>Mitigation</strong>: Gradual rollout reduces risk by limiting blast radius.</p>
+<div class="mermaid">
+graph LR
+Code[New Code] --> Canary[Canary<br/>5% Traffic]
+Canary --> Monitor[Monitor]
+Monitor -->|Success| Gradual[Gradual Rollout]
+Monitor -->|Failure| Rollback[Rollback]
+style Canary fill:#ffcc99
+style Monitor fill:#99ccff
+style Rollback fill:#ff9999
+</div>
+<p><strong>Key insight</strong>: Canary deployments and gradual rollouts minimize risk by testing changes on small subset before full rollout.</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="canary-deployment">Canary Deployment</h3>
+<p><strong>Canary process</strong>:
+1. <strong>Deploy</strong>: Deploy new version to canary (small percentage)
+2. <strong>Monitor</strong>: Monitor metrics (error rate, latency, SLOs)
+3. <strong>Decision</strong>: Proceed or rollback based on metrics
+4. <strong>Rollout</strong>: Gradually increase traffic if successful</p>
+<p><strong>Canary size</strong>: Typically 5-10% of traffic.</p>
+<p><strong>Monitoring</strong>: Monitor for 15-30 minutes before proceeding.</p>
+<h3 id="gradual-rollout">Gradual Rollout</h3>
+<p><strong>Rollout phases</strong>:
+1. <strong>Canary</strong>: 5% traffic
+2. <strong>Phase 1</strong>: 25% traffic
+3. <strong>Phase 2</strong>: 50% traffic
+4. <strong>Phase 3</strong>: 100% traffic</p>
+<p><strong>Time between phases</strong>: 15-30 minutes for monitoring.</p>
+<p><strong>Rollback</strong>: Rollback at any phase if issues detected.</p>
+<h3 id="blue-green-deployment">Blue-Green Deployment</h3>
+<p><strong>Blue-Green process</strong>:
+1. <strong>Deploy</strong>: Deploy new version to green environment
+2. <strong>Test</strong>: Test green environment
+3. <strong>Switch</strong>: Switch traffic from blue to green
+4. <strong>Rollback</strong>: Switch back to blue if issues</p>
+<p><strong>Use case</strong>: When instant switchover is needed.</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="deployment-failures">Deployment Failures</h3>
+<h4 id="scenario-1-canary-failure">Scenario 1: Canary Failure</h4>
+<ul>
+<li><strong>Impact</strong>: 5% of users affected, issues detected early</li>
+<li><strong>Blast radius</strong>: Canary users only</li>
+<li><strong>Detection</strong>: Metrics show issues in canary</li>
+<li><strong>Recovery</strong>: Rollback canary immediately</li>
+<li><strong>Mitigation</strong>: Canary deployment, fast rollback</li>
+</ul>
+<h4 id="scenario-2-gradual-rollout-failure">Scenario 2: Gradual Rollout Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Increasing percentage of users affected</li>
+<li><strong>Blast radius</strong>: Users in rollout percentage</li>
+<li><strong>Detection</strong>: Metrics show issues at higher percentage</li>
+<li><strong>Recovery</strong>: Rollback to previous phase</li>
+<li><strong>Mitigation</strong>: Gradual rollout, monitoring at each phase</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics">Metrics</h3>
+<ul>
+<li><strong>Error rate</strong>: Error rate per deployment phase</li>
+<li><strong>Latency</strong>: Latency per deployment phase</li>
+<li><strong>SLO compliance</strong>: SLO compliance per phase</li>
+<li><strong>Rollback rate</strong>: Frequency of rollbacks</li>
+</ul>
+<h3 id="alerts">Alerts</h3>
+<ul>
+<li>Error rate spike in canary</li>
+<li>Latency increase in canary</li>
+<li>SLO violation in canary</li>
+<li>Rollback triggered</li>
+</ul>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="deployment-process">Deployment Process</h3>
+<ul>
+<li><strong>Process</strong>: Follow canary → gradual rollout process</li>
+<li><strong>Risk</strong>: Low (limited blast radius)</li>
+<li><strong>Rollback</strong>: Fast rollback at any phase</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="canary-vs-blue-green">Canary vs Blue-Green</h3>
+<p><strong>Canary</strong>:
+- <strong>Pros</strong>: Lower risk, gradual rollout
+- <strong>Cons</strong>: More complex, longer process</p>
+<p><strong>Blue-Green</strong>:
+- <strong>Pros</strong>: Simpler, instant switchover
+- <strong>Cons</strong>: Higher risk, all-or-nothing</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="best-practices">Best Practices</h3>
+<ol>
+<li><strong>Start small</strong>: Begin with small canary</li>
+<li><strong>Monitor closely</strong>: Monitor metrics at each phase</li>
+<li><strong>Rollback quickly</strong>: Fast rollback if issues</li>
+<li><strong>Document process</strong>: Document deployment process</li>
+</ol>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<ul>
+<li>"What's the deployment strategy?"</li>
+<li>"How is the canary configured?"</li>
+<li>"What metrics are monitored?"</li>
+<li>"What's the rollback process?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/canary-rollouts.html">Further Reading: Canary Rollouts</a></p>
+<p><strong>Quick Links</strong>:
+- <a href="testing-for-failure.html">Testing for Failure</a>
+- <a href="sli-slo-error-budget.html">SLIs, SLOs &amp; Error Budgets</a>
+- <a href="../06-case-studies/multi-region-api.html">Multi-Region API</a>
+- <a href="README.html">Back to Reliability &amp; SRE</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design canary</strong>: Design a canary deployment process. What percentage? How long?</p>
+</li>
+<li>
+<p><strong>Handle canary failure</strong>: Your canary shows issues. How do you respond?</p>
+</li>
+<li>
+<p><strong>Plan rollout</strong>: Plan a gradual rollout. What are the phases?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/canary-rollouts-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

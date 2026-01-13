@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concurrency Answers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#answer-key-concurrency-primitives" class="level-1">Answer Key: Concurrency Primitives</a></li>
+                <li><a href="#exercise-1-design-concurrency" class="level-2">Exercise 1: Design Concurrency</a></li>
+                <li><a href="#answer" class="level-3">Answer</a></li>
+                <li><a href="#exercise-2-prevent-deadlock" class="level-2">Exercise 2: Prevent Deadlock</a></li>
+                <li><a href="#answer_1" class="level-3">Answer</a></li>
+                <li><a href="#exercise-3-handle-race-condition" class="level-2">Exercise 3: Handle Race Condition</a></li>
+                <li><a href="#answer_2" class="level-3">Answer</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="answer-key-concurrency-primitives">Answer Key: Concurrency Primitives</h1>
+<p><a href="../../05-llD-patterns/concurrency.html">Back to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-design-concurrency">Exercise 1: Design Concurrency</h2>
+<p><strong>Question</strong>: Design concurrent access to shared resource. What primitives?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Concurrency Design</strong>:
+- <strong>Mutex</strong>: For exclusive access
+- <strong>Read-write lock</strong>: For read-heavy workloads
+- <strong>Channels</strong>: For communication between goroutines
+- <strong>Atomic operations</strong>: For simple operations</p>
+<p><strong>Answer</strong>: Use mutex for exclusive access, read-write locks for reads, channels for communication.</p>
+<hr />
+<h2 id="exercise-2-prevent-deadlock">Exercise 2: Prevent Deadlock</h2>
+<p><strong>Question</strong>: How do you prevent deadlocks in your system?</p>
+<h3 id="answer_1">Answer</h3>
+<p><strong>Deadlock Prevention</strong>:
+1. <strong>Lock ordering</strong>: Always acquire locks in same order
+2. <strong>Timeout</strong>: Use timeout on locks
+3. <strong>Avoid circular dependencies</strong>: Avoid circular lock dependencies
+4. <strong>Lock-free</strong>: Use lock-free algorithms where possible</p>
+<p><strong>Answer</strong>: Consistent lock ordering, timeouts, avoid circular dependencies, use lock-free when possible.</p>
+<hr />
+<h2 id="exercise-3-handle-race-condition">Exercise 3: Handle Race Condition</h2>
+<p><strong>Question</strong>: Your system has a race condition. How do you fix it?</p>
+<h3 id="answer_2">Answer</h3>
+<p><strong>Fix Race Condition</strong>:
+1. <strong>Identify</strong>: Identify shared resource and race condition
+2. <strong>Add synchronization</strong>: Add locks or atomic operations
+3. <strong>Test</strong>: Test thoroughly for race conditions
+4. <strong>Verify</strong>: Verify fix eliminates race condition</p>
+<p><strong>Answer</strong>: Identify race condition, add synchronization (locks/atomics), test thoroughly, verify fix.</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../../assets/scripts.js"></script>
+    
+</body>
+</html>

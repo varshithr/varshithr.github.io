@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Limiting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#rate-limiter-implementations" class="level-1">Rate Limiter Implementations</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#rate-limiting-purpose" class="level-3">Rate Limiting Purpose</a></li>
+                <li><a href="#rate-limiting-goals" class="level-3">Rate Limiting Goals</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#algorithm-1-token-bucket" class="level-3">Algorithm 1: Token Bucket</a></li>
+                <li><a href="#concept" class="level-4">Concept</a></li>
+                <li><a href="#implementation" class="level-4">Implementation</a></li>
+                <li><a href="#properties" class="level-4">Properties</a></li>
+                <li><a href="#algorithm-2-sliding-window-log" class="level-3">Algorithm 2: Sliding Window Log</a></li>
+                <li><a href="#concept_1" class="level-4">Concept</a></li>
+                <li><a href="#implementation_1" class="level-4">Implementation</a></li>
+                <li><a href="#properties_1" class="level-4">Properties</a></li>
+                <li><a href="#algorithm-3-fixed-window-counter" class="level-3">Algorithm 3: Fixed Window Counter</a></li>
+                <li><a href="#concept_2" class="level-4">Concept</a></li>
+                <li><a href="#implementation_2" class="level-4">Implementation</a></li>
+                <li><a href="#properties_2" class="level-4">Properties</a></li>
+                <li><a href="#algorithm-4-sliding-window-counter" class="level-3">Algorithm 4: Sliding Window Counter</a></li>
+                <li><a href="#concept_3" class="level-4">Concept</a></li>
+                <li><a href="#implementation_3" class="level-4">Implementation</a></li>
+                <li><a href="#properties_3" class="level-4">Properties</a></li>
+                <li><a href="#distributed-rate-limiting" class="level-3">Distributed Rate Limiting</a></li>
+                <li><a href="#challenge" class="level-4">Challenge</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#rate-limiter-failures" class="level-3">Rate Limiter Failures</a></li>
+                <li><a href="#scenario-1-rate-limiter-down" class="level-4">Scenario 1: Rate Limiter Down</a></li>
+                <li><a href="#scenario-2-incorrect-limits" class="level-4">Scenario 2: Incorrect Limits</a></li>
+                <li><a href="#scenario-3-distributed-limiter-inconsistency" class="level-4">Scenario 3: Distributed Limiter Inconsistency</a></li>
+                <li><a href="#overload-scenarios" class="level-3">Overload Scenarios</a></li>
+                <li><a href="#10-normal-load" class="level-4">10× Normal Load</a></li>
+                <li><a href="#100-normal-load-ddos" class="level-4">100× Normal Load (DDoS)</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics-to-track" class="level-3">Metrics to Track</a></li>
+                <li><a href="#rate-limiter-metrics" class="level-4">Rate Limiter Metrics</a></li>
+                <li><a href="#algorithm-metrics" class="level-4">Algorithm Metrics</a></li>
+                <li><a href="#performance-metrics" class="level-4">Performance Metrics</a></li>
+                <li><a href="#logs" class="level-3">Logs</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#implementing-rate-limiters" class="level-3">Implementing Rate Limiters</a></li>
+                <li><a href="#1-choose-algorithm" class="level-4">1. Choose Algorithm</a></li>
+                <li><a href="#2-set-limits" class="level-4">2. Set Limits</a></li>
+                <li><a href="#3-implement-distributed-limiting" class="level-4">3. Implement Distributed Limiting</a></li>
+                <li><a href="#4-test" class="level-4">4. Test</a></li>
+                <li><a href="#security-boundaries" class="level-2">Security Boundaries</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#algorithm-tradeoffs" class="level-3">Algorithm Tradeoffs</a></li>
+                <li><a href="#distributed-tradeoffs" class="level-3">Distributed Tradeoffs</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#capacity-planning" class="level-3">Capacity Planning</a></li>
+                <li><a href="#monitoring-debugging" class="level-3">Monitoring &amp; Debugging</a></li>
+                <li><a href="#incident-response" class="level-3">Incident Response</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#design-questions" class="level-3">Design Questions</a></li>
+                <li><a href="#scale-questions" class="level-3">Scale Questions</a></li>
+                <li><a href="#operational-questions" class="level-3">Operational Questions</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="rate-limiter-implementations">Rate Limiter Implementations</h1>
+<p><strong>One-line summary</strong>: How to implement rate limiters correctly, with different algorithms and their tradeoffs.</p>
+<p><strong>Prerequisites</strong>: <a href="../01-foundations/queueing-tail-latency.html">Queueing Theory</a>, understanding of algorithms and data structures.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="rate-limiting-purpose">Rate Limiting Purpose</h3>
+<div class="mermaid">
+flowchart LR
+Requests[Requests] --> RateLimiter[Rate Limiter]
+RateLimiter -->|Allowed| Process[Process Request]
+RateLimiter -->|Rejected| Reject[Reject Request]
+style RateLimiter fill:#ffcc99
+style Reject fill:#ff9999
+</div>
+<p><strong>Key insight</strong>: Rate limiting prevents overload by controlling request rate. Different algorithms have different tradeoffs.</p>
+<h3 id="rate-limiting-goals">Rate Limiting Goals</h3>
+<ol>
+<li><strong>Prevent overload</strong>: Don't allow more requests than capacity</li>
+<li><strong>Fairness</strong>: Distribute capacity fairly among clients</li>
+<li><strong>Accuracy</strong>: Enforce limits accurately</li>
+<li><strong>Performance</strong>: Low overhead, fast decisions</li>
+<li><strong>Distributed</strong>: Work across multiple servers</li>
+</ol>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="algorithm-1-token-bucket">Algorithm 1: Token Bucket</h3>
+<h4 id="concept">Concept</h4>
+<p><strong>Token bucket</strong>: Tokens are added at a fixed rate. Requests consume tokens. Requests are allowed if tokens available.</p>
+<div class="mermaid">
+graph LR
+Tokens[Token Bucket] -->|Add Tokens| Rate[Fixed Rate]
+Requests[Requests] -->|Consume Tokens| Tokens
+Tokens -->|Tokens Available?| Allow[Allow]
+Tokens -->|No Tokens| Reject[Reject]
+style Tokens fill:#99ccff
+style Allow fill:#99ff99
+style Reject fill:#ff9999
+</div>
+<h4 id="implementation">Implementation</h4>
+<p><strong>Parameters</strong>:
+- <strong>Capacity</strong>: Maximum tokens (burst size)
+- <strong>Rate</strong>: Tokens added per second (sustained rate)</p>
+<p><strong>Algorithm</strong>:</p>
+<pre><code>1. Add tokens: tokens = min(capacity, tokens + rate × time_elapsed)
+2. Check request: if tokens &gt;= 1:
+     tokens -= 1
+     allow request
+   else:
+     reject request
+</code></pre>
+<h4 id="properties">Properties</h4>
+<p><strong>Pros</strong>:
+- <strong>Burst handling</strong>: Allows bursts up to capacity
+- <strong>Simple</strong>: Easy to implement
+- <strong>Memory efficient</strong>: O(1) space</p>
+<p><strong>Cons</strong>:
+- <strong>Not perfectly accurate</strong>: Tokens added continuously, not discretely
+- <strong>Bursty</strong>: May allow bursts that exceed rate</p>
+<p><strong>Use case</strong>: APIs that need to handle bursts but limit sustained rate.</p>
+<h3 id="algorithm-2-sliding-window-log">Algorithm 2: Sliding Window Log</h3>
+<h4 id="concept_1">Concept</h4>
+<p><strong>Sliding window log</strong>: Track timestamps of requests in a time window. Allow request if count &lt; limit.</p>
+<div class="mermaid">
+graph LR
+Requests[Requests] --> Log[Request Log]
+Log -->|Count Requests| Window[Sliding Window]
+Window -->|Count < Limit?| Allow[Allow]
+Window -->|Count >= Limit| Reject[Reject]
+style Log fill:#99ccff
+style Window fill:#ffcc99
+style Allow fill:#99ff99
+style Reject fill:#ff9999
+</div>
+<h4 id="implementation_1">Implementation</h4>
+<p><strong>Parameters</strong>:
+- <strong>Window size</strong>: Time window (e.g., 1 minute)
+- <strong>Limit</strong>: Maximum requests per window</p>
+<p><strong>Algorithm</strong>:</p>
+<pre><code>1. Get current time: now = current_time()
+2. Remove old entries: log = log.filter(timestamp &gt; now - window_size)
+3. Check limit: if len(log) &lt; limit:
+     log.append(now)
+     allow request
+   else:
+     reject request
+</code></pre>
+<h4 id="properties_1">Properties</h4>
+<p><strong>Pros</strong>:
+- <strong>Accurate</strong>: Precise limit enforcement
+- <strong>Fair</strong>: Distributes capacity evenly</p>
+<p><strong>Cons</strong>:
+- <strong>Memory intensive</strong>: O(n) space, where n = requests in window
+- <strong>CPU intensive</strong>: O(n) time to clean old entries
+- <strong>Not distributed</strong>: Hard to implement across servers</p>
+<p><strong>Use case</strong>: When accuracy is critical and memory is available.</p>
+<h3 id="algorithm-3-fixed-window-counter">Algorithm 3: Fixed Window Counter</h3>
+<h4 id="concept_2">Concept</h4>
+<p><strong>Fixed window counter</strong>: Count requests in fixed time windows. Allow request if count &lt; limit.</p>
+<div class="mermaid">
+graph LR
+Requests[Requests] --> Counter[Window Counter]
+Counter -->|Increment| Count[Count]
+Count -->|Count < Limit?| Allow[Allow]
+Count -->|Count >= Limit| Reject[Reject]
+Time[Time] -->|New Window| Reset[Reset Counter]
+style Counter fill:#99ccff
+style Allow fill:#99ff99
+style Reject fill:#ff9999
+</div>
+<h4 id="implementation_2">Implementation</h4>
+<p><strong>Parameters</strong>:
+- <strong>Window size</strong>: Time window (e.g., 1 minute)
+- <strong>Limit</strong>: Maximum requests per window</p>
+<p><strong>Algorithm</strong>:</p>
+<pre><code>1. Get current window: window = floor(now / window_size)
+2. Check window: if window != current_window:
+     current_window = window
+     count = 0
+3. Check limit: if count &lt; limit:
+     count += 1
+     allow request
+   else:
+     reject request
+</code></pre>
+<h4 id="properties_2">Properties</h4>
+<p><strong>Pros</strong>:
+- <strong>Simple</strong>: Very easy to implement
+- <strong>Memory efficient</strong>: O(1) space
+- <strong>Fast</strong>: O(1) time</p>
+<p><strong>Cons</strong>:
+- <strong>Bursty</strong>: Allows 2× limit at window boundaries
+- <strong>Not accurate</strong>: May exceed limit at boundaries</p>
+<p><strong>Use case</strong>: When simplicity is more important than accuracy.</p>
+<h3 id="algorithm-4-sliding-window-counter">Algorithm 4: Sliding Window Counter</h3>
+<h4 id="concept_3">Concept</h4>
+<p><strong>Sliding window counter</strong>: Combine fixed windows with weighted average for smoother limit.</p>
+<div class="mermaid">
+graph LR
+Requests[Requests] --> Windows[Fixed Windows]
+Windows -->|Weighted Average| Smooth[Sliding Window]
+Smooth -->|Count < Limit?| Allow[Allow]
+Smooth -->|Count >= Limit| Reject[Reject]
+style Windows fill:#99ccff
+style Smooth fill:#ffcc99
+style Allow fill:#99ff99
+style Reject fill:#ff9999
+</div>
+<h4 id="implementation_3">Implementation</h4>
+<p><strong>Parameters</strong>:
+- <strong>Window size</strong>: Time window (e.g., 1 minute)
+- <strong>Limit</strong>: Maximum requests per window
+- <strong>Sub-windows</strong>: Number of sub-windows (e.g., 10)</p>
+<p><strong>Algorithm</strong>:</p>
+<pre><code>1. Get current sub-window: sub_window = floor(now / (window_size / sub_windows))
+2. Update sub-windows: sub_windows[sub_window] = count
+3. Calculate weighted average: count = weighted_average(sub_windows)
+4. Check limit: if count &lt; limit:
+     count += 1
+     allow request
+   else:
+     reject request
+</code></pre>
+<h4 id="properties_3">Properties</h4>
+<p><strong>Pros</strong>:
+- <strong>Smooth</strong>: No bursts at boundaries
+- <strong>Memory efficient</strong>: O(k) space, where k = sub-windows
+- <strong>Accurate</strong>: More accurate than fixed window</p>
+<p><strong>Cons</strong>:
+- <strong>More complex</strong>: Harder to implement
+- <strong>Still approximate</strong>: Not perfectly accurate</p>
+<p><strong>Use case</strong>: When you need accuracy but can't store full log.</p>
+<h3 id="distributed-rate-limiting">Distributed Rate Limiting</h3>
+<h4 id="challenge">Challenge</h4>
+<p><strong>Problem</strong>: Rate limiting across multiple servers.</p>
+<p><strong>Solutions</strong>:</p>
+<ol>
+<li><strong>Centralized store</strong> (Redis):</li>
+<li>Store counters in Redis</li>
+<li>All servers check Redis</li>
+<li><strong>Pros</strong>: Accurate, consistent</li>
+<li>
+<p><strong>Cons</strong>: Redis is single point of failure, network latency</p>
+</li>
+<li>
+<p><strong>Distributed counters</strong>:</p>
+</li>
+<li>Each server maintains counter</li>
+<li>Periodically sync counters</li>
+<li><strong>Pros</strong>: No single point of failure</li>
+<li>
+<p><strong>Cons</strong>: Less accurate, eventual consistency</p>
+</li>
+<li>
+<p><strong>Client-side enforcement</strong>:</p>
+</li>
+<li>Client enforces rate limit</li>
+<li>Server validates</li>
+<li><strong>Pros</strong>: Reduces server load</li>
+<li><strong>Cons</strong>: Not secure (client can bypass)</li>
+</ol>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="rate-limiter-failures">Rate Limiter Failures</h3>
+<h4 id="scenario-1-rate-limiter-down">Scenario 1: Rate Limiter Down</h4>
+<ul>
+<li><strong>Impact</strong>: No rate limiting, system overloaded</li>
+<li><strong>Blast radius</strong>: Entire system</li>
+<li><strong>Detection</strong>: Rate limiter health checks fail</li>
+<li><strong>Recovery</strong>: Fail open (allow all) or fail closed (reject all)</li>
+</ul>
+<p><strong>Fail open vs fail closed</strong>:
+- <strong>Fail open</strong>: Allow requests when limiter fails (better UX, risk overload)
+- <strong>Fail closed</strong>: Reject requests when limiter fails (safer, worse UX)</p>
+<h4 id="scenario-2-incorrect-limits">Scenario 2: Incorrect Limits</h4>
+<ul>
+<li><strong>Impact</strong>: Too restrictive (reject legitimate requests) or too permissive (allow overload)</li>
+<li><strong>Blast radius</strong>: All clients</li>
+<li><strong>Detection</strong>: High rejection rate or system overload</li>
+<li><strong>Recovery</strong>: Adjust limits, verify behavior</li>
+</ul>
+<h4 id="scenario-3-distributed-limiter-inconsistency">Scenario 3: Distributed Limiter Inconsistency</h4>
+<ul>
+<li><strong>Impact</strong>: Different limits on different servers</li>
+<li><strong>Blast radius</strong>: Clients hitting different servers</li>
+<li><strong>Detection</strong>: Inconsistent behavior across servers</li>
+<li><strong>Recovery</strong>: Fix synchronization, use centralized store</li>
+</ul>
+<h3 id="overload-scenarios">Overload Scenarios</h3>
+<h4 id="10-normal-load">10× Normal Load</h4>
+<ul>
+<li><strong>Impact</strong>: Rate limiter may become bottleneck</li>
+<li><strong>Mitigation</strong>: Use efficient algorithm, cache decisions</li>
+</ul>
+<h4 id="100-normal-load-ddos">100× Normal Load (DDoS)</h4>
+<ul>
+<li><strong>Impact</strong>: Rate limiter overwhelmed</li>
+<li><strong>Mitigation</strong>: Fail closed, use DDoS protection</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics-to-track">Metrics to Track</h3>
+<h4 id="rate-limiter-metrics">Rate Limiter Metrics</h4>
+<ul>
+<li><strong>Request rate</strong>: Requests per second</li>
+<li><strong>Allowed rate</strong>: Requests allowed per second</li>
+<li><strong>Rejected rate</strong>: Requests rejected per second</li>
+<li><strong>Rejection rate</strong>: Percentage of requests rejected</li>
+</ul>
+<h4 id="algorithm-metrics">Algorithm Metrics</h4>
+<ul>
+<li><strong>Token bucket</strong>: Tokens available, tokens consumed</li>
+<li><strong>Sliding window</strong>: Requests in window, window size</li>
+<li><strong>Counter</strong>: Current count, limit</li>
+</ul>
+<h4 id="performance-metrics">Performance Metrics</h4>
+<ul>
+<li><strong>Decision latency</strong>: Time to make allow/reject decision</li>
+<li><strong>Storage size</strong>: Memory used for rate limiting</li>
+<li><strong>Cache hit rate</strong>: Cache effectiveness (if caching)</li>
+</ul>
+<h3 id="logs">Logs</h3>
+<p>Log events:
+- Rate limit violations (who, what, when)
+- Rate limiter failures
+- Limit changes</p>
+<h3 id="alerts">Alerts</h3>
+<p><strong>Critical alerts</strong>:
+- Rate limiter down
+- Rejection rate &gt; threshold (may indicate attack)
+- Rate limiter performance degradation</p>
+<p><strong>Warning alerts</strong>:
+- Rejection rate trending up
+- Rate limiter storage growing</p>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="implementing-rate-limiters">Implementing Rate Limiters</h3>
+<h4 id="1-choose-algorithm">1. Choose Algorithm</h4>
+<ul>
+<li><strong>Token bucket</strong>: For burst handling</li>
+<li><strong>Sliding window log</strong>: For accuracy</li>
+<li><strong>Fixed window</strong>: For simplicity</li>
+<li><strong>Sliding window counter</strong>: For balance</li>
+</ul>
+<h4 id="2-set-limits">2. Set Limits</h4>
+<ul>
+<li><strong>Measure baseline</strong>: What's normal request rate?</li>
+<li><strong>Set limits</strong>: What's acceptable?</li>
+<li><strong>Add margin</strong>: Leave headroom for spikes</li>
+</ul>
+<h4 id="3-implement-distributed-limiting">3. Implement Distributed Limiting</h4>
+<ul>
+<li><strong>Choose approach</strong>: Centralized vs distributed</li>
+<li><strong>Handle failures</strong>: Fail open vs fail closed</li>
+<li><strong>Monitor consistency</strong>: Verify limits consistent</li>
+</ul>
+<h4 id="4-test">4. Test</h4>
+<ul>
+<li><strong>Unit tests</strong>: Test algorithm correctness</li>
+<li><strong>Load tests</strong>: Test under load</li>
+<li><strong>Failure tests</strong>: Test limiter failures</li>
+</ul>
+<hr />
+<h2 id="security-boundaries">Security Boundaries</h2>
+<p>Rate limiting is a security control:
+- <strong>DDoS protection</strong>: Prevents overload attacks
+- <strong>Abuse prevention</strong>: Prevents abuse of APIs
+- <strong>Fairness</strong>: Ensures fair resource usage</p>
+<p><strong>Bypass attacks</strong>:
+- <strong>IP rotation</strong>: Attackers rotate IPs
+- <strong>Mitigation</strong>: Use client IDs, not just IPs
+- <strong>Distributed attacks</strong>: Attackers use multiple IPs
+- <strong>Mitigation</strong>: Global rate limits, not just per-IP</p>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="algorithm-tradeoffs">Algorithm Tradeoffs</h3>
+<table>
+<thead>
+<tr>
+<th>Algorithm</th>
+<th>Accuracy</th>
+<th>Memory</th>
+<th>CPU</th>
+<th>Burst Handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Token Bucket</td>
+<td>Medium</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Sliding Window Log</td>
+<td>High</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Fixed Window</td>
+<td>Low</td>
+<td>O(1)</td>
+<td>O(1)</td>
+<td>Yes (at boundaries)</td>
+</tr>
+<tr>
+<td>Sliding Window Counter</td>
+<td>Medium</td>
+<td>O(k)</td>
+<td>O(k)</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h3 id="distributed-tradeoffs">Distributed Tradeoffs</h3>
+<p><strong>Centralized (Redis)</strong>:
+- <strong>Pros</strong>: Accurate, consistent
+- <strong>Cons</strong>: Single point of failure, network latency</p>
+<p><strong>Distributed</strong>:
+- <strong>Pros</strong>: No single point of failure
+- <strong>Cons</strong>: Less accurate, eventual consistency</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<p><strong>Rate limiter capacity</strong>:
+- <strong>Decision rate</strong>: How many decisions per second?
+- <strong>Storage</strong>: How much memory for counters/logs?
+- <strong>Network</strong>: How much bandwidth for distributed limiting?</p>
+<h3 id="monitoring-debugging">Monitoring &amp; Debugging</h3>
+<p><strong>Monitor</strong>:
+- Request rates
+- Rejection rates
+- Rate limiter performance
+- Storage usage</p>
+<p><strong>Debug rate limiting issues</strong>:
+1. Check limits: Are limits correct?
+2. Check algorithm: Is algorithm working correctly?
+3. Check distribution: Are limits consistent across servers?
+4. Check performance: Is limiter a bottleneck?</p>
+<h3 id="incident-response">Incident Response</h3>
+<p><strong>Common incidents</strong>:
+- Rate limiter failures
+- Incorrect limits
+- DDoS attacks</p>
+<p><strong>Response</strong>:
+1. Check rate limiter health
+2. Check limits configuration
+3. Adjust limits if needed
+4. Scale rate limiter if needed</p>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>"What rate limiting algorithm?"</li>
+<li>"What are the limits?"</li>
+<li>"How is it distributed?"</li>
+<li>"What happens when limiter fails?"</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>"What's the decision rate?"</li>
+<li>"How does it scale?"</li>
+<li>"What's the storage overhead?"</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>"How do we monitor rate limiting?"</li>
+<li>"What alerts do we have?"</li>
+<li>"How do we debug rate limiting issues?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/rate-limiting.html">Further Reading: Rate Limiting</a></p>
+<p><strong>Quick Links</strong>:
+- Token Bucket Algorithm (Wikipedia)
+- Redis Rate Limiting documentation
+- Kong API Gateway rate limiting guide
+- <a href="../02-distributed-systems/overload-backpressure.html">Overload &amp; Backpressure</a>
+- <a href="README.html">Back to LLD Patterns</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Implement token bucket</strong>: Implement a token bucket rate limiter. What are the edge cases?</p>
+</li>
+<li>
+<p><strong>Compare algorithms</strong>: Compare token bucket vs sliding window log. When would you use each?</p>
+</li>
+<li>
+<p><strong>Distributed rate limiting</strong>: Design a distributed rate limiter. How do you ensure consistency?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/rate-limiting-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

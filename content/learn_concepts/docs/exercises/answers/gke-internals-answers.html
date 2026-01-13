@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gke Internals Answers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#answer-key-gke-control-plane-data-plane" class="level-1">Answer Key: GKE Control Plane &amp; Data Plane</a></li>
+                <li><a href="#exercise-1-design-node-pools" class="level-2">Exercise 1: Design Node Pools</a></li>
+                <li><a href="#answer" class="level-3">Answer</a></li>
+                <li><a href="#node-pool-design" class="level-3">Node Pool Design</a></li>
+                <li><a href="#node-pool-summary" class="level-3">Node Pool Summary</a></li>
+                <li><a href="#key-principles" class="level-3">Key Principles</a></li>
+                <li><a href="#exercise-2-pod-scheduling" class="level-2">Exercise 2: Pod Scheduling</a></li>
+                <li><a href="#answer_1" class="level-3">Answer</a></li>
+                <li><a href="#scheduling-strategies" class="level-3">Scheduling Strategies</a></li>
+                <li><a href="#best-practices" class="level-3">Best Practices</a></li>
+                <li><a href="#answer_2" class="level-3">Answer</a></li>
+                <li><a href="#exercise-3-debug-pod-failure" class="level-2">Exercise 3: Debug Pod Failure</a></li>
+                <li><a href="#answer_3" class="level-3">Answer</a></li>
+                <li><a href="#debugging-steps" class="level-3">Debugging Steps</a></li>
+                <li><a href="#common-issues-and-solutions" class="level-3">Common Issues and Solutions</a></li>
+                <li><a href="#answer_4" class="level-3">Answer</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="answer-key-gke-control-plane-data-plane">Answer Key: GKE Control Plane &amp; Data Plane</h1>
+<p><a href="../../03-gcp-core-building-blocks/gke-internals.html">Back to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-design-node-pools">Exercise 1: Design Node Pools</h2>
+<p><strong>Question</strong>: Design node pools for a multi-tier application (web, app, database). What machine types? How many nodes?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Goal</strong>: Design node pools optimized for different workload types.</p>
+<h3 id="node-pool-design">Node Pool Design</h3>
+<p><strong>1. Web Tier Node Pool</strong></p>
+<p><strong>Purpose</strong>: Host web servers (stateless, high traffic)</p>
+<p><strong>Machine Type</strong>: <code>n1-standard-4</code> (4 vCPU, 15GB RAM)
+- <strong>CPU</strong>: 4 vCPU for handling HTTP requests
+- <strong>Memory</strong>: 15GB for web server processes
+- <strong>Cost</strong>: Moderate cost, good performance</p>
+<p><strong>Node Count</strong>: 3-10 nodes (auto-scaling)
+- <strong>Min</strong>: 3 nodes (high availability)
+- <strong>Max</strong>: 10 nodes (handle peak traffic)
+- <strong>Auto-scaling</strong>: Based on CPU/memory utilization</p>
+<p><strong>Configuration</strong>:
+- <strong>OS</strong>: Container-Optimized OS
+- <strong>Preemptible</strong>: No (need reliability)
+- <strong>Labels</strong>: <code>tier=web</code></p>
+<p><strong>2. App Tier Node Pool</strong></p>
+<p><strong>Purpose</strong>: Host application servers (CPU-intensive, stateful)</p>
+<p><strong>Machine Type</strong>: <code>n1-standard-8</code> (8 vCPU, 30GB RAM)
+- <strong>CPU</strong>: 8 vCPU for application processing
+- <strong>Memory</strong>: 30GB for application state
+- <strong>Cost</strong>: Higher cost, better performance</p>
+<p><strong>Node Count</strong>: 5-20 nodes (auto-scaling)
+- <strong>Min</strong>: 5 nodes (handle base load)
+- <strong>Max</strong>: 20 nodes (handle peak load)
+- <strong>Auto-scaling</strong>: Based on CPU/memory utilization</p>
+<p><strong>Configuration</strong>:
+- <strong>OS</strong>: Container-Optimized OS
+- <strong>Preemptible</strong>: No (need reliability)
+- <strong>Labels</strong>: <code>tier=app</code></p>
+<p><strong>3. Database Tier Node Pool</strong></p>
+<p><strong>Purpose</strong>: Host database pods (memory-intensive, I/O-intensive)</p>
+<p><strong>Machine Type</strong>: <code>n1-highmem-8</code> (8 vCPU, 52GB RAM)
+- <strong>CPU</strong>: 8 vCPU for database operations
+- <strong>Memory</strong>: 52GB for database cache
+- <strong>Cost</strong>: Higher cost, optimized for memory</p>
+<p><strong>Node Count</strong>: 3-6 nodes (limited scaling)
+- <strong>Min</strong>: 3 nodes (high availability)
+- <strong>Max</strong>: 6 nodes (limited by database design)
+- <strong>Auto-scaling</strong>: Conservative (databases don't scale horizontally easily)</p>
+<p><strong>Configuration</strong>:
+- <strong>OS</strong>: Container-Optimized OS
+- <strong>Preemptible</strong>: No (critical tier)
+- <strong>Labels</strong>: <code>tier=database</code>
+- <strong>Taints</strong>: <code>database=true:NoSchedule</code> (prevent non-database pods)</p>
+<h3 id="node-pool-summary">Node Pool Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Machine Type</th>
+<th>Nodes</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web</td>
+<td>n1-standard-4</td>
+<td>3-10</td>
+<td>Stateless web servers</td>
+</tr>
+<tr>
+<td>App</td>
+<td>n1-standard-8</td>
+<td>5-20</td>
+<td>Application servers</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>n1-highmem-8</td>
+<td>3-6</td>
+<td>Database pods</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-principles">Key Principles</h3>
+<ol>
+<li><strong>Right-size machines</strong>: Match machine type to workload</li>
+<li><strong>Separate tiers</strong>: Different node pools for different workloads</li>
+<li><strong>Auto-scaling</strong>: Enable auto-scaling for variable load</li>
+<li><strong>High availability</strong>: Minimum 3 nodes per tier</li>
+<li><strong>Cost optimization</strong>: Use appropriate machine types</li>
+</ol>
+<hr />
+<h2 id="exercise-2-pod-scheduling">Exercise 2: Pod Scheduling</h2>
+<p><strong>Question</strong>: You have pods that need to run on specific nodes. How do you ensure they're scheduled correctly?</p>
+<h3 id="answer_1">Answer</h3>
+<p><strong>Goal</strong>: Ensure pods are scheduled on correct nodes using Kubernetes scheduling features.</p>
+<h3 id="scheduling-strategies">Scheduling Strategies</h3>
+<p><strong>1. Node Selectors</strong></p>
+<p><strong>Use case</strong>: Simple node selection based on labels</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: database-pod
+spec:
+  nodeSelector:
+    tier: database
+  containers:
+  - name: database
+    image: postgres:13
+</code></pre>
+<p><strong>How it works</strong>:
+- Pod only schedules on nodes with <code>tier=database</code> label
+- Simple and straightforward
+- Hard requirement (pod won't schedule if no matching nodes)</p>
+<p><strong>2. Node Affinity</strong></p>
+<p><strong>Use case</strong>: More flexible node selection</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: app-pod
+spec:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+          - key: tier
+            operator: In
+            values:
+            - app
+            - web
+</code></pre>
+<p><strong>How it works</strong>:
+- Prefer nodes with <code>tier=app</code> or <code>tier=web</code>
+- Soft requirement (pod can schedule elsewhere if needed)
+- More flexible than node selectors</p>
+<p><strong>3. Taints and Tolerations</strong></p>
+<p><strong>Use case</strong>: Prevent pods from scheduling on specific nodes</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-yaml"># Taint node
+kubectl taint nodes database-node-1 database=true:NoSchedule
+
+# Pod with toleration
+apiVersion: v1
+kind: Pod
+metadata:
+  name: database-pod
+spec:
+  tolerations:
+  - key: database
+    operator: Equal
+    value: &quot;true&quot;
+    effect: NoSchedule
+  containers:
+  - name: database
+    image: postgres:13
+</code></pre>
+<p><strong>How it works</strong>:
+- Taint prevents most pods from scheduling
+- Toleration allows specific pods to schedule
+- Useful for dedicated nodes (e.g., database nodes)</p>
+<p><strong>4. Pod Affinity/Anti-Affinity</strong></p>
+<p><strong>Use case</strong>: Co-locate or separate pods</p>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: app-pod
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - myapp
+        topologyKey: kubernetes.io/hostname
+</code></pre>
+<p><strong>How it works</strong>:
+- Co-locate pods with same <code>app=myapp</code> label on same node
+- Useful for related pods that benefit from co-location</p>
+<h3 id="best-practices">Best Practices</h3>
+<p><strong>1. Use Node Selectors for Simple Cases</strong>:
+- Simple label matching
+- Hard requirements</p>
+<p><strong>2. Use Node Affinity for Flexibility</strong>:
+- Soft requirements
+- Multiple preferences</p>
+<p><strong>3. Use Taints/Tolerations for Dedicated Nodes</strong>:
+- Database nodes
+- GPU nodes
+- Specialized hardware</p>
+<p><strong>4. Use Pod Affinity for Co-location</strong>:
+- Related pods
+- Performance optimization</p>
+<p><strong>5. Monitor Scheduling</strong>:
+- Check pod scheduling status
+- Monitor node utilization
+- Adjust as needed</p>
+<h3 id="answer_2">Answer</h3>
+<p><strong>Use Node Selectors</strong> for simple cases:
+- Add labels to nodes: <code>tier=web</code>, <code>tier=app</code>, <code>tier=database</code>
+- Use <code>nodeSelector</code> in pod spec to select nodes</p>
+<p><strong>Use Taints/Tolerations</strong> for dedicated nodes:
+- Taint database nodes: <code>database=true:NoSchedule</code>
+- Add toleration to database pods
+- Prevents non-database pods from scheduling</p>
+<p><strong>Use Pod Affinity</strong> for co-location:
+- Co-locate related pods on same node
+- Improve performance and reduce network latency</p>
+<p><strong>Key principles</strong>:
+- <strong>Labels</strong>: Use labels to identify node types
+- <strong>Selectors</strong>: Use node selectors for simple matching
+- <strong>Taints</strong>: Use taints to reserve nodes for specific workloads
+- <strong>Affinity</strong>: Use affinity for flexible scheduling
+- <strong>Monitor</strong>: Monitor scheduling and adjust as needed</p>
+<hr />
+<h2 id="exercise-3-debug-pod-failure">Exercise 3: Debug Pod Failure</h2>
+<p><strong>Question</strong>: A pod is crashing. How do you debug this? What logs do you check?</p>
+<h3 id="answer_3">Answer</h3>
+<p><strong>Goal</strong>: Debug pod crashes systematically using Kubernetes debugging tools.</p>
+<h3 id="debugging-steps">Debugging Steps</h3>
+<p><strong>1. Check Pod Status</strong></p>
+<p><strong>Command</strong>:</p>
+<pre><code class="language-bash">kubectl get pods
+kubectl describe pod &lt;pod-name&gt;
+</code></pre>
+<p><strong>What to look for</strong>:
+- <strong>Status</strong>: <code>CrashLoopBackOff</code>, <code>Error</code>, <code>Pending</code>
+- <strong>Events</strong>: Recent events showing errors
+- <strong>Restarts</strong>: Number of restarts
+- <strong>State</strong>: Current state and last state</p>
+<p><strong>Example output</strong>:</p>
+<pre><code>Name:         app-pod
+Status:       CrashLoopBackOff
+Restarts:     5
+Last State:   Terminated
+  Reason:     Error
+  Exit Code:  1
+</code></pre>
+<p><strong>2. Check Pod Logs</strong></p>
+<p><strong>Command</strong>:</p>
+<pre><code class="language-bash">kubectl logs &lt;pod-name&gt;
+kubectl logs &lt;pod-name&gt; --previous  # Previous container instance
+kubectl logs &lt;pod-name&gt; -f  # Follow logs
+</code></pre>
+<p><strong>What to look for</strong>:
+- <strong>Error messages</strong>: Application errors
+- <strong>Stack traces</strong>: Exception stack traces
+- <strong>Startup errors</strong>: Configuration errors
+- <strong>Runtime errors</strong>: Application runtime errors</p>
+<p><strong>3. Check Container Logs</strong></p>
+<p><strong>Command</strong>:</p>
+<pre><code class="language-bash">kubectl logs &lt;pod-name&gt; -c &lt;container-name&gt;  # Multi-container pods
+</code></pre>
+<p><strong>What to look for</strong>:
+- <strong>Sidecar logs</strong>: Sidecar container logs
+- <strong>Init container logs</strong>: Init container logs
+- <strong>Application logs</strong>: Main application logs</p>
+<p><strong>4. Check Events</strong></p>
+<p><strong>Command</strong>:</p>
+<pre><code class="language-bash">kubectl get events --sort-by=.metadata.creationTimestamp
+kubectl describe pod &lt;pod-name&gt; | grep Events -A 10
+</code></pre>
+<p><strong>What to look for</strong>:
+- <strong>Scheduling events</strong>: Pod scheduling issues
+- <strong>Image pull events</strong>: Image pull failures
+- <strong>Startup events</strong>: Container startup failures
+- <strong>Health check events</strong>: Liveness/readiness probe failures</p>
+<p><strong>5. Check Resource Limits</strong></p>
+<p><strong>Command</strong>:</p>
+<pre><code class="language-bash">kubectl describe pod &lt;pod-name&gt; | grep Limits -A 5
+kubectl top pod &lt;pod-name&gt;
+</code></pre>
+<p><strong>What to look for</strong>:
+- <strong>Memory limits</strong>: OOM (Out of Memory) kills
+- <strong>CPU limits</strong>: CPU throttling
+- <strong>Resource usage</strong>: Current vs limits</p>
+<p><strong>6. Check Configuration</strong></p>
+<p><strong>Command</strong>:</p>
+<pre><code class="language-bash">kubectl get pod &lt;pod-name&gt; -o yaml
+kubectl get configmap &lt;configmap-name&gt; -o yaml
+kubectl get secret &lt;secret-name&gt; -o yaml
+</code></pre>
+<p><strong>What to look for</strong>:
+- <strong>Environment variables</strong>: Missing or incorrect values
+- <strong>ConfigMaps</strong>: Configuration errors
+- <strong>Secrets</strong>: Missing or incorrect secrets
+- <strong>Volume mounts</strong>: Volume mount issues</p>
+<p><strong>7. Check Health Checks</strong></p>
+<p><strong>Command</strong>:</p>
+<pre><code class="language-bash">kubectl describe pod &lt;pod-name&gt; | grep Liveness -A 5
+kubectl describe pod &lt;pod-name&gt; | grep Readiness -A 5
+</code></pre>
+<p><strong>What to look for</strong>:
+- <strong>Liveness probe</strong>: Failing liveness probes
+- <strong>Readiness probe</strong>: Failing readiness probes
+- <strong>Probe configuration</strong>: Incorrect probe settings</p>
+<h3 id="common-issues-and-solutions">Common Issues and Solutions</h3>
+<p><strong>1. Image Pull Errors</strong></p>
+<p><strong>Symptoms</strong>: <code>ImagePullBackOff</code>, <code>ErrImagePull</code></p>
+<p><strong>Debug</strong>:</p>
+<pre><code class="language-bash">kubectl describe pod &lt;pod-name&gt; | grep Events
+</code></pre>
+<p><strong>Solutions</strong>:
+- Check image name and tag
+- Check image pull secrets
+- Verify image registry access</p>
+<p><strong>2. OOM Kills</strong></p>
+<p><strong>Symptoms</strong>: <code>OOMKilled</code>, frequent restarts</p>
+<p><strong>Debug</strong>:</p>
+<pre><code class="language-bash">kubectl describe pod &lt;pod-name&gt; | grep OOM
+kubectl top pod &lt;pod-name&gt;
+</code></pre>
+<p><strong>Solutions</strong>:
+- Increase memory limits
+- Optimize application memory usage
+- Check for memory leaks</p>
+<p><strong>3. Configuration Errors</strong></p>
+<p><strong>Symptoms</strong>: Application startup failures, missing config</p>
+<p><strong>Debug</strong>:</p>
+<pre><code class="language-bash">kubectl logs &lt;pod-name&gt;
+kubectl get configmap &lt;configmap-name&gt;
+</code></pre>
+<p><strong>Solutions</strong>:
+- Check ConfigMap/Secret existence
+- Verify environment variables
+- Check configuration values</p>
+<p><strong>4. Health Check Failures</strong></p>
+<p><strong>Symptoms</strong>: <code>Unhealthy</code>, <code>Readiness probe failed</code></p>
+<p><strong>Debug</strong>:</p>
+<pre><code class="language-bash">kubectl describe pod &lt;pod-name&gt; | grep Probe
+kubectl exec &lt;pod-name&gt; -- curl http://localhost:8080/health
+</code></pre>
+<p><strong>Solutions</strong>:
+- Fix health check endpoint
+- Adjust probe timeout/interval
+- Check application health</p>
+<h3 id="answer_4">Answer</h3>
+<p><strong>Debugging Steps</strong>:</p>
+<ol>
+<li><strong>Check pod status</strong>: <code>kubectl get pods</code> and <code>kubectl describe pod &lt;pod-name&gt;</code></li>
+<li>
+<p>Look for status, restarts, events</p>
+</li>
+<li>
+<p><strong>Check pod logs</strong>: <code>kubectl logs &lt;pod-name&gt;</code></p>
+</li>
+<li>
+<p>Look for error messages, stack traces</p>
+</li>
+<li>
+<p><strong>Check previous logs</strong>: <code>kubectl logs &lt;pod-name&gt; --previous</code></p>
+</li>
+<li>
+<p>Check logs from previous container instance</p>
+</li>
+<li>
+<p><strong>Check events</strong>: <code>kubectl get events</code></p>
+</li>
+<li>
+<p>Look for scheduling, image pull, startup events</p>
+</li>
+<li>
+<p><strong>Check resources</strong>: <code>kubectl top pod &lt;pod-name&gt;</code></p>
+</li>
+<li>
+<p>Look for OOM kills, CPU throttling</p>
+</li>
+<li>
+<p><strong>Check configuration</strong>: <code>kubectl get pod &lt;pod-name&gt; -o yaml</code></p>
+</li>
+<li>
+<p>Look for ConfigMaps, Secrets, environment variables</p>
+</li>
+<li>
+<p><strong>Check health checks</strong>: <code>kubectl describe pod &lt;pod-name&gt;</code></p>
+</li>
+<li>Look for liveness/readiness probe failures</li>
+</ol>
+<p><strong>Key logs to check</strong>:
+- <strong>Application logs</strong>: Main application error logs
+- <strong>Container logs</strong>: Sidecar and init container logs
+- <strong>System logs</strong>: Kubernetes system logs
+- <strong>Event logs</strong>: Pod events and scheduling events</p>
+<p><strong>Common issues</strong>:
+- <strong>Image pull errors</strong>: Check image name, registry access
+- <strong>OOM kills</strong>: Increase memory limits, optimize memory usage
+- <strong>Configuration errors</strong>: Check ConfigMaps, Secrets, environment variables
+- <strong>Health check failures</strong>: Fix health check endpoint, adjust probe settings</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../../assets/scripts.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vpc Lb Dns</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#vpc-load-balancing-dns" class="level-1">VPC, Load Balancing &amp; DNS</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#request-flow" class="level-3">Request Flow</a></li>
+                <li><a href="#vpc-architecture" class="level-3">VPC Architecture</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#vpc-deep-dive" class="level-3">VPC Deep Dive</a></li>
+                <li><a href="#subnets" class="level-4">Subnets</a></li>
+                <li><a href="#routes" class="level-4">Routes</a></li>
+                <li><a href="#firewall-rules" class="level-4">Firewall Rules</a></li>
+                <li><a href="#vpc-peering" class="level-4">VPC Peering</a></li>
+                <li><a href="#load-balancing" class="level-3">Load Balancing</a></li>
+                <li><a href="#load-balancer-types" class="level-4">Load Balancer Types</a></li>
+                <li><a href="#load-balancing-algorithms" class="level-4">Load Balancing Algorithms</a></li>
+                <li><a href="#health-checks" class="level-4">Health Checks</a></li>
+                <li><a href="#dns-resolution" class="level-3">DNS Resolution</a></li>
+                <li><a href="#dns-architecture" class="level-4">DNS Architecture</a></li>
+                <li><a href="#dns-resolution-flow" class="level-4">DNS Resolution Flow</a></li>
+                <li><a href="#dns-caching" class="level-4">DNS Caching</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#vpc-failures" class="level-3">VPC Failures</a></li>
+                <li><a href="#scenario-1-misconfigured-firewall-rules" class="level-4">Scenario 1: Misconfigured Firewall Rules</a></li>
+                <li><a href="#scenario-2-subnet-exhaustion" class="level-4">Scenario 2: Subnet Exhaustion</a></li>
+                <li><a href="#scenario-3-route-misconfiguration" class="level-4">Scenario 3: Route Misconfiguration</a></li>
+                <li><a href="#load-balancer-failures" class="level-3">Load Balancer Failures</a></li>
+                <li><a href="#scenario-1-all-backends-unhealthy" class="level-4">Scenario 1: All Backends Unhealthy</a></li>
+                <li><a href="#scenario-2-load-balancer-overload" class="level-4">Scenario 2: Load Balancer Overload</a></li>
+                <li><a href="#scenario-3-ssl-certificate-expiry" class="level-4">Scenario 3: SSL Certificate Expiry</a></li>
+                <li><a href="#dns-failures" class="level-3">DNS Failures</a></li>
+                <li><a href="#scenario-1-dns-resolution-failure" class="level-4">Scenario 1: DNS Resolution Failure</a></li>
+                <li><a href="#scenario-2-dns-cache-poisoning" class="level-4">Scenario 2: DNS Cache Poisoning</a></li>
+                <li><a href="#scenario-3-dns-propagation-delay" class="level-4">Scenario 3: DNS Propagation Delay</a></li>
+                <li><a href="#overload-scenarios" class="level-3">Overload Scenarios</a></li>
+                <li><a href="#10-normal-load" class="level-4">10× Normal Load</a></li>
+                <li><a href="#100-normal-load" class="level-4">100× Normal Load</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics-to-track" class="level-3">Metrics to Track</a></li>
+                <li><a href="#vpc-metrics" class="level-4">VPC Metrics</a></li>
+                <li><a href="#load-balancer-metrics" class="level-4">Load Balancer Metrics</a></li>
+                <li><a href="#dns-metrics" class="level-4">DNS Metrics</a></li>
+                <li><a href="#logs" class="level-3">Logs</a></li>
+                <li><a href="#traces" class="level-3">Traces</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#vpc-changes" class="level-3">VPC Changes</a></li>
+                <li><a href="#adding-subnets" class="level-4">Adding Subnets</a></li>
+                <li><a href="#changing-firewall-rules" class="level-4">Changing Firewall Rules</a></li>
+                <li><a href="#vpc-peering_1" class="level-4">VPC Peering</a></li>
+                <li><a href="#load-balancer-changes" class="level-3">Load Balancer Changes</a></li>
+                <li><a href="#adding-backends" class="level-4">Adding Backends</a></li>
+                <li><a href="#changing-health-checks" class="level-4">Changing Health Checks</a></li>
+                <li><a href="#ssl-certificate-updates" class="level-4">SSL Certificate Updates</a></li>
+                <li><a href="#dns-changes" class="level-3">DNS Changes</a></li>
+                <li><a href="#updating-records" class="level-4">Updating Records</a></li>
+                <li><a href="#changing-ttl" class="level-4">Changing TTL</a></li>
+                <li><a href="#security-boundaries" class="level-2">Security Boundaries</a></li>
+                <li><a href="#vpc-security" class="level-3">VPC Security</a></li>
+                <li><a href="#load-balancer-security" class="level-3">Load Balancer Security</a></li>
+                <li><a href="#dns-security" class="level-3">DNS Security</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#vpc-tradeoffs" class="level-3">VPC Tradeoffs</a></li>
+                <li><a href="#load-balancer-tradeoffs" class="level-3">Load Balancer Tradeoffs</a></li>
+                <li><a href="#dns-tradeoffs" class="level-3">DNS Tradeoffs</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#capacity-planning" class="level-3">Capacity Planning</a></li>
+                <li><a href="#monitoring-debugging" class="level-3">Monitoring &amp; Debugging</a></li>
+                <li><a href="#incident-response" class="level-3">Incident Response</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#design-questions" class="level-3">Design Questions</a></li>
+                <li><a href="#scale-questions" class="level-3">Scale Questions</a></li>
+                <li><a href="#security-questions" class="level-3">Security Questions</a></li>
+                <li><a href="#operational-questions" class="level-3">Operational Questions</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="vpc-load-balancing-dns">VPC, Load Balancing &amp; DNS</h1>
+<p><strong>One-line summary</strong>: How requests flow through GCP networking: VPC routing, load balancer selection, and DNS resolution.</p>
+<p><strong>Prerequisites</strong>: Basic networking concepts (IP addresses, subnets, routing), <a href="../01-foundations/README.html">Foundations</a>.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="request-flow">Request Flow</h3>
+<div class="mermaid">
+flowchart LR
+Client[Client] --> DNS[DNS Resolution]
+DNS --> LB[Load Balancer]
+LB --> VPC[VPC Routing]
+VPC --> VM[VM/Instance]
+style DNS fill:#99ccff
+style LB fill:#ffcc99
+style VPC fill:#99ff99
+</div>
+<p><strong>Key insight</strong>: Every request goes through DNS → Load Balancer → VPC → Instance. Understanding each layer is critical for debugging and design.</p>
+<h3 id="vpc-architecture">VPC Architecture</h3>
+<p><strong>VPC (Virtual Private Cloud)</strong>: Logically isolated network in GCP.</p>
+<p><strong>Components</strong>:
+- <strong>Subnets</strong>: IP address ranges within VPC
+- <strong>Routes</strong>: How traffic is routed
+- <strong>Firewall rules</strong>: What traffic is allowed
+- <strong>Peering</strong>: Connecting VPCs</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="vpc-deep-dive">VPC Deep Dive</h3>
+<h4 id="subnets">Subnets</h4>
+<p><strong>Regional subnets</strong>: Span all zones in a region.</p>
+<p><strong>IP ranges</strong>: CIDR blocks (e.g., 10.0.0.0/16).</p>
+<p><strong>Private vs public</strong>: 
+- <strong>Private</strong>: No external IP, use NAT gateway
+- <strong>Public</strong>: External IP, direct internet access</p>
+<h4 id="routes">Routes</h4>
+<p><strong>Route table</strong>: Determines where traffic goes.</p>
+<p><strong>Default routes</strong>:
+- <strong>Default internet gateway</strong>: Routes to internet
+- <strong>Default VPC peering</strong>: Routes to peered VPCs
+- <strong>Default subnet routes</strong>: Routes within subnet</p>
+<p><strong>Custom routes</strong>: 
+- <strong>Static routes</strong>: Manual routing rules
+- <strong>Dynamic routes</strong>: BGP routes (for VPN/Interconnect)</p>
+<h4 id="firewall-rules">Firewall Rules</h4>
+<p><strong>Firewall rules</strong>: Control what traffic is allowed.</p>
+<p><strong>Components</strong>:
+- <strong>Direction</strong>: Ingress (inbound) or egress (outbound)
+- <strong>Source/Destination</strong>: IP ranges, tags, service accounts
+- <strong>Protocol/Port</strong>: TCP, UDP, ICMP, specific ports
+- <strong>Action</strong>: Allow or deny
+- <strong>Priority</strong>: Lower number = higher priority</p>
+<p><strong>Default rules</strong>:
+- <strong>Default allow egress</strong>: All outbound traffic allowed
+- <strong>Default deny ingress</strong>: All inbound traffic denied (unless allowed)</p>
+<h4 id="vpc-peering">VPC Peering</h4>
+<p><strong>VPC peering</strong>: Connect VPCs for private communication.</p>
+<p><strong>Types</strong>:
+- <strong>Private peering</strong>: Within same project
+- <strong>Cross-project peering</strong>: Across projects
+- <strong>Cross-organization peering</strong>: Across organizations</p>
+<p><strong>Limitations</strong>:
+- No transitive peering (A→B→C doesn't work)
+- IP ranges must not overlap</p>
+<h3 id="load-balancing">Load Balancing</h3>
+<h4 id="load-balancer-types">Load Balancer Types</h4>
+<p><strong>1. Global Load Balancer (HTTP(S))</strong>
+- <strong>Use case</strong>: HTTP/HTTPS traffic
+- <strong>Features</strong>: SSL termination, content-based routing, CDN integration
+- <strong>Scope</strong>: Global (anywhere → any region)</p>
+<p><strong>2. Global Load Balancer (TCP/SSL)</strong>
+- <strong>Use case</strong>: TCP/SSL traffic
+- <strong>Features</strong>: SSL passthrough, TCP proxy
+- <strong>Scope</strong>: Global</p>
+<p><strong>3. Regional Load Balancer (Internal)</strong>
+- <strong>Use case</strong>: Internal traffic within region
+- <strong>Features</strong>: Private IP only, lower latency
+- <strong>Scope</strong>: Regional</p>
+<p><strong>4. Network Load Balancer</strong>
+- <strong>Use case</strong>: Non-HTTP traffic, high performance
+- <strong>Features</strong>: Pass-through, preserves client IP
+- <strong>Scope</strong>: Regional</p>
+<h4 id="load-balancing-algorithms">Load Balancing Algorithms</h4>
+<p><strong>HTTP(S) Load Balancer</strong>:
+- <strong>Least connections</strong>: Route to backend with fewest connections
+- <strong>Round robin</strong>: Distribute evenly
+- <strong>Geographic</strong>: Route based on client location</p>
+<p><strong>Network Load Balancer</strong>:
+- <strong>5-tuple hash</strong>: Hash on (src IP, src port, dst IP, dst port, protocol)
+- <strong>Consistent</strong>: Same client → same backend (session affinity)</p>
+<h4 id="health-checks">Health Checks</h4>
+<p><strong>Health checks</strong>: Determine if backends are healthy.</p>
+<p><strong>Types</strong>:
+- <strong>HTTP</strong>: Check HTTP endpoint (e.g., /health)
+- <strong>HTTPS</strong>: Check HTTPS endpoint
+- <strong>TCP</strong>: Check TCP port
+- <strong>SSL</strong>: Check SSL handshake</p>
+<p><strong>Configuration</strong>:
+- <strong>Interval</strong>: How often to check (e.g., 10s)
+- <strong>Timeout</strong>: How long to wait (e.g., 5s)
+- <strong>Healthy threshold</strong>: Consecutive successes needed (e.g., 2)
+- <strong>Unhealthy threshold</strong>: Consecutive failures needed (e.g., 3)</p>
+<h3 id="dns-resolution">DNS Resolution</h3>
+<h4 id="dns-architecture">DNS Architecture</h4>
+<p><strong>Cloud DNS</strong>: GCP's DNS service.</p>
+<p><strong>Components</strong>:
+- <strong>Zones</strong>: DNS namespaces (e.g., example.com)
+- <strong>Records</strong>: DNS records (A, AAAA, CNAME, etc.)
+- <strong>Policies</strong>: Routing policies (geolocation, weighted, etc.)</p>
+<h4 id="dns-resolution-flow">DNS Resolution Flow</h4>
+<ol>
+<li><strong>Client queries DNS</strong>: Resolves domain name to IP</li>
+<li><strong>DNS resolver</strong>: Checks cache, queries authoritative DNS</li>
+<li><strong>Authoritative DNS</strong>: Returns IP address</li>
+<li><strong>Client connects</strong>: Uses IP to connect to load balancer</li>
+</ol>
+<h4 id="dns-caching">DNS Caching</h4>
+<p><strong>TTL (Time To Live)</strong>: How long DNS records are cached.</p>
+<p><strong>Tradeoffs</strong>:
+- <strong>Short TTL</strong>: Faster updates, more DNS queries
+- <strong>Long TTL</strong>: Fewer queries, slower updates</p>
+<p><strong>Recommendation</strong>: Use short TTL (60s) for production, longer for static resources.</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="vpc-failures">VPC Failures</h3>
+<h4 id="scenario-1-misconfigured-firewall-rules">Scenario 1: Misconfigured Firewall Rules</h4>
+<ul>
+<li><strong>Impact</strong>: Traffic blocked, services unreachable</li>
+<li><strong>Blast radius</strong>: Entire VPC or specific services</li>
+<li><strong>Detection</strong>: Monitoring, health checks fail</li>
+<li><strong>Recovery</strong>: Fix firewall rules, verify connectivity</li>
+</ul>
+<h4 id="scenario-2-subnet-exhaustion">Scenario 2: Subnet Exhaustion</h4>
+<ul>
+<li><strong>Impact</strong>: Can't create new instances</li>
+<li><strong>Blast radius</strong>: New deployments fail</li>
+<li><strong>Detection</strong>: Instance creation failures</li>
+<li><strong>Recovery</strong>: Expand subnet CIDR or create new subnet</li>
+</ul>
+<h4 id="scenario-3-route-misconfiguration">Scenario 3: Route Misconfiguration</h4>
+<ul>
+<li><strong>Impact</strong>: Traffic routed incorrectly, services unreachable</li>
+<li><strong>Blast radius</strong>: Affected routes</li>
+<li><strong>Detection</strong>: Traffic not reaching destinations</li>
+<li><strong>Recovery</strong>: Fix routes, verify routing table</li>
+</ul>
+<h3 id="load-balancer-failures">Load Balancer Failures</h3>
+<h4 id="scenario-1-all-backends-unhealthy">Scenario 1: All Backends Unhealthy</h4>
+<ul>
+<li><strong>Impact</strong>: No traffic served, service down</li>
+<li><strong>Blast radius</strong>: Entire service</li>
+<li><strong>Detection</strong>: Health check failures, error rate spikes</li>
+<li><strong>Recovery</strong>: Fix backends, verify health checks</li>
+</ul>
+<h4 id="scenario-2-load-balancer-overload">Scenario 2: Load Balancer Overload</h4>
+<ul>
+<li><strong>Impact</strong>: Increased latency, timeouts</li>
+<li><strong>Blast radius</strong>: All traffic through load balancer</li>
+<li><strong>Detection</strong>: Latency metrics, error rate</li>
+<li><strong>Recovery</strong>: Scale load balancer, add backends</li>
+</ul>
+<h4 id="scenario-3-ssl-certificate-expiry">Scenario 3: SSL Certificate Expiry</h4>
+<ul>
+<li><strong>Impact</strong>: HTTPS connections fail</li>
+<li><strong>Blast radius</strong>: All HTTPS traffic</li>
+<li><strong>Detection</strong>: SSL errors, certificate expiry alerts</li>
+<li><strong>Recovery</strong>: Renew certificate, update load balancer</li>
+</ul>
+<h3 id="dns-failures">DNS Failures</h3>
+<h4 id="scenario-1-dns-resolution-failure">Scenario 1: DNS Resolution Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Can't resolve domain names, services unreachable</li>
+<li><strong>Blast radius</strong>: All clients using DNS</li>
+<li><strong>Detection</strong>: DNS query failures, connection failures</li>
+<li><strong>Recovery</strong>: Check DNS configuration, verify records</li>
+</ul>
+<h4 id="scenario-2-dns-cache-poisoning">Scenario 2: DNS Cache Poisoning</h4>
+<ul>
+<li><strong>Impact</strong>: Clients connect to wrong IPs</li>
+<li><strong>Blast radius</strong>: Affected clients</li>
+<li><strong>Detection</strong>: Unusual traffic patterns, errors</li>
+<li><strong>Recovery</strong>: Clear DNS cache, verify DNS records</li>
+</ul>
+<h4 id="scenario-3-dns-propagation-delay">Scenario 3: DNS Propagation Delay</h4>
+<ul>
+<li><strong>Impact</strong>: Some clients see old IPs, some see new</li>
+<li><strong>Blast radius</strong>: Clients during DNS updates</li>
+<li><strong>Detection</strong>: Inconsistent connectivity</li>
+<li><strong>Recovery</strong>: Wait for propagation, use short TTL</li>
+</ul>
+<h3 id="overload-scenarios">Overload Scenarios</h3>
+<h4 id="10-normal-load">10× Normal Load</h4>
+<ul>
+<li><strong>VPC</strong>: Routes handle load, but may see increased latency</li>
+<li><strong>Load Balancer</strong>: May need to scale, backends may be overloaded</li>
+<li><strong>DNS</strong>: DNS queries increase, but usually handles load</li>
+</ul>
+<h4 id="100-normal-load">100× Normal Load</h4>
+<ul>
+<li><strong>VPC</strong>: Routes may be overwhelmed, packet loss possible</li>
+<li><strong>Load Balancer</strong>: Likely overloaded, needs scaling</li>
+<li><strong>DNS</strong>: May need to scale DNS servers</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics-to-track">Metrics to Track</h3>
+<h4 id="vpc-metrics">VPC Metrics</h4>
+<ul>
+<li><strong>Packet loss</strong>: Packets dropped</li>
+<li><strong>Latency</strong>: Network latency between zones</li>
+<li><strong>Bandwidth</strong>: Network throughput</li>
+</ul>
+<h4 id="load-balancer-metrics">Load Balancer Metrics</h4>
+<ul>
+<li><strong>Request rate</strong>: Requests per second</li>
+<li><strong>Latency</strong>: P50/P95/P99 latency</li>
+<li><strong>Error rate</strong>: 4xx/5xx errors</li>
+<li><strong>Backend health</strong>: Healthy vs unhealthy backends</li>
+<li><strong>Connection count</strong>: Active connections</li>
+</ul>
+<h4 id="dns-metrics">DNS Metrics</h4>
+<ul>
+<li><strong>Query rate</strong>: DNS queries per second</li>
+<li><strong>Response time</strong>: DNS resolution latency</li>
+<li><strong>Error rate</strong>: Failed DNS queries</li>
+<li><strong>Cache hit rate</strong>: DNS cache effectiveness</li>
+</ul>
+<h3 id="logs">Logs</h3>
+<p>Log events:
+- Firewall rule matches (allow/deny)
+- Load balancer access logs
+- DNS query logs
+- Route changes</p>
+<h3 id="traces">Traces</h3>
+<p>Trace:
+- End-to-end request latency
+- DNS resolution time
+- Load balancer processing time
+- VPC routing time</p>
+<h3 id="alerts">Alerts</h3>
+<p><strong>Critical alerts</strong>:
+- All backends unhealthy
+- Load balancer error rate &gt; threshold
+- DNS resolution failures
+- Firewall blocking legitimate traffic</p>
+<p><strong>Warning alerts</strong>:
+- Backend health degrading
+- Load balancer latency increasing
+- DNS query rate spiking</p>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="vpc-changes">VPC Changes</h3>
+<h4 id="adding-subnets">Adding Subnets</h4>
+<ul>
+<li><strong>Process</strong>: Create subnet, configure routes</li>
+<li><strong>Risk</strong>: Low (additive change)</li>
+<li><strong>Rollback</strong>: Delete subnet</li>
+</ul>
+<h4 id="changing-firewall-rules">Changing Firewall Rules</h4>
+<ul>
+<li><strong>Process</strong>: Update rule, verify connectivity</li>
+<li><strong>Risk</strong>: Medium (may block traffic)</li>
+<li><strong>Rollback</strong>: Revert firewall rule</li>
+</ul>
+<h4 id="vpc-peering_1">VPC Peering</h4>
+<ul>
+<li><strong>Process</strong>: Create peering, configure routes</li>
+<li><strong>Risk</strong>: Medium (may affect routing)</li>
+<li><strong>Rollback</strong>: Delete peering</li>
+</ul>
+<h3 id="load-balancer-changes">Load Balancer Changes</h3>
+<h4 id="adding-backends">Adding Backends</h4>
+<ul>
+<li><strong>Process</strong>: Add backend, verify health checks</li>
+<li><strong>Risk</strong>: Low (additive change)</li>
+<li><strong>Rollback</strong>: Remove backend</li>
+</ul>
+<h4 id="changing-health-checks">Changing Health Checks</h4>
+<ul>
+<li><strong>Process</strong>: Update health check config, monitor</li>
+<li><strong>Risk</strong>: Medium (may mark healthy backends as unhealthy)</li>
+<li><strong>Rollback</strong>: Revert health check config</li>
+</ul>
+<h4 id="ssl-certificate-updates">SSL Certificate Updates</h4>
+<ul>
+<li><strong>Process</strong>: Upload new certificate, update load balancer</li>
+<li><strong>Risk</strong>: High (may break HTTPS)</li>
+<li><strong>Rollback</strong>: Revert certificate</li>
+</ul>
+<h3 id="dns-changes">DNS Changes</h3>
+<h4 id="updating-records">Updating Records</h4>
+<ul>
+<li><strong>Process</strong>: Update DNS record, wait for propagation</li>
+<li><strong>Risk</strong>: Medium (may break connectivity)</li>
+<li><strong>Rollback</strong>: Revert DNS record</li>
+</ul>
+<h4 id="changing-ttl">Changing TTL</h4>
+<ul>
+<li><strong>Process</strong>: Update TTL, wait for cache expiry</li>
+<li><strong>Risk</strong>: Low (affects caching only)</li>
+<li><strong>Rollback</strong>: Revert TTL</li>
+</ul>
+<hr />
+<h2 id="security-boundaries">Security Boundaries</h2>
+<h3 id="vpc-security">VPC Security</h3>
+<ul>
+<li><strong>Firewall rules</strong>: Control what traffic is allowed</li>
+<li><strong>Private IPs</strong>: Use private IPs for internal traffic</li>
+<li><strong>Service accounts</strong>: Use service accounts for authentication</li>
+<li><strong>VPC peering</strong>: Limit peering to trusted VPCs</li>
+</ul>
+<h3 id="load-balancer-security">Load Balancer Security</h3>
+<ul>
+<li><strong>SSL/TLS</strong>: Encrypt traffic in transit</li>
+<li><strong>WAF</strong>: Use Web Application Firewall for HTTP(S) load balancers</li>
+<li><strong>DDoS protection</strong>: Built-in DDoS protection</li>
+<li><strong>Backend security</strong>: Secure backends independently</li>
+</ul>
+<h3 id="dns-security">DNS Security</h3>
+<ul>
+<li><strong>DNSSEC</strong>: Sign DNS records for authenticity</li>
+<li><strong>Private zones</strong>: Use private DNS zones for internal services</li>
+<li><strong>Access control</strong>: Limit who can modify DNS records</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="vpc-tradeoffs">VPC Tradeoffs</h3>
+<p><strong>Regional vs Zonal</strong>:
+- <strong>Regional</strong>: Span multiple zones, more resilient
+- <strong>Zonal</strong>: Lower latency, simpler</p>
+<p><strong>Public vs Private</strong>:
+- <strong>Public</strong>: Direct internet access, simpler
+- <strong>Private</strong>: More secure, requires NAT gateway</p>
+<h3 id="load-balancer-tradeoffs">Load Balancer Tradeoffs</h3>
+<p><strong>Global vs Regional</strong>:
+- <strong>Global</strong>: Lower latency (closer to users), more complex
+- <strong>Regional</strong>: Simpler, higher latency for distant users</p>
+<p><strong>HTTP(S) vs Network</strong>:
+- <strong>HTTP(S)</strong>: More features (SSL termination, routing), higher latency
+- <strong>Network</strong>: Lower latency, fewer features</p>
+<h3 id="dns-tradeoffs">DNS Tradeoffs</h3>
+<p><strong>Short vs Long TTL</strong>:
+- <strong>Short TTL</strong>: Faster updates, more queries
+- <strong>Long TTL</strong>: Fewer queries, slower updates</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<p><strong>VPC</strong>:
+- Plan subnet sizes (don't run out of IPs)
+- Plan for VPC peering (IP ranges must not overlap)</p>
+<p><strong>Load Balancer</strong>:
+- Plan backend capacity
+- Plan for health check overhead</p>
+<p><strong>DNS</strong>:
+- Plan for DNS query rate
+- Plan for DNS record storage</p>
+<h3 id="monitoring-debugging">Monitoring &amp; Debugging</h3>
+<p><strong>VPC</strong>:
+- Monitor firewall rule matches
+- Monitor route changes
+- Monitor network latency</p>
+<p><strong>Load Balancer</strong>:
+- Monitor backend health
+- Monitor request rate and latency
+- Monitor error rate</p>
+<p><strong>DNS</strong>:
+- Monitor DNS query rate
+- Monitor DNS resolution time
+- Monitor DNS errors</p>
+<h3 id="incident-response">Incident Response</h3>
+<p><strong>Common incidents</strong>:
+- Services unreachable (firewall, routing)
+- Load balancer failures
+- DNS resolution failures</p>
+<p><strong>Response</strong>:
+1. Check firewall rules
+2. Check routes
+3. Check load balancer health
+4. Check DNS records
+5. Verify connectivity</p>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>"What's the VPC architecture?"</li>
+<li>"How is traffic routed?"</li>
+<li>"What's the load balancing strategy?"</li>
+<li>"How is DNS configured?"</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>"What happens at 10× load?"</li>
+<li>"How does the load balancer scale?"</li>
+<li>"What's the DNS query capacity?"</li>
+</ul>
+<h3 id="security-questions">Security Questions</h3>
+<ul>
+<li>"What firewall rules are in place?"</li>
+<li>"How is traffic encrypted?"</li>
+<li>"Who can modify DNS records?"</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>"How do we monitor networking?"</li>
+<li>"What alerts do we have?"</li>
+<li>"How do we debug connectivity issues?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/vpc-lb-dns.html">Further Reading: VPC, Load Balancing &amp; DNS</a></p>
+<p><strong>Quick Links</strong>:
+- <a href="https://cloud.google.com/vpc/docs">GCP VPC Documentation</a>
+- <a href="https://cloud.google.com/load-balancing/docs">GCP Load Balancing Documentation</a>
+- <a href="https://cloud.google.com/dns/docs">GCP Cloud DNS Documentation</a>
+- <a href="https://cloud.google.com/architecture">Google Cloud Architecture Center</a>
+- <a href="README.html">Back to GCP Core Building Blocks</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design VPC</strong>: Design a VPC for a multi-tier application (web, app, database). What subnets do you need? What firewall rules?</p>
+</li>
+<li>
+<p><strong>Load balancer selection</strong>: You have an API that needs low latency and high throughput. Do you use HTTP(S) or Network Load Balancer? Why?</p>
+</li>
+<li>
+<p><strong>DNS strategy</strong>: You're deploying a new service. What DNS TTL do you use? How do you handle DNS updates during deployments?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/vpc-lb-dns-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

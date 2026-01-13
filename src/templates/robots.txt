@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://varshithr.github.io/sitemap.xml
+
+# Disallow crawling of certain directories
+Disallow: /src/
+Disallow: /content/
+Disallow: /venv/
+Disallow: /.git/

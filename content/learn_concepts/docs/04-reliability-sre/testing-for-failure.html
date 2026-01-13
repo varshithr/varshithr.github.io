@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing For Failure</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#testing-for-failure" class="level-1">Testing for Failure</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#failure-testing" class="level-3">Failure Testing</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#failure-injection-types" class="level-3">Failure Injection Types</a></li>
+                <li><a href="#network-failures" class="level-4">Network Failures</a></li>
+                <li><a href="#node-failures" class="level-4">Node Failures</a></li>
+                <li><a href="#service-failures" class="level-4">Service Failures</a></li>
+                <li><a href="#chaos-engineering" class="level-3">Chaos Engineering</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#testing-failures" class="level-3">Testing Failures</a></li>
+                <li><a href="#scenario-1-test-too-aggressive" class="level-4">Scenario 1: Test Too Aggressive</a></li>
+                <li><a href="#scenario-2-missing-failure-scenarios" class="level-4">Scenario 2: Missing Failure Scenarios</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics" class="level-3">Metrics</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#testing-process" class="level-3">Testing Process</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#staging-vs-production-testing" class="level-3">Staging vs Production Testing</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#best-practices" class="level-3">Best Practices</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="testing-for-failure">Testing for Failure</h1>
+<p><strong>One-line summary</strong>: How to test systems for failure scenarios, chaos engineering, and failure injection.</p>
+<p><strong>Prerequisites</strong>: <a href="../01-foundations/README.html">Foundations</a>, understanding of testing and reliability.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="failure-testing">Failure Testing</h3>
+<p><strong>Failure testing</strong>: Intentionally inject failures to test system resilience.</p>
+<p><strong>Goals</strong>:
+- <strong>Find weaknesses</strong>: Discover failure modes before production
+- <strong>Validate resilience</strong>: Verify system handles failures correctly
+- <strong>Build confidence</strong>: Build confidence in system reliability</p>
+<div class="mermaid">
+graph LR
+System[System] --> Inject[Inject Failure]
+Inject --> Observe[Observe Behavior]
+Observe --> Learn[Learn & Improve]
+style Inject fill:#ff9999
+style Observe fill:#99ccff
+</div>
+<p><strong>Key insight</strong>: Testing for failure helps build resilient systems by discovering weaknesses early.</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="failure-injection-types">Failure Injection Types</h3>
+<h4 id="network-failures">Network Failures</h4>
+<p><strong>Types</strong>:
+- <strong>Latency</strong>: Add network latency
+- <strong>Packet loss</strong>: Drop packets
+- <strong>Partition</strong>: Network partition
+- <strong>Timeout</strong>: Connection timeouts</p>
+<p><strong>Use case</strong>: Test network resilience.</p>
+<h4 id="node-failures">Node Failures</h4>
+<p><strong>Types</strong>:
+- <strong>Kill process</strong>: Kill application process
+- <strong>Reboot node</strong>: Reboot server
+- <strong>Resource exhaustion</strong>: Exhaust CPU/memory
+- <strong>Disk failure</strong>: Simulate disk failure</p>
+<p><strong>Use case</strong>: Test node failure handling.</p>
+<h4 id="service-failures">Service Failures</h4>
+<p><strong>Types</strong>:
+- <strong>Service down</strong>: Take service offline
+- <strong>Slow responses</strong>: Slow down service responses
+- <strong>Error injection</strong>: Inject errors
+- <strong>Timeout</strong>: Service timeouts</p>
+<p><strong>Use case</strong>: Test service failure handling.</p>
+<h3 id="chaos-engineering">Chaos Engineering</h3>
+<p><strong>Chaos engineering</strong>: Systematic experimentation on distributed systems.</p>
+<p><strong>Process</strong>:
+1. <strong>Hypothesis</strong>: Form hypothesis about system behavior
+2. <strong>Experiment</strong>: Run experiment in production-like environment
+3. <strong>Observe</strong>: Observe system behavior
+4. <strong>Learn</strong>: Learn from results, improve system</p>
+<p><strong>Principles</strong>:
+- <strong>Start small</strong>: Start with small experiments
+- <strong>Gradual</strong>: Gradually increase scope
+- <strong>Automated</strong>: Automate experiments
+- <strong>Safe</strong>: Ensure experiments are safe</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="testing-failures">Testing Failures</h3>
+<h4 id="scenario-1-test-too-aggressive">Scenario 1: Test Too Aggressive</h4>
+<ul>
+<li><strong>Impact</strong>: System fails, production impact</li>
+<li><strong>Blast radius</strong>: Entire system</li>
+<li><strong>Detection</strong>: System failures during testing</li>
+<li><strong>Recovery</strong>: Stop testing, restore system</li>
+<li><strong>Mitigation</strong>: Start small, test in staging first</li>
+</ul>
+<h4 id="scenario-2-missing-failure-scenarios">Scenario 2: Missing Failure Scenarios</h4>
+<ul>
+<li><strong>Impact</strong>: Undiscovered failure modes, production incidents</li>
+<li><strong>Blast radius</strong>: Production incidents</li>
+<li><strong>Detection</strong>: Production failures</li>
+<li><strong>Recovery</strong>: Fix issues, add tests</li>
+<li><strong>Mitigation</strong>: Comprehensive test coverage</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics">Metrics</h3>
+<ul>
+<li><strong>Test coverage</strong>: Failure scenarios tested</li>
+<li><strong>Test success rate</strong>: Percentage of tests passing</li>
+<li><strong>Failure detection</strong>: Failures discovered</li>
+<li><strong>Recovery time</strong>: Time to recover from test failures</li>
+</ul>
+<h3 id="alerts">Alerts</h3>
+<ul>
+<li>Test failures</li>
+<li>System failures during testing</li>
+<li>Missing test coverage</li>
+</ul>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="testing-process">Testing Process</h3>
+<ul>
+<li><strong>Process</strong>: Run tests in staging, then production</li>
+<li><strong>Risk</strong>: Low (controlled testing)</li>
+<li><strong>Rollback</strong>: Stop tests if issues</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="staging-vs-production-testing">Staging vs Production Testing</h3>
+<p><strong>Staging testing</strong>:
+- <strong>Pros</strong>: Safer, no production impact
+- <strong>Cons</strong>: May not catch production-specific issues</p>
+<p><strong>Production testing</strong>:
+- <strong>Pros</strong>: Real environment, catch real issues
+- <strong>Cons</strong>: Production impact risk</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="best-practices">Best Practices</h3>
+<ol>
+<li><strong>Start small</strong>: Begin with small, safe tests</li>
+<li><strong>Automate</strong>: Automate failure injection</li>
+<li><strong>Monitor</strong>: Monitor system during tests</li>
+<li><strong>Learn</strong>: Learn from test results, improve</li>
+</ol>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<ul>
+<li>"What failure scenarios are tested?"</li>
+<li>"How is chaos engineering used?"</li>
+<li>"What's the testing process?"</li>
+<li>"How are test results used?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/testing-for-failure.html">Further Reading: Testing for Failure</a></p>
+<p><strong>Quick Links</strong>:
+- "Chaos Engineering" (Netflix)
+- <a href="canary-rollouts.html">Canary Deployments &amp; Rollouts</a>
+- <a href="incident-response.html">Incident Response &amp; Postmortems</a>
+- <a href="README.html">Back to Reliability &amp; SRE</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design failure tests</strong>: Design failure tests for a distributed system. What failures do you test?</p>
+</li>
+<li>
+<p><strong>Run chaos experiment</strong>: Run a chaos engineering experiment. What's the process?</p>
+</li>
+<li>
+<p><strong>Handle test failure</strong>: Your failure test causes system failure. How do you respond?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/testing-for-failure-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon S3 Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        @media (max-width: 767px) {
+            .responsive-table thead { display: none; }
+            .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; }
+            .responsive-table tr { margin-bottom: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); background-color: white; }
+            .responsive-table td { display: flex; justify-content: space-between; align-items: center; text-align: right; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; }
+            .responsive-table td::before { content: attr(data-label); text-align: left; font-weight: 600; color: #b98700; padding-right: 1rem; white-space: nowrap; }
+            .responsive-table td:last-child { border-bottom: none; }
+        }
+    </style>
+    <script>
+        const state = { currentTab: 'architecture' };
+        const concepts = {
+            architecture: {
+                title: "1. S3 Core Architecture",
+                description: "S3 is a globally distributed object storage service. Its core components ensure massive scalability and durability.",
+                headers: ["Component", "Function", "Key Characteristic"],
+                rows: [
+                    { key: "Buckets", data: ["Global containers for objects", "Globally unique name, region-specific"] },
+                    { key: "Objects", data: ["The fundamental data entities (files)", "Contain data and metadata, up to 5TB in size"] },
+                    { key: "Keys", data: ["The unique identifier for an object within a bucket", "A full path, e.g., 'data/sales/2024/data.csv'"] },
+                    { key: "Regions", data: ["The geographical area where a bucket resides", "Choose for latency, cost, and regulatory compliance"] },
+                ]
+            },
+            storageClasses: {
+                title: "2. Storage Classes for Cost Optimization",
+                description: "S3 offers a range of storage classes designed for different access patterns, allowing for significant cost savings.",
+                headers: ["Storage Class", "Designed For", "Retrieval Fee"],
+                rows: [
+                    { key: "S3 Standard", data: ["Frequently accessed data", "No retrieval fee"] },
+                    { key: "S3 Intelligent-Tiering", data: ["Data with unknown or changing access patterns", "No retrieval fee; small monitoring fee"] },
+                    { key: "S3 Standard-IA", data: ["Infrequently accessed data needing rapid access", "Per-GB retrieval fee"] },
+                    { key: "S3 Glacier Instant Retrieval", data: ["Long-term archive needing millisecond access", "Per-GB retrieval fee (higher than IA)"] },
+                    { key: "S3 Glacier Flexible Retrieval", data: ["Long-term backups (minutes to hours retrieval)", "Per-GB retrieval fee (lower than Instant)"] },
+                ]
+            },
+            dataLake: {
+                title: "3. Data Lake Best Practices",
+                description: "Properly structuring data in S3 is crucial for building a high-performance data lake.",
+                headers: ["Practice", "Implementation", "Benefit"],
+                rows: [
+                    { key: "Partitioning", data: ["Use a logical key structure (e.g., /year=2024/month=01/)", "Allows query engines to prune data, reducing scan size and cost"] },
+                    { key: "Columnar Formats", data: ["Store data as Apache Parquet or ORC", "Enables query engines to read only necessary columns"] },
+                    { key: "Compression", data: ["Use splittable compression like Snappy or Gzip", "Reduces storage costs and improves I/O"] },
+                    { key: "Small File Compaction", data: ["Periodically run jobs to compact small files into larger ones", "Reduces metadata overhead and improves read performance"] },
+                ]
+            },
+            security: {
+                title: "4. Security and Access Control",
+                description: "S3 provides a multi-layered security model to protect data from unauthorized access.",
+                headers: ["Mechanism", "Scope", "Use Case"],
+                rows: [
+                    { key: "IAM Policies", data: ["User/Role-based", "Granting specific permissions (e.g., GetObject, PutObject) to users or applications"] },
+                    { key: "Bucket Policies", data: ["Bucket-based (JSON)", "Controlling access to all objects in a bucket (e.g., making a bucket public)"] },
+                    { key: "Access Control Lists (ACLs)", data: ["Object-based", "Granting read/write access to specific objects for other AWS accounts"] },
+                    { key: "S3 Block Public Access", data: ["Account/Bucket-level", "A safety feature to prevent accidental public exposure of data"] },
+                    { key: "VPC Endpoints", data: ["Networking", "Allowing resources in a VPC to access S3 without traversing the public internet"] },
+                ]
+            },
+            performance: {
+                title: "5. Performance Optimization",
+                description: "Techniques to maximize read/write performance for demanding analytics and data processing workloads.",
+                headers: ["Technique", "How It Works", "Impact"],
+                rows: [
+                    { key: "Prefix Parallelism", data: ["Use random prefixes or reverse strings in keys", "Distributes requests across multiple S3 partitions, avoiding hotspots"] },
+                    { key: "S3 Transfer Acceleration", data: ["Uses CloudFront's edge network to accelerate uploads", "Reduces latency for geographically dispersed users"] },
+                    { key: "Multipart Upload", data: ["Splits large objects into smaller parts uploaded in parallel", "Improves throughput and resilience for large file uploads"] },
+                    { key: "S3 Select / Glacier Select", data: ["Pushes down computation to S3", "Filters data on the storage layer, reducing data transferred"] },
+                ]
+            }
+        };
+        const render = () => {
+            const container = document.getElementById('table-container');
+            const messageBar = document.getElementById('message-bar');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => {
+                btn.classList.remove('bg-gray-700', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+                if (btn.dataset.tab === state.currentTab) {
+                    btn.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-50');
+                    btn.classList.add('bg-gray-700', 'text-white', 'shadow-lg');
+                }
+            });
+            messageBar.innerHTML = `<span class="font-bold">${concepts[state.currentTab].title}</span>: ${concepts[state.currentTab].description}`;
+            const currentConcept = concepts[state.currentTab];
+            let html = '<table class="w-full responsive-table shadow-xl rounded-xl overflow-hidden">';
+            html += '<thead class="bg-yellow-500 text-gray-800"><tr>';
+            currentConcept.headers.forEach(header => {
+                html += `<th class="p-3 text-left font-semibold text-sm">${header}</th>`;
+            });
+            html += '</tr></thead>';
+            html += '<tbody>';
+            currentConcept.rows.forEach(row => {
+                html += '<tr class="md:border-b md:border-gray-200">';
+                html += `<td data-label="${currentConcept.headers[0]}" class="font-semibold text-yellow-800 md:bg-yellow-50">${row.key}</td>`;
+                row.data.forEach((cellData, colIndex) => {
+                    html += `<td data-label="${currentConcept.headers[colIndex + 1]}">${cellData}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        };
+        const switchTab = (tabName) => {
+            state.currentTab = tabName;
+            render();
+        };
+        window.onload = () => {
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => switchTab(button.dataset.tab));
+            });
+            switchTab('architecture');
+        };
+    </script>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Back to AWS Topics</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../aboutme.html" class="hover:text-[#FF9900] font-semibold">About Me</a></li>
+                <li><a href="../case_studies.html" class="hover:text-[#FF9900] font-semibold">Case Studies</a></li>
+            </ul>
+        </nav>
+    </header>
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4 flex items-center">
+        Amazon S3: The Foundation of the Data Lake
+    </h1>
+    <p class="text-base sm:text-lg text-gray-600 mb-8">A deep dive into the core concepts of Amazon S3 that make it the de facto standard for building scalable and durable data lakes in the cloud.</p>
+    <div class="flex flex-wrap gap-2 mb-8">
+        <button data-tab="architecture" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">1. Core Architecture</button>
+        <button data-tab="storageClasses" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">2. Storage Classes</button>
+        <button data-tab="dataLake" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">3. Data Lake Best Practices</button>
+        <button data-tab="security" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">4. Security</button>
+        <button data-tab="performance" class="tab-button py-2 px-3 text-sm sm:px-4 rounded-lg font-semibold border border-gray-700 transition duration-150 ease-in-out">5. Performance</button>
+    </div>
+    <div id="message-bar" class="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 mb-8 rounded-md shadow-md text-sm sm:text-base"></div>
+    <div id="table-container" class="mt-8"></div>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>

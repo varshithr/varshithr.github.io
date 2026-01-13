@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load Shedding</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#load-shedding-circuit-breakers" class="level-1">Load Shedding &amp; Circuit Breakers</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#overload-protection" class="level-3">Overload Protection</a></li>
+                <li><a href="#load-shedding" class="level-3">Load Shedding</a></li>
+                <li><a href="#circuit-breakers" class="level-3">Circuit Breakers</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#load-shedding-implementation" class="level-3">Load Shedding Implementation</a></li>
+                <li><a href="#priority-based-shedding" class="level-4">Priority-Based Shedding</a></li>
+                <li><a href="#rate-based-shedding" class="level-4">Rate-Based Shedding</a></li>
+                <li><a href="#circuit-breaker-implementation" class="level-3">Circuit Breaker Implementation</a></li>
+                <li><a href="#three-state-circuit-breaker" class="level-4">Three-State Circuit Breaker</a></li>
+                <li><a href="#failure-detection" class="level-4">Failure Detection</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#load-shedding-failures" class="level-3">Load Shedding Failures</a></li>
+                <li><a href="#scenario-1-over-shedding" class="level-4">Scenario 1: Over-Shedding</a></li>
+                <li><a href="#scenario-2-under-shedding" class="level-4">Scenario 2: Under-Shedding</a></li>
+                <li><a href="#circuit-breaker-failures" class="level-3">Circuit Breaker Failures</a></li>
+                <li><a href="#scenario-1-false-opens" class="level-4">Scenario 1: False Opens</a></li>
+                <li><a href="#scenario-2-slow-recovery" class="level-4">Scenario 2: Slow Recovery</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics" class="level-3">Metrics</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#load-shedding-changes" class="level-3">Load Shedding Changes</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#aggressive-vs-conservative-shedding" class="level-3">Aggressive vs Conservative Shedding</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#best-practices" class="level-3">Best Practices</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="load-shedding-circuit-breakers">Load Shedding &amp; Circuit Breakers</h1>
+<p><strong>One-line summary</strong>: How to handle overload gracefully using load shedding and circuit breakers to protect systems.</p>
+<p><strong>Prerequisites</strong>: <a href="../02-distributed-systems/overload-backpressure.html">Overload &amp; Backpressure</a>, <a href="sli-slo-error-budget.html">SLIs, SLOs &amp; Error Budgets</a>.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="overload-protection">Overload Protection</h3>
+<div class="mermaid">
+graph LR
+Requests[Requests] --> Check{Overload?}
+Check -->|Yes| Shed[Load Shedding]
+Check -->|No| Process[Process]
+Shed --> Reject[Reject Requests]
+style Check fill:#ffcc99
+style Shed fill:#ff9999
+</div>
+<p><strong>Key insight</strong>: Load shedding and circuit breakers protect systems from overload and cascading failures.</p>
+<h3 id="load-shedding">Load Shedding</h3>
+<p><strong>Load shedding</strong>: Dropping requests when overloaded.</p>
+<p><strong>Strategies</strong>:
+- <strong>Random</strong>: Randomly drop requests
+- <strong>Priority</strong>: Drop low-priority requests
+- <strong>Rate limiting</strong>: Limit request rate
+- <strong>Queue-based</strong>: Drop when queue full</p>
+<h3 id="circuit-breakers">Circuit Breakers</h3>
+<p><strong>Circuit breaker</strong>: Stops calling downstream service when it's failing.</p>
+<p><strong>States</strong>:
+- <strong>Closed</strong>: Normal operation, calls pass through
+- <strong>Open</strong>: Service failing, calls rejected immediately
+- <strong>Half-open</strong>: Testing if service recovered</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="load-shedding-implementation">Load Shedding Implementation</h3>
+<h4 id="priority-based-shedding">Priority-Based Shedding</h4>
+<p><strong>How it works</strong>:
+1. <strong>Classify requests</strong>: Classify requests by priority
+2. <strong>Monitor load</strong>: Monitor system load
+3. <strong>Shed low priority</strong>: Drop low-priority requests when overloaded
+4. <strong>Protect high priority</strong>: Continue processing high-priority requests</p>
+<p><strong>Use case</strong>: When some requests are more important than others.</p>
+<h4 id="rate-based-shedding">Rate-Based Shedding</h4>
+<p><strong>How it works</strong>:
+1. <strong>Set rate limit</strong>: Set maximum request rate
+2. <strong>Track rate</strong>: Track current request rate
+3. <strong>Drop excess</strong>: Drop requests exceeding limit</p>
+<p><strong>Use case</strong>: When absolute rate limit is needed.</p>
+<h3 id="circuit-breaker-implementation">Circuit Breaker Implementation</h3>
+<h4 id="three-state-circuit-breaker">Three-State Circuit Breaker</h4>
+<p><strong>Closed state</strong>:
+- <strong>Behavior</strong>: Calls pass through
+- <strong>Transition</strong>: Open on failure threshold</p>
+<p><strong>Open state</strong>:
+- <strong>Behavior</strong>: Calls rejected immediately
+- <strong>Transition</strong>: Half-open after timeout</p>
+<p><strong>Half-open state</strong>:
+- <strong>Behavior</strong>: Test calls allowed
+- <strong>Transition</strong>: Closed on success, open on failure</p>
+<h4 id="failure-detection">Failure Detection</h4>
+<p><strong>Failure criteria</strong>:
+- <strong>Error rate</strong>: Error rate exceeds threshold
+- <strong>Latency</strong>: Latency exceeds threshold
+- <strong>Timeout</strong>: Requests timing out</p>
+<p><strong>Thresholds</strong>:
+- <strong>Error rate</strong>: &gt; 50% errors
+- <strong>Latency</strong>: P95 &gt; threshold
+- <strong>Timeout</strong>: &gt; timeout duration</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="load-shedding-failures">Load Shedding Failures</h3>
+<h4 id="scenario-1-over-shedding">Scenario 1: Over-Shedding</h4>
+<ul>
+<li><strong>Impact</strong>: Legitimate requests dropped, user impact</li>
+<li><strong>Blast radius</strong>: All requests</li>
+<li><strong>Detection</strong>: High rejection rate, user complaints</li>
+<li><strong>Recovery</strong>: Adjust shedding thresholds</li>
+<li><strong>Mitigation</strong>: Tune thresholds, monitor rejection rate</li>
+</ul>
+<h4 id="scenario-2-under-shedding">Scenario 2: Under-Shedding</h4>
+<ul>
+<li><strong>Impact</strong>: System overloaded, cascading failures</li>
+<li><strong>Blast radius</strong>: Entire system</li>
+<li><strong>Detection</strong>: System overload, high latency</li>
+<li><strong>Recovery</strong>: Increase shedding, enable circuit breakers</li>
+<li><strong>Mitigation</strong>: Lower thresholds, proactive shedding</li>
+</ul>
+<h3 id="circuit-breaker-failures">Circuit Breaker Failures</h3>
+<h4 id="scenario-1-false-opens">Scenario 1: False Opens</h4>
+<ul>
+<li><strong>Impact</strong>: Service rejected unnecessarily</li>
+<li><strong>Blast radius</strong>: Affected service</li>
+<li><strong>Detection</strong>: Circuit opens frequently</li>
+<li><strong>Recovery</strong>: Adjust thresholds</li>
+<li><strong>Mitigation</strong>: Tune thresholds, reduce false positives</li>
+</ul>
+<h4 id="scenario-2-slow-recovery">Scenario 2: Slow Recovery</h4>
+<ul>
+<li><strong>Impact</strong>: Service unavailable longer than needed</li>
+<li><strong>Blast radius</strong>: Affected service</li>
+<li><strong>Detection</strong>: Long time in open state</li>
+<li><strong>Recovery</strong>: Reduce timeout, faster recovery</li>
+<li><strong>Mitigation</strong>: Shorter timeouts, better recovery logic</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics">Metrics</h3>
+<ul>
+<li><strong>Shedding rate</strong>: Requests shed per second</li>
+<li><strong>Circuit breaker state</strong>: State of circuit breakers</li>
+<li><strong>Rejection rate</strong>: Requests rejected per second</li>
+<li><strong>Recovery time</strong>: Time to recover from open state</li>
+</ul>
+<h3 id="alerts">Alerts</h3>
+<ul>
+<li>High shedding rate</li>
+<li>Circuit breaker opens</li>
+<li>High rejection rate</li>
+<li>Slow recovery</li>
+</ul>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="load-shedding-changes">Load Shedding Changes</h3>
+<ul>
+<li><strong>Process</strong>: Update thresholds, verify behavior</li>
+<li><strong>Risk</strong>: Medium (may affect request handling)</li>
+<li><strong>Rollback</strong>: Revert thresholds</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="aggressive-vs-conservative-shedding">Aggressive vs Conservative Shedding</h3>
+<p><strong>Aggressive shedding</strong>:
+- <strong>Pros</strong>: Better protection, faster recovery
+- <strong>Cons</strong>: More requests dropped, user impact</p>
+<p><strong>Conservative shedding</strong>:
+- <strong>Pros</strong>: Fewer requests dropped, better UX
+- <strong>Cons</strong>: Less protection, slower recovery</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="best-practices">Best Practices</h3>
+<ol>
+<li><strong>Tune thresholds</strong>: Balance protection and UX</li>
+<li><strong>Monitor shedding</strong>: Track shedding rate and impact</li>
+<li><strong>Test circuit breakers</strong>: Test circuit breaker behavior</li>
+<li><strong>Document policies</strong>: Document shedding and circuit breaker policies</li>
+</ol>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<ul>
+<li>"What's the load shedding strategy?"</li>
+<li>"How are circuit breakers configured?"</li>
+<li>"What happens when overloaded?"</li>
+<li>"How is recovery handled?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/load-shedding.html">Further Reading: Load Shedding</a></p>
+<p><strong>Quick Links</strong>:
+- <a href="../02-distributed-systems/overload-backpressure.html">Overload &amp; Backpressure</a>
+- <a href="../05-llD-patterns/circuit-breakers.html">Circuit Breaker Pattern</a>
+- <a href="../05-llD-patterns/rate-limiting.html">Rate Limiting</a>
+- <a href="README.html">Back to Reliability &amp; SRE</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design load shedding</strong>: Design a load shedding strategy. What requests do you shed?</p>
+</li>
+<li>
+<p><strong>Configure circuit breaker</strong>: Configure a circuit breaker. What are the thresholds?</p>
+</li>
+<li>
+<p><strong>Handle overload</strong>: Your system is overloaded. How do you handle it?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/load-shedding-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

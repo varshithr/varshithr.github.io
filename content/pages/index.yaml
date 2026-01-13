@@ -1,0 +1,95 @@
+title: "Data Engineering Guides"
+description: "Comprehensive data engineering concepts, services, and best practices across major cloud platforms."
+keywords: ["data engineering", "cloud platforms", "AWS", "GCP", "Azure", "Databricks", "distributed systems", "SRE"]
+content: |
+  <section id="hero" class="text-center mt-4 mb-6 sm:mt-6 sm:mb-12">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight">
+          <span class="gradient-text">Data Engineering Guides</span>
+      </h1>
+      <p class="text-base sm:text-lg text-slate-600 max-w-3xl mx-auto">Comprehensive resources for data engineering concepts, cloud platforms, and system design patterns.</p>
+  </section>
+
+  <div id="topics-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="card group">
+          <div class="card-content">
+              <h3 class="text-xl font-bold text-slate-800 mb-2">Google Cloud Platform</h3>
+              <p class="text-slate-600">Explore data engineering services on GCP, including BigQuery, Dataflow, and more.</p>
+          </div>
+          <div class="card-link">
+              <a href="gcp/" class="font-semibold text-purple-600 hover:text-pink-600 group-hover:translate-x-1 transition-all">Explore GCP →</a>
+          </div>
+      </div>
+
+      <div class="card group">
+          <div class="card-content">
+              <h3 class="text-xl font-bold text-slate-800 mb-2">Amazon Web Services</h3>
+              <p class="text-slate-600">Discover AWS services for data engineering, such as Redshift, EMR, and Glue.</p>
+          </div>
+          <div class="card-link">
+              <a href="aws/" class="font-semibold text-purple-600 hover:text-pink-600 group-hover:translate-x-1 transition-all">Explore AWS →</a>
+          </div>
+      </div>
+
+      <div class="card group">
+          <div class="card-content">
+              <h3 class="text-xl font-bold text-slate-800 mb-2">Microsoft Azure</h3>
+              <p class="text-slate-600">Learn about Azure's data services, including Synapse Analytics and Data Factory.</p>
+          </div>
+          <div class="card-link">
+              <a href="azure/" class="font-semibold text-purple-600 hover:text-pink-600 group-hover:translate-x-1 transition-all">Explore Azure →</a>
+          </div>
+      </div>
+
+      <div class="card group">
+          <div class="card-content">
+              <h3 class="text-xl font-bold text-slate-800 mb-2">Databricks</h3>
+              <p class="text-slate-600">Dive into the Databricks Lakehouse platform for unified data and AI.</p>
+          </div>
+          <div class="card-link">
+              <a href="databricks/" class="font-semibold text-purple-600 hover:text-pink-600 group-hover:translate-x-1 transition-all">Explore Databricks →</a>
+          </div>
+      </div>
+
+      <div class="card group">
+          <div class="card-content">
+              <h3 class="text-xl font-bold text-slate-800 mb-2">SQL & Data Modeling</h3>
+              <p class="text-slate-600">Master essential SQL techniques and data modeling concepts for analytics.</p>
+          </div>
+          <div class="card-link">
+              <a href="sql/" class="font-semibold text-purple-600 hover:text-pink-600 group-hover:translate-x-1 transition-all">Explore SQL →</a>
+          </div>
+      </div>
+
+      <div class="card group">
+          <div class="card-content">
+              <h3 class="text-xl font-bold text-slate-800 mb-2">Case Studies</h3>
+              <p class="text-slate-600">Real-world examples and implementations of data engineering solutions.</p>
+          </div>
+          <div class="card-link">
+              <a href="case_studies.html" class="font-semibold text-purple-600 hover:text-pink-600 group-hover:translate-x-1 transition-all">View Case Studies →</a>
+          </div>
+      </div>
+
+      <div class="card group">
+          <div class="card-content">
+              <h3 class="text-xl font-bold text-slate-800 mb-2">SRE Concepts</h3>
+              <p class="text-slate-600">Deep dives into system design, distributed systems, and SRE concepts for staff-level engineers.</p>
+          </div>
+          <div class="card-link">
+              <a href="learn_concepts/" class="font-semibold text-purple-600 hover:text-pink-600 group-hover:translate-x-1 transition-all">SRE Concepts →</a>
+          </div>
+      </div>
+  </div>
+
+  <script>
+      document.addEventListener('DOMContentLoaded', () => {
+          document.querySelectorAll('.card').forEach(card => {
+              card.addEventListener('click', () => {
+                  const link = card.querySelector('.card-link a');
+                  if (link) {
+                      window.location.href = link.href;
+                  }
+              });
+          });
+      });
+  </script>

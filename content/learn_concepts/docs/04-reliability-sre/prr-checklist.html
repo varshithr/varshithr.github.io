@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prr Checklist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#production-readiness-review-prr-checklist" class="level-1">Production Readiness Review (PRR) Checklist</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#prr-purpose" class="level-3">PRR Purpose</a></li>
+                <li><a href="#prr-scope" class="level-3">PRR Scope</a></li>
+                <li><a href="#staff-level-prr-checklist" class="level-2">Staff-Level PRR Checklist</a></li>
+                <li><a href="#1-slis-slos-error-budgets" class="level-3">1. SLIs, SLOs &amp; Error Budgets</a></li>
+                <li><a href="#slis-defined" class="level-4">SLIs Defined</a></li>
+                <li><a href="#slos-set" class="level-4">SLOs Set</a></li>
+                <li><a href="#error-budgets" class="level-4">Error Budgets</a></li>
+                <li><a href="#2-observability" class="level-3">2. Observability</a></li>
+                <li><a href="#metrics" class="level-4">Metrics</a></li>
+                <li><a href="#logging" class="level-4">Logging</a></li>
+                <li><a href="#tracing" class="level-4">Tracing</a></li>
+                <li><a href="#dashboards" class="level-4">Dashboards</a></li>
+                <li><a href="#alerting" class="level-4">Alerting</a></li>
+                <li><a href="#3-incident-response" class="level-3">3. Incident Response</a></li>
+                <li><a href="#on-call" class="level-4">On-Call</a></li>
+                <li><a href="#runbooks" class="level-4">Runbooks</a></li>
+                <li><a href="#incident-management" class="level-4">Incident Management</a></li>
+                <li><a href="#4-capacity-scaling" class="level-3">4. Capacity &amp; Scaling</a></li>
+                <li><a href="#capacity-planning" class="level-4">Capacity Planning</a></li>
+                <li><a href="#auto-scaling" class="level-4">Auto-Scaling</a></li>
+                <li><a href="#load-testing" class="level-4">Load Testing</a></li>
+                <li><a href="#5-security" class="level-3">5. Security</a></li>
+                <li><a href="#authentication" class="level-4">Authentication</a></li>
+                <li><a href="#authorization" class="level-4">Authorization</a></li>
+                <li><a href="#data-protection" class="level-4">Data Protection</a></li>
+                <li><a href="#6-change-management" class="level-3">6. Change Management</a></li>
+                <li><a href="#deployment" class="level-4">Deployment</a></li>
+                <li><a href="#feature-flags" class="level-4">Feature Flags</a></li>
+                <li><a href="#testing" class="level-4">Testing</a></li>
+                <li><a href="#what-staff-engineers-actually-look-for" class="level-2">What Staff Engineers Actually Look For</a></li>
+                <li><a href="#red-flags-must-fix" class="level-3">Red Flags (Must Fix)</a></li>
+                <li><a href="#yellow-flags-should-fix" class="level-3">Yellow Flags (Should Fix)</a></li>
+                <li><a href="#green-flags-good-practices" class="level-3">Green Flags (Good Practices)</a></li>
+                <li><a href="#prr-decision-matrix" class="level-2">PRR Decision Matrix</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="production-readiness-review-prr-checklist">Production Readiness Review (PRR) Checklist</h1>
+<p><strong>One-line summary</strong>: What staff engineers and SREs actually look for in production readiness reviews.</p>
+<p><strong>Prerequisites</strong>: <a href="sli-slo-error-budget.html">SLIs/SLOs</a>, understanding of production systems.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="prr-purpose">PRR Purpose</h3>
+<div class="mermaid">
+flowchart TD
+Design[System Design] --> PRR[PRR Review]
+PRR --> Approved{Approved?}
+Approved -->|Yes| Production[Production]
+Approved -->|No| Fix[Fix Issues]
+Fix --> PRR
+style PRR fill:#ffcc99
+style Approved fill:#99ff99
+</div>
+<p><strong>Key insight</strong>: PRR ensures systems are ready for production. It's not about perfection—it's about identifying and mitigating risks.</p>
+<h3 id="prr-scope">PRR Scope</h3>
+<p><strong>What PRR covers</strong>:
+- Reliability (SLIs/SLOs, error budgets)
+- Observability (monitoring, logging, tracing)
+- Security (authentication, authorization, encryption)
+- Operations (runbooks, on-call, incidents)
+- Capacity (scaling, load testing)</p>
+<p><strong>What PRR doesn't cover</strong>:
+- Feature completeness (that's product review)
+- Code quality (that's code review)
+- Performance optimization (that's performance review)</p>
+<hr />
+<h2 id="staff-level-prr-checklist">Staff-Level PRR Checklist</h2>
+<h3 id="1-slis-slos-error-budgets">1. SLIs, SLOs &amp; Error Budgets</h3>
+<h4 id="slis-defined">SLIs Defined</h4>
+<ul>
+<li>[ ] <strong>User-facing SLIs</strong>: SLIs measure what users experience</li>
+<li>[ ] <strong>Measurable</strong>: SLIs can be measured accurately</li>
+<li>[ ] <strong>Actionable</strong>: SLIs change when system behavior changes</li>
+<li>[ ] <strong>Documented</strong>: SLIs are documented and understood</li>
+</ul>
+<p><strong>Common failures</strong>:
+- Using internal metrics (CPU, memory) as SLIs
+- SLIs that don't reflect user experience
+- SLIs that can't be measured reliably</p>
+<h4 id="slos-set">SLOs Set</h4>
+<ul>
+<li>[ ] <strong>Realistic targets</strong>: SLOs are achievable based on baseline</li>
+<li>[ ] <strong>Appropriate for criticality</strong>: P0 services have tighter SLOs</li>
+<li>[ ] <strong>Documented</strong>: SLOs are documented and communicated</li>
+<li>[ ] <strong>Monitored</strong>: SLO compliance is tracked</li>
+</ul>
+<p><strong>Common failures</strong>:
+- SLOs set without baseline measurement
+- SLOs too aggressive (constant violations)
+- SLOs too lax (poor user experience)</p>
+<h4 id="error-budgets">Error Budgets</h4>
+<ul>
+<li>[ ] <strong>Calculated</strong>: Error budgets are calculated from SLOs</li>
+<li>[ ] <strong>Policy defined</strong>: Error budget policy is defined</li>
+<li>[ ] <strong>Tracked</strong>: Error budget consumption is tracked</li>
+<li>[ ] <strong>Alerts configured</strong>: Alerts for budget thresholds</li>
+</ul>
+<p><strong>Common failures</strong>:
+- No error budget policy
+- Error budget not tracked
+- No alerts for budget exhaustion</p>
+<h3 id="2-observability">2. Observability</h3>
+<h4 id="metrics">Metrics</h4>
+<ul>
+<li>[ ] <strong>Latency metrics</strong>: P50, P95, P99 tracked</li>
+<li>[ ] <strong>Throughput metrics</strong>: QPS, requests/sec tracked</li>
+<li>[ ] <strong>Error metrics</strong>: Error rates, error types tracked</li>
+<li>[ ] <strong>Resource metrics</strong>: CPU, memory, I/O tracked</li>
+<li>[ ] <strong>Business metrics</strong>: User-facing metrics tracked</li>
+<li>[ ] <strong>Exported correctly</strong>: Metrics exported to monitoring system</li>
+<li>[ ] <strong>Retention configured</strong>: Metric retention is appropriate</li>
+</ul>
+<p><strong>Common failures</strong>:
+- Missing critical metrics (latency, errors)
+- Metrics not exported correctly
+- No business metrics</p>
+<h4 id="logging">Logging</h4>
+<ul>
+<li>[ ] <strong>Critical events logged</strong>: Important events are logged</li>
+<li>[ ] <strong>Appropriate levels</strong>: INFO, WARN, ERROR used correctly</li>
+<li>[ ] <strong>Structured logs</strong>: Logs are structured (JSON)</li>
+<li>[ ] <strong>Request IDs</strong>: Logs include request IDs for correlation</li>
+<li>[ ] <strong>Retention configured</strong>: Log retention is appropriate</li>
+<li>[ ] <strong>Searchable</strong>: Logs are searchable and queryable</li>
+</ul>
+<p><strong>Common failures</strong>:
+- Too much logging (noise)
+- Too little logging (can't debug)
+- Unstructured logs (hard to query)
+- No request IDs (can't correlate)</p>
+<h4 id="tracing">Tracing</h4>
+<ul>
+<li>[ ] <strong>Critical paths traced</strong>: Important operations are traced</li>
+<li>[ ] <strong>Spans well-defined</strong>: Spans have clear boundaries</li>
+<li>[ ] <strong>Sampling configured</strong>: Trace sampling is appropriate</li>
+<li>[ ] <strong>Cross-service correlation</strong>: Traces work across services</li>
+<li>[ ] <strong>Queryable</strong>: Traces are queryable</li>
+</ul>
+<p><strong>Common failures</strong>:
+- No tracing
+- Tracing too expensive (100% sampling)
+- Can't correlate across services</p>
+<h4 id="dashboards">Dashboards</h4>
+<ul>
+<li>[ ] <strong>Service dashboard</strong>: Shows key metrics, health status</li>
+<li>[ ] <strong>SLO dashboard</strong>: Shows SLO compliance, error budgets</li>
+<li>[ ] <strong>Capacity dashboard</strong>: Shows resource usage, scaling</li>
+<li>[ ] <strong>Business dashboard</strong>: Shows user-facing metrics</li>
+<li>[ ] <strong>Accessible</strong>: Dashboards accessible to on-call</li>
+<li>[ ] <strong>Fast loading</strong>: Dashboards load quickly</li>
+</ul>
+<p><strong>Common failures</strong>:
+- No dashboards
+- Dashboards too complex (hard to understand)
+- Dashboards don't load (too many metrics)</p>
+<h4 id="alerting">Alerting</h4>
+<ul>
+<li>[ ] <strong>Critical alerts</strong>: P0 incidents page on-call</li>
+<li>[ ] <strong>Warning alerts</strong>: P1 incidents notify, don't page</li>
+<li>[ ] <strong>Info alerts</strong>: P2 incidents log only</li>
+<li>[ ] <strong>Actionable</strong>: Alerts are actionable (clear what to do)</li>
+<li>[ ] <strong>Not too many</strong>: Alert fatigue avoided</li>
+<li>[ ] <strong>Thresholds tuned</strong>: Alerts not too sensitive/insensitive</li>
+<li>[ ] <strong>Runbooks exist</strong>: Alert runbooks exist</li>
+<li>[ ] <strong>Escalation paths</strong>: Escalation paths defined</li>
+</ul>
+<p><strong>Common failures</strong>:
+- Too many alerts (alert fatigue)
+- Alerts not actionable (don't know what to do)
+- No runbooks (don't know how to respond)
+- Alerts too sensitive (false positives)</p>
+<h3 id="3-incident-response">3. Incident Response</h3>
+<h4 id="on-call">On-Call</h4>
+<ul>
+<li>[ ] <strong>Rotation established</strong>: On-call rotation exists</li>
+<li>[ ] <strong>Engineers trained</strong>: On-call engineers are trained</li>
+<li>[ ] <strong>Procedures documented</strong>: On-call procedures documented</li>
+<li>[ ] <strong>Tools available</strong>: On-call tools are available</li>
+<li>[ ] <strong>Escalation paths</strong>: Escalation paths are clear</li>
+</ul>
+<p><strong>Common failures</strong>:
+- No on-call rotation
+- On-call engineers not trained
+- No escalation paths</p>
+<h4 id="runbooks">Runbooks</h4>
+<ul>
+<li>[ ] <strong>Common incidents</strong>: Runbooks for common issues</li>
+<li>[ ] <strong>Critical failures</strong>: Runbooks for critical failures</li>
+<li>[ ] <strong>Recovery procedures</strong>: Runbooks include recovery steps</li>
+<li>[ ] <strong>Rollback procedures</strong>: Runbooks include rollback steps</li>
+<li>[ ] <strong>Tested</strong>: Runbooks are tested</li>
+<li>[ ] <strong>Accessible</strong>: Runbooks accessible during incidents</li>
+</ul>
+<p><strong>Common failures</strong>:
+- No runbooks
+- Runbooks outdated (don't match reality)
+- Runbooks not tested (don't work)</p>
+<h4 id="incident-management">Incident Management</h4>
+<ul>
+<li>[ ] <strong>Process defined</strong>: Incident response process defined</li>
+<li>[ ] <strong>Communication channels</strong>: Communication channels established</li>
+<li>[ ] <strong>Postmortem process</strong>: Postmortem process defined</li>
+<li>[ ] <strong>Tracking system</strong>: Incident tracking system used</li>
+</ul>
+<p><strong>Common failures</strong>:
+- No incident process
+- No communication channels
+- No postmortems</p>
+<h3 id="4-capacity-scaling">4. Capacity &amp; Scaling</h3>
+<h4 id="capacity-planning">Capacity Planning</h4>
+<ul>
+<li>[ ] <strong>Current capacity known</strong>: Current load and capacity known</li>
+<li>[ ] <strong>Target capacity</strong>: Capacity for launch is provisioned</li>
+<li>[ ] <strong>Growth forecast</strong>: Capacity for growth is planned</li>
+<li>[ ] <strong>Scaling limits</strong>: Maximum scale is understood</li>
+<li>[ ] <strong>Capacity alerts</strong>: Alerts for capacity thresholds</li>
+</ul>
+<p><strong>Common failures</strong>:
+- Don't know current capacity
+- No growth forecast
+- No capacity alerts</p>
+<h4 id="auto-scaling">Auto-Scaling</h4>
+<ul>
+<li>[ ] <strong>Configured</strong>: Auto-scaling is configured (if applicable)</li>
+<li>[ ] <strong>Policies tuned</strong>: Scaling policies are tuned</li>
+<li>[ ] <strong>Limits set</strong>: Scaling limits are set (min/max)</li>
+<li>[ ] <strong>Metrics appropriate</strong>: Scaling metrics are appropriate</li>
+<li>[ ] <strong>Behavior tested</strong>: Scaling behavior is tested</li>
+</ul>
+<p><strong>Common failures</strong>:
+- Auto-scaling not configured
+- Scaling policies not tuned (too aggressive/conservative)
+- Scaling limits not set (unbounded scaling)</p>
+<h4 id="load-testing">Load Testing</h4>
+<ul>
+<li>[ ] <strong>Tests run</strong>: Load tests have been run</li>
+<li>[ ] <strong>Expected load</strong>: System handles expected load</li>
+<li>[ ] <strong>2× load</strong>: System handles 2× expected load</li>
+<li>[ ] <strong>Graceful degradation</strong>: System degrades gracefully under overload</li>
+<li>[ ] <strong>Bottlenecks identified</strong>: Bottlenecks are identified and addressed</li>
+</ul>
+<p><strong>Common failures</strong>:
+- No load testing
+- Load testing doesn't match production
+- System doesn't degrade gracefully</p>
+<h3 id="5-security">5. Security</h3>
+<h4 id="authentication">Authentication</h4>
+<ul>
+<li>[ ] <strong>Required</strong>: Authentication is required for all access</li>
+<li>[ ] <strong>Appropriate mechanism</strong>: Authentication mechanism is appropriate</li>
+<li>[ ] <strong>Tested</strong>: Authentication is tested</li>
+<li>[ ] <strong>Failures logged</strong>: Authentication failures are logged</li>
+</ul>
+<p><strong>Common failures</strong>:
+- No authentication
+- Weak authentication
+- Authentication not tested</p>
+<h4 id="authorization">Authorization</h4>
+<ul>
+<li>[ ] <strong>Checked</strong>: Authorization is checked for all operations</li>
+<li>[ ] <strong>Least privilege</strong>: Principle of least privilege is followed</li>
+<li>[ ] <strong>Documented</strong>: Permissions are documented</li>
+<li>[ ] <strong>Audited</strong>: Access is audited</li>
+<li>[ ] <strong>Failures logged</strong>: Authorization failures are logged</li>
+</ul>
+<p><strong>Common failures</strong>:
+- No authorization checks
+- Overly permissive permissions
+- No audit logs</p>
+<h4 id="data-protection">Data Protection</h4>
+<ul>
+<li>[ ] <strong>Encryption at rest</strong>: Data is encrypted at rest</li>
+<li>[ ] <strong>Encryption in transit</strong>: Data is encrypted in transit (TLS)</li>
+<li>[ ] <strong>Key management</strong>: Keys are managed securely</li>
+<li>[ ] <strong>Data classification</strong>: Data is classified appropriately</li>
+<li>[ ] <strong>Retention policies</strong>: Data retention policies are defined</li>
+<li>[ ] <strong>Deletion procedures</strong>: Data deletion procedures exist</li>
+</ul>
+<p><strong>Common failures</strong>:
+- No encryption
+- Keys stored in code
+- No data retention policies</p>
+<h3 id="6-change-management">6. Change Management</h3>
+<h4 id="deployment">Deployment</h4>
+<ul>
+<li>[ ] <strong>Process documented</strong>: Deployment process is documented</li>
+<li>[ ] <strong>Automated</strong>: Deployments are automated</li>
+<li>[ ] <strong>Rollback tested</strong>: Rollback procedure is tested</li>
+<li>[ ] <strong>Windows defined</strong>: Deployment windows are defined</li>
+<li>[ ] <strong>Approvals defined</strong>: Approval process is defined</li>
+</ul>
+<p><strong>Common failures</strong>:
+- Manual deployments
+- No rollback procedure
+- No deployment windows</p>
+<h4 id="feature-flags">Feature Flags</h4>
+<ul>
+<li>[ ] <strong>Used for risky changes</strong>: Feature flags used for risky changes</li>
+<li>[ ] <strong>Kill switches</strong>: Kill switches are implemented</li>
+<li>[ ] <strong>Management documented</strong>: Flag management is documented</li>
+<li>[ ] <strong>Tested</strong>: Flags are tested</li>
+</ul>
+<p><strong>Common failures</strong>:
+- No feature flags
+- No kill switches
+- Flags not tested</p>
+<h4 id="testing">Testing</h4>
+<ul>
+<li>[ ] <strong>Unit tests</strong>: Unit test coverage is adequate</li>
+<li>[ ] <strong>Integration tests</strong>: Integration tests exist</li>
+<li>[ ] <strong>Load tests</strong>: Load tests are run regularly</li>
+<li>[ ] <strong>Chaos tests</strong>: Chaos tests are considered</li>
+<li>[ ] <strong>Smoke tests</strong>: Smoke tests run after deployment</li>
+</ul>
+<p><strong>Common failures</strong>:
+- No tests
+- Tests don't catch production issues
+- No load testing</p>
+<hr />
+<h2 id="what-staff-engineers-actually-look-for">What Staff Engineers Actually Look For</h2>
+<h3 id="red-flags-must-fix">Red Flags (Must Fix)</h3>
+<ol>
+<li><strong>No SLIs/SLOs</strong>: Can't measure reliability</li>
+<li><strong>No monitoring</strong>: Can't detect problems</li>
+<li><strong>No on-call</strong>: Can't respond to incidents</li>
+<li><strong>No rollback</strong>: Can't recover from bad deployments</li>
+<li><strong>No security</strong>: Vulnerable to attacks</li>
+</ol>
+<h3 id="yellow-flags-should-fix">Yellow Flags (Should Fix)</h3>
+<ol>
+<li><strong>Weak SLIs</strong>: SLIs don't reflect user experience</li>
+<li><strong>Alert fatigue</strong>: Too many alerts</li>
+<li><strong>No runbooks</strong>: Don't know how to respond</li>
+<li><strong>No load testing</strong>: Don't know capacity</li>
+<li><strong>Weak security</strong>: Security gaps</li>
+</ol>
+<h3 id="green-flags-good-practices">Green Flags (Good Practices)</h3>
+<ol>
+<li><strong>Clear SLIs/SLOs</strong>: Well-defined and measured</li>
+<li><strong>Comprehensive monitoring</strong>: Metrics, logs, traces</li>
+<li><strong>Tested runbooks</strong>: Know how to respond</li>
+<li><strong>Load tested</strong>: Know capacity limits</li>
+<li><strong>Secure</strong>: Authentication, authorization, encryption</li>
+</ol>
+<hr />
+<h2 id="prr-decision-matrix">PRR Decision Matrix</h2>
+<div class="mermaid">
+graph TD
+PRR[PRR Review] --> RedFlags{Red Flags?}
+RedFlags -->|Yes| Reject[Reject: Must Fix]
+RedFlags -->|No| YellowFlags{Yellow Flags?}
+YellowFlags -->|Many| Conditional[Conditional: Fix Soon]
+YellowFlags -->|Few| Approve[Approve: Ready]
+style Reject fill:#ff9999
+style Conditional fill:#ffcc99
+style Approve fill:#99ff99
+</div>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/prr-checklist.html">Further Reading: PRR Checklist</a></p>
+<p><strong>Quick Links</strong>:
+- "Site Reliability Engineering" (SRE Book) - Production readiness
+- "The Site Reliability Workbook" - Practical PRR implementation
+- <a href="../00-meta/prr_template.html">PRR Template</a>
+- <a href="sli-slo-error-budget.html">SLIs/SLOs</a>
+- <a href="README.html">Back to Reliability &amp; SRE</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Run a PRR</strong>: Review a system design using this checklist. What issues do you find?</p>
+</li>
+<li>
+<p><strong>Fix PRR issues</strong>: A system fails PRR. What are the top 3 issues to fix?</p>
+</li>
+<li>
+<p><strong>Design for PRR</strong>: Design a system that passes PRR. What do you include?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/prr-checklist-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

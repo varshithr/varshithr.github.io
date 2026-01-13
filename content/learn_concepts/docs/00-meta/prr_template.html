@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prr_Template</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#production-readiness-review-prr-template" class="level-1">Production Readiness Review (PRR) Template</a></li>
+                <li><a href="#system-information" class="level-2">System Information</a></li>
+                <li><a href="#overview" class="level-2">Overview</a></li>
+                <li><a href="#reliability-slos" class="level-2">Reliability &amp; SLOs</a></li>
+                <li><a href="#slis-service-level-indicators" class="level-3">SLIs (Service Level Indicators)</a></li>
+                <li><a href="#slos-service-level-objectives" class="level-3">SLOs (Service Level Objectives)</a></li>
+                <li><a href="#error-budgets" class="level-3">Error Budgets</a></li>
+                <li><a href="#availability-targets" class="level-3">Availability Targets</a></li>
+                <li><a href="#monitoring-observability" class="level-2">Monitoring &amp; Observability</a></li>
+                <li><a href="#metrics" class="level-3">Metrics</a></li>
+                <li><a href="#logging" class="level-3">Logging</a></li>
+                <li><a href="#tracing" class="level-3">Tracing</a></li>
+                <li><a href="#dashboards" class="level-3">Dashboards</a></li>
+                <li><a href="#alerting" class="level-3">Alerting</a></li>
+                <li><a href="#incident-response" class="level-2">Incident Response</a></li>
+                <li><a href="#on-call" class="level-3">On-Call</a></li>
+                <li><a href="#runbooks" class="level-3">Runbooks</a></li>
+                <li><a href="#incident-management" class="level-3">Incident Management</a></li>
+                <li><a href="#postmortems" class="level-3">Postmortems</a></li>
+                <li><a href="#capacity-scaling" class="level-2">Capacity &amp; Scaling</a></li>
+                <li><a href="#capacity-planning" class="level-3">Capacity Planning</a></li>
+                <li><a href="#auto-scaling" class="level-3">Auto-Scaling</a></li>
+                <li><a href="#load-testing" class="level-3">Load Testing</a></li>
+                <li><a href="#resource-limits" class="level-3">Resource Limits</a></li>
+                <li><a href="#security" class="level-2">Security</a></li>
+                <li><a href="#authentication" class="level-3">Authentication</a></li>
+                <li><a href="#authorization" class="level-3">Authorization</a></li>
+                <li><a href="#data-protection" class="level-3">Data Protection</a></li>
+                <li><a href="#security-monitoring" class="level-3">Security Monitoring</a></li>
+                <li><a href="#compliance" class="level-3">Compliance</a></li>
+                <li><a href="#change-management" class="level-2">Change Management</a></li>
+                <li><a href="#deployment" class="level-3">Deployment</a></li>
+                <li><a href="#feature-flags" class="level-3">Feature Flags</a></li>
+                <li><a href="#canary-deployments" class="level-3">Canary Deployments</a></li>
+                <li><a href="#testing" class="level-3">Testing</a></li>
+                <li><a href="#documentation" class="level-2">Documentation</a></li>
+                <li><a href="#architecture" class="level-3">Architecture</a></li>
+                <li><a href="#runbooks_1" class="level-3">Runbooks</a></li>
+                <li><a href="#api-documentation" class="level-3">API Documentation</a></li>
+                <li><a href="#onboarding" class="level-3">Onboarding</a></li>
+                <li><a href="#dependencies" class="level-2">Dependencies</a></li>
+                <li><a href="#external-dependencies" class="level-3">External Dependencies</a></li>
+                <li><a href="#internal-dependencies" class="level-3">Internal Dependencies</a></li>
+                <li><a href="#dependency-risks" class="level-3">Dependency Risks</a></li>
+                <li><a href="#cost" class="level-2">Cost</a></li>
+                <li><a href="#cost-model" class="level-3">Cost Model</a></li>
+                <li><a href="#cost-optimization" class="level-3">Cost Optimization</a></li>
+                <li><a href="#launch-readiness" class="level-2">Launch Readiness</a></li>
+                <li><a href="#pre-launch-checklist" class="level-3">Pre-Launch Checklist</a></li>
+                <li><a href="#launch-plan" class="level-3">Launch Plan</a></li>
+                <li><a href="#post-launch" class="level-3">Post-Launch</a></li>
+                <li><a href="#prr-decision" class="level-2">PRR Decision</a></li>
+                <li><a href="#notes" class="level-2">Notes</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="production-readiness-review-prr-template">Production Readiness Review (PRR) Template</h1>
+<p>A PRR ensures a system is ready for production. Use this checklist before launching.</p>
+<h2 id="system-information">System Information</h2>
+<p><strong>System Name</strong>: [Name]</p>
+<p><strong>Team</strong>: [Team name]</p>
+<p><strong>PRR Date</strong>: [Date]</p>
+<p><strong>PRR Lead</strong>: [Name]</p>
+<p><strong>Reviewers</strong>: [Names]</p>
+<p><strong>Target Launch Date</strong>: [Date]</p>
+<hr />
+<h2 id="overview">Overview</h2>
+<p><strong>Purpose</strong>: [What does this system do?]</p>
+<p><strong>Users</strong>: [Who uses this system?]</p>
+<p><strong>Scale</strong>: [Expected load, users, data volume]</p>
+<p><strong>Criticality</strong>: [P0/P1/P2 - how critical is this system?]</p>
+<hr />
+<h2 id="reliability-slos">Reliability &amp; SLOs</h2>
+<h3 id="slis-service-level-indicators">SLIs (Service Level Indicators)</h3>
+<ul>
+<li>[ ] <strong>Latency SLI</strong>: [Definition, e.g., "P95 latency of API requests"]</li>
+<li>Measurement: [How is it measured?]</li>
+<li>Current value: [Current P95 latency]</li>
+<li>
+<p>Target: [Target P95 latency]</p>
+</li>
+<li>
+<p>[ ] <strong>Availability SLI</strong>: [Definition, e.g., "Fraction of successful requests"]</p>
+</li>
+<li>Measurement: [How is it measured?]</li>
+<li>Current value: [Current availability]</li>
+<li>
+<p>Target: [Target availability]</p>
+</li>
+<li>
+<p>[ ] <strong>Error Rate SLI</strong>: [Definition]</p>
+</li>
+<li>Measurement: [How is it measured?]</li>
+<li>Current value: [Current error rate]</li>
+<li>
+<p>Target: [Target error rate]</p>
+</li>
+<li>
+<p>[ ] <strong>Throughput SLI</strong>: [Definition, if applicable]</p>
+</li>
+<li>Measurement: [How is it measured?]</li>
+<li>Current value: [Current throughput]</li>
+<li>Target: [Target throughput]</li>
+</ul>
+<h3 id="slos-service-level-objectives">SLOs (Service Level Objectives)</h3>
+<ul>
+<li>[ ] SLOs are defined for all SLIs</li>
+<li>[ ] SLOs are achievable (based on historical data or testing)</li>
+<li>[ ] SLOs are documented</li>
+<li>[ ] SLOs are communicated to stakeholders</li>
+</ul>
+<h3 id="error-budgets">Error Budgets</h3>
+<ul>
+<li>[ ] Error budgets are calculated</li>
+<li>[ ] Error budget policy is defined (what happens when budget is exhausted?)</li>
+<li>[ ] Error budget tracking is automated</li>
+<li>[ ] Error budget alerts are configured</li>
+</ul>
+<h3 id="availability-targets">Availability Targets</h3>
+<ul>
+<li>[ ] Availability target is appropriate for criticality</li>
+<li>[ ] Availability is measured correctly</li>
+<li>[ ] Planned downtime is accounted for</li>
+<li>[ ] Unplanned downtime is tracked</li>
+</ul>
+<hr />
+<h2 id="monitoring-observability">Monitoring &amp; Observability</h2>
+<h3 id="metrics">Metrics</h3>
+<ul>
+<li>[ ] <strong>Latency metrics</strong>: P50, P95, P99 are tracked</li>
+<li>[ ] <strong>Throughput metrics</strong>: QPS, requests/sec are tracked</li>
+<li>[ ] <strong>Error metrics</strong>: Error rates, error types are tracked</li>
+<li>[ ] <strong>Resource metrics</strong>: CPU, memory, disk, network are tracked</li>
+<li>[ ] <strong>Business metrics</strong>: User-facing metrics are tracked</li>
+<li>[ ] Metrics are exported correctly</li>
+<li>[ ] Metrics retention is configured</li>
+</ul>
+<h3 id="logging">Logging</h3>
+<ul>
+<li>[ ] Critical events are logged</li>
+<li>[ ] Log levels are appropriate (INFO, WARN, ERROR)</li>
+<li>[ ] Logs are structured (JSON or structured format)</li>
+<li>[ ] Logs include request IDs for correlation</li>
+<li>[ ] Log retention is configured appropriately</li>
+<li>[ ] Logs are searchable and queryable</li>
+</ul>
+<h3 id="tracing">Tracing</h3>
+<ul>
+<li>[ ] Critical paths are traced</li>
+<li>[ ] Spans are well-defined</li>
+<li>[ ] Trace sampling is configured</li>
+<li>[ ] Cross-service correlation works</li>
+<li>[ ] Traces are queryable</li>
+</ul>
+<h3 id="dashboards">Dashboards</h3>
+<ul>
+<li>[ ] <strong>Service dashboard</strong>: Shows key metrics, health status</li>
+<li>[ ] <strong>SLO dashboard</strong>: Shows SLO compliance, error budgets</li>
+<li>[ ] <strong>Capacity dashboard</strong>: Shows resource usage, scaling</li>
+<li>[ ] <strong>Business dashboard</strong>: Shows user-facing metrics</li>
+<li>[ ] Dashboards are accessible to on-call</li>
+<li>[ ] Dashboards load quickly</li>
+</ul>
+<h3 id="alerting">Alerting</h3>
+<ul>
+<li>[ ] <strong>Critical alerts</strong>: P0 incidents (page on-call)</li>
+<li>[ ] <strong>Warning alerts</strong>: P1 incidents (notify, don't page)</li>
+<li>[ ] <strong>Info alerts</strong>: P2 incidents (log only)</li>
+<li>[ ] Alerts are actionable (clear what to do)</li>
+<li>[ ] Alert fatigue is avoided (not too many alerts)</li>
+<li>[ ] Alert thresholds are tuned (not too sensitive/insensitive)</li>
+<li>[ ] Alert runbooks exist</li>
+<li>[ ] Alert escalation paths are defined</li>
+</ul>
+<hr />
+<h2 id="incident-response">Incident Response</h2>
+<h3 id="on-call">On-Call</h3>
+<ul>
+<li>[ ] On-call rotation is established</li>
+<li>[ ] On-call engineers are trained</li>
+<li>[ ] On-call procedures are documented</li>
+<li>[ ] On-call tools are available</li>
+<li>[ ] On-call escalation paths are clear</li>
+</ul>
+<h3 id="runbooks">Runbooks</h3>
+<ul>
+<li>[ ] <strong>Common incidents</strong>: Runbooks exist for common issues</li>
+<li>[ ] <strong>Critical failures</strong>: Runbooks exist for critical failures</li>
+<li>[ ] <strong>Recovery procedures</strong>: Runbooks include recovery steps</li>
+<li>[ ] <strong>Rollback procedures</strong>: Runbooks include rollback steps</li>
+<li>[ ] Runbooks are tested</li>
+<li>[ ] Runbooks are accessible during incidents</li>
+</ul>
+<h3 id="incident-management">Incident Management</h3>
+<ul>
+<li>[ ] Incident response process is defined</li>
+<li>[ ] Incident communication channels are established</li>
+<li>[ ] Postmortem process is defined</li>
+<li>[ ] Incident tracking system is used</li>
+</ul>
+<h3 id="postmortems">Postmortems</h3>
+<ul>
+<li>[ ] Postmortem template is used</li>
+<li>[ ] Postmortems are written for all P0/P1 incidents</li>
+<li>[ ] Postmortems include root cause analysis</li>
+<li>[ ] Postmortems include action items</li>
+<li>[ ] Action items are tracked to completion</li>
+</ul>
+<hr />
+<h2 id="capacity-scaling">Capacity &amp; Scaling</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<ul>
+<li>[ ] <strong>Current capacity</strong>: Current load and capacity are known</li>
+<li>[ ] <strong>Target capacity</strong>: Capacity for launch is provisioned</li>
+<li>[ ] <strong>Growth forecast</strong>: Capacity for growth is planned</li>
+<li>[ ] <strong>Scaling limits</strong>: Maximum scale is understood</li>
+<li>[ ] <strong>Capacity alerts</strong>: Alerts for capacity thresholds</li>
+</ul>
+<h3 id="auto-scaling">Auto-Scaling</h3>
+<ul>
+<li>[ ] Auto-scaling is configured (if applicable)</li>
+<li>[ ] Scaling policies are tuned</li>
+<li>[ ] Scaling limits are set (min/max instances)</li>
+<li>[ ] Scaling metrics are appropriate</li>
+<li>[ ] Scaling behavior is tested</li>
+</ul>
+<h3 id="load-testing">Load Testing</h3>
+<ul>
+<li>[ ] Load tests have been run</li>
+<li>[ ] System handles expected load</li>
+<li>[ ] System handles 2× expected load</li>
+<li>[ ] System degrades gracefully under overload</li>
+<li>[ ] Bottlenecks are identified and addressed</li>
+</ul>
+<h3 id="resource-limits">Resource Limits</h3>
+<ul>
+<li>[ ] CPU limits are set appropriately</li>
+<li>[ ] Memory limits are set appropriately</li>
+<li>[ ] Disk limits are set appropriately</li>
+<li>[ ] Network limits are understood</li>
+<li>[ ] Limits prevent resource exhaustion</li>
+</ul>
+<hr />
+<h2 id="security">Security</h2>
+<h3 id="authentication">Authentication</h3>
+<ul>
+<li>[ ] Authentication is required for all access</li>
+<li>[ ] Authentication mechanism is appropriate</li>
+<li>[ ] Authentication is tested</li>
+<li>[ ] Authentication failures are logged</li>
+</ul>
+<h3 id="authorization">Authorization</h3>
+<ul>
+<li>[ ] Authorization is checked for all operations</li>
+<li>[ ] Principle of least privilege is followed</li>
+<li>[ ] Permissions are documented</li>
+<li>[ ] Access is audited</li>
+<li>[ ] Authorization failures are logged</li>
+</ul>
+<h3 id="data-protection">Data Protection</h3>
+<ul>
+<li>[ ] <strong>Encryption at rest</strong>: Data is encrypted at rest</li>
+<li>[ ] <strong>Encryption in transit</strong>: Data is encrypted in transit (TLS)</li>
+<li>[ ] <strong>Key management</strong>: Keys are managed securely</li>
+<li>[ ] <strong>Data classification</strong>: Data is classified appropriately</li>
+<li>[ ] <strong>Data retention</strong>: Data retention policies are defined</li>
+<li>[ ] <strong>Data deletion</strong>: Data deletion procedures exist</li>
+</ul>
+<h3 id="security-monitoring">Security Monitoring</h3>
+<ul>
+<li>[ ] Security events are logged</li>
+<li>[ ] Security alerts are configured</li>
+<li>[ ] Security incidents are tracked</li>
+<li>[ ] Security reviews are conducted</li>
+</ul>
+<h3 id="compliance">Compliance</h3>
+<ul>
+<li>[ ] Compliance requirements are met (if applicable)</li>
+<li>[ ] Compliance documentation exists</li>
+<li>[ ] Compliance audits are planned</li>
+</ul>
+<hr />
+<h2 id="change-management">Change Management</h2>
+<h3 id="deployment">Deployment</h3>
+<ul>
+<li>[ ] <strong>Deployment process</strong>: Deployment process is documented</li>
+<li>[ ] <strong>Deployment automation</strong>: Deployments are automated</li>
+<li>[ ] <strong>Deployment rollback</strong>: Rollback procedure is tested</li>
+<li>[ ] <strong>Deployment windows</strong>: Deployment windows are defined</li>
+<li>[ ] <strong>Deployment approvals</strong>: Approval process is defined</li>
+</ul>
+<h3 id="feature-flags">Feature Flags</h3>
+<ul>
+<li>[ ] Feature flags are used for risky changes</li>
+<li>[ ] Kill switches are implemented</li>
+<li>[ ] Flag management is documented</li>
+<li>[ ] Flags are tested</li>
+</ul>
+<h3 id="canary-deployments">Canary Deployments</h3>
+<ul>
+<li>[ ] Canary deployment is used (if applicable)</li>
+<li>[ ] Canary metrics are monitored</li>
+<li>[ ] Canary rollback is tested</li>
+<li>[ ] Canary promotion criteria are defined</li>
+</ul>
+<h3 id="testing">Testing</h3>
+<ul>
+<li>[ ] <strong>Unit tests</strong>: Unit test coverage is adequate</li>
+<li>[ ] <strong>Integration tests</strong>: Integration tests exist</li>
+<li>[ ] <strong>Load tests</strong>: Load tests are run regularly</li>
+<li>[ ] <strong>Chaos tests</strong>: Chaos tests are considered</li>
+<li>[ ] <strong>Smoke tests</strong>: Smoke tests run after deployment</li>
+</ul>
+<hr />
+<h2 id="documentation">Documentation</h2>
+<h3 id="architecture">Architecture</h3>
+<ul>
+<li>[ ] Architecture diagram exists</li>
+<li>[ ] Architecture is documented</li>
+<li>[ ] Data flow is documented</li>
+<li>[ ] Component responsibilities are documented</li>
+</ul>
+<h3 id="runbooks_1">Runbooks</h3>
+<ul>
+<li>[ ] Runbooks exist for common operations</li>
+<li>[ ] Runbooks are tested</li>
+<li>[ ] Runbooks are accessible</li>
+</ul>
+<h3 id="api-documentation">API Documentation</h3>
+<ul>
+<li>[ ] API is documented (if applicable)</li>
+<li>[ ] API examples exist</li>
+<li>[ ] API versioning is documented</li>
+<li>[ ] API deprecation policy exists</li>
+</ul>
+<h3 id="onboarding">Onboarding</h3>
+<ul>
+<li>[ ] Onboarding documentation exists</li>
+<li>[ ] New engineers can get started quickly</li>
+<li>[ ] Development environment setup is documented</li>
+</ul>
+<hr />
+<h2 id="dependencies">Dependencies</h2>
+<h3 id="external-dependencies">External Dependencies</h3>
+<ul>
+<li>[ ] External dependencies are identified</li>
+<li>[ ] Dependency SLAs are understood</li>
+<li>[ ] Dependency failures are handled gracefully</li>
+<li>[ ] Dependency monitoring is in place</li>
+<li>[ ] Dependency runbooks exist</li>
+</ul>
+<h3 id="internal-dependencies">Internal Dependencies</h3>
+<ul>
+<li>[ ] Internal dependencies are identified</li>
+<li>[ ] Dependency contracts are documented</li>
+<li>[ ] Dependency failures are handled gracefully</li>
+<li>[ ] Dependency monitoring is in place</li>
+</ul>
+<h3 id="dependency-risks">Dependency Risks</h3>
+<ul>
+<li>[ ] Single points of failure are identified</li>
+<li>[ ] Dependency risks are mitigated</li>
+<li>[ ] Fallback mechanisms exist</li>
+</ul>
+<hr />
+<h2 id="cost">Cost</h2>
+<h3 id="cost-model">Cost Model</h3>
+<ul>
+<li>[ ] Cost per request/user/unit is understood</li>
+<li>[ ] Cost drivers are identified</li>
+<li>[ ] Cost monitoring is in place</li>
+<li>[ ] Cost alerts are configured</li>
+</ul>
+<h3 id="cost-optimization">Cost Optimization</h3>
+<ul>
+<li>[ ] Cost optimization opportunities are identified</li>
+<li>[ ] Cost optimization is planned</li>
+<li>[ ] Cost budgets are set</li>
+</ul>
+<hr />
+<h2 id="launch-readiness">Launch Readiness</h2>
+<h3 id="pre-launch-checklist">Pre-Launch Checklist</h3>
+<ul>
+<li>[ ] All PRR items are complete</li>
+<li>[ ] On-call rotation is ready</li>
+<li>[ ] Runbooks are ready</li>
+<li>[ ] Monitoring is configured</li>
+<li>[ ] Alerts are configured</li>
+<li>[ ] Dashboards are ready</li>
+<li>[ ] Documentation is complete</li>
+<li>[ ] Team is trained</li>
+</ul>
+<h3 id="launch-plan">Launch Plan</h3>
+<ul>
+<li>[ ] Launch plan is documented</li>
+<li>[ ] Launch steps are defined</li>
+<li>[ ] Launch rollback plan exists</li>
+<li>[ ] Launch communication plan exists</li>
+<li>[ ] Launch date is set</li>
+</ul>
+<h3 id="post-launch">Post-Launch</h3>
+<ul>
+<li>[ ] Post-launch monitoring plan exists</li>
+<li>[ ] Post-launch review is scheduled</li>
+<li>[ ] Post-launch improvements are planned</li>
+</ul>
+<hr />
+<h2 id="prr-decision">PRR Decision</h2>
+<ul>
+<li>[ ] <strong>Approved</strong> - System is ready for production</li>
+<li>[ ] <strong>Approved with Conditions</strong> - System is approved pending fixes</li>
+<li>[ ] <strong>Not Approved</strong> - System needs significant work</li>
+</ul>
+<p><strong>PRR Lead Signature</strong>: [Name]</p>
+<p><strong>Date</strong>: [Date]</p>
+<p><strong>Next Steps</strong>: [What happens next?]</p>
+<hr />
+<h2 id="notes">Notes</h2>
+<p>[Additional notes, concerns, or recommendations]</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

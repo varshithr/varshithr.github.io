@@ -3,146 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Engineering Topics</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- SEO Meta Tags -->
+    <title>Data Engineering Guides</title>
+    <meta name="description" content="Comprehensive data engineering concepts, services, and best practices across major cloud platforms.">
+    <meta name="keywords" content="[&#39;data engineering&#39;, &#39;cloud platforms&#39;, &#39;AWS&#39;, &#39;GCP&#39;, &#39;Azure&#39;, &#39;Databricks&#39;, &#39;distributed systems&#39;, &#39;SRE&#39;]">
+    <meta name="author" content="Varshith Ramachandra Manchikanti">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://varshithr.github.io/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://varshithr.github.io/">
+    <meta property="og:title" content="Data Engineering Guides">
+    <meta property="og:description" content="Comprehensive data engineering concepts, services, and best practices across major cloud platforms.">
+    <meta property="og:image" content="https://varshithr.github.io/assets/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://varshithr.github.io/">
+    <meta property="twitter:title" content="Data Engineering Guides">
+    <meta property="twitter:description" content="Comprehensive data engineering concepts, services, and best practices across major cloud platforms.">
+    <meta property="twitter:image" content="https://varshithr.github.io/assets/og-image.jpg">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F0F4F8;
-            color: #1E293B;
-        }
-        .gradient-text {
-            background: linear-gradient(90deg, #58508d, #bc5090);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .card {
-            background-color: white;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            cursor: pointer; /* Added for clickable cards */
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        }
-        .card-content {
-            flex-grow: 1;
-        }
-        .card-link {
-            margin-top: auto;
-            padding-top: 1rem;
-        }
-    </style>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Mermaid for diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/styles.css">
+
+    <!-- Additional head content -->
 </head>
-<body class="antialiased">
-    <header class="bg-white sticky top-0 z-50 shadow-md">
-        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+<body class="antialiased font-['Inter'] bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 bg-purple-600 text-white px-4 py-2 z-50 rounded" tabindex="0">
+        Skip to main content
+    </a>
+
+    <!-- Header -->
+<header class="bg-white sticky top-0 z-50 shadow-md border-b border-slate-200" role="banner">
+    <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center" role="navigation" aria-label="Main navigation">
+        <div class="flex items-center space-x-4">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="index.html" class="flex items-center">
-                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                <a href="index.html" class="flex items-center hover:text-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded" aria-label="Home - Data Engineering Guides">
+                    <svg class="w-6 h-6 mr-2 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 20 20" aria-hidden="true" role="img">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
                     <span class="gradient-text">Home</span>
                 </a>
             </div>
-            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
-                <li><a href="aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
-        <section id="hero" class="text-center mt-4 mb-3 sm:mt-6 sm:mb-6">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight">Case Studies and Cheatsheets</h1>
-            <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">Use this as a quick reference guide before an interview.</p>
-        </section>
-        <div id="topics-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="card">
-                <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Google Cloud Platform</h3>
-                    <p class="text-gray-600">Explore data engineering services on GCP, including BigQuery, Dataflow, and more.</p>
-                </div>
-                <div class="card-link">
-                    <a href="gcp/index.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">Explore GCP &rarr;</a>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Amazon Web Services</h3>
-                    <p class="text-gray-600">Discover AWS services for data engineering, such as Redshift, EMR, and Glue.</p>
-                </div>
-                <div class="card-link">
-                    <a href="aws/index.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">Explore AWS &rarr;</a>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Microsoft Azure</h3>
-                    <p class="text-gray-600">Learn about Azure's data services, including Synapse Analytics and Data Factory.</p>
-                </div>
-                <div class="card-link">
-                    <a href="azure/index.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">Explore Azure &rarr;</a>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Databricks</h3>
-                    <p class="text-gray-600">Dive into the Databricks Lakehouse platform for unified data and AI.</p>
-                </div>
-                <div class="card-link">
-                    <a href="databricks/index.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">Explore Databricks &rarr;</a>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">SQL & Data Modeling</h3>
-                    <p class="text-gray-600">Master essential SQL techniques and data modeling concepts for analytics.</p>
-                </div>
-                <div class="card-link">
-                    <a href="sql/index.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">Explore SQL &rarr;</a>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Case Studies</h3>
-                    <p class="text-gray-600">Real-world examples and implementations of data engineering solutions.</p>
-                </div>
-                <div class="card-link">
-                    <a href="case_studies.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">Explore Case Studies &rarr;</a>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-content">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">SRE Concepts</h3>
-                    <p class="text-gray-600">Deep dives into system design, distributed systems, and SRE concepts for staff-level engineers.</p>
-                </div>
-                <div class="card-link">
-                    <a href="learn_concepts/index.html" class="font-semibold text-[#58508d] hover:text-[#bc5090]">SRE Concepts &rarr;</a>
-                </div>
-            </div>
         </div>
-    </main>
-    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
-        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
-    </footer>
+        <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base" role="menubar">
+            <li role="none"><a href="aws/" class="hover:text-[#FF9900] transition-colors font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF9900] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="AWS Services - Amazon Web Services data engineering guides">AWS</a></li>
+            <li role="none"><a href="gcp/" class="hover:text-[#4285F4] transition-colors font-semibold focus:outline-none focus:ring-2 focus:ring-[#4285F4] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="GCP Services - Google Cloud Platform data engineering guides">GCP</a></li>
+            <li role="none"><a href="azure/" class="hover:text-[#0078D4] transition-colors font-semibold focus:outline-none focus:ring-2 focus:ring-[#0078D4] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="Azure Services - Microsoft Azure data engineering guides">Azure</a></li>
+            <li role="none"><a href="databricks/" class="hover:text-[#FF3621] transition-colors font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF3621] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="Databricks - Lakehouse platform guides">Databricks</a></li>
+            <li role="none"><a href="sql/" class="hover:text-[#336791] transition-colors font-semibold focus:outline-none focus:ring-2 focus:ring-[#336791] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="SQL & Data Modeling - Database and SQL guides">SQL</a></li>
+            <li role="none"><a href="case_studies.html" class="hover:text-[#bc5090] font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-[#bc5090] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="Case Studies - Real-world implementation examples">Case Studies</a></li>
+            <li role="none"><a href="learn_concepts/" class="hover:text-[#10B981] font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-[#10B981] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="SRE Concepts - System design and reliability engineering">SRE Concepts</a></li>
+            <li role="none"><a href="aboutme.html" class="hover:text-[#bc5090] font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-[#bc5090] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="About Me - Author information">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+    <!-- Sidebar (if needed) -->
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const link = card.querySelector('.card-link a');
-                    if (link) {
-                        window.location.href = link.href;
-                    }
-                });
+    <!-- Main Content -->
+    <main id="main-content" class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1">
+        <section id="hero" class="text-center mt-4 mb-6 sm:mt-6 sm:mb-12">
+    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight">
+        <span class="gradient-text">Data Engineering Guides</span>
+    </h1>
+    <p class="text-base sm:text-lg text-slate-600 max-w-3xl mx-auto">Comprehensive resources for data engineering concepts, cloud platforms, and system design patterns.</p>
+</section>
+
+<div id="topics-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="card group">
+        <div class="card-content">
+            <h3 class="text-xl font-bold text-slate-800 mb-2">Google Cloud Platform</h3>
+            <p class="text-slate-600">Explore data engineering services on GCP, including BigQuery, Dataflow, and more.</p>
+        </div>
+        <div class="card-link">
+            <a href="gcp/" class="font-semibold text-purple-600 hover:text-pink-600 group-hover:translate-x-1 transition-all">Explore GCP →</a>
+        </div>
+    </div>
+
+    <div class="card group">
+        <div class="card-content">
+            <h3 class="text-xl font-bold text-slate-800 mb-2">Amazon Web Services</h3>
+            <p class="text-slate-600">Discover AWS services for data engineering, such as Redshift, EMR, and Glue.</p>
+        </div>
+        <div class="card-link">
+            <a href="aws/" class="font-semibold text-purple-600 hover:text-pink-600 group-hover:translate-x-1 transition-all">Explore AWS →</a>
+        </div>
+    </div>
+
+    <div class="card group">
+        <div class="card-content">
+            <h3 class="text-xl font-bold text-slate-800 mb-2">Microsoft Azure</h3>
+            <p class="text-slate-600">Learn about Azure's data services, including Synapse Analytics and Data Factory.</p>
+        </div>
+        <div class="card-link">
+            <a href="azure/" class="font-semibold text-purple-600 hover:text-pink-600 group-hover:translate-x-1 transition-all">Explore Azure →</a>
+        </div>
+    </div>
+
+    <div class="card group">
+        <div class="card-content">
+            <h3 class="text-xl font-bold text-slate-800 mb-2">Databricks</h3>
+            <p class="text-slate-600">Dive into the Databricks Lakehouse platform for unified data and AI.</p>
+        </div>
+        <div class="card-link">
+            <a href="databricks/" class="font-semibold text-purple-600 hover:text-pink-600 group-hover:translate-x-1 transition-all">Explore Databricks →</a>
+        </div>
+    </div>
+
+    <div class="card group">
+        <div class="card-content">
+            <h3 class="text-xl font-bold text-slate-800 mb-2">SQL & Data Modeling</h3>
+            <p class="text-slate-600">Master essential SQL techniques and data modeling concepts for analytics.</p>
+        </div>
+        <div class="card-link">
+            <a href="sql/" class="font-semibold text-purple-600 hover:text-pink-600 group-hover:translate-x-1 transition-all">Explore SQL →</a>
+        </div>
+    </div>
+
+    <div class="card group">
+        <div class="card-content">
+            <h3 class="text-xl font-bold text-slate-800 mb-2">Case Studies</h3>
+            <p class="text-slate-600">Real-world examples and implementations of data engineering solutions.</p>
+        </div>
+        <div class="card-link">
+            <a href="case_studies.html" class="font-semibold text-purple-600 hover:text-pink-600 group-hover:translate-x-1 transition-all">View Case Studies →</a>
+        </div>
+    </div>
+
+    <div class="card group">
+        <div class="card-content">
+            <h3 class="text-xl font-bold text-slate-800 mb-2">SRE Concepts</h3>
+            <p class="text-slate-600">Deep dives into system design, distributed systems, and SRE concepts for staff-level engineers.</p>
+        </div>
+        <div class="card-link">
+            <a href="learn_concepts/" class="font-semibold text-purple-600 hover:text-pink-600 group-hover:translate-x-1 transition-all">SRE Concepts →</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', () => {
+                const link = card.querySelector('.card-link a');
+                if (link) {
+                    window.location.href = link.href;
+                }
             });
         });
+    });
+</script>
+    </main>
+
+    <!-- Footer -->
+<footer class="bg-slate-800 text-white text-center p-6 border-t border-slate-700" role="contentinfo">
+    <div class="container mx-auto">
+        <p class="text-slate-300">&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+        <nav class="mt-4" role="navigation" aria-label="Footer navigation">
+            <ul class="flex justify-center space-x-6 text-sm" role="menu">
+                <li role="none">
+                    <a href="/aboutme.html" class="text-slate-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-800 rounded px-2 py-1" role="menuitem" aria-label="About Me - Author information">About</a>
+                </li>
+                <li role="none">
+                    <a href="/case_studies.html" class="text-slate-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-800 rounded px-2 py-1" role="menuitem" aria-label="Case Studies - Real-world examples">Case Studies</a>
+                </li>
+                <li role="none">
+                    <a href="/learn_concepts/" class="text-slate-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-800 rounded px-2 py-1" role="menuitem" aria-label="Learning Concepts - Educational content">Learn</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</footer>
+    <!-- JavaScript -->
+    <script src="/assets/scripts.js"></script>
+
+    <!-- Initialize Mermaid -->
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
     </script>
 </body>
 </html>

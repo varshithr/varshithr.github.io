@@ -8,56 +8,35 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F0F4F8;
-            color: #1E293B;
-        }
-        .gradient-text {
-            background: linear-gradient(90deg, #FF9900, #232F3E);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .card {
-            background-color: white;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            cursor: pointer; /* Added for clickable cards */
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        }
-        .card-content {
-            flex-grow: 1;
-        }
-        .card-link {
-            margin-top: auto;
-            padding-top: 1rem;
-        }
-    </style>
+    
+    <link rel="stylesheet" href="/assets/styles.css">
 </head>
-<body class="antialiased">
-    <header class="bg-white sticky top-0 z-50 shadow-md">
-        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+<body class="antialiased min-h-screen flex flex-col">
+    <header class="bg-white sticky top-0 z-50 shadow-md border-b border-slate-200" role="banner">
+    <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center" role="navigation" aria-label="Main navigation">
+        <div class="flex items-center space-x-4">
             <div class="text-xl sm:text-2xl font-bold text-gray-800">
-                <a href="../index.html" class="flex items-center">
-                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
-                    <span class="gradient-text">Back to AWS Topics</span>
+                <a href="../../" class="flex items-center hover:text-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded" aria-label="Home - Data Engineering Guides">
+                    <svg class="w-6 h-6 mr-2 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 20 20" aria-hidden="true" role="img">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    <span class="gradient-aws">AWS</span>
                 </a>
             </div>
-            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
-                <li><a href="../../index.html" class="hover:text-[#FF9900]">Home</a></li>
-                <li><a href="../../aboutme.html" class="hover:text-[#FF9900] font-semibold">About Me</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
+        </div>
+        <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base" role="menubar">
+            <li role="none"><a href="./" class="hover:text-[#FF9900] transition-colors font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF9900] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="AWS Services - Amazon Web Services data engineering guides">AWS</a></li>
+            <li role="none"><a href="../../gcp/" class="hover:text-[#4285F4] transition-colors font-semibold focus:outline-none focus:ring-2 focus:ring-[#4285F4] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="GCP Services - Google Cloud Platform data engineering guides">GCP</a></li>
+            <li role="none"><a href="../../azure/" class="hover:text-[#0078D4] transition-colors font-semibold focus:outline-none focus:ring-2 focus:ring-[#0078D4] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="Azure Services - Microsoft Azure data engineering guides">Azure</a></li>
+            <li role="none"><a href="../../databricks/" class="hover:text-[#FF3621] transition-colors font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF3621] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="Databricks - Lakehouse platform guides">Databricks</a></li>
+            <li role="none"><a href="../../sql/" class="hover:text-[#336791] transition-colors font-semibold focus:outline-none focus:ring-2 focus:ring-[#336791] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="SQL & Data Modeling - Database and SQL guides">SQL</a></li>
+            <li role="none"><a href="../../case_studies.html" class="hover:text-[#bc5090] font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-[#bc5090] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="Case Studies - Real-world implementation examples">Case Studies</a></li>
+            <li role="none"><a href="../../learn_concepts/" class="hover:text-[#10B981] font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-[#10B981] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="SRE Concepts - System design and reliability engineering">SRE Concepts</a></li>
+            <li role="none"><a href="../../aboutme.html" class="hover:text-[#bc5090] font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-[#bc5090] focus:ring-offset-2 rounded px-2 py-1" role="menuitem" aria-label="About Me - Author information">About Me</a></li>
+        </ul>
+    </nav>
+</header>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 flex-1">
         <section id="hero" class="text-center mt-4 mb-3 sm:mt-6 sm:mb-6">
             <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight">AWS Case Studies</h1>
             <p class="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">A collection of case studies demonstrating practical applications of AWS data engineering technologies.</p>
@@ -101,9 +80,24 @@
             </div>
         </div>
     </main>
-    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
-        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
-    </footer>
+    <footer class="bg-slate-800 text-white text-center p-6 border-t border-slate-700" role="contentinfo">
+    <div class="container mx-auto">
+        <p class="text-slate-300">&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+        <nav class="mt-4" role="navigation" aria-label="Footer navigation">
+            <ul class="flex justify-center space-x-6 text-sm" role="menu">
+                <li role="none">
+                    <a href="/aboutme.html" class="text-slate-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-800 rounded px-2 py-1" role="menuitem" aria-label="About Me - Author information">About</a>
+                </li>
+                <li role="none">
+                    <a href="/case_studies.html" class="text-slate-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-800 rounded px-2 py-1" role="menuitem" aria-label="Case Studies - Real-world examples">Case Studies</a>
+                </li>
+                <li role="none">
+                    <a href="/learn_concepts/" class="text-slate-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-800 rounded px-2 py-1" role="menuitem" aria-label="Learning Concepts - Educational content">Learn</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

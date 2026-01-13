@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sharding Partitioning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#sharding-partitioning" class="level-1">Sharding &amp; Partitioning</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#partitioning-problem" class="level-3">Partitioning Problem</a></li>
+                <li><a href="#sharding-strategies" class="level-3">Sharding Strategies</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#range-partitioning" class="level-3">Range Partitioning</a></li>
+                <li><a href="#hash-partitioning" class="level-3">Hash Partitioning</a></li>
+                <li><a href="#consistent-hashing" class="level-3">Consistent Hashing</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#partitioning-failures" class="level-3">Partitioning Failures</a></li>
+                <li><a href="#scenario-1-hot-spots" class="level-4">Scenario 1: Hot Spots</a></li>
+                <li><a href="#scenario-2-shard-failure" class="level-4">Scenario 2: Shard Failure</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics" class="level-3">Metrics</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#partitioning-changes" class="level-3">Partitioning Changes</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#range-vs-hash-partitioning" class="level-3">Range vs Hash Partitioning</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#best-practices" class="level-3">Best Practices</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="sharding-partitioning">Sharding &amp; Partitioning</h1>
+<p><strong>One-line summary</strong>: Understanding how to partition data across multiple nodes, sharding strategies, and handling hot spots.</p>
+<p><strong>Prerequisites</strong>: <a href="replication.html">Replication Strategies</a>, understanding of data distribution.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="partitioning-problem">Partitioning Problem</h3>
+<p><strong>Partitioning</strong>: Dividing data across multiple nodes.</p>
+<p><strong>Goals</strong>:
+- <strong>Scale</strong>: Handle more data than single node
+- <strong>Performance</strong>: Distribute load across nodes
+- <strong>Isolation</strong>: Isolate failures</p>
+<div class="mermaid">
+graph LR
+Data[Data] --> Shard1[Shard 1]
+Data --> Shard2[Shard 2]
+Data --> Shard3[Shard 3]
+style Data fill:#99ccff
+style Shard1 fill:#ffcc99
+style Shard2 fill:#ffcc99
+style Shard3 fill:#ffcc99
+</div>
+<p><strong>Key insight</strong>: Partitioning enables horizontal scaling but introduces complexity.</p>
+<h3 id="sharding-strategies">Sharding Strategies</h3>
+<p><strong>Range partitioning</strong>: Partition by key ranges.
+- <strong>Pros</strong>: Simple, supports range queries
+- <strong>Cons</strong>: Hot spots, uneven distribution</p>
+<p><strong>Hash partitioning</strong>: Partition by hash of key.
+- <strong>Pros</strong>: Even distribution, no hot spots
+- <strong>Cons</strong>: No range queries, rebalancing needed</p>
+<p><strong>Directory partitioning</strong>: Use directory to map keys to shards.
+- <strong>Pros</strong>: Flexible, easy rebalancing
+- <strong>Cons</strong>: Directory is bottleneck, single point of failure</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="range-partitioning">Range Partitioning</h3>
+<p><strong>How it works</strong>:
+- <strong>Partition key</strong>: Choose partition key (e.g., user_id)
+- <strong>Ranges</strong>: Assign ranges to shards (e.g., 0-1000, 1001-2000)
+- <strong>Routing</strong>: Route queries to appropriate shard</p>
+<p><strong>Use case</strong>: When range queries are needed.</p>
+<h3 id="hash-partitioning">Hash Partitioning</h3>
+<p><strong>How it works</strong>:
+- <strong>Hash function</strong>: Hash partition key
+- <strong>Shard assignment</strong>: Assign hash ranges to shards
+- <strong>Routing</strong>: Route queries based on hash</p>
+<p><strong>Use case</strong>: When even distribution is priority.</p>
+<h3 id="consistent-hashing">Consistent Hashing</h3>
+<p><strong>Consistent hashing</strong>: Hash ring for shard assignment.</p>
+<p><strong>Properties</strong>:
+- <strong>Minimal rebalancing</strong>: Only rebalance affected shards
+- <strong>Even distribution</strong>: Hash ring ensures distribution
+- <strong>Fault tolerance</strong>: Handles node failures</p>
+<p><strong>Use case</strong>: Dynamic sharding with minimal rebalancing.</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="partitioning-failures">Partitioning Failures</h3>
+<h4 id="scenario-1-hot-spots">Scenario 1: Hot Spots</h4>
+<ul>
+<li><strong>Impact</strong>: Single shard overloaded, increased latency</li>
+<li><strong>Blast radius</strong>: Affected shard</li>
+<li><strong>Detection</strong>: High load on shard, uneven distribution</li>
+<li><strong>Recovery</strong>: Rebalance data, split hot shard</li>
+<li><strong>Mitigation</strong>: Design keys for even distribution, monitor hot spots</li>
+</ul>
+<h4 id="scenario-2-shard-failure">Scenario 2: Shard Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Data on shard unavailable</li>
+<li><strong>Blast radius</strong>: Affected shard</li>
+<li><strong>Detection</strong>: Shard health checks fail</li>
+<li><strong>Recovery</strong>: Replicate shard, restore from backup</li>
+<li><strong>Mitigation</strong>: Replicate shards, automatic failover</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics">Metrics</h3>
+<ul>
+<li><strong>Shard load</strong>: Load per shard</li>
+<li><strong>Hot spots</strong>: Shards with high load</li>
+<li><strong>Rebalancing events</strong>: Shard rebalancing frequency</li>
+<li><strong>Shard health</strong>: Health of shards</li>
+</ul>
+<h3 id="alerts">Alerts</h3>
+<ul>
+<li>Hot spots detected</li>
+<li>Shard failures</li>
+<li>Uneven distribution</li>
+<li>High rebalancing rate</li>
+</ul>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="partitioning-changes">Partitioning Changes</h3>
+<ul>
+<li><strong>Process</strong>: Update partitioning, rebalance data</li>
+<li><strong>Risk</strong>: High (may affect availability)</li>
+<li><strong>Rollback</strong>: Revert partitioning</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="range-vs-hash-partitioning">Range vs Hash Partitioning</h3>
+<p><strong>Range partitioning</strong>:
+- <strong>Pros</strong>: Supports range queries, simple
+- <strong>Cons</strong>: Hot spots, uneven distribution</p>
+<p><strong>Hash partitioning</strong>:
+- <strong>Pros</strong>: Even distribution, no hot spots
+- <strong>Cons</strong>: No range queries, rebalancing needed</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="best-practices">Best Practices</h3>
+<ol>
+<li><strong>Choose right strategy</strong>: Match partitioning to access patterns</li>
+<li><strong>Design keys</strong>: Design partition keys for even distribution</li>
+<li><strong>Monitor hot spots</strong>: Track and handle hot spots</li>
+<li><strong>Plan rebalancing</strong>: Plan for data growth and rebalancing</li>
+</ol>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<ul>
+<li>"What partitioning strategy is used?"</li>
+<li>"How are hot spots avoided?"</li>
+<li>"What happens if a shard fails?"</li>
+<li>"How is rebalancing handled?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/sharding-partitioning.html">Further Reading: Sharding &amp; Partitioning</a></p>
+<p><strong>Quick Links</strong>:
+- "Scalable Web Architecture and Distributed Systems" (Barroso &amp; Hölzle)
+- <a href="../03-gcp-core-building-blocks/bigtable.html">Bigtable: Design &amp; Tradeoffs</a>
+- <a href="../03-gcp-core-building-blocks/bigquery.html">BigQuery Architecture</a>
+- <a href="README.html">Back to Distributed Systems</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design partitioning</strong>: Design a partitioning strategy for a user database. What partition key? What strategy?</p>
+</li>
+<li>
+<p><strong>Handle hot spots</strong>: Your partitioned system has hot spots. How do you fix them?</p>
+</li>
+<li>
+<p><strong>Rebalance data</strong>: How do you rebalance data when adding new shards?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/sharding-partitioning-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

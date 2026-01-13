@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dimensional Modeling & Lakehouse Pipelines</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f9ff; /* Very light blue background */
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+        .section-header {
+            background-color: #0c4a6e; /* Dark blue-gray */
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        .section-header:hover {
+            background-color: #164e63; /* Slightly lighter on hover */
+        }
+        .section-content {
+            background-color: #f8fafc; /* Lighter background for content */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e0f2f7; /* Light border */
+        }
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        .accordion-icon.rotated {
+            transform: rotate(90deg);
+        }
+        ul.list-disc li {
+            margin-bottom: 0.5rem;
+        }
+        pre {
+            background-color: #f4f6f8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: #36454F; /* Charcoal */
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                <a href="index.html" class="flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    <span class="gradient-text">Back to SQL Topics</span>
+                </a>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../aboutme.html" class="hover:text-[#336791] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="space-y-8">
+            <div class="card">
+    <div class="container">
+        <h1 class="text-4xl font-bold text-center mb-8 text-sky-800">Dimensional Modeling & Lakehouse Pipeline Design</h1>
+
+        <!-- Principles of Dimensional Modeling -->
+        <div class="mb-6">
+            <div class="section-header" onclick="toggleSection('dimensional-modeling')">
+                <h2 class="text-2xl font-semibold">Principles of Dimensional Modeling</h2>
+                <span class="accordion-icon text-2xl font-bold" id="dimensional-modeling-icon">+</span>
+            </div>
+            <div id="dimensional-modeling-content" class="section-content hidden">
+                <p class="mb-4">Dimensional modeling is a data design technique used for data warehouses and data marts, optimized for analytical querying and reporting. It structures data into "facts" (measures) and "dimensions" (context).</p>
+
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">Key Concepts:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Fact Tables:</strong>
+                        <p>Contain quantitative measurements (metrics) and foreign keys to dimension tables. Facts are typically numeric and additive.</p>
+                        <ul class="list-circle list-inside ml-4">
+                            <li><strong>Additive Facts:</strong> Can be summed across all dimensions (e.g., sales amount, quantity).</li>
+                            <li><strong>Semi-Additive Facts:</strong> Can be summed across some dimensions but not all (e.g., account balance - sum across customers, but not across time).</li>
+                            <li><strong>Non-Additive Facts:</strong> Cannot be summed across any dimension (e.g., unit price, ratios). Require specific aggregations like average, min, max.</li>
+                        </ul>
+                    </li>
+                    <li class="mb-2"><strong>Dimension Tables:</strong>
+                        <p>Contain descriptive attributes that provide context to the facts. They answer "who, what, where, when, why, how."</p>
+                        <ul class="list-circle list-inside ml-4">
+                            <li><strong>Slowly Changing Dimensions (SCDs):</strong> Handle changes in dimension attributes over time.
+                                <ul class="list-square list-inside ml-4">
+                                    <li><strong>SCD Type 0 (Retain Original):</strong> Attribute never changes.</li>
+                                    <li><strong>SCD Type 1 (Overwrite):</strong> Old value is overwritten by new value (no history).</li>
+                                    <li><strong>SCD Type 2 (Add New Row):</strong> A new row is added for each change, preserving full history. Most common.</li>
+                                    <li><strong>SCD Type 3 (Add New Column):</strong> A new column is added to store the old value.</li>
+                                    <li><strong>SCD Type 4 (History Table):</strong> Current attributes in dimension, history in separate table.</li>
+                                    <li><strong>SCD Type 6 (Hybrid):</strong> Combines Type 1, 2, and 3 (e.g., current value, historical value, and effective dates).</li>
+                                </ul>
+                            </li>
+                            <li><strong>Conformed Dimensions:</strong> Dimensions that are shared across multiple fact tables or data marts, ensuring consistent reporting and integration across business areas.</li>
+                        </ul>
+                    </li>
+                    <li class="mb-2"><strong>Granularity:</strong> The level of detail stored in a fact table. It's crucial to define the lowest level of detail for which data is captured (e.g., sales per item per day per store).</li>
+                    <li class="mb-2"><strong>Surrogate Keys:</strong> Simple, system-generated integer keys used in dimension tables instead of natural keys. They provide performance benefits, handle SCDs, and isolate the data warehouse from source system key changes.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">Schema Types:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Star Schema:</strong>
+                        <p>The simplest and most common dimensional model. A central fact table surrounded by denormalized dimension tables. Optimized for query performance and ease of understanding.</p>
+                        <pre><code>
+        [Time Dimension]
+              |
+              |
+[Product Dimension] --- [Fact Table] --- [Customer Dimension]
+              |
+              |
+        [Store Dimension]
+                        </code></pre>
+                    </li>
+                    <li class="mb-2"><strong>Snowflake Schema:</strong>
+                        <p>An extension of the star schema where dimensions are normalized into multiple related tables. Reduces data redundancy but can increase query complexity due to more joins.</p>
+                        <pre><code>
+        [Time Dimension]
+              |
+              |
+[Product Category] --- [Product Dimension] --- [Fact Table] --- [Customer Dimension]
+                                 |
+                                 |
+                          [Store Location] --- [Store Dimension]
+                        </code></pre>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Lakehouse Pipeline Design Best Practices -->
+        <div class="mb-6">
+            <div class="section-header" onclick="toggleSection('lakehouse-pipelines')">
+                <h2 class="text-2xl font-semibold">Lakehouse Pipeline Design Best Practices</h2>
+                <span class="accordion-icon text-2xl font-bold" id="lakehouse-pipelines-icon">+</span>
+            </div>
+            <div id="lakehouse-pipelines-content" class="section-content hidden">
+                <p class="mb-4">Designing robust and efficient data pipelines in a Lakehouse environment (like Databricks) involves leveraging its unique capabilities.</p>
+
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">1. Medallion Architecture (Bronze, Silver, Gold):</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Bronze Layer (Raw Data Lake):</strong>
+                        <p>Ingest data as-is from source systems. Use Delta Lake for ACID properties and schema inference. Ideal for append-only operations.</p>
+                        <pre><code>
+# Example: Ingesting raw JSON into Bronze
+df_raw = spark.readStream.format("cloudFiles") \
+    .option("cloudFiles.format", "json") \
+    .load("/mnt/raw_data/json")
+
+df_raw.writeStream.format("delta") \
+    .option("checkpointLocation", "/mnt/checkpoints/bronze") \
+    .toTable("bronze_layer.raw_events")
+                        </code></pre>
+                    </li>
+                    <li class="mb-2"><strong>Silver Layer (Cleaned & Conformed):</strong>
+                        <p>Apply data cleaning, filtering, basic transformations, and schema enforcement. This is where you might implement SCDs for dimensions.</p>
+                        <pre><code>
+# Example: Cleaning and transforming to Silver
+# Assuming 'bronze_events' is streaming from bronze layer
+df_silver = spark.readStream.table("bronze_layer.raw_events") \
+    .withColumn("processed_timestamp", current_timestamp()) \
+    .filter("event_type IS NOT NULL") # Basic cleaning
+
+df_silver.writeStream.format("delta") \
+    .option("checkpointLocation", "/mnt/checkpoints/silver") \
+    .toTable("silver_layer.cleaned_events")
+                        </code></pre>
+                    </li>
+                    <li class="mb-2"><strong>Gold Layer (Curated & Aggregated):</strong>
+                        <p>Create highly refined, aggregated, and business-ready data optimized for specific use cases (BI, ML). This is where dimensional models (fact and dimension tables) reside.</p>
+                        <pre><code>
+# Example: Creating a Gold layer fact table
+df_sales_fact = spark.readStream.table("silver_layer.cleaned_events") \
+    .groupBy("product_id", "customer_id", "date") \
+    .agg(sum("quantity").alias("total_quantity"), sum("price").alias("total_sales"))
+
+df_sales_fact.writeStream.format("delta") \
+    .option("checkpointLocation", "/mnt/checkpoints/gold") \
+    .toTable("gold_layer.sales_fact")
+                        </code></pre>
+                    </li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">2. Data Ingestion Strategies:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Batch Processing:</strong> For large historical data loads or less time-sensitive data. Use Spark batch jobs.</li>
+                    <li class="mb-2"><strong>Streaming Ingestion (Structured Streaming):</strong> For real-time or near real-time data. Leverage Spark Structured Streaming with Delta Lake for exactly-once processing and low latency.</li>
+                    <li class="mb-2"><strong>Auto Loader:</strong> For efficient and scalable ingestion of new files arriving in cloud storage. Automatically detects and processes new files.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">3. Data Quality and Validation:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Schema Enforcement & Evolution:</strong> Delta Lake automatically enforces schema. Use <code>mergeSchema</code> or <code>overwriteSchema</code> options for controlled schema evolution.</li>
+                    <li class="mb-2"><strong>Expectations (Delta Live Tables - DLT):</strong> Use DLT's "expectations" feature to define data quality rules and handle invalid records (e.g., quarantine, drop, fail).</li>
+                    <li class="mb-2"><strong>Data Validation Frameworks:</strong> Integrate with tools like Great Expectations or Deequ for robust data validation checks.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">4. Performance Optimization:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Delta Lake Optimizations:</strong>
+                        <ul class="list-circle list-inside ml-4">
+                            <li><strong><code>OPTIMIZE</code> & <code>ZORDER BY</code>:</strong> Periodically run <code>OPTIMIZE</code> to compact small files and <code>ZORDER BY</code> on frequently queried columns to improve query performance.</li>
+                            <li><strong>Liquid Clustering:</strong> Use as a flexible alternative to partitioning and Z-Ordering for dynamic data distribution.</li>
+                            <li><strong>Predictive I/O:</strong> Leverage Databricks' Photon engine for vectorized query execution and optimized I/O.</li>
+                        </ul>
+                    </li>
+                    <li class="mb-2"><strong>Cluster Sizing & Autoscaling:</strong> Configure clusters with appropriate instance types and enable autoscaling to match compute resources to workload demands.</li>
+                    <li class="mb-2"><strong>Adaptive Query Execution (AQE):</strong> Ensure AQE is enabled (Spark 3.0+) for runtime query plan optimizations.</li>
+                    <li class="mb-2"><strong>Broadcast Joins:</strong> Apply for small-to-large table joins to avoid costly shuffles.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">5. Data Governance & Security:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Unity Catalog:</strong> Centralize metadata, access control, auditing, and lineage for all data assets across your Lakehouse. Essential for robust governance.</li>
+                    <li class="mb-2"><strong>Least Privilege:</strong> Implement strict access controls, granting only necessary permissions to users and service accounts.</li>
+                    <li class="mb-2"><strong>Secrets Management:</strong> Use Databricks Secrets or cloud-native secret managers for credentials.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">6. Observability & Monitoring:</h3>
+                <ul class="list-disc list-inside mb-4 pl-4">
+                    <li class="mb-2"><strong>Logging & Alerting:</strong> Implement comprehensive logging within pipelines and set up alerts for failures, performance degradation, or data quality issues.</li>
+                    <li class="mb-2"><strong>Monitoring Tools:</strong> Utilize Spark UI, Databricks UI, and integrate with external monitoring systems (e.g., Prometheus, Grafana, cloud-native monitoring).</li>
+                    <li class="mb-2"><strong>Data Lineage:</strong> Use Unity Catalog's lineage capabilities to track data flow and transformations.</li>
+                </ul>
+
+                <h3 class="text-xl font-semibold mb-2 text-sky-700">7. CI/CD and Automation:</h3>
+                <ul class="list-disc list-inside pl-4">
+                    <li class="mb-2"><strong>Databricks Repos:</strong> Integrate your notebooks and code with Git for version control and collaborative development.</li>
+                    <li class="mb-2"><strong>Automated Testing:</strong> Incorporate unit, integration, and data quality tests into your CI/CD pipeline.</li>
+                    <li class="mb-2"><strong>Job Orchestration:</strong> Use Databricks Workflows, Apache Airflow, or other orchestrators to schedule and manage pipeline execution.</li>
+                    <li class="mb-2"><strong>Infrastructure as Code (IaC):</strong> Manage Databricks workspaces, clusters, and jobs using tools like Terraform.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for accordion functionality
+        function toggleSection(id) {
+            const content = document.getElementById(id + '-content');
+            const icon = document.getElementById(id + '-icon');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotated');
+                icon.textContent = '-';
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('rotated');
+                icon.textContent = '+';
+            }
+        }
+    </script>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+</body>
+</html>

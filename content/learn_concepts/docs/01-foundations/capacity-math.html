@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capacity Math</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#capacity-math-cheat-sheet" class="level-1">Capacity Math Cheat Sheet</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#capacity-planning-process" class="level-3">Capacity Planning Process</a></li>
+                <li><a href="#key-formula" class="level-3">Key Formula</a></li>
+                <li><a href="#resource-calculation-flow" class="level-3">Resource Calculation Flow</a></li>
+                <li><a href="#cpu-capacity" class="level-2">CPU Capacity</a></li>
+                <li><a href="#calculating-cpu-needs" class="level-3">Calculating CPU Needs</a></li>
+                <li><a href="#cpu-considerations" class="level-3">CPU Considerations</a></li>
+                <li><a href="#cpu-scaling" class="level-3">CPU Scaling</a></li>
+                <li><a href="#memory-capacity" class="level-2">Memory Capacity</a></li>
+                <li><a href="#calculating-memory-needs" class="level-3">Calculating Memory Needs</a></li>
+                <li><a href="#memory-considerations" class="level-3">Memory Considerations</a></li>
+                <li><a href="#memory-scaling" class="level-3">Memory Scaling</a></li>
+                <li><a href="#disk-capacity" class="level-2">Disk Capacity</a></li>
+                <li><a href="#calculating-disk-needs" class="level-3">Calculating Disk Needs</a></li>
+                <li><a href="#disk-io-capacity" class="level-3">Disk I/O Capacity</a></li>
+                <li><a href="#disk-scaling" class="level-3">Disk Scaling</a></li>
+                <li><a href="#network-capacity" class="level-2">Network Capacity</a></li>
+                <li><a href="#calculating-network-needs" class="level-3">Calculating Network Needs</a></li>
+                <li><a href="#network-considerations" class="level-3">Network Considerations</a></li>
+                <li><a href="#network-scaling" class="level-3">Network Scaling</a></li>
+                <li><a href="#capacity-forecasting" class="level-2">Capacity Forecasting</a></li>
+                <li><a href="#growth-projections" class="level-3">Growth Projections</a></li>
+                <li><a href="#safety-margins" class="level-3">Safety Margins</a></li>
+                <li><a href="#capacity-planning-example" class="level-2">Capacity Planning Example</a></li>
+                <li><a href="#scenario-api-service" class="level-3">Scenario: API Service</a></li>
+                <li><a href="#what-staff-engineers-ask" class="level-2">What Staff Engineers Ask</a></li>
+                <li><a href="#design-questions" class="level-3">Design Questions</a></li>
+                <li><a href="#scale-questions" class="level-3">Scale Questions</a></li>
+                <li><a href="#operational-questions" class="level-3">Operational Questions</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="capacity-math-cheat-sheet">Capacity Math Cheat Sheet</h1>
+<p><strong>One-line summary</strong>: How to calculate CPU, memory, disk, and network capacity needs from requirements.</p>
+<p><strong>Prerequisites</strong>: Basic arithmetic, understanding of system resources.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="capacity-planning-process">Capacity Planning Process</h3>
+<div class="mermaid">
+flowchart TD
+Requirements[Understand Requirements] --> Baseline[Measure Baseline]
+Baseline --> Calculate[Calculate Capacity]
+Calculate --> Margin[Add Safety Margin]
+Margin --> Scaling[Plan Scaling]
+Scaling --> Monitor[Monitor & Adjust]
+Monitor --> Requirements
+style Requirements fill:#99ccff
+style Calculate fill:#ffcc99
+style Scaling fill:#99ff99
+</div>
+<ol>
+<li><strong>Understand requirements</strong>: Latency, throughput, data volume</li>
+<li><strong>Measure baseline</strong>: Current resource usage per request</li>
+<li><strong>Calculate capacity</strong>: Resources needed for target load</li>
+<li><strong>Add safety margin</strong>: Buffer for spikes and growth</li>
+<li><strong>Plan scaling</strong>: How to scale as load grows</li>
+</ol>
+<h3 id="key-formula">Key Formula</h3>
+<p><strong>Total Capacity = (Requests/Second × Resources Per Request) × Safety Margin</strong></p>
+<h3 id="resource-calculation-flow">Resource Calculation Flow</h3>
+<div class="mermaid">
+graph LR
+QPS[QPS] --> CPU[CPU Calculation]
+QPS --> Memory[Memory Calculation]
+QPS --> Disk[Disk Calculation]
+QPS --> Network[Network Calculation]
+CPU --> Total[Total Capacity]
+Memory --> Total
+Disk --> Total
+Network --> Total
+Total --> Instances[Instance Count]
+style QPS fill:#99ccff
+style Total fill:#ffcc99
+style Instances fill:#99ff99
+</div>
+<hr />
+<h2 id="cpu-capacity">CPU Capacity</h2>
+<h3 id="calculating-cpu-needs">Calculating CPU Needs</h3>
+<p><strong>Formula</strong>: <code>CPU Cores = (QPS × CPU Time Per Request) / Target Utilization</code></p>
+<p><strong>Example</strong>:
+- QPS: 1000 requests/second
+- CPU time per request: 10ms = 0.01 seconds
+- Target utilization: 70% (leave 30% headroom)
+- CPU cores = (1000 × 0.01) / 0.7 = 14.3 cores → <strong>15 cores</strong></p>
+<h3 id="cpu-considerations">CPU Considerations</h3>
+<ul>
+<li><strong>Single-threaded vs multi-threaded</strong>: Multi-threaded can use more cores</li>
+<li><strong>CPU-bound vs I/O-bound</strong>: I/O-bound may need more cores for concurrency</li>
+<li><strong>Context switching overhead</strong>: Too many threads can hurt performance</li>
+<li><strong>NUMA</strong>: Non-uniform memory access affects performance</li>
+</ul>
+<h3 id="cpu-scaling">CPU Scaling</h3>
+<ul>
+<li><strong>Vertical scaling</strong>: Larger instances (more CPU per instance)</li>
+<li><strong>Horizontal scaling</strong>: More instances (more total CPU)</li>
+<li><strong>Auto-scaling</strong>: Scale based on CPU utilization</li>
+</ul>
+<hr />
+<h2 id="memory-capacity">Memory Capacity</h2>
+<h3 id="calculating-memory-needs">Calculating Memory Needs</h3>
+<p><strong>Formula</strong>: <code>Memory = (QPS × Memory Per Request) + Base Memory + Cache</code></p>
+<p><strong>Components</strong>:
+1. <strong>Per-request memory</strong>: Memory used processing each request
+2. <strong>Base memory</strong>: OS, runtime, application base
+3. <strong>Cache memory</strong>: Data structures, caches</p>
+<p><strong>Example</strong>:
+- QPS: 1000 requests/second
+- Memory per request: 1MB (peak, not average)
+- Base memory: 2GB
+- Cache: 10GB
+- <strong>Total memory = (1000 × 1MB) + 2GB + 10GB = 13GB</strong></p>
+<p><strong>Wait</strong>: Per-request memory is peak, not cumulative. Need to account for concurrency.</p>
+<p><strong>Better formula</strong>: <code>Memory = (Concurrent Requests × Memory Per Request) + Base Memory + Cache</code></p>
+<p><strong>Example</strong>:
+- Concurrent requests: 100 (requests in flight)
+- Memory per request: 1MB
+- Base memory: 2GB
+- Cache: 10GB
+- <strong>Total memory = (100 × 1MB) + 2GB + 10GB = 12.1GB</strong></p>
+<h3 id="memory-considerations">Memory Considerations</h3>
+<ul>
+<li><strong>Peak vs average</strong>: Use peak memory for capacity planning</li>
+<li><strong>Garbage collection</strong>: GC overhead in managed languages</li>
+<li><strong>Memory leaks</strong>: Monitor for gradual memory growth</li>
+<li><strong>Swap</strong>: Avoid swap for performance-critical systems</li>
+</ul>
+<h3 id="memory-scaling">Memory Scaling</h3>
+<ul>
+<li><strong>Vertical scaling</strong>: Larger instances (more RAM)</li>
+<li><strong>Horizontal scaling</strong>: More instances (distribute memory)</li>
+<li><strong>Cache scaling</strong>: Separate cache layer (Redis, Memcached)</li>
+</ul>
+<hr />
+<h2 id="disk-capacity">Disk Capacity</h2>
+<h3 id="calculating-disk-needs">Calculating Disk Needs</h3>
+<p><strong>Formula</strong>: <code>Disk = Data Volume + Logs + Temporary Files + Safety Margin</code></p>
+<p><strong>Components</strong>:
+1. <strong>Data volume</strong>: Persistent data storage
+2. <strong>Logs</strong>: Application and system logs
+3. <strong>Temporary files</strong>: Temp files, caches
+4. <strong>Safety margin</strong>: Buffer for growth</p>
+<p><strong>Example</strong>:
+- Data volume: 100GB
+- Logs (30 days retention): 50GB
+- Temporary files: 10GB
+- Safety margin (20%): 32GB
+- <strong>Total disk = 192GB → 200GB</strong></p>
+<h3 id="disk-io-capacity">Disk I/O Capacity</h3>
+<p><strong>Formula</strong>: <code>IOPS Needed = QPS × I/O Operations Per Request</code></p>
+<p><strong>Example</strong>:
+- QPS: 1000 requests/second
+- I/O operations per request: 2 (read + write)
+- <strong>IOPS needed = 1000 × 2 = 2000 IOPS</strong></p>
+<p><strong>Considerations</strong>:
+- <strong>SSD vs HDD</strong>: SSD has much higher IOPS
+- <strong>Random vs sequential</strong>: Random I/O is slower
+- <strong>Read vs write</strong>: Writes are often slower</p>
+<h3 id="disk-scaling">Disk Scaling</h3>
+<ul>
+<li><strong>Vertical scaling</strong>: Larger disks, faster disks (SSD)</li>
+<li><strong>Horizontal scaling</strong>: Shard data across instances</li>
+<li><strong>Separate storage</strong>: Use managed storage (Cloud Storage, databases)</li>
+</ul>
+<hr />
+<h2 id="network-capacity">Network Capacity</h2>
+<h3 id="calculating-network-needs">Calculating Network Needs</h3>
+<p><strong>Formula</strong>: <code>Bandwidth = QPS × (Request Size + Response Size)</code></p>
+<p><strong>Example</strong>:
+- QPS: 1000 requests/second
+- Request size: 1KB
+- Response size: 10KB
+- <strong>Bandwidth = 1000 × (1KB + 10KB) = 11MB/s = 88Mbps</strong></p>
+<h3 id="network-considerations">Network Considerations</h3>
+<ul>
+<li><strong>Bidirectional</strong>: Both ingress and egress matter</li>
+<li><strong>Peak vs average</strong>: Plan for peak traffic</li>
+<li><strong>Compression</strong>: Can reduce bandwidth needs</li>
+<li><strong>CDN</strong>: Reduces egress bandwidth</li>
+</ul>
+<h3 id="network-scaling">Network Scaling</h3>
+<ul>
+<li><strong>Vertical scaling</strong>: Larger network capacity per instance</li>
+<li><strong>Horizontal scaling</strong>: More instances (distribute load)</li>
+<li><strong>CDN</strong>: Offload static content</li>
+</ul>
+<hr />
+<h2 id="capacity-forecasting">Capacity Forecasting</h2>
+<h3 id="growth-projections">Growth Projections</h3>
+<p><strong>Linear growth</strong>: <code>Future Capacity = Current Capacity × (1 + Growth Rate × Time)</code></p>
+<p><strong>Example</strong>:
+- Current capacity: 1000 QPS
+- Growth rate: 10% per month
+- Time: 6 months
+- <strong>Future capacity = 1000 × (1 + 0.10 × 6) = 1600 QPS</strong></p>
+<p><strong>Exponential growth</strong>: <code>Future Capacity = Current Capacity × (1 + Growth Rate)^Time</code></p>
+<p><strong>Example</strong>:
+- Current capacity: 1000 QPS
+- Growth rate: 10% per month
+- Time: 6 months
+- <strong>Future capacity = 1000 × (1.10)^6 = 1771 QPS</strong></p>
+<h3 id="safety-margins">Safety Margins</h3>
+<p><strong>Recommended margins</strong>:
+- <strong>CPU</strong>: 20-30% headroom (70-80% utilization)
+- <strong>Memory</strong>: 20% headroom
+- <strong>Disk</strong>: 20-30% headroom
+- <strong>Network</strong>: 30-50% headroom (for bursts)</p>
+<p><strong>Why margins?</strong>
+- Traffic spikes
+- Growth uncertainty
+- Failure scenarios (fewer instances)
+- Maintenance windows</p>
+<hr />
+<h2 id="capacity-planning-example">Capacity Planning Example</h2>
+<h3 id="scenario-api-service">Scenario: API Service</h3>
+<p><strong>Requirements</strong>:
+- QPS: 10,000 requests/second
+- P95 latency: &lt; 100ms
+- Availability: 99.9%</p>
+<p><strong>Baseline measurements</strong> (per request):
+- CPU time: 5ms
+- Memory: 2MB (peak)
+- Disk I/O: 1 operation (read)
+- Network: 5KB request + 20KB response</p>
+<p><strong>Calculations</strong>:</p>
+<p><strong>CPU</strong>:
+- CPU cores = (10,000 × 0.005) / 0.7 = 71.4 cores
+- With 8-core instances: 71.4 / 8 = 9 instances
+- <strong>Recommendation: 10 instances (80 cores)</strong></p>
+<p><strong>Memory</strong>:
+- Concurrent requests ≈ QPS × latency = 10,000 × 0.1 = 1,000
+- Memory = (1,000 × 2MB) + 2GB base + 10GB cache = 14GB
+- With 16GB instances: 14GB / 16GB = 1 instance
+- <strong>Recommendation: 2 instances (for redundancy)</strong></p>
+<p><strong>Disk I/O</strong>:
+- IOPS = 10,000 × 1 = 10,000 IOPS
+- Per instance: 10,000 / 10 instances = 1,000 IOPS per instance
+- <strong>Recommendation: SSD with &gt; 1,000 IOPS</strong></p>
+<p><strong>Network</strong>:
+- Bandwidth = 10,000 × (5KB + 20KB) = 250MB/s = 2Gbps
+- Per instance: 2Gbps / 10 instances = 200Mbps per instance
+- <strong>Recommendation: Instances with &gt; 200Mbps capacity</strong></p>
+<p><strong>Final recommendation</strong>: 10 instances, 8 cores, 16GB RAM, SSD, &gt; 200Mbps network each.</p>
+<hr />
+<h2 id="what-staff-engineers-ask">What Staff Engineers Ask</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>"What's the capacity per instance?"</li>
+<li>"How do we scale horizontally?"</li>
+<li>"What's the bottleneck resource?"</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>"What happens at 2× load?"</li>
+<li>"How do we scale to 10× load?"</li>
+<li>"What's the maximum capacity?"</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>"How do we monitor capacity?"</li>
+<li>"What alerts do we have?"</li>
+<li>"How do we forecast capacity needs?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/capacity-math.html">Further Reading: Capacity Math</a></p>
+<p><strong>Quick Links</strong>:
+- "Systems Performance" by Brendan Gregg
+- "The Datacenter as a Computer" (Barroso &amp; Hölzle, 2018)
+- <a href="queueing-tail-latency.html">Queueing Theory &amp; Tail Latency</a>
+- <a href="README.html">Back to Foundations</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Calculate capacity</strong>: API with 5,000 QPS, 20ms CPU time per request, 5MB memory per request. How many 8-core, 32GB instances do you need?</p>
+</li>
+<li>
+<p><strong>Forecast growth</strong>: Current capacity handles 1,000 QPS. Traffic grows 15% per month. What capacity do you need in 12 months?</p>
+</li>
+<li>
+<p><strong>Identify bottleneck</strong>: System with 1,000 QPS, CPU at 50%, memory at 90%, disk I/O at 80%. What's the bottleneck?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/capacity-math-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

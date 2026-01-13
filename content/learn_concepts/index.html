@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Readme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#gcp-staff-level-system-design-sre-deep-dive" class="level-1">GCP Staff-Level System Design &amp; SRE Deep Dive</a></li>
+                <li><a href="#quick-start" class="level-2">Quick Start</a></li>
+                <li><a href="#structure" class="level-2">Structure</a></li>
+                <li><a href="#how-to-use-this-repo" class="level-2">How to Use This Repo</a></li>
+                <li><a href="#as-a-curriculum" class="level-3">As a Curriculum</a></li>
+                <li><a href="#as-a-reference" class="level-3">As a Reference</a></li>
+                <li><a href="#depth-standards" class="level-3">Depth Standards</a></li>
+                <li><a href="#contributing" class="level-2">Contributing</a></li>
+                <li><a href="#license" class="level-2">License</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="gcp-staff-level-system-design-sre-deep-dive">GCP Staff-Level System Design &amp; SRE Deep Dive</h1>
+<blockquote>
+<p><strong>Target audience</strong>: Engineers aiming for staff/SRE-level depth in GCP, distributed systems, and production reliability.<br />
+<strong>Goal</strong>: Understand internals, failure modes, and tradeoffs at the depth expected of senior staff engineers and SREs at Google.</p>
+</blockquote>
+<h2 id="quick-start">Quick Start</h2>
+<ol>
+<li><strong>New to the repo?</strong> Start here: <a href="docs/index.html"> docs </a></li>
+<li><strong>Want a guided path?</strong> Follow the <strong>Learning Path</strong> section in the index.</li>
+<li><strong>Looking for a specific topic?</strong> Use the <strong>Reference Map</strong> section.</li>
+<li><strong>Track your progress:</strong> Check off items in <a href="docs/PROGRESS.html">docs/PROGRESS.md</a></li>
+</ol>
+<h2 id="structure">Structure</h2>
+<pre><code>docs/
+├── 00-meta/          # Templates, glossary, learning principles
+├── 01-foundations/    # Quantitative reasoning, capacity math, mental models
+├── 02-distributed-systems/  # Consensus, replication, ordering, overload
+├── 03-gcp-core-building-blocks/  # VPC, GKE, IAM, Spanner, Bigtable, etc.
+├── 04-reliability-sre/  # SLIs/SLOs, PRRs, postmortems, capacity planning
+├── 05-llD-patterns/  # Idempotency, rate limiting, circuit breakers
+└── 06-case-studies/  # End-to-end system designs with ops playbooks
+</code></pre>
+<h2 id="how-to-use-this-repo">How to Use This Repo</h2>
+<h3 id="as-a-curriculum">As a Curriculum</h3>
+<ul>
+<li>Follow the phases in order (Phase 0 → Phase 4)</li>
+<li>Complete exercises and deep dives before moving on</li>
+<li>Use <a href="docs/PROGRESS.html">docs/PROGRESS.md</a> to track milestones</li>
+</ul>
+<h3 id="as-a-reference">As a Reference</h3>
+<ul>
+<li>Jump to specific topics via the Reference Map</li>
+<li>Use templates in <code>00-meta/</code> for your own deep dives</li>
+<li>Cross-reference related concepts using the links</li>
+</ul>
+<h3 id="depth-standards">Depth Standards</h3>
+<p>Every deep dive includes:
+- <strong>Mental model</strong>: How to think about the system
+- <strong>Internals</strong>: Implementation details and architecture
+- <strong>Failure modes</strong>: What breaks and why
+- <strong>Overload behavior</strong>: Behavior at 10×, 100× load
+- <strong>Observability</strong>: What to measure and where
+- <strong>Change safety</strong>: Rollout strategies and reversibility
+- <strong>Security boundaries</strong>: Identity, authorization, data protection
+- <strong>Tradeoffs</strong>: What you gain/lose with each choice</p>
+<h2 id="contributing">Contributing</h2>
+<p>When adding new content:
+1. Use the templates in <code>docs/00-meta/</code>
+2. Maintain staff-level depth (see guardrails in INDEX.md)
+3. Cross-link related topics
+4. Update INDEX.md and PROGRESS.md</p>
+<h2 id="license">License</h2>
+<p>This is a personal learning repository. Use freely for your own education.</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="assets/scripts.js"></script>
+    
+</body>
+</html>

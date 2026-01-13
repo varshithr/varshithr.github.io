@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuit Breakers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#circuit-breaker-pattern" class="level-1">Circuit Breaker Pattern</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#circuit-breaker-purpose" class="level-3">Circuit Breaker Purpose</a></li>
+                <li><a href="#circuit-breaker-states" class="level-3">Circuit Breaker States</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#circuit-breaker-implementation" class="level-3">Circuit Breaker Implementation</a></li>
+                <li><a href="#state-machine" class="level-4">State Machine</a></li>
+                <li><a href="#failure-detection" class="level-3">Failure Detection</a></li>
+                <li><a href="#recovery-logic" class="level-3">Recovery Logic</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#circuit-breaker-failures" class="level-3">Circuit Breaker Failures</a></li>
+                <li><a href="#scenario-1-false-opens" class="level-4">Scenario 1: False Opens</a></li>
+                <li><a href="#scenario-2-slow-recovery" class="level-4">Scenario 2: Slow Recovery</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics" class="level-3">Metrics</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#circuit-breaker-changes" class="level-3">Circuit Breaker Changes</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#aggressive-vs-conservative" class="level-3">Aggressive vs Conservative</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#best-practices" class="level-3">Best Practices</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="circuit-breaker-pattern">Circuit Breaker Pattern</h1>
+<p><strong>One-line summary</strong>: How to implement circuit breakers to prevent cascading failures and protect systems from downstream failures.</p>
+<p><strong>Prerequisites</strong>: <a href="../04-reliability-sre/load-shedding.html">Load Shedding &amp; Circuit Breakers</a>, understanding of failure handling.</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="circuit-breaker-purpose">Circuit Breaker Purpose</h3>
+<div class="mermaid">
+graph LR
+Request[Request] --> CB[Circuit Breaker]
+CB -->|Closed| Service[Downstream Service]
+CB -->|Open| Reject[Reject Immediately]
+CB -->|Half-Open| Test[Test Service]
+style CB fill:#ffcc99
+style Reject fill:#ff9999
+</div>
+<p><strong>Key insight</strong>: Circuit breakers prevent cascading failures by stopping calls to failing services.</p>
+<h3 id="circuit-breaker-states">Circuit Breaker States</h3>
+<p><strong>Closed</strong>: Normal operation, calls pass through.
+<strong>Open</strong>: Service failing, calls rejected immediately.
+<strong>Half-open</strong>: Testing if service recovered.</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="circuit-breaker-implementation">Circuit Breaker Implementation</h3>
+<h4 id="state-machine">State Machine</h4>
+<p><strong>Closed → Open</strong>: 
+- <strong>Trigger</strong>: Failure threshold exceeded
+- <strong>Action</strong>: Reject calls immediately
+- <strong>Timeout</strong>: Wait before transitioning to half-open</p>
+<p><strong>Open → Half-open</strong>:
+- <strong>Trigger</strong>: Timeout expired
+- <strong>Action</strong>: Allow test calls
+- <strong>Success threshold</strong>: Need N successes to close</p>
+<p><strong>Half-open → Closed</strong>:
+- <strong>Trigger</strong>: Success threshold met
+- <strong>Action</strong>: Resume normal operation</p>
+<p><strong>Half-open → Open</strong>:
+- <strong>Trigger</strong>: Failure detected
+- <strong>Action</strong>: Return to open state</p>
+<h3 id="failure-detection">Failure Detection</h3>
+<p><strong>Failure criteria</strong>:
+- <strong>Error rate</strong>: Error rate &gt; threshold (e.g., 50%)
+- <strong>Latency</strong>: Latency &gt; threshold (e.g., P95 &gt; 1s)
+- <strong>Timeout</strong>: Requests timing out</p>
+<p><strong>Thresholds</strong>:
+- <strong>Error threshold</strong>: 50% errors
+- <strong>Latency threshold</strong>: P95 latency
+- <strong>Timeout threshold</strong>: Request timeout</p>
+<h3 id="recovery-logic">Recovery Logic</h3>
+<p><strong>Recovery process</strong>:
+1. <strong>Wait</strong>: Wait for timeout period
+2. <strong>Test</strong>: Allow test requests (half-open)
+3. <strong>Evaluate</strong>: Evaluate test results
+4. <strong>Decide</strong>: Close if successful, open if failed</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="circuit-breaker-failures">Circuit Breaker Failures</h3>
+<h4 id="scenario-1-false-opens">Scenario 1: False Opens</h4>
+<ul>
+<li><strong>Impact</strong>: Service rejected unnecessarily</li>
+<li><strong>Blast radius</strong>: Affected service</li>
+<li><strong>Detection</strong>: Circuit opens frequently</li>
+<li><strong>Recovery</strong>: Adjust thresholds</li>
+<li><strong>Mitigation</strong>: Tune thresholds, reduce false positives</li>
+</ul>
+<h4 id="scenario-2-slow-recovery">Scenario 2: Slow Recovery</h4>
+<ul>
+<li><strong>Impact</strong>: Service unavailable longer than needed</li>
+<li><strong>Blast radius</strong>: Affected service</li>
+<li><strong>Detection</strong>: Long time in open state</li>
+<li><strong>Recovery</strong>: Reduce timeout, faster recovery</li>
+<li><strong>Mitigation</strong>: Shorter timeouts, better recovery logic</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics">Metrics</h3>
+<ul>
+<li><strong>Circuit state</strong>: Current state (closed/open/half-open)</li>
+<li><strong>Failure rate</strong>: Failure rate triggering opens</li>
+<li><strong>Recovery time</strong>: Time to recover from open</li>
+<li><strong>False open rate</strong>: Rate of false opens</li>
+</ul>
+<h3 id="alerts">Alerts</h3>
+<ul>
+<li>Circuit breaker opens</li>
+<li>High false open rate</li>
+<li>Slow recovery</li>
+<li>Frequent state changes</li>
+</ul>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="circuit-breaker-changes">Circuit Breaker Changes</h3>
+<ul>
+<li><strong>Process</strong>: Update thresholds, verify behavior</li>
+<li><strong>Risk</strong>: Medium (may affect service availability)</li>
+<li><strong>Rollback</strong>: Revert thresholds</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="aggressive-vs-conservative">Aggressive vs Conservative</h3>
+<p><strong>Aggressive</strong>:
+- <strong>Pros</strong>: Better protection, faster failure detection
+- <strong>Cons</strong>: More false opens, service unavailable</p>
+<p><strong>Conservative</strong>:
+- <strong>Pros</strong>: Fewer false opens, better availability
+- <strong>Cons</strong>: Slower failure detection, less protection</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="best-practices">Best Practices</h3>
+<ol>
+<li><strong>Tune thresholds</strong>: Balance protection and availability</li>
+<li><strong>Monitor state</strong>: Track circuit breaker state changes</li>
+<li><strong>Test recovery</strong>: Test recovery logic</li>
+<li><strong>Document policies</strong>: Document circuit breaker policies</li>
+</ol>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<ul>
+<li>"How are circuit breakers configured?"</li>
+<li>"What are the failure thresholds?"</li>
+<li>"How is recovery handled?"</li>
+<li>"What's the timeout policy?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/circuit-breakers.html">Further Reading: Circuit Breakers</a></p>
+<p><strong>Quick Links</strong>:
+- <a href="../04-reliability-sre/load-shedding.html">Load Shedding &amp; Circuit Breakers</a>
+- "Release It!" by Michael Nygard
+- <a href="README.html">Back to LLD Patterns</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Implement circuit breaker</strong>: Implement a circuit breaker. What are the states?</p>
+</li>
+<li>
+<p><strong>Configure thresholds</strong>: Configure circuit breaker thresholds. What values?</p>
+</li>
+<li>
+<p><strong>Handle recovery</strong>: Your circuit breaker opens. How does it recover?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/circuit-breakers-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

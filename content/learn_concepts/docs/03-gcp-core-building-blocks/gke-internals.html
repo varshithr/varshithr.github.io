@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gke Internals</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#gke-control-plane-data-plane" class="level-1">GKE Control Plane &amp; Data Plane</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#gke-architecture" class="level-3">GKE Architecture</a></li>
+                <li><a href="#control-plane-vs-data-plane" class="level-3">Control Plane vs Data Plane</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#control-plane-deep-dive" class="level-3">Control Plane Deep Dive</a></li>
+                <li><a href="#api-server" class="level-4">API Server</a></li>
+                <li><a href="#etcd" class="level-4">etcd</a></li>
+                <li><a href="#scheduler" class="level-4">Scheduler</a></li>
+                <li><a href="#controller-manager" class="level-4">Controller Manager</a></li>
+                <li><a href="#data-plane-deep-dive" class="level-3">Data Plane Deep Dive</a></li>
+                <li><a href="#node-pools" class="level-4">Node Pools</a></li>
+                <li><a href="#kubelet" class="level-4">Kubelet</a></li>
+                <li><a href="#kube-proxy" class="level-4">Kube-proxy</a></li>
+                <li><a href="#cni-container-network-interface" class="level-4">CNI (Container Network Interface)</a></li>
+                <li><a href="#pod-networking" class="level-3">Pod Networking</a></li>
+                <li><a href="#pod-network-architecture" class="level-4">Pod Network Architecture</a></li>
+                <li><a href="#service-types" class="level-4">Service Types</a></li>
+                <li><a href="#workload-identity" class="level-3">Workload Identity</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#control-plane-failures" class="level-3">Control Plane Failures</a></li>
+                <li><a href="#scenario-1-api-server-failure" class="level-4">Scenario 1: API Server Failure</a></li>
+                <li><a href="#scenario-2-etcd-failure" class="level-4">Scenario 2: etcd Failure</a></li>
+                <li><a href="#scenario-3-scheduler-failure" class="level-4">Scenario 3: Scheduler Failure</a></li>
+                <li><a href="#data-plane-failures" class="level-3">Data Plane Failures</a></li>
+                <li><a href="#scenario-1-node-failure" class="level-4">Scenario 1: Node Failure</a></li>
+                <li><a href="#scenario-2-kubelet-failure" class="level-4">Scenario 2: Kubelet Failure</a></li>
+                <li><a href="#scenario-3-network-partition" class="level-4">Scenario 3: Network Partition</a></li>
+                <li><a href="#pod-failures" class="level-3">Pod Failures</a></li>
+                <li><a href="#scenario-1-pod-crash-loop" class="level-4">Scenario 1: Pod Crash Loop</a></li>
+                <li><a href="#scenario-2-resource-exhaustion" class="level-4">Scenario 2: Resource Exhaustion</a></li>
+                <li><a href="#overload-scenarios" class="level-3">Overload Scenarios</a></li>
+                <li><a href="#10-normal-load" class="level-4">10× Normal Load</a></li>
+                <li><a href="#100-normal-load" class="level-4">100× Normal Load</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics-to-track" class="level-3">Metrics to Track</a></li>
+                <li><a href="#control-plane-metrics" class="level-4">Control Plane Metrics</a></li>
+                <li><a href="#data-plane-metrics" class="level-4">Data Plane Metrics</a></li>
+                <li><a href="#pod-metrics" class="level-4">Pod Metrics</a></li>
+                <li><a href="#service-metrics" class="level-4">Service Metrics</a></li>
+                <li><a href="#logs" class="level-3">Logs</a></li>
+                <li><a href="#traces" class="level-3">Traces</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#control-plane-changes" class="level-3">Control Plane Changes</a></li>
+                <li><a href="#node-pool-changes" class="level-3">Node Pool Changes</a></li>
+                <li><a href="#adding-nodes" class="level-4">Adding Nodes</a></li>
+                <li><a href="#updating-nodes" class="level-4">Updating Nodes</a></li>
+                <li><a href="#changing-machine-types" class="level-4">Changing Machine Types</a></li>
+                <li><a href="#pod-changes" class="level-3">Pod Changes</a></li>
+                <li><a href="#deploying-new-version" class="level-4">Deploying New Version</a></li>
+                <li><a href="#changing-resource-limits" class="level-4">Changing Resource Limits</a></li>
+                <li><a href="#network-changes" class="level-3">Network Changes</a></li>
+                <li><a href="#changing-service-type" class="level-4">Changing Service Type</a></li>
+                <li><a href="#updating-network-policies" class="level-4">Updating Network Policies</a></li>
+                <li><a href="#security-boundaries" class="level-2">Security Boundaries</a></li>
+                <li><a href="#cluster-security" class="level-3">Cluster Security</a></li>
+                <li><a href="#node-security" class="level-3">Node Security</a></li>
+                <li><a href="#pod-security" class="level-3">Pod Security</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#control-plane-managed-vs-self-managed" class="level-3">Control Plane: Managed vs Self-Managed</a></li>
+                <li><a href="#node-pool-standard-vs-spot" class="level-3">Node Pool: Standard vs Spot</a></li>
+                <li><a href="#networking-vpc-native-vs-routes-based" class="level-3">Networking: VPC-Native vs Routes-Based</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#capacity-planning" class="level-3">Capacity Planning</a></li>
+                <li><a href="#monitoring-debugging" class="level-3">Monitoring &amp; Debugging</a></li>
+                <li><a href="#incident-response" class="level-3">Incident Response</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#design-questions" class="level-3">Design Questions</a></li>
+                <li><a href="#scale-questions" class="level-3">Scale Questions</a></li>
+                <li><a href="#security-questions" class="level-3">Security Questions</a></li>
+                <li><a href="#operational-questions" class="level-3">Operational Questions</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="gke-control-plane-data-plane">GKE Control Plane &amp; Data Plane</h1>
+<p><strong>One-line summary</strong>: Deep dive into GKE's control plane architecture, node management, pod networking, and how Kubernetes components work together.</p>
+<p><strong>Prerequisites</strong>: <a href="vpc-lb-dns.html">VPC, Load Balancing &amp; DNS</a>, Basic Kubernetes concepts (pods, nodes, services).</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="gke-architecture">GKE Architecture</h3>
+<div class="mermaid">
+flowchart TB
+User[User/API] --> CP[Control Plane<br/>GKE Managed]
+CP --> ETCD[etcd<br/>State Store]
+CP --> API[API Server]
+CP --> Scheduler[Scheduler]
+CP --> CM[Controller Manager]
+CP --> DP[Data Plane<br/>Node Pools]
+DP --> Kubelet[Kubelet]
+DP --> KubeProxy[Kube-proxy]
+DP --> CNI[CNI Plugin<br/>Networking]
+DP --> Pod1[Pod 1]
+DP --> Pod2[Pod 2]
+DP --> Pod3[Pod 3]
+style CP fill:#99ccff
+style DP fill:#ffcc99
+style ETCD fill:#99ff99
+</div>
+<p><strong>Key insight</strong>: GKE separates control plane (managed by Google) from data plane (your nodes). Understanding both is critical for troubleshooting and optimization.</p>
+<h3 id="control-plane-vs-data-plane">Control Plane vs Data Plane</h3>
+<p><strong>Control Plane</strong>: Manages cluster state, schedules pods, handles API requests.
+- <strong>Managed by Google</strong>: High availability, automatic updates
+- <strong>Components</strong>: API server, etcd, scheduler, controller manager</p>
+<p><strong>Data Plane</strong>: Runs your workloads (pods).
+- <strong>Managed by you</strong>: Node pools, scaling, updates
+- <strong>Components</strong>: Kubelet, kube-proxy, CNI plugin</p>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="control-plane-deep-dive">Control Plane Deep Dive</h3>
+<h4 id="api-server">API Server</h4>
+<p><strong>API Server</strong>: Central component that validates and processes all API requests.</p>
+<p><strong>Functions</strong>:
+- <strong>Authentication</strong>: Verify identity (service accounts, OAuth)
+- <strong>Authorization</strong>: Check permissions (RBAC, ABAC)
+- <strong>Admission control</strong>: Validate and mutate requests (validating/mutating webhooks)
+- <strong>State management</strong>: Read/write to etcd</p>
+<p><strong>Request Flow</strong>:</p>
+<pre><code>Client → API Server → Authentication → Authorization → Admission Control → etcd
+</code></pre>
+<p><strong>Performance</strong>:
+- <strong>QPS</strong>: Handles thousands of requests per second
+- <strong>Latency</strong>: P95 &lt; 10ms for most operations
+- <strong>Scaling</strong>: Automatically scales with cluster size</p>
+<h4 id="etcd">etcd</h4>
+<p><strong>etcd</strong>: Distributed key-value store for cluster state.</p>
+<p><strong>Data stored</strong>:
+- <strong>Pods</strong>: Pod specifications and status
+- <strong>Services</strong>: Service definitions
+- <strong>ConfigMaps</strong>: Configuration data
+- <strong>Secrets</strong>: Encrypted secrets
+- <strong>Nodes</strong>: Node information</p>
+<p><strong>Consistency</strong>: Strong consistency (linearizable reads)</p>
+<p><strong>Backup</strong>: Automatic backups every 6 hours (GKE managed)</p>
+<p><strong>Performance</strong>:
+- <strong>Write latency</strong>: P95 &lt; 50ms
+- <strong>Read latency</strong>: P95 &lt; 10ms
+- <strong>Throughput</strong>: Thousands of operations per second</p>
+<h4 id="scheduler">Scheduler</h4>
+<p><strong>Scheduler</strong>: Assigns pods to nodes based on constraints and resources.</p>
+<p><strong>Scheduling process</strong>:
+1. <strong>Filter</strong>: Filter nodes that meet pod requirements (resources, node selectors, taints/tolerations)
+2. <strong>Score</strong>: Score filtered nodes (resource availability, affinity, anti-affinity)
+3. <strong>Bind</strong>: Assign pod to highest-scoring node</p>
+<p><strong>Scheduling policies</strong>:
+- <strong>Resource requests</strong>: CPU, memory requirements
+- <strong>Node selectors</strong>: Prefer specific node types
+- <strong>Affinity/anti-affinity</strong>: Co-locate or separate pods
+- <strong>Taints/tolerations</strong>: Restrict pod placement</p>
+<p><strong>Performance</strong>:
+- <strong>Scheduling latency</strong>: P95 &lt; 100ms
+- <strong>Throughput</strong>: Hundreds of pods per second</p>
+<h4 id="controller-manager">Controller Manager</h4>
+<p><strong>Controller Manager</strong>: Runs controllers that maintain desired state.</p>
+<p><strong>Controllers</strong>:
+- <strong>Replication Controller</strong>: Maintains pod replicas
+- <strong>Deployment Controller</strong>: Manages deployments
+- <strong>StatefulSet Controller</strong>: Manages stateful applications
+- <strong>Node Controller</strong>: Monitors node health
+- <strong>Service Controller</strong>: Manages load balancers</p>
+<p><strong>Reconciliation loop</strong>: Continuously checks desired vs actual state, makes changes.</p>
+<h3 id="data-plane-deep-dive">Data Plane Deep Dive</h3>
+<h4 id="node-pools">Node Pools</h4>
+<p><strong>Node Pool</strong>: Group of nodes with same configuration.</p>
+<p><strong>Configuration</strong>:
+- <strong>Machine type</strong>: CPU, memory, disk
+- <strong>OS image</strong>: Container-Optimized OS, Ubuntu
+- <strong>Scaling</strong>: Auto-scaling, manual scaling
+- <strong>Upgrades</strong>: Automatic or manual node upgrades</p>
+<p><strong>Node Pool Types</strong>:
+- <strong>Standard</strong>: General-purpose workloads
+- <strong>Spot/Preemptible</strong>: Cost-effective, can be preempted
+- <strong>GPU</strong>: GPU-enabled nodes
+- <strong>High-memory</strong>: Memory-optimized nodes</p>
+<h4 id="kubelet">Kubelet</h4>
+<p><strong>Kubelet</strong>: Agent running on each node, manages pods.</p>
+<p><strong>Functions</strong>:
+- <strong>Pod lifecycle</strong>: Create, start, stop, delete pods
+- <strong>Health checks</strong>: Liveness, readiness probes
+- <strong>Volume mounting</strong>: Mount volumes to pods
+- <strong>Container runtime</strong>: Interface with container runtime (containerd)</p>
+<p><strong>Communication</strong>:
+- <strong>API Server</strong>: Reports node status, receives pod assignments
+- <strong>Container runtime</strong>: Manages containers
+- <strong>CNI</strong>: Configures pod networking</p>
+<h4 id="kube-proxy">Kube-proxy</h4>
+<p><strong>Kube-proxy</strong>: Network proxy for service routing.</p>
+<p><strong>Modes</strong>:
+- <strong>iptables</strong>: Uses iptables rules (default, high performance)
+- <strong>IPVS</strong>: Uses IPVS (better for large clusters)
+- <strong>Userspace</strong>: Userspace proxy (legacy)</p>
+<p><strong>Functions</strong>:
+- <strong>Service routing</strong>: Routes service traffic to pods
+- <strong>Load balancing</strong>: Distributes traffic across pod endpoints
+- <strong>Session affinity</strong>: Maintains client-pod affinity</p>
+<p><strong>How it works</strong>:
+1. Service created → kube-proxy watches API server
+2. Endpoints discovered → kube-proxy creates iptables rules
+3. Traffic arrives → iptables routes to pod IP</p>
+<h4 id="cni-container-network-interface">CNI (Container Network Interface)</h4>
+<p><strong>CNI</strong>: Plugin that configures pod networking.</p>
+<p><strong>GKE CNI</strong>: Google's VPC-native networking.</p>
+<p><strong>Features</strong>:
+- <strong>VPC-native</strong>: Pods get IPs from VPC subnet
+- <strong>Network policies</strong>: Firewall rules for pod-to-pod communication
+- <strong>Service mesh</strong>: Integration with Istio/Anthos Service Mesh</p>
+<p><strong>Networking model</strong>:
+- <strong>Pod IP</strong>: Each pod gets IP from VPC subnet
+- <strong>Service IP</strong>: Virtual IP for service (cluster IP)
+- <strong>Load balancer</strong>: External IP for external access</p>
+<h3 id="pod-networking">Pod Networking</h3>
+<h4 id="pod-network-architecture">Pod Network Architecture</h4>
+<div class="mermaid">
+graph LR
+Pod[Pod] --> Veth[Virtual Ethernet Pair]
+Veth --> Bridge[Linux Bridge]
+Bridge --> VPC[VPC Network]
+Pod --> Service[Service IP]
+Service --> KubeProxy[Kube-proxy]
+KubeProxy --> Pod
+style Pod fill:#99ccff
+style Service fill:#ffcc99
+style VPC fill:#99ff99
+</div>
+<p><strong>Pod networking flow</strong>:
+1. <strong>Pod creation</strong>: CNI assigns IP from VPC subnet
+2. <strong>Intra-pod</strong>: Pods on same node communicate via bridge
+3. <strong>Inter-pod</strong>: Pods on different nodes communicate via VPC routing
+4. <strong>Service access</strong>: Traffic goes through kube-proxy to pod IP</p>
+<h4 id="service-types">Service Types</h4>
+<p><strong>ClusterIP</strong>: Internal service (default).
+- <strong>Use case</strong>: Internal communication
+- <strong>Access</strong>: Only within cluster</p>
+<p><strong>NodePort</strong>: Exposes service on node IP.
+- <strong>Use case</strong>: External access via node IP
+- <strong>Port</strong>: 30000-32767</p>
+<p><strong>LoadBalancer</strong>: External load balancer.
+- <strong>Use case</strong>: External access via load balancer IP
+- <strong>GCP</strong>: Creates GCP load balancer</p>
+<p><strong>ExternalName</strong>: Maps to external DNS name.
+- <strong>Use case</strong>: External services
+- <strong>Access</strong>: Via DNS name</p>
+<h3 id="workload-identity">Workload Identity</h3>
+<p><strong>Workload Identity</strong>: Allows pods to use GCP service accounts.</p>
+<p><strong>Architecture</strong>:</p>
+<pre><code>Kubernetes Service Account (KSA) → Workload Identity → Google Service Account (GSA)
+</code></pre>
+<p><strong>Process</strong>:
+1. <strong>Annotation</strong>: Pod annotated with KSA
+2. <strong>Mapping</strong>: Workload Identity maps KSA to GSA
+3. <strong>Token</strong>: Pod receives GCP access token
+4. <strong>Access</strong>: Pod accesses GCP resources as GSA</p>
+<p><strong>Benefits</strong>:
+- <strong>No keys</strong>: No need to store service account keys
+- <strong>Security</strong>: Automatic key rotation
+- <strong>Audit</strong>: Better audit trail</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="control-plane-failures">Control Plane Failures</h3>
+<h4 id="scenario-1-api-server-failure">Scenario 1: API Server Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Cannot create/update/delete resources, cluster API unavailable</li>
+<li><strong>Blast radius</strong>: Entire cluster (API operations)</li>
+<li><strong>Detection</strong>: API server health checks fail, API requests timeout</li>
+<li><strong>Recovery</strong>: GKE automatically fails over (multi-region control plane)</li>
+<li><strong>Mitigation</strong>: GKE managed control plane has automatic failover</li>
+</ul>
+<h4 id="scenario-2-etcd-failure">Scenario 2: etcd Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Cluster state lost, cannot read cluster state</li>
+<li><strong>Blast radius</strong>: Entire cluster (state operations)</li>
+<li><strong>Detection</strong>: etcd health checks fail, API server errors</li>
+<li><strong>Recovery</strong>: GKE automatically restores from backup</li>
+<li><strong>Mitigation</strong>: Automatic backups every 6 hours</li>
+</ul>
+<h4 id="scenario-3-scheduler-failure">Scenario 3: Scheduler Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Cannot schedule new pods, existing pods continue running</li>
+<li><strong>Blast radius</strong>: New pod scheduling</li>
+<li><strong>Detection</strong>: Pods stuck in Pending state</li>
+<li><strong>Recovery</strong>: Scheduler automatically restarts</li>
+<li><strong>Mitigation</strong>: Scheduler runs in high-availability mode</li>
+</ul>
+<h3 id="data-plane-failures">Data Plane Failures</h3>
+<h4 id="scenario-1-node-failure">Scenario 1: Node Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Pods on node become unavailable</li>
+<li><strong>Blast radius</strong>: Pods on failed node</li>
+<li><strong>Detection</strong>: Node health checks fail, pods marked as NotReady</li>
+<li><strong>Recovery</strong>: </li>
+<li>Pods rescheduled to healthy nodes (if managed by Deployment/StatefulSet)</li>
+<li>Node pool auto-scaling replaces failed node</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Multiple nodes per zone</li>
+<li>Pod disruption budgets</li>
+<li>Health checks (liveness, readiness)</li>
+</ul>
+<h4 id="scenario-2-kubelet-failure">Scenario 2: Kubelet Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Cannot manage pods on node, pods may become unavailable</li>
+<li><strong>Blast radius</strong>: Pods on affected node</li>
+<li><strong>Detection</strong>: Kubelet health checks fail, node marked as NotReady</li>
+<li><strong>Recovery</strong>: Kubelet restarts automatically</li>
+<li><strong>Mitigation</strong>: Health checks, automatic restarts</li>
+</ul>
+<h4 id="scenario-3-network-partition">Scenario 3: Network Partition</h4>
+<ul>
+<li><strong>Impact</strong>: Pods cannot communicate, services unavailable</li>
+<li><strong>Blast radius</strong>: Affected pods/services</li>
+<li><strong>Detection</strong>: Network connectivity errors, service failures</li>
+<li><strong>Recovery</strong>: Network partition resolves, connectivity restored</li>
+<li><strong>Mitigation</strong>: </li>
+<li>VPC-native networking (reduces partition risk)</li>
+<li>Network policies (isolate failures)</li>
+<li>Health checks (detect failures quickly)</li>
+</ul>
+<h3 id="pod-failures">Pod Failures</h3>
+<h4 id="scenario-1-pod-crash-loop">Scenario 1: Pod Crash Loop</h4>
+<ul>
+<li><strong>Impact</strong>: Pod continuously crashes, service unavailable</li>
+<li><strong>Blast radius</strong>: Affected service</li>
+<li><strong>Detection</strong>: Pod restart count increases, liveness probe failures</li>
+<li><strong>Recovery</strong>: </li>
+<li>Fix application bug</li>
+<li>Adjust resource limits</li>
+<li>Fix configuration errors</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Liveness probes (detect crashes)</li>
+<li>Resource limits (prevent OOM)</li>
+<li>Health checks (catch issues early)</li>
+</ul>
+<h4 id="scenario-2-resource-exhaustion">Scenario 2: Resource Exhaustion</h4>
+<ul>
+<li><strong>Impact</strong>: Pods cannot get resources, scheduling fails</li>
+<li><strong>Blast radius</strong>: New pods, resource-constrained pods</li>
+<li><strong>Detection</strong>: Pods stuck in Pending, resource quota exceeded</li>
+<li><strong>Recovery</strong>: </li>
+<li>Scale up node pool</li>
+<li>Adjust resource requests</li>
+<li>Add more nodes</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Resource quotas (prevent over-allocation)</li>
+<li>Auto-scaling (add nodes when needed)</li>
+<li>Resource requests (reserve resources)</li>
+</ul>
+<h3 id="overload-scenarios">Overload Scenarios</h3>
+<h4 id="10-normal-load">10× Normal Load</h4>
+<ul>
+<li><strong>Control Plane</strong>: API server handles load, may see increased latency</li>
+<li><strong>Data Plane</strong>: Nodes may need scaling, pods may need more resources</li>
+<li><strong>Networking</strong>: VPC handles load, may see increased latency</li>
+</ul>
+<h4 id="100-normal-load">100× Normal Load</h4>
+<ul>
+<li><strong>Control Plane</strong>: API server may be overwhelmed, rate limiting kicks in</li>
+<li><strong>Data Plane</strong>: Nodes overwhelmed, need significant scaling</li>
+<li><strong>Networking</strong>: VPC may be overwhelmed, packet loss possible</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics-to-track">Metrics to Track</h3>
+<h4 id="control-plane-metrics">Control Plane Metrics</h4>
+<ul>
+<li><strong>API server QPS</strong>: Requests per second</li>
+<li><strong>API server latency</strong>: P50/P95/P99 latency</li>
+<li><strong>etcd latency</strong>: Read/write latency</li>
+<li><strong>Scheduler latency</strong>: Pod scheduling latency</li>
+<li><strong>Controller manager latency</strong>: Reconciliation latency</li>
+</ul>
+<h4 id="data-plane-metrics">Data Plane Metrics</h4>
+<ul>
+<li><strong>Node CPU</strong>: CPU utilization per node</li>
+<li><strong>Node memory</strong>: Memory utilization per node</li>
+<li><strong>Pod count</strong>: Pods per node</li>
+<li><strong>Kubelet errors</strong>: Kubelet error rate</li>
+<li><strong>Kube-proxy errors</strong>: Kube-proxy error rate</li>
+</ul>
+<h4 id="pod-metrics">Pod Metrics</h4>
+<ul>
+<li><strong>Pod CPU</strong>: CPU usage per pod</li>
+<li><strong>Pod memory</strong>: Memory usage per pod</li>
+<li><strong>Pod restarts</strong>: Restart count per pod</li>
+<li><strong>Pod status</strong>: Running, Pending, Failed, Succeeded</li>
+</ul>
+<h4 id="service-metrics">Service Metrics</h4>
+<ul>
+<li><strong>Service latency</strong>: Request latency per service</li>
+<li><strong>Service QPS</strong>: Requests per second per service</li>
+<li><strong>Service errors</strong>: Error rate per service</li>
+<li><strong>Endpoint count</strong>: Healthy vs unhealthy endpoints</li>
+</ul>
+<h3 id="logs">Logs</h3>
+<p><strong>Control Plane Logs</strong>:
+- API server audit logs
+- etcd logs
+- Scheduler logs
+- Controller manager logs</p>
+<p><strong>Data Plane Logs</strong>:
+- Kubelet logs
+- Kube-proxy logs
+- Container logs (application logs)</p>
+<p><strong>Cluster Logs</strong>:
+- Node events
+- Pod events
+- Service events</p>
+<h3 id="traces">Traces</h3>
+<p><strong>Distributed Tracing</strong>:
+- End-to-end request traces
+- Pod-to-pod communication
+- Service mesh traces (if using Istio)</p>
+<h3 id="alerts">Alerts</h3>
+<p><strong>Critical alerts</strong>:
+- Control plane unavailable
+- Node failure
+- Pod crash loop
+- Service unavailable</p>
+<p><strong>Warning alerts</strong>:
+- High API server latency
+- Node resource exhaustion
+- Pod resource exhaustion
+- Service latency increase</p>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="control-plane-changes">Control Plane Changes</h3>
+<p><strong>GKE Managed</strong>: Control plane updates are managed by Google.
+- <strong>Process</strong>: Automatic updates during maintenance windows
+- <strong>Risk</strong>: Low (Google manages updates)
+- <strong>Rollback</strong>: Automatic rollback on failure</p>
+<h3 id="node-pool-changes">Node Pool Changes</h3>
+<h4 id="adding-nodes">Adding Nodes</h4>
+<ul>
+<li><strong>Process</strong>: Scale up node pool, verify nodes join cluster</li>
+<li><strong>Risk</strong>: Low (additive change)</li>
+<li><strong>Rollback</strong>: Scale down node pool</li>
+</ul>
+<h4 id="updating-nodes">Updating Nodes</h4>
+<ul>
+<li><strong>Process</strong>: Rolling update (drain, update, replace)</li>
+<li><strong>Risk</strong>: Medium (may disrupt pods)</li>
+<li><strong>Rollback</strong>: Rollback node image</li>
+</ul>
+<h4 id="changing-machine-types">Changing Machine Types</h4>
+<ul>
+<li><strong>Process</strong>: Create new node pool, migrate pods, delete old pool</li>
+<li><strong>Risk</strong>: High (requires pod migration)</li>
+<li><strong>Rollback</strong>: Keep old node pool until migration complete</li>
+</ul>
+<h3 id="pod-changes">Pod Changes</h3>
+<h4 id="deploying-new-version">Deploying New Version</h4>
+<ul>
+<li><strong>Process</strong>: Rolling update (deployment strategy)</li>
+<li><strong>Risk</strong>: Medium (may cause service disruption)</li>
+<li><strong>Rollback</strong>: Rollback deployment</li>
+</ul>
+<h4 id="changing-resource-limits">Changing Resource Limits</h4>
+<ul>
+<li><strong>Process</strong>: Update pod spec, rolling update</li>
+<li><strong>Risk</strong>: Medium (may cause pod eviction)</li>
+<li><strong>Rollback</strong>: Revert resource limits</li>
+</ul>
+<h3 id="network-changes">Network Changes</h3>
+<h4 id="changing-service-type">Changing Service Type</h4>
+<ul>
+<li><strong>Process</strong>: Update service spec, verify connectivity</li>
+<li><strong>Risk</strong>: Medium (may break connectivity)</li>
+<li><strong>Rollback</strong>: Revert service type</li>
+</ul>
+<h4 id="updating-network-policies">Updating Network Policies</h4>
+<ul>
+<li><strong>Process</strong>: Update network policy, verify pod communication</li>
+<li><strong>Risk</strong>: High (may block legitimate traffic)</li>
+<li><strong>Rollback</strong>: Revert network policy</li>
+</ul>
+<hr />
+<h2 id="security-boundaries">Security Boundaries</h2>
+<h3 id="cluster-security">Cluster Security</h3>
+<ul>
+<li><strong>RBAC</strong>: Role-based access control for API access</li>
+<li><strong>Network policies</strong>: Firewall rules for pod-to-pod communication</li>
+<li><strong>Pod security</strong>: Pod security policies (deprecated, use Pod Security Standards)</li>
+<li><strong>Secrets</strong>: Encrypted secrets storage</li>
+</ul>
+<h3 id="node-security">Node Security</h3>
+<ul>
+<li><strong>OS hardening</strong>: Container-Optimized OS (hardened)</li>
+<li><strong>Image scanning</strong>: Container image vulnerability scanning</li>
+<li><strong>Workload Identity</strong>: No service account keys on nodes</li>
+<li><strong>Network isolation</strong>: VPC-native networking</li>
+</ul>
+<h3 id="pod-security">Pod Security</h3>
+<ul>
+<li><strong>Service accounts</strong>: Least privilege service accounts</li>
+<li><strong>Secrets</strong>: Use Secret Manager, not hardcoded secrets</li>
+<li><strong>Network policies</strong>: Restrict pod-to-pod communication</li>
+<li><strong>Resource limits</strong>: Prevent resource exhaustion attacks</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="control-plane-managed-vs-self-managed">Control Plane: Managed vs Self-Managed</h3>
+<p><strong>GKE Managed</strong>:
+- <strong>Pros</strong>: High availability, automatic updates, no maintenance
+- <strong>Cons</strong>: Less control, Google-managed</p>
+<p><strong>Self-Managed</strong>:
+- <strong>Pros</strong>: Full control, customizable
+- <strong>Cons</strong>: Maintenance overhead, need to manage HA</p>
+<h3 id="node-pool-standard-vs-spot">Node Pool: Standard vs Spot</h3>
+<p><strong>Standard Nodes</strong>:
+- <strong>Pros</strong>: Reliable, not preempted
+- <strong>Cons</strong>: Higher cost</p>
+<p><strong>Spot/Preemptible Nodes</strong>:
+- <strong>Pros</strong>: Lower cost (up to 80% discount)
+- <strong>Cons</strong>: Can be preempted, less reliable</p>
+<h3 id="networking-vpc-native-vs-routes-based">Networking: VPC-Native vs Routes-Based</h3>
+<p><strong>VPC-Native</strong>:
+- <strong>Pros</strong>: Better performance, simpler networking
+- <strong>Cons</strong>: Requires VPC subnet IPs</p>
+<p><strong>Routes-Based</strong>:
+- <strong>Pros</strong>: Works with existing networking
+- <strong>Cons</strong>: More complex, performance overhead</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<p><strong>Control Plane</strong>:
+- <strong>Limits</strong>: 
+  - 5,000 nodes per cluster
+  - 150,000 pods per cluster
+  - 5,000 services per cluster</p>
+<p><strong>Data Plane</strong>:
+- <strong>Node sizing</strong>: Right-size nodes for workloads
+- <strong>Pod density</strong>: Balance pod density vs resource availability
+- <strong>Scaling</strong>: Plan for auto-scaling headroom</p>
+<h3 id="monitoring-debugging">Monitoring &amp; Debugging</h3>
+<p><strong>Monitor</strong>:
+- Control plane health
+- Node health and resources
+- Pod health and resources
+- Service availability and latency</p>
+<p><strong>Debug issues</strong>:
+1. Check control plane: API server, etcd health
+2. Check nodes: Node status, resources
+3. Check pods: Pod status, logs, events
+4. Check services: Service endpoints, connectivity
+5. Check networking: Network policies, VPC routes</p>
+<h3 id="incident-response">Incident Response</h3>
+<p><strong>Common incidents</strong>:
+- Pod failures
+- Node failures
+- Service unavailable
+- Network connectivity issues</p>
+<p><strong>Response</strong>:
+1. Check cluster health
+2. Check node health
+3. Check pod status and logs
+4. Check service endpoints
+5. Check network connectivity
+6. Scale if needed
+7. Rollback if deployment issue</p>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>"What's the node pool configuration?"</li>
+<li>"How are pods scheduled?"</li>
+<li>"What's the networking model?"</li>
+<li>"How is workload identity configured?"</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>"What happens at 10× load?"</li>
+<li>"How does the cluster scale?"</li>
+<li>"What are the control plane limits?"</li>
+<li>"How do you handle node failures?"</li>
+</ul>
+<h3 id="security-questions">Security Questions</h3>
+<ul>
+<li>"How are service accounts managed?"</li>
+<li>"What network policies are in place?"</li>
+<li>"How are secrets managed?"</li>
+<li>"What's the RBAC configuration?"</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>"How do you monitor the cluster?"</li>
+<li>"What alerts do you have?"</li>
+<li>"How do you debug pod failures?"</li>
+<li>"What's the upgrade strategy?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/gke-internals.html">Further Reading: GKE Internals</a></p>
+<p><strong>Quick Links</strong>:
+- <a href="https://cloud.google.com/kubernetes-engine/docs">GKE Documentation</a>
+- <a href="https://kubernetes.io/docs">Kubernetes Documentation</a>
+- "Kubernetes: Up and Running" (Hightower et al.)
+- <a href="https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity">Workload Identity</a>
+- <a href="https://cloud.google.com/kubernetes-engine/docs/concepts/alias-ips">VPC-Native Networking</a>
+- <a href="README.html">Back to GCP Core Building Blocks</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design node pools</strong>: Design node pools for a multi-tier application (web, app, database). What machine types? How many nodes?</p>
+</li>
+<li>
+<p><strong>Pod scheduling</strong>: You have pods that need to run on specific nodes. How do you ensure they're scheduled correctly?</p>
+</li>
+<li>
+<p><strong>Debug pod failure</strong>: A pod is crashing. How do you debug this? What logs do you check?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/gke-internals-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

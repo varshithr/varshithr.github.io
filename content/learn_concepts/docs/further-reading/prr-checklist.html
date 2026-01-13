@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prr Checklist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#further-reading-prr-checklist" class="level-1">Further Reading: PRR Checklist</a></li>
+                <li><a href="#site-reliability-engineering-google-sre-book" class="level-2">Site Reliability Engineering (Google SRE Book)</a></li>
+                <li><a href="#key-concepts" class="level-3">Key Concepts</a></li>
+                <li><a href="#recommended-chapters" class="level-3">Recommended Chapters</a></li>
+                <li><a href="#the-site-reliability-workbook" class="level-2">The Site Reliability Workbook</a></li>
+                <li><a href="#key-concepts_1" class="level-3">Key Concepts</a></li>
+                <li><a href="#recommended-chapters_1" class="level-3">Recommended Chapters</a></li>
+                <li><a href="#google-cloud-production-readiness" class="level-2">Google Cloud Production Readiness</a></li>
+                <li><a href="#key-areas" class="level-3">Key Areas</a></li>
+                <li><a href="#prr-best-practices" class="level-2">PRR Best Practices</a></li>
+                <li><a href="#what-staff-engineers-look-for" class="level-3">What Staff Engineers Look For</a></li>
+                <li><a href="#additional-resources" class="level-2">Additional Resources</a></li>
+                <li><a href="#books" class="level-3">Books</a></li>
+                <li><a href="#online-resources" class="level-3">Online Resources</a></li>
+                <li><a href="#key-takeaways" class="level-2">Key Takeaways</a></li>
+                <li><a href="#related-topics" class="level-2">Related Topics</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="further-reading-prr-checklist">Further Reading: PRR Checklist</h1>
+<p><a href="../04-reliability-sre/prr-checklist.html">Back to PRR Checklist</a></p>
+<hr />
+<h2 id="site-reliability-engineering-google-sre-book">Site Reliability Engineering (Google SRE Book)</h2>
+<p><strong>Book</strong>: <a href="https://sre.google/books/">Site Reliability Engineering: How Google Runs Production Systems</a></p>
+<p><strong>Why it matters</strong>: Google's approach to production readiness, including what makes systems production-ready.</p>
+<h3 id="key-concepts">Key Concepts</h3>
+<p><strong>Production Readiness</strong>:
+- What makes a system production-ready
+- How to evaluate production readiness
+- Common production readiness failures</p>
+<p><strong>Checklists</strong>:
+- What to check before production
+- How to verify readiness
+- When to approve for production</p>
+<p><strong>Relevance</strong>: Provides the foundation for PRR practices and what Google considers production-ready.</p>
+<h3 id="recommended-chapters">Recommended Chapters</h3>
+<ul>
+<li><strong>Chapter 4: Service Level Objectives</strong>: SLOs and production readiness</li>
+<li><strong>Chapter 6: Monitoring Distributed Systems</strong>: Observability requirements</li>
+<li><strong>Chapter 10: Practical Alerting</strong>: Alerting best practices</li>
+<li><strong>Chapter 11: On-Call</strong>: On-call requirements</li>
+</ul>
+<hr />
+<h2 id="the-site-reliability-workbook">The Site Reliability Workbook</h2>
+<p><strong>Book</strong>: <a href="https://sre.google/workbook/">The Site Reliability Workbook: Practical Ways to Implement SRE</a></p>
+<p><strong>Why it matters</strong>: Practical guide to implementing PRR practices with detailed checklists and examples.</p>
+<h3 id="key-concepts_1">Key Concepts</h3>
+<p><strong>PRR Process</strong>:
+- How to run a PRR
+- What to check
+- How to document findings</p>
+<p><strong>Common Issues</strong>:
+- What typically fails PRR
+- How to fix common issues
+- How to prevent issues</p>
+<p><strong>Relevance</strong>: Provides practical, actionable guidance for running PRRs.</p>
+<h3 id="recommended-chapters_1">Recommended Chapters</h3>
+<ul>
+<li><strong>Chapter 2: Implementing SLOs</strong>: SLO requirements for PRR</li>
+<li><strong>Chapter 4: Error Budgets</strong>: Error budget requirements</li>
+<li><strong>Chapter 5: Alerting on SLOs</strong>: Alerting requirements</li>
+<li><strong>Chapter 6: On-Call</strong>: On-call requirements</li>
+</ul>
+<hr />
+<h2 id="google-cloud-production-readiness">Google Cloud Production Readiness</h2>
+<p><strong>Documentation</strong>: <a href="https://cloud.google.com/architecture/framework/reliability/production-readiness">Production Readiness Review</a></p>
+<p><strong>Why it matters</strong>: GCP's recommended practices for production readiness reviews.</p>
+<h3 id="key-areas">Key Areas</h3>
+<p><strong>1. Reliability</strong>
+- SLIs and SLOs defined
+- Error budgets calculated
+- Monitoring configured</p>
+<p><strong>2. Observability</strong>
+- Metrics, logs, traces
+- Dashboards created
+- Alerts configured</p>
+<p><strong>3. Security</strong>
+- Authentication and authorization
+- Encryption configured
+- Security monitoring</p>
+<p><strong>4. Operations</strong>
+- On-call rotation
+- Runbooks created
+- Incident response process</p>
+<p><strong>Relevance</strong>: Provides GCP-specific guidance for production readiness.</p>
+<hr />
+<h2 id="prr-best-practices">PRR Best Practices</h2>
+<h3 id="what-staff-engineers-look-for">What Staff Engineers Look For</h3>
+<p><strong>Critical (Must Fix)</strong>:
+1. No SLIs/SLOs defined
+2. No monitoring configured
+3. No on-call rotation
+4. No rollback plan
+5. No security (auth, encryption)</p>
+<p><strong>Important (Should Fix)</strong>:
+1. Weak SLIs (internal metrics)
+2. Alert fatigue
+3. No runbooks
+4. No load testing
+5. Weak security</p>
+<p><strong>Nice-to-Have</strong>:
+1. Distributed tracing
+2. Chaos testing
+3. Capacity planning</p>
+<p><strong>Relevance</strong>: Provides a prioritized checklist of what matters most.</p>
+<hr />
+<h2 id="additional-resources">Additional Resources</h2>
+<h3 id="books">Books</h3>
+<p><strong>"The Site Reliability Workbook"</strong> (Google SRE Workbook)
+- Practical PRR implementation
+- Real-world examples</p>
+<p><strong>"Release It!"</strong> by Michael Nygard
+- Production readiness patterns
+- Common production failures</p>
+<h3 id="online-resources">Online Resources</h3>
+<p><strong>Google Cloud Documentation</strong>: <a href="https://cloud.google.com/architecture/framework/reliability/production-readiness">Production Readiness</a>
+- GCP production readiness guide
+- Checklists and best practices</p>
+<p><strong>SRE Book</strong>: <a href="https://sre.google/">sre.google</a>
+- Free online version
+- PRR concepts and practices</p>
+<hr />
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ol>
+<li><strong>PRR ensures readiness</strong>: Don't skip production readiness reviews</li>
+<li><strong>Focus on critical issues</strong>: SLIs/SLOs, monitoring, on-call, rollback, security</li>
+<li><strong>Use checklists</strong>: Systematic approach to PRR</li>
+<li><strong>Document findings</strong>: Clear feedback and action items</li>
+<li><strong>Iterate</strong>: PRR is not one-time, systems evolve</li>
+</ol>
+<hr />
+<h2 id="related-topics">Related Topics</h2>
+<ul>
+<li><a href="../04-reliability-sre/sli-slo-error-budget.html">SLIs/SLOs</a> - Foundation for PRR</li>
+<li><a href="../01-foundations/observability-basics.html">Observability Basics</a> - Monitoring requirements</li>
+<li><a href="../04-reliability-sre/incident-response.html">Incident Response</a> - On-call and runbooks</li>
+</ul>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

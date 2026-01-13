@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bigtable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#bigtable-design-tradeoffs" class="level-1">Bigtable: Design &amp; Tradeoffs</a></li>
+                <li><a href="#mental-model" class="level-2">Mental Model</a></li>
+                <li><a href="#bigtable-architecture" class="level-3">Bigtable Architecture</a></li>
+                <li><a href="#data-model" class="level-3">Data Model</a></li>
+                <li><a href="#internals-architecture" class="level-2">Internals &amp; Architecture</a></li>
+                <li><a href="#key-design" class="level-3">Key Design</a></li>
+                <li><a href="#row-key-structure" class="level-4">Row Key Structure</a></li>
+                <li><a href="#key-components" class="level-4">Key Components</a></li>
+                <li><a href="#tablet-distribution" class="level-3">Tablet Distribution</a></li>
+                <li><a href="#column-families" class="level-3">Column Families</a></li>
+                <li><a href="#timestamps" class="level-3">Timestamps</a></li>
+                <li><a href="#sstable-storage" class="level-3">SSTable Storage</a></li>
+                <li><a href="#performance-characteristics" class="level-3">Performance Characteristics</a></li>
+                <li><a href="#latency" class="level-4">Latency</a></li>
+                <li><a href="#throughput" class="level-4">Throughput</a></li>
+                <li><a href="#scalability" class="level-4">Scalability</a></li>
+                <li><a href="#failure-modes-blast-radius" class="level-2">Failure Modes &amp; Blast Radius</a></li>
+                <li><a href="#bigtable-failures" class="level-3">Bigtable Failures</a></li>
+                <li><a href="#scenario-1-regional-outage" class="level-4">Scenario 1: Regional Outage</a></li>
+                <li><a href="#scenario-2-tablet-server-failure" class="level-4">Scenario 2: Tablet Server Failure</a></li>
+                <li><a href="#scenario-3-hot-spot" class="level-4">Scenario 3: Hot Spot</a></li>
+                <li><a href="#performance-failures" class="level-3">Performance Failures</a></li>
+                <li><a href="#scenario-1-slow-compaction" class="level-4">Scenario 1: Slow Compaction</a></li>
+                <li><a href="#scenario-2-wal-overload" class="level-4">Scenario 2: WAL Overload</a></li>
+                <li><a href="#overload-scenarios" class="level-3">Overload Scenarios</a></li>
+                <li><a href="#10-normal-load" class="level-4">10× Normal Load</a></li>
+                <li><a href="#100-normal-load" class="level-4">100× Normal Load</a></li>
+                <li><a href="#observability-contract" class="level-2">Observability Contract</a></li>
+                <li><a href="#metrics-to-track" class="level-3">Metrics to Track</a></li>
+                <li><a href="#table-metrics" class="level-4">Table Metrics</a></li>
+                <li><a href="#node-metrics" class="level-4">Node Metrics</a></li>
+                <li><a href="#tablet-metrics" class="level-4">Tablet Metrics</a></li>
+                <li><a href="#logs" class="level-3">Logs</a></li>
+                <li><a href="#alerts" class="level-3">Alerts</a></li>
+                <li><a href="#change-safety" class="level-2">Change Safety</a></li>
+                <li><a href="#schema-changes" class="level-3">Schema Changes</a></li>
+                <li><a href="#adding-column-families" class="level-4">Adding Column Families</a></li>
+                <li><a href="#changing-row-key-structure" class="level-4">Changing Row Key Structure</a></li>
+                <li><a href="#configuration-changes" class="level-3">Configuration Changes</a></li>
+                <li><a href="#scaling-nodes" class="level-4">Scaling Nodes</a></li>
+                <li><a href="#changing-replication" class="level-4">Changing Replication</a></li>
+                <li><a href="#security-boundaries" class="level-2">Security Boundaries</a></li>
+                <li><a href="#access-control" class="level-3">Access Control</a></li>
+                <li><a href="#encryption" class="level-3">Encryption</a></li>
+                <li><a href="#data-protection" class="level-3">Data Protection</a></li>
+                <li><a href="#tradeoffs" class="level-2">Tradeoffs</a></li>
+                <li><a href="#consistency-strong-vs-eventual" class="level-3">Consistency: Strong vs Eventual</a></li>
+                <li><a href="#key-design-sequential-vs-hashed" class="level-3">Key Design: Sequential vs Hashed</a></li>
+                <li><a href="#column-families-many-vs-few" class="level-3">Column Families: Many vs Few</a></li>
+                <li><a href="#operational-considerations" class="level-2">Operational Considerations</a></li>
+                <li><a href="#capacity-planning" class="level-3">Capacity Planning</a></li>
+                <li><a href="#monitoring-debugging" class="level-3">Monitoring &amp; Debugging</a></li>
+                <li><a href="#incident-response" class="level-3">Incident Response</a></li>
+                <li><a href="#what-staff-engineers-ask-in-reviews" class="level-2">What Staff Engineers Ask in Reviews</a></li>
+                <li><a href="#design-questions" class="level-3">Design Questions</a></li>
+                <li><a href="#scale-questions" class="level-3">Scale Questions</a></li>
+                <li><a href="#performance-questions" class="level-3">Performance Questions</a></li>
+                <li><a href="#operational-questions" class="level-3">Operational Questions</a></li>
+                <li><a href="#further-reading" class="level-2">Further Reading</a></li>
+                <li><a href="#exercises" class="level-2">Exercises</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="bigtable-design-tradeoffs">Bigtable: Design &amp; Tradeoffs</h1>
+<p><strong>One-line summary</strong>: Understanding Bigtable's wide-column store design, key structure, performance characteristics, and how to avoid hot spots.</p>
+<p><strong>Prerequisites</strong>: <a href="../02-distributed-systems/sharding-partitioning.html">Sharding &amp; Partitioning</a>, Basic NoSQL concepts (key-value stores, column families).</p>
+<hr />
+<h2 id="mental-model">Mental Model</h2>
+<h3 id="bigtable-architecture">Bigtable Architecture</h3>
+<div class="mermaid">
+flowchart TB
+Client[Client] --> LB[Load Balancer]
+LB --> Bigtable[Bigtable Instance]
+Bigtable --> Tablet1[Tablet 1<br/>Shard]
+Bigtable --> Tablet2[Tablet 2<br/>Shard]
+Bigtable --> Tablet3[Tablet 3<br/>Shard]
+Tablet1 --> SSTable1[SSTable Files]
+Tablet2 --> SSTable2[SSTable Files]
+Tablet3 --> SSTable3[SSTable Files]
+SSTable1 --> GCS[Cloud Storage<br/>Backup]
+SSTable2 --> GCS
+SSTable3 --> GCS
+style Bigtable fill:#99ccff
+style Tablet1 fill:#ffcc99
+style Tablet2 fill:#ffcc99
+style Tablet3 fill:#ffcc99
+</div>
+<p><strong>Key insight</strong>: Bigtable is a wide-column store optimized for high-throughput, low-latency reads and writes. Understanding key design is critical for avoiding hot spots and achieving good performance.</p>
+<h3 id="data-model">Data Model</h3>
+<p><strong>Table</strong>: Collection of rows.</p>
+<p><strong>Row</strong>: Identified by row key (string).</p>
+<p><strong>Column Family</strong>: Group of columns (logical grouping).</p>
+<p><strong>Column</strong>: Identified by column family:column qualifier.</p>
+<p><strong>Cell</strong>: Value at (row, column, timestamp).</p>
+<p><strong>Example</strong>:</p>
+<pre><code>Row Key: user:123
+  Column Family: profile
+    Column: name → &quot;Alice&quot;
+    Column: email → &quot;alice@example.com&quot;
+  Column Family: activity
+    Column: last_login → 2024-01-01T10:00:00Z
+</code></pre>
+<hr />
+<h2 id="internals-architecture">Internals &amp; Architecture</h2>
+<h3 id="key-design">Key Design</h3>
+<h4 id="row-key-structure">Row Key Structure</h4>
+<p><strong>Row key</strong>: Determines data distribution and access patterns.</p>
+<p><strong>Design principles</strong>:
+- <strong>Even distribution</strong>: Distribute load evenly across tablets
+- <strong>Locality</strong>: Related data should be co-located
+- <strong>Access patterns</strong>: Optimize for common access patterns</p>
+<p><strong>Good key design</strong>:</p>
+<pre><code>user:{userId}:{timestamp}
+  - Distributes users evenly
+  - Co-locates user data
+  - Supports time-range queries
+</code></pre>
+<p><strong>Bad key design</strong>:</p>
+<pre><code>{timestamp}:user:{userId}
+  - All recent data on one tablet (hot spot)
+  - Poor distribution
+</code></pre>
+<h4 id="key-components">Key Components</h4>
+<p><strong>Components</strong>:
+- <strong>Prefix</strong>: Common prefix for related data
+- <strong>Hash</strong>: Hash component for distribution
+- <strong>Suffix</strong>: Additional components for ordering</p>
+<p><strong>Example</strong>:</p>
+<pre><code>{prefix}:{hash}:{suffix}
+  user:abc123:20240101
+  - prefix: user (logical grouping)
+  - hash: abc123 (distribution)
+  - suffix: 20240101 (ordering)
+</code></pre>
+<h3 id="tablet-distribution">Tablet Distribution</h3>
+<p><strong>Tablets</strong>: Shards that store data.</p>
+<p><strong>Distribution</strong>:
+- <strong>Automatic</strong>: Bigtable automatically distributes tablets
+- <strong>Key-based</strong>: Distribution based on row key ranges
+- <strong>Dynamic</strong>: Tablets split and merge automatically</p>
+<p><strong>Splitting</strong>:
+- <strong>Trigger</strong>: Tablet size exceeds threshold
+- <strong>Process</strong>: Split tablet into two tablets
+- <strong>Result</strong>: Better load distribution</p>
+<p><strong>Merging</strong>:
+- <strong>Trigger</strong>: Tablet size below threshold
+- <strong>Process</strong>: Merge tablets
+- <strong>Result</strong>: Fewer tablets, simpler management</p>
+<h3 id="column-families">Column Families</h3>
+<p><strong>Column families</strong>: Logical grouping of columns.</p>
+<p><strong>Design</strong>:
+- <strong>Group related columns</strong>: Columns accessed together
+- <strong>Separate access patterns</strong>: Different access patterns in different families
+- <strong>Limit families</strong>: Too many families hurt performance</p>
+<p><strong>Example</strong>:</p>
+<pre><code>Column Family: profile
+  - name, email, phone (frequently accessed together)
+Column Family: activity
+  - last_login, page_views (less frequently accessed)
+</code></pre>
+<h3 id="timestamps">Timestamps</h3>
+<p><strong>Timestamps</strong>: Version data in cells.</p>
+<p><strong>Use cases</strong>:
+- <strong>Time-series data</strong>: Store historical data
+- <strong>Versioning</strong>: Track changes over time
+- <strong>TTL</strong>: Automatic expiration of old data</p>
+<p><strong>Example</strong>:</p>
+<pre><code>Row: user:123
+  Column: profile:name
+    Timestamp: 2024-01-01T10:00:00Z → &quot;Alice&quot;
+    Timestamp: 2024-01-02T10:00:00Z → &quot;Alice Smith&quot;
+</code></pre>
+<h3 id="sstable-storage">SSTable Storage</h3>
+<p><strong>SSTable</strong>: Sorted String Table (immutable data files).</p>
+<p><strong>Structure</strong>:
+- <strong>Sorted</strong>: Rows sorted by key
+- <strong>Immutable</strong>: Files never modified (only created/deleted)
+- <strong>Compressed</strong>: Data compressed for storage efficiency</p>
+<p><strong>Compaction</strong>:
+- <strong>Minor compaction</strong>: Merge small SSTables
+- <strong>Major compaction</strong>: Merge all SSTables
+- <strong>Benefits</strong>: Reduce file count, improve read performance</p>
+<h3 id="performance-characteristics">Performance Characteristics</h3>
+<h4 id="latency">Latency</h4>
+<p><strong>Read latency</strong>:
+- <strong>Single row</strong>: P95 &lt; 10ms
+- <strong>Range scan</strong>: Depends on range size
+- <strong>Bottleneck</strong>: Usually disk I/O</p>
+<p><strong>Write latency</strong>:
+- <strong>Single row</strong>: P95 &lt; 10ms
+- <strong>Batch writes</strong>: Lower latency per row
+- <strong>Bottleneck</strong>: Usually WAL (Write-Ahead Log)</p>
+<h4 id="throughput">Throughput</h4>
+<p><strong>Read throughput</strong>:
+- <strong>Scales linearly</strong>: With number of nodes
+- <strong>Bottleneck</strong>: Usually disk I/O or network</p>
+<p><strong>Write throughput</strong>:
+- <strong>Scales linearly</strong>: With number of nodes
+- <strong>Bottleneck</strong>: Usually WAL or disk I/O</p>
+<h4 id="scalability">Scalability</h4>
+<p><strong>Limits</strong>:
+- <strong>Table size</strong>: Petabytes
+- <strong>Nodes</strong>: Thousands of nodes
+- <strong>QPS</strong>: Millions of queries per second
+- <strong>Regions</strong>: Multi-region support</p>
+<hr />
+<h2 id="failure-modes-blast-radius">Failure Modes &amp; Blast Radius</h2>
+<h3 id="bigtable-failures">Bigtable Failures</h3>
+<h4 id="scenario-1-regional-outage">Scenario 1: Regional Outage</h4>
+<ul>
+<li><strong>Impact</strong>: Nodes in affected region unavailable</li>
+<li><strong>Blast radius</strong>: Affected region (other regions continue)</li>
+<li><strong>Detection</strong>: Node health checks fail, increased latency</li>
+<li><strong>Recovery</strong>: </li>
+<li>Automatic failover to other regions (if multi-region)</li>
+<li>Nodes restored when region recovers</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Multi-region configuration</li>
+<li>Sufficient replicas per region</li>
+</ul>
+<h4 id="scenario-2-tablet-server-failure">Scenario 2: Tablet Server Failure</h4>
+<ul>
+<li><strong>Impact</strong>: Tablets on failed server unavailable</li>
+<li><strong>Blast radius</strong>: Affected tablets</li>
+<li><strong>Detection</strong>: Server health checks fail</li>
+<li><strong>Recovery</strong>: </li>
+<li>Automatic failover to other servers</li>
+<li>Tablets restored on healthy servers</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Multiple tablet servers</li>
+<li>Automatic failover</li>
+</ul>
+<h4 id="scenario-3-hot-spot">Scenario 3: Hot Spot</h4>
+<ul>
+<li><strong>Impact</strong>: Single tablet overloaded, increased latency</li>
+<li><strong>Blast radius</strong>: Affected tablet, may affect entire table</li>
+<li><strong>Detection</strong>: High latency on specific keys, server CPU high</li>
+<li><strong>Recovery</strong>: </li>
+<li>Redesign keys (better distribution)</li>
+<li>Add more nodes (may not help if hot spot persists)</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Design keys for even distribution</li>
+<li>Monitor hot spots</li>
+<li>Use key prefixes for distribution</li>
+</ul>
+<h3 id="performance-failures">Performance Failures</h3>
+<h4 id="scenario-1-slow-compaction">Scenario 1: Slow Compaction</h4>
+<ul>
+<li><strong>Impact</strong>: Many SSTables, slow reads</li>
+<li><strong>Blast radius</strong>: Affected tablets</li>
+<li><strong>Detection</strong>: High read latency, many SSTables</li>
+<li><strong>Recovery</strong>: </li>
+<li>Trigger manual compaction</li>
+<li>Wait for automatic compaction</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Monitor compaction lag</li>
+<li>Tune compaction settings</li>
+</ul>
+<h4 id="scenario-2-wal-overload">Scenario 2: WAL Overload</h4>
+<ul>
+<li><strong>Impact</strong>: Write latency increases</li>
+<li><strong>Blast radius</strong>: Write operations</li>
+<li><strong>Detection</strong>: High write latency, WAL queue full</li>
+<li><strong>Recovery</strong>: </li>
+<li>Reduce write rate</li>
+<li>Add more nodes</li>
+<li><strong>Mitigation</strong>: </li>
+<li>Monitor WAL queue</li>
+<li>Scale nodes for write throughput</li>
+</ul>
+<h3 id="overload-scenarios">Overload Scenarios</h3>
+<h4 id="10-normal-load">10× Normal Load</h4>
+<ul>
+<li><strong>Latency</strong>: May increase, especially for hot spots</li>
+<li><strong>Throughput</strong>: Handles load, may need to scale nodes</li>
+<li><strong>Hot spots</strong>: Hot spots become more problematic</li>
+</ul>
+<h4 id="100-normal-load">100× Normal Load</h4>
+<ul>
+<li><strong>Latency</strong>: Significantly increased, hot spots critical</li>
+<li><strong>Throughput</strong>: May need significant scaling</li>
+<li><strong>Hot spots</strong>: Hot spots may cause failures</li>
+</ul>
+<hr />
+<h2 id="observability-contract">Observability Contract</h2>
+<h3 id="metrics-to-track">Metrics to Track</h3>
+<h4 id="table-metrics">Table Metrics</h4>
+<ul>
+<li><strong>QPS</strong>: Queries per second (read/write)</li>
+<li><strong>Latency</strong>: P50/P95/P99 latency (read/write)</li>
+<li><strong>Error rate</strong>: Error rate (4xx/5xx)</li>
+<li><strong>Hot spots</strong>: Hot spot detection</li>
+</ul>
+<h4 id="node-metrics">Node Metrics</h4>
+<ul>
+<li><strong>CPU</strong>: CPU utilization per node</li>
+<li><strong>Memory</strong>: Memory utilization per node</li>
+<li><strong>Disk</strong>: Disk I/O per node</li>
+<li><strong>Network</strong>: Network bandwidth per node</li>
+</ul>
+<h4 id="tablet-metrics">Tablet Metrics</h4>
+<ul>
+<li><strong>Tablet count</strong>: Number of tablets</li>
+<li><strong>Tablet size</strong>: Size per tablet</li>
+<li><strong>SSTable count</strong>: Number of SSTables per tablet</li>
+<li><strong>Compaction lag</strong>: Compaction delay</li>
+</ul>
+<h3 id="logs">Logs</h3>
+<p><strong>Bigtable logs</strong>:
+- Query logs (if enabled)
+- Error logs
+- Admin activity logs
+- Compaction logs</p>
+<h3 id="alerts">Alerts</h3>
+<p><strong>Critical alerts</strong>:
+- Table unavailable
+- High error rate (&gt; 1%)
+- High latency (&gt; threshold)
+- Hot spots detected</p>
+<p><strong>Warning alerts</strong>:
+- High compaction lag
+- WAL queue full
+- Node resource exhaustion
+- Tablet count increasing</p>
+<hr />
+<h2 id="change-safety">Change Safety</h2>
+<h3 id="schema-changes">Schema Changes</h3>
+<h4 id="adding-column-families">Adding Column Families</h4>
+<ul>
+<li><strong>Process</strong>: Add column family, verify application compatibility</li>
+<li><strong>Risk</strong>: Low (additive change)</li>
+<li><strong>Rollback</strong>: Remove column family (if empty)</li>
+</ul>
+<h4 id="changing-row-key-structure">Changing Row Key Structure</h4>
+<ul>
+<li><strong>Process</strong>: Cannot change row key structure (requires data migration)</li>
+<li><strong>Risk</strong>: High (requires data migration)</li>
+<li><strong>Rollback</strong>: Recreate table with old key structure</li>
+</ul>
+<h3 id="configuration-changes">Configuration Changes</h3>
+<h4 id="scaling-nodes">Scaling Nodes</h4>
+<ul>
+<li><strong>Process</strong>: Add/remove nodes, verify performance</li>
+<li><strong>Risk</strong>: Medium (may affect performance temporarily)</li>
+<li><strong>Rollback</strong>: Revert node count</li>
+</ul>
+<h4 id="changing-replication">Changing Replication</h4>
+<ul>
+<li><strong>Process</strong>: Update replication configuration, verify availability</li>
+<li><strong>Risk</strong>: High (affects availability, requires downtime)</li>
+<li><strong>Rollback</strong>: Revert replication configuration</li>
+</ul>
+<hr />
+<h2 id="security-boundaries">Security Boundaries</h2>
+<h3 id="access-control">Access Control</h3>
+<ul>
+<li><strong>IAM</strong>: Table and column family-level IAM policies</li>
+<li><strong>Encryption</strong>: Encryption at rest and in transit</li>
+</ul>
+<h3 id="encryption">Encryption</h3>
+<p><strong>At rest</strong>:
+- <strong>Google-managed keys</strong>: Default encryption
+- <strong>Customer-managed keys</strong>: Cloud KMS keys</p>
+<p><strong>In transit</strong>:
+- <strong>TLS</strong>: All connections use TLS
+- <strong>Encryption</strong>: Data encrypted in transit</p>
+<h3 id="data-protection">Data Protection</h3>
+<ul>
+<li><strong>Backups</strong>: Automatic backups (point-in-time recovery)</li>
+<li><strong>Audit logs</strong>: Audit all table access</li>
+<li><strong>Data retention</strong>: Configurable data retention (TTL)</li>
+</ul>
+<hr />
+<h2 id="tradeoffs">Tradeoffs</h2>
+<h3 id="consistency-strong-vs-eventual">Consistency: Strong vs Eventual</h3>
+<p><strong>Strong consistency</strong>:
+- <strong>Pros</strong>: Always see latest data
+- <strong>Cons</strong>: Higher latency, lower throughput</p>
+<p><strong>Eventual consistency</strong>:
+- <strong>Pros</strong>: Better performance, higher throughput
+- <strong>Cons</strong>: May see stale data briefly</p>
+<h3 id="key-design-sequential-vs-hashed">Key Design: Sequential vs Hashed</h3>
+<p><strong>Sequential keys</strong>:
+- <strong>Pros</strong>: Supports range scans, ordered access
+- <strong>Cons</strong>: May cause hot spots</p>
+<p><strong>Hashed keys</strong>:
+- <strong>Pros</strong>: Even distribution, no hot spots
+- <strong>Cons</strong>: No range scans, random access only</p>
+<h3 id="column-families-many-vs-few">Column Families: Many vs Few</h3>
+<p><strong>Many families</strong>:
+- <strong>Pros</strong>: Better organization, separate access patterns
+- <strong>Cons</strong>: More overhead, worse performance</p>
+<p><strong>Few families</strong>:
+- <strong>Pros</strong>: Better performance, simpler
+- <strong>Cons</strong>: Less organization, mixed access patterns</p>
+<hr />
+<h2 id="operational-considerations">Operational Considerations</h2>
+<h3 id="capacity-planning">Capacity Planning</h3>
+<p><strong>Storage</strong>:
+- <strong>Growth</strong>: Plan for storage growth
+- <strong>Backups</strong>: Plan for backup storage
+- <strong>Compaction</strong>: Plan for compaction overhead</p>
+<p><strong>Compute</strong>:
+- <strong>Nodes</strong>: Plan for node capacity
+- <strong>QPS</strong>: Plan for query throughput
+- <strong>Scaling</strong>: Plan for auto-scaling</p>
+<h3 id="monitoring-debugging">Monitoring &amp; Debugging</h3>
+<p><strong>Monitor</strong>:
+- Query performance
+- Hot spots
+- Node health
+- Compaction lag</p>
+<p><strong>Debug issues</strong>:
+1. Check query performance (slow queries)
+2. Check hot spots
+3. Check node health
+4. Check compaction lag
+5. Review logs</p>
+<h3 id="incident-response">Incident Response</h3>
+<p><strong>Common incidents</strong>:
+- High latency
+- Hot spots
+- Compaction lag
+- Node failures</p>
+<p><strong>Response</strong>:
+1. Check table health
+2. Check query performance
+3. Check hot spots
+4. Check node health
+5. Scale if needed
+6. Contact support if persistent</p>
+<hr />
+<h2 id="what-staff-engineers-ask-in-reviews">What Staff Engineers Ask in Reviews</h2>
+<h3 id="design-questions">Design Questions</h3>
+<ul>
+<li>"What's the key design?"</li>
+<li>"How are hot spots avoided?"</li>
+<li>"What column families are used?"</li>
+<li>"How is data distributed?"</li>
+</ul>
+<h3 id="scale-questions">Scale Questions</h3>
+<ul>
+<li>"What happens at 10× load?"</li>
+<li>"How does Bigtable scale?"</li>
+<li>"What are the hot spots?"</li>
+<li>"How do you handle key distribution?"</li>
+</ul>
+<h3 id="performance-questions">Performance Questions</h3>
+<ul>
+<li>"What's the read/write latency?"</li>
+<li>"How is compaction handled?"</li>
+<li>"What's the WAL configuration?"</li>
+<li>"How are SSTables managed?"</li>
+</ul>
+<h3 id="operational-questions">Operational Questions</h3>
+<ul>
+<li>"How do you monitor Bigtable?"</li>
+<li>"What alerts do you have?"</li>
+<li>"How do you debug performance issues?"</li>
+<li>"What's the backup strategy?"</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<p><strong>Comprehensive Guide</strong>: <a href="../further-reading/bigtable.html">Further Reading: Bigtable</a></p>
+<p><strong>Quick Links</strong>:
+- <a href="https://cloud.google.com/bigtable/docs">Bigtable Documentation</a>
+- "Bigtable: A Distributed Storage System for Structured Data" (Chang et al., 2006)
+- <a href="https://cloud.google.com/bigtable/docs/schema-design">Schema Design</a>
+- <a href="https://cloud.google.com/bigtable/docs/performance">Performance Best Practices</a>
+- <a href="README.html">Back to GCP Core Building Blocks</a></p>
+<hr />
+<h2 id="exercises">Exercises</h2>
+<ol>
+<li>
+<p><strong>Design keys</strong>: Design row keys for a time-series application. How do you avoid hot spots?</p>
+</li>
+<li>
+<p><strong>Handle hot spots</strong>: Your table has hot spots. How do you fix them? What key changes do you make?</p>
+</li>
+<li>
+<p><strong>Optimize performance</strong>: Your queries are slow. How do you optimize them? What column families do you use?</p>
+</li>
+</ol>
+<p><strong>Answer Key</strong>: <a href="../exercises/answers/bigtable-answers.html">View Answers</a></p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../assets/scripts.js"></script>
+    
+</body>
+</html>

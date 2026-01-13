@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sli Slo Error Budget Answers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../../../assets/styles.css">
+</head>
+<body class="antialiased">
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                                <button class="sidebar-toggle mobile md:hidden" id="sidebarToggleMobile" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <button class="sidebar-toggle desktop hidden md:block" id="sidebarToggleDesktop" aria-label="Toggle sidebar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div class="text-xl sm:text-2xl font-bold text-gray-800">
+                    <a href="../../../../index.html" class="flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        <span class="gradient-text">Home</span>
+                    </a>
+                </div>
+            </div>
+            <ul class="flex space-x-4 sm:space-x-6 text-gray-600 font-medium text-sm sm:text-base">
+                <li><a href="../../../../case_studies.html" class="hover:text-[#bc5090] font-semibold">Case Studies</a></li>
+                <li><a href="../../../../aboutme.html" class="hover:text-[#bc5090] font-semibold">About Me</a></li>
+            </ul>
+        </nav>
+    </header>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Table of Contents</div>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <ul class="sidebar-nav">
+                <li><a href="#answer-key-slis-slos-error-budgets" class="level-1">Answer Key: SLIs, SLOs &amp; Error Budgets</a></li>
+                <li><a href="#exercise-1-define-slisslos" class="level-2">Exercise 1: Define SLIs/SLOs</a></li>
+                <li><a href="#answer" class="level-3">Answer</a></li>
+                <li><a href="#slis-service-level-indicators" class="level-3">SLIs (Service Level Indicators)</a></li>
+                <li><a href="#slos-service-level-objectives" class="level-3">SLOs (Service Level Objectives)</a></li>
+                <li><a href="#complete-slislo-definition" class="level-3">Complete SLI/SLO Definition</a></li>
+                <li><a href="#answer_1" class="level-3">Answer</a></li>
+                <li><a href="#exercise-2-error-budget-policy" class="level-2">Exercise 2: Error Budget Policy</a></li>
+                <li><a href="#answer_2" class="level-3">Answer</a></li>
+                <li><a href="#error-budget-policy" class="level-3">Error Budget Policy</a></li>
+                <li><a href="#policy-implementation" class="level-3">Policy Implementation</a></li>
+                <li><a href="#monitoring-alerts" class="level-3">Monitoring &amp; Alerts</a></li>
+                <li><a href="#answer_3" class="level-3">Answer</a></li>
+                <li><a href="#exercise-3-debug-slo-violation" class="level-2">Exercise 3: Debug SLO Violation</a></li>
+                <li><a href="#answer_4" class="level-3">Answer</a></li>
+                <li><a href="#debugging-steps" class="level-3">Debugging Steps</a></li>
+                <li><a href="#debugging-checklist" class="level-3">Debugging Checklist</a></li>
+                <li><a href="#common-root-causes" class="level-3">Common Root Causes</a></li>
+                <li><a href="#answer_5" class="level-3">Answer</a></li>
+            </ul>
+        </div>
+    </aside>
+    <main class="main-content container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="content">
+<h1 id="answer-key-slis-slos-error-budgets">Answer Key: SLIs, SLOs &amp; Error Budgets</h1>
+<p><a href="../../04-reliability-sre/sli-slo-error-budget.html">Back to Exercises</a></p>
+<hr />
+<h2 id="exercise-1-define-slisslos">Exercise 1: Define SLIs/SLOs</h2>
+<p><strong>Question</strong>: Define SLIs and SLOs for an API service. What metrics do you use? What targets?</p>
+<h3 id="answer">Answer</h3>
+<p><strong>Service</strong>: REST API for user data management</p>
+<h3 id="slis-service-level-indicators">SLIs (Service Level Indicators)</h3>
+<p><strong>1. Availability SLI</strong></p>
+<p><strong>Definition</strong>: Fraction of successful HTTP requests (2xx, 3xx status codes)</p>
+<p><strong>Measurement</strong>:
+- Count successful requests / total requests
+- Measured over 1-minute windows
+- Aggregated over 30-day period</p>
+<p><strong>Formula</strong>: <code>availability = successful_requests / total_requests</code></p>
+<p><strong>2. Latency SLI</strong></p>
+<p><strong>Definition</strong>: Request latency percentiles (P50, P95, P99)</p>
+<p><strong>Measurement</strong>:
+- Time from request received to response sent
+- Measured in milliseconds
+- Tracked as percentiles</p>
+<p><strong>Percentiles</strong>:
+- P50 (median): Typical user experience
+- P95: 95% of users experience this or better
+- P99: 99% of users experience this or better</p>
+<p><strong>3. Error Rate SLI</strong></p>
+<p><strong>Definition</strong>: Fraction of requests returning 5xx errors</p>
+<p><strong>Measurement</strong>:
+- Count of 5xx errors / total requests
+- Measured over 1-minute windows
+- Aggregated over 30-day period</p>
+<p><strong>Formula</strong>: <code>error_rate = 5xx_errors / total_requests</code></p>
+<p><strong>4. Throughput SLI</strong> (Optional)</p>
+<p><strong>Definition</strong>: Requests processed per second</p>
+<p><strong>Measurement</strong>:
+- Count requests per second
+- Tracked as average and peak</p>
+<h3 id="slos-service-level-objectives">SLOs (Service Level Objectives)</h3>
+<p><strong>1. Availability SLO</strong></p>
+<p><strong>Target</strong>: 99.9% availability</p>
+<p><strong>Meaning</strong>: 99.9% of requests succeed</p>
+<p><strong>Error budget</strong>: 0.1% = 43.2 minutes/month</p>
+<p><strong>2. Latency SLO</strong></p>
+<p><strong>Targets</strong>:
+- P50 latency &lt; 50ms
+- P95 latency &lt; 100ms
+- P99 latency &lt; 200ms</p>
+<p><strong>Meaning</strong>: 
+- 50% of requests complete in &lt; 50ms
+- 95% of requests complete in &lt; 100ms
+- 99% of requests complete in &lt; 200ms</p>
+<p><strong>Error budget</strong>: &gt; threshold for &gt; 0.1% of requests</p>
+<p><strong>3. Error Rate SLO</strong></p>
+<p><strong>Target</strong>: &lt; 0.1% error rate</p>
+<p><strong>Meaning</strong>: &lt; 0.1% of requests return 5xx errors</p>
+<p><strong>Error budget</strong>: &gt; 0.1% for &gt; 0.1% of requests</p>
+<h3 id="complete-slislo-definition">Complete SLI/SLO Definition</h3>
+<table>
+<thead>
+<tr>
+<th>SLI</th>
+<th>Definition</th>
+<th>SLO Target</th>
+<th>Error Budget</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Availability</td>
+<td>Fraction of successful requests</td>
+<td>99.9%</td>
+<td>0.1% = 43.2 min/month</td>
+</tr>
+<tr>
+<td>P50 Latency</td>
+<td>Median request latency</td>
+<td>&lt; 50ms</td>
+<td>&gt; 50ms for &gt; 0.1% requests</td>
+</tr>
+<tr>
+<td>P95 Latency</td>
+<td>95th percentile latency</td>
+<td>&lt; 100ms</td>
+<td>&gt; 100ms for &gt; 0.1% requests</td>
+</tr>
+<tr>
+<td>P99 Latency</td>
+<td>99th percentile latency</td>
+<td>&lt; 200ms</td>
+<td>&gt; 200ms for &gt; 0.1% requests</td>
+</tr>
+<tr>
+<td>Error Rate</td>
+<td>Fraction of 5xx errors</td>
+<td>&lt; 0.1%</td>
+<td>&gt; 0.1% for &gt; 0.1% requests</td>
+</tr>
+</tbody>
+</table>
+<h3 id="answer_1">Answer</h3>
+<p><strong>SLIs</strong>:
+1. <strong>Availability</strong>: Fraction of successful requests (2xx, 3xx)
+2. <strong>Latency</strong>: P50, P95, P99 request latency
+3. <strong>Error Rate</strong>: Fraction of 5xx errors
+4. <strong>Throughput</strong>: Requests per second (optional)</p>
+<p><strong>SLOs</strong>:
+1. <strong>Availability</strong>: 99.9% (0.1% error budget = 43.2 min/month)
+2. <strong>P50 Latency</strong>: &lt; 50ms
+3. <strong>P95 Latency</strong>: &lt; 100ms
+4. <strong>P99 Latency</strong>: &lt; 200ms
+5. <strong>Error Rate</strong>: &lt; 0.1%</p>
+<p><strong>Key principles</strong>:
+- <strong>User-facing</strong>: SLIs measure what users experience
+- <strong>Measurable</strong>: Can be measured accurately
+- <strong>Actionable</strong>: Changes when system behavior changes
+- <strong>Realistic</strong>: SLOs are achievable based on baseline</p>
+<hr />
+<h2 id="exercise-2-error-budget-policy">Exercise 2: Error Budget Policy</h2>
+<p><strong>Question</strong>: Design an error budget policy. What happens at 50%? 25%? 0%?</p>
+<h3 id="answer_2">Answer</h3>
+<p><strong>Goal</strong>: Define actions when error budget is consumed.</p>
+<h3 id="error-budget-policy">Error Budget Policy</h3>
+<p><strong>Error Budget</strong>: 0.1% = 43.2 minutes/month (for 99.9% availability SLO)</p>
+<p><strong>Policy Tiers</strong>:</p>
+<p><strong>1. &gt; 50% Remaining (Normal Operations)</strong></p>
+<p><strong>Status</strong>: Green</p>
+<p><strong>Actions</strong>:
+- Normal operations
+- Can ship new features
+- Can make risky changes
+- Monitor error budget consumption</p>
+<p><strong>Threshold</strong>: &gt; 50% remaining (&gt; 21.6 minutes)</p>
+<p><strong>2. 25-50% Remaining (Warning)</strong></p>
+<p><strong>Status</strong>: Yellow</p>
+<p><strong>Actions</strong>:
+- <strong>Reduce risky changes</strong>: Avoid risky deployments
+- <strong>Increase monitoring</strong>: Monitor more closely
+- <strong>Review changes</strong>: Review all changes before deployment
+- <strong>Focus on reliability</strong>: Start focusing on reliability improvements
+- <strong>Can ship features</strong>: Can still ship low-risk features</p>
+<p><strong>Threshold</strong>: 25-50% remaining (10.8-21.6 minutes)</p>
+<p><strong>3. &lt; 25% Remaining (Critical)</strong></p>
+<p><strong>Status</strong>: Orange</p>
+<p><strong>Actions</strong>:
+- <strong>Stop feature work</strong>: No new features, only bug fixes
+- <strong>Focus on reliability</strong>: All work focused on reliability
+- <strong>Freeze changes</strong>: Freeze non-critical changes
+- <strong>Emergency fixes only</strong>: Only critical bug fixes
+- <strong>Daily reviews</strong>: Daily error budget reviews</p>
+<p><strong>Threshold</strong>: &lt; 25% remaining (&lt; 10.8 minutes)</p>
+<p><strong>4. 0% Remaining (Emergency)</strong></p>
+<p><strong>Status</strong>: Red</p>
+<p><strong>Actions</strong>:
+- <strong>Emergency reliability only</strong>: Only reliability work, no features
+- <strong>Stop all changes</strong>: Freeze all changes except emergency fixes
+- <strong>Incident response</strong>: Treat as incident, full incident response
+- <strong>Daily standups</strong>: Daily standups on error budget recovery
+- <strong>Escalation</strong>: Escalate to management</p>
+<p><strong>Threshold</strong>: 0% remaining (0 minutes)</p>
+<p><strong>5. Budget Exhausted (Negative)</strong></p>
+<p><strong>Status</strong>: Critical</p>
+<p><strong>Actions</strong>:
+- <strong>Emergency mode</strong>: Full emergency response
+- <strong>All hands</strong>: All engineers focused on reliability
+- <strong>No changes</strong>: No changes except emergency fixes
+- <strong>Postmortem</strong>: Postmortem on budget exhaustion
+- <strong>Recovery plan</strong>: Create recovery plan</p>
+<p><strong>Threshold</strong>: &lt; 0% (negative budget)</p>
+<h3 id="policy-implementation">Policy Implementation</h3>
+<div class="mermaid">
+graph LR
+Budget[Error Budget] --> Check{Remaining?}
+Check -->|> 50%| Normal[Normal Operations]
+Check -->|25-50%| Warning[Reduce Risky Changes]
+Check -->|< 25%| Critical[Stop Feature Work]
+Check -->|0%| Emergency[Emergency Only]
+style Normal fill:#99ff99
+style Warning fill:#ffcc99
+style Critical fill:#ff9999
+style Emergency fill:#ff6666
+</div>
+<h3 id="monitoring-alerts">Monitoring &amp; Alerts</h3>
+<p><strong>Alerts</strong>:
+- <strong>Warning</strong>: Error budget &lt; 50% (alert team)
+- <strong>Critical</strong>: Error budget &lt; 25% (page on-call)
+- <strong>Emergency</strong>: Error budget &lt; 0% (page on-call + escalation)</p>
+<p><strong>Dashboards</strong>:
+- Error budget remaining
+- Error budget burn rate
+- Projected exhaustion date
+- Policy status</p>
+<h3 id="answer_3">Answer</h3>
+<p><strong>Error Budget Policy</strong>:</p>
+<p><strong>&gt; 50% Remaining (Green)</strong>:
+- Normal operations
+- Can ship features
+- Monitor consumption</p>
+<p><strong>25-50% Remaining (Yellow)</strong>:
+- Reduce risky changes
+- Increase monitoring
+- Review changes before deployment
+- Can ship low-risk features</p>
+<p><strong>&lt; 25% Remaining (Orange)</strong>:
+- Stop feature work
+- Focus on reliability
+- Freeze non-critical changes
+- Emergency fixes only
+- Daily reviews</p>
+<p><strong>0% Remaining (Red)</strong>:
+- Emergency reliability only
+- Stop all changes
+- Incident response
+- Daily standups
+- Escalation</p>
+<p><strong>&lt; 0% (Critical)</strong>:
+- Emergency mode
+- All hands on reliability
+- No changes except emergency fixes
+- Postmortem required
+- Recovery plan</p>
+<p><strong>Key principles</strong>:
+- <strong>Gradual escalation</strong>: More restrictions as budget decreases
+- <strong>Clear thresholds</strong>: Well-defined thresholds for each tier
+- <strong>Actionable</strong>: Clear actions for each tier
+- <strong>Monitoring</strong>: Alerts and dashboards for visibility</p>
+<hr />
+<h2 id="exercise-3-debug-slo-violation">Exercise 3: Debug SLO Violation</h2>
+<p><strong>Question</strong>: An SLO is being violated. How do you debug? What do you check?</p>
+<h3 id="answer_4">Answer</h3>
+<p><strong>Problem</strong>: SLO violation detected (e.g., availability &lt; 99.9%)</p>
+<h3 id="debugging-steps">Debugging Steps</h3>
+<p><strong>1. Identify Which SLO is Violated</strong></p>
+<p><strong>Check SLO dashboard</strong>:
+- Which SLO? (Availability, Latency, Error Rate)
+- When did violation start?
+- How severe is violation?</p>
+<p><strong>2. Check SLI Values</strong></p>
+<p><strong>Verify SLI measurement</strong>:
+- Are SLIs being measured correctly?
+- Are metrics accurate?
+- Are there measurement issues?</p>
+<p><strong>3. Check Error Budget</strong></p>
+<p><strong>Error budget status</strong>:
+- How much budget consumed?
+- What's the burn rate?
+- When will budget be exhausted?</p>
+<p><strong>4. Analyze Metrics</strong></p>
+<p><strong>Availability violation</strong>:
+- Check error rate: Are errors increasing?
+- Check error types: What types of errors?
+- Check endpoints: Which endpoints failing?
+- Check regions: Which regions affected?</p>
+<p><strong>Latency violation</strong>:
+- Check P50, P95, P99: Which percentile violated?
+- Check endpoints: Which endpoints slow?
+- Check regions: Which regions slow?
+- Check database: Is database slow?
+- Check cache: Is cache hit rate low?</p>
+<p><strong>Error rate violation</strong>:
+- Check error types: What errors?
+- Check endpoints: Which endpoints erroring?
+- Check regions: Which regions erroring?
+- Check downstream: Are downstream services failing?</p>
+<p><strong>5. Check Recent Changes</strong></p>
+<p><strong>Deployment history</strong>:
+- Recent deployments?
+- Recent configuration changes?
+- Recent feature flags?
+- Recent infrastructure changes?</p>
+<p><strong>6. Check Downstream Services</strong></p>
+<p><strong>Dependencies</strong>:
+- Are downstream services healthy?
+- Are databases healthy?
+- Are caches healthy?
+- Are external APIs healthy?</p>
+<p><strong>7. Check Infrastructure</strong></p>
+<p><strong>Infrastructure health</strong>:
+- Are servers healthy?
+- Are load balancers healthy?
+- Is network healthy?
+- Are there capacity issues?</p>
+<p><strong>8. Check Logs</strong></p>
+<p><strong>Application logs</strong>:
+- Error logs: What errors?
+- Performance logs: Slow requests?
+- Access logs: Unusual patterns?</p>
+<p><strong>9. Check Traces</strong></p>
+<p><strong>Distributed traces</strong>:
+- Slow spans: Which operations slow?
+- Error spans: Which operations erroring?
+- Bottlenecks: Where are bottlenecks?</p>
+<p><strong>10. Check Alerts</strong></p>
+<p><strong>Related alerts</strong>:
+- Other alerts firing?
+- Related incidents?
+- Known issues?</p>
+<h3 id="debugging-checklist">Debugging Checklist</h3>
+<div class="mermaid">
+flowchart TD
+Violation[SLO Violation] --> Identify[Identify SLO]
+Identify --> CheckSLI[Check SLI Values]
+CheckSLI --> CheckBudget[Check Error Budget]
+CheckBudget --> Analyze[Analyze Metrics]
+Analyze --> CheckChanges[Check Recent Changes]
+CheckChanges --> CheckDownstream[Check Downstream]
+CheckDownstream --> CheckInfra[Check Infrastructure]
+CheckInfra --> CheckLogs[Check Logs]
+CheckLogs --> CheckTraces[Check Traces]
+CheckTraces --> Fix[Fix Issue]
+style Violation fill:#ff9999
+style Fix fill:#99ff99
+</div>
+<h3 id="common-root-causes">Common Root Causes</h3>
+<p><strong>Availability violations</strong>:
+- Downstream service failures
+- Database failures
+- Infrastructure failures
+- Buggy deployments
+- Configuration errors</p>
+<p><strong>Latency violations</strong>:
+- Database slow queries
+- Cache misses
+- Downstream service latency
+- Resource contention
+- Network issues</p>
+<p><strong>Error rate violations</strong>:
+- Buggy code
+- Downstream service errors
+- Database errors
+- Configuration errors
+- Resource exhaustion</p>
+<h3 id="answer_5">Answer</h3>
+<p><strong>Debugging steps</strong>:</p>
+<ol>
+<li><strong>Identify SLO</strong>: Which SLO violated? When? How severe?</li>
+<li><strong>Check SLI values</strong>: Verify SLI measurement accuracy</li>
+<li><strong>Check error budget</strong>: How much consumed? Burn rate?</li>
+<li><strong>Analyze metrics</strong>: Error rate, latency, endpoints, regions</li>
+<li><strong>Check recent changes</strong>: Deployments, configs, features</li>
+<li><strong>Check downstream</strong>: Database, cache, external APIs</li>
+<li><strong>Check infrastructure</strong>: Servers, load balancers, network</li>
+<li><strong>Check logs</strong>: Error logs, performance logs, access logs</li>
+<li><strong>Check traces</strong>: Slow spans, error spans, bottlenecks</li>
+<li><strong>Check alerts</strong>: Related alerts, incidents, known issues</li>
+</ol>
+<p><strong>Key checks</strong>:
+- <strong>Metrics</strong>: Error rate, latency, endpoints, regions
+- <strong>Changes</strong>: Recent deployments, configs, features
+- <strong>Dependencies</strong>: Downstream services, databases, caches
+- <strong>Infrastructure</strong>: Servers, load balancers, network
+- <strong>Observability</strong>: Logs, traces, alerts</p>
+<p><strong>Common causes</strong>:
+- Downstream failures
+- Database issues
+- Buggy deployments
+- Resource exhaustion
+- Configuration errors</p>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center p-6 mt-16">
+        <p>&copy; 2025 Data Engineering Guides. An illustrative web application.</p>
+    </footer>
+    <script src="../../../assets/scripts.js"></script>
+    
+</body>
+</html>
